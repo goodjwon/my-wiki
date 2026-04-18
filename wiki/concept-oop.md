@@ -36,4 +36,5 @@ Spring DI, 전략 패턴, 도메인 모델링, 테스트 가능한 구조는 모
 ## 관련 페이지
 
 - [[concept-design-patterns]] — OOP 원칙을 구조화한 패턴들
+- [[concept-spring-core]] — Spring에서 OOP가 실현되는 구조
 - [[src-java-study-2024-2025]] — 원본 교재
