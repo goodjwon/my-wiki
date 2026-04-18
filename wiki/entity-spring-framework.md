@@ -38,3 +38,5 @@ Java/Kotlin 기반의 엔터프라이즈 애플리케이션 프레임워크. [[e
 - [[src-spring-framework-7]] — 7.0 릴리스 노트 소스
 - [[concept-api-versioning]]
 - [[concept-jspecify-null-safety]]
+- [[src-java-study-2024-2025|Java 스터디 자료]] — Spring 핵심 개념(IoC, DI, MVC, AOP)을 다루는 교재
+- [[concept-spring-core]] — IoC, DI, Bean, MVC 핵심 정리

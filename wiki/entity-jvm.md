@@ -34,3 +34,6 @@ Java 바이트코드를 실행하는 가상 머신. Java의 "Write Once, Run Any
 ## 관련 페이지
 
 - [[src-java-study-2024-2025]] — JVM 기초 가이드 1~3
+- [[concept-spring-core]] — Spring Bean의 싱글톤 스코프는 JVM 메모리 위에서 동작
+- [[entity-spring-boot]] — Spring Boot 내장 서버도 JVM 위에서 실행
+- [[concept-oop]] — 객체 생성과 GC는 OOP 구조와 직결
