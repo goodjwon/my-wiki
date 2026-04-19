@@ -152,3 +152,257 @@ public class JdbcMovieFinder implements MovieFinder {
 - 유연한 DI: @Autowired, @PersistenceContext 등
 
 ---
+
+## JdbcTemplate / JdbcClient 사용법 (코드 예제)
+
+### JdbcTemplate 설정
+
+```java
+public class JdbcCorporateEventDao implements CorporateEventDao {
+    private final JdbcTemplate jdbcTemplate;
+
+    public JdbcCorporateEventDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+}
+```
+
+### 쿼리 예제 (SELECT)
+
+```java
+// 단일 값
+int rowCount = jdbcTemplate.queryForObject("select count(*) from t_actor", Integer.class);
+
+// 바인드 변수
+int count = jdbcTemplate.queryForObject(
+    "select count(*) from t_actor where first_name = ?", Integer.class, "Joe");
+
+// 단일 도메인 객체
+Actor actor = jdbcTemplate.queryForObject(
+    "select first_name, last_name from t_actor where id = ?",
+    (rs, rowNum) -> {
+        Actor a = new Actor();
+        a.setFirstName(rs.getString("first_name"));
+        a.setLastName(rs.getString("last_name"));
+        return a;
+    }, 1212L);
+
+// 리스트 조회
+List<Actor> actors = jdbcTemplate.query(
+    "select first_name, last_name from t_actor",
+    (rs, rowNum) -> new Actor(rs.getString("first_name"), rs.getString("last_name")));
+```
+
+### 업데이트 예제 (INSERT/UPDATE/DELETE)
+
+```java
+jdbcTemplate.update("insert into t_actor (first_name, last_name) values (?, ?)", "Leonor", "Watling");
+jdbcTemplate.update("update t_actor set last_name = ? where id = ?", "Banjo", 5276L);
+jdbcTemplate.update("delete from t_actor where id = ?", actorId);
+```
+
+### 자동 생성 키 조회
+
+```java
+KeyHolder keyHolder = new GeneratedKeyHolder();
+jdbcTemplate.update(connection -> {
+    PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
+    ps.setString(1, name);
+    return ps;
+}, keyHolder);
+// keyHolder.getKey() → 생성된 키
+```
+
+### JdbcClient (Spring 6.1+) — 모던 fluent API
+
+```java
+JdbcClient jdbcClient = JdbcClient.create(dataSource);
+
+// 조회
+List<Actor> actors = jdbcClient.sql("select first_name, last_name from t_actor")
+    .query(Actor.class).list();
+
+// 단일 조회
+Actor actor = jdbcClient.sql("select * from t_actor where id = ?")
+    .param(1212L).query(Actor.class).single();
+
+// Optional
+Optional<Actor> actor = jdbcClient.sql("select * from t_actor where id = ?")
+    .param(1212L).query(Actor.class).optional();
+
+// 업데이트
+jdbcClient.sql("insert into t_actor (first_name, last_name) values (:firstName, :lastName)")
+    .param("firstName", "Leonor").param("lastName", "Watling").update();
+
+// 객체 파라미터
+jdbcClient.sql("insert into t_actor (first_name, last_name) values (:firstName, :lastName)")
+    .paramSource(new Actor("Leonor", "Watling")).update();
+```
+
+### NamedParameterJdbcTemplate
+
+```java
+String sql = "select count(*) from t_actor where first_name = :first_name";
+SqlParameterSource params = new MapSqlParameterSource("first_name", firstName);
+return namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
+
+// BeanPropertySqlParameterSource
+SqlParameterSource params = new BeanPropertySqlParameterSource(actor);
+return namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
+```
+
+### 핵심 포인트
+- JdbcTemplate은 **thread-safe** — 하나의 인스턴스를 여러 DAO에서 공유
+- Spring이 커넥션 열기/닫기, 예외 처리, 트랜잭션 관리를 담당
+- 개발자는 SQL과 파라미터, 결과 매핑에만 집중
+
+---
+
+## Transaction Propagation 상세
+
+### PROPAGATION_REQUIRED (기본값)
+
+- 기존 트랜잭션이 있으면 **참여**, 없으면 **새로 생성**
+- 참여 시 외부 트랜잭션의 isolation, timeout, readOnly 설정은 무시
+- 내부에서 rollback-only 설정하면 외부 커밋 시 `UnexpectedRollbackException` 발생
+
+### PROPAGATION_REQUIRES_NEW
+
+- 항상 **독립적인 물리적 트랜잭션** 생성
+- 외부 트랜잭션과 완전히 분리 — 독립적으로 commit/rollback
+- 자체 isolation, timeout, readOnly 설정 가능
+- **주의**: 커넥션 풀 고갈/데드락 가능성 — 풀 크기를 동시 스레드 수 + 1 이상으로 설정
+
+### PROPAGATION_NESTED
+
+- **단일 물리적 트랜잭션** + 여러 **savepoint** 사용
+- 내부 범위만 롤백하고 외부는 계속 진행 가능
+- JDBC savepoint에 의존 → `DataSourceTransactionManager`에서만 동작
+
+---
+
+## Rollback 규칙 상세
+
+### 기본 동작
+- `RuntimeException`, `Error` → 롤백
+- Checked Exception → 롤백하지 않음 (커밋)
+
+### 커스텀 롤백 규칙
+
+```java
+@Transactional(rollbackFor = {NoProductInStockException.class})
+public void updateStock() { ... }
+
+@Transactional(noRollbackFor = {InstrumentNotFoundException.class})
+public void processOrder() { ... }
+```
+
+### Spring 6.2+ 전역 설정
+```java
+@EnableTransactionManagement(rollbackOn = ALL_EXCEPTIONS)
+```
+
+### 프로그래밍 방식 롤백
+```java
+TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+```
+
+---
+
+## Programmatic Transaction 관리
+
+### TransactionTemplate (권장)
+
+```java
+public class SimpleService {
+    private final TransactionTemplate transactionTemplate;
+
+    public SimpleService(PlatformTransactionManager txManager) {
+        this.transactionTemplate = new TransactionTemplate(txManager);
+    }
+
+    public Object someServiceMethod() {
+        return transactionTemplate.execute(status -> {
+            updateOperation1();
+            return resultOfUpdateOperation2();
+        });
+    }
+}
+```
+
+### 롤백
+
+```java
+transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+    protected void doInTransactionWithoutResult(TransactionStatus status) {
+        try {
+            updateOperation1();
+        } catch (SomeBusinessException ex) {
+            status.setRollbackOnly();
+        }
+    }
+});
+```
+
+### 설정 커스터마이징
+
+```java
+transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_UNCOMMITTED);
+transactionTemplate.setTimeout(30);
+```
+
+### PlatformTransactionManager 직접 사용
+
+```java
+DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+def.setName("SomeTxName");
+def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+TransactionStatus status = txManager.getTransaction(def);
+try {
+    // business logic
+} catch (MyException ex) {
+    txManager.rollback(status);
+    throw ex;
+}
+txManager.commit(status);
+```
+
+---
+
+## DataSource 설정 가이드
+
+### 커넥션 풀 비교
+
+| 구현체 | 용도 | 풀링 |
+|--------|------|------|
+| DriverManagerDataSource | 테스트 전용 | X |
+| SingleConnectionDataSource | 테스트 전용 | X (단일 커넥션) |
+| Apache Commons DBCP | 프로덕션 | O |
+| C3P0 | 프로덕션 | O |
+| **HikariCP** | **프로덕션 (권장)** | O |
+
+### HikariCP 설정 (Spring Boot 기본)
+
+```java
+@Bean(destroyMethod = "close")
+BasicDataSource dataSource() {
+    BasicDataSource ds = new BasicDataSource();
+    ds.setDriverClassName("org.hsqldb.jdbcDriver");
+    ds.setUrl("jdbc:hsqldb:hsql://localhost:");
+    ds.setUsername("sa");
+    ds.setPassword("");
+    return ds;
+}
+```
+
+### TransactionManager 선택
+
+| 매니저 | 용도 |
+|--------|------|
+| DataSourceTransactionManager | 기본 JDBC |
+| JdbcTransactionManager | JDBC + 예외 번역 (Spring 5.3+, 권장) |
+| JpaTransactionManager | JPA |
+| JtaTransactionManager | 분산 트랜잭션 |
+
+---
