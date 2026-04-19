@@ -11,7 +11,8 @@ updated: 2026-04-18
 - [[src-spring-boot]] — Spring Boot 공식 소개 페이지 클리핑 (v4.0.5)
 - [[src-spring-framework-7]] — Spring Framework 7.0 릴리스 노트 (베이스라인·제거·신규 기능)
 - [[src-claude-design-review]] — Claude Design 기능 리뷰 영상 요약 (아키모링 쏘지)
-- [[src-java-study-2024-2025]] — [2024-2025] Java 스터디 자료 (Notion DB, 12챕터 74페이지)
+- [[src-java-study-2024-2025]] — [2024-2025] Java 스터디 자료 (Notion DB, 12챕터 91페이지)
+- [[src-my-links]] — 나의 링크 (Notion 북마크 모음, 35건)
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원
