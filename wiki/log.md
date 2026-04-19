@@ -101,3 +101,10 @@ title: Wons Wiki 로그
 - 수집 범위: Transaction, @Transactional, JDBC, JPA, DAO Support (5개 섹션)
 - raw/spring-data-access-ref.md, wiki/src-spring-data-access-ref.md 생성
 - index.md 업데이트
+
+## [2026-04-19] ingest | Spring Web MVC + Testing 레퍼런스
+- raw/spring-web-mvc-ref.md: Controller, @RequestBody, ResponseEntity, 예외 처리
+- raw/spring-testing-ref.md: 테스트 어노테이션, Mock, MockMvc, 테스트 피라미드
+- wiki/src-spring-web-mvc-ref.md, wiki/src-spring-testing-ref.md 생성
+- CLAUDE.md에 콘텐츠 보강 정책 추가
+- index.md 업데이트

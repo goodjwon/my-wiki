@@ -15,7 +15,9 @@ updated: 2026-04-18
 - [[src-my-links]] — 나의 링크 (Notion 북마크 모음, 24건 본문 포함)
 - [[src-spring-guide]] — Spring Guide (cheese10yun) 실무 가이드 6종
 - [[src-kakaopay-ddd]] — 카카오페이 여신코어 DDD 구축기 (Bounded Context, Aggregate, Command)
-- [[src-spring-data-access-ref]] — Spring Framework Data Access 공식 레퍼런스 (Transaction, JDBC, JPA)
+- [[src-spring-data-access-ref]] — Spring Data Access 레퍼런스 (Transaction, JDBC, JPA)
+- [[src-spring-web-mvc-ref]] — Spring Web MVC 레퍼런스 (Controller, REST, 예외처리)
+- [[src-spring-testing-ref]] — Spring Testing 레퍼런스 (MockMvc, 어노테이션, 테스트 피라미드)
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원
