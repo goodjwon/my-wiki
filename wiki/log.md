@@ -89,3 +89,9 @@ title: Wons Wiki 로그
 - 북마크 본문 보충: WebFetch로 5건 웹 콘텐츠 수집
 - 본문 없는 11건 삭제 → 24개 유지 (모두 본문 포함)
 - index.md 업데이트
+
+## [2026-04-19] ingest | 카카오페이 DDD 구축기
+- 원본: https://tech.kakaopay.com/post/backend-domain-driven-design/
+- raw/kakaopay-ddd.md: 전문 저장 (DDD 개념, 설계, 구현, 코드 예시)
+- wiki/src-kakaopay-ddd.md: 소스 요약 + 관련 페이지 교차참조
+- index.md 업데이트
