@@ -82,3 +82,10 @@ title: Wons Wiki 로그
 - 생성된 raw 파일: `my-links.md`
 - 생성된 위키 페이지: `src-my-links.md` — 주제별 분류 포함
 - index.md 업데이트 완료
+
+## [2026-04-19] ingest | Spring Guide (cheese10yun) + 북마크 본문 보충
+- 신규 raw: `spring-guide.md` (GitHub 6개 가이드, 1,697줄)
+- 신규 wiki: `src-spring-guide.md` — 실무 가이드 요약
+- 북마크 본문 보충: WebFetch로 5건 웹 콘텐츠 수집
+- 본문 없는 11건 삭제 → 24개 유지 (모두 본문 포함)
+- index.md 업데이트
