@@ -37,3 +37,5 @@ updated: 2026-04-18
 - [[entity-spring-boot]] — Spring Boot 프레임워크
 - [[entity-spring-framework]] — Spring Framework
 - [[concept-design-patterns]] — Spring에서 활용되는 패턴들
+- [[src-spring-guide]] — 실무 가이드 (디렉터리 구조, 도메인, 예외, 서비스, API, 테스트)
+- [[src-java-study-2024-2025]] — Java 스터디 교재 Ch5~Ch8
