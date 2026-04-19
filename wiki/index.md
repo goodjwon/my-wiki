@@ -14,7 +14,8 @@ updated: 2026-04-18
 - [[src-java-study-2024-2025]] — [2024-2025] Java 스터디 자료 (Notion DB, 12챕터 91페이지)
 - [[src-my-links]] — 나의 링크 (Notion 북마크 모음, 24건 본문 포함)
 - [[src-spring-guide]] — Spring Guide (cheese10yun) 실무 가이드 6종
-- [[src-kakaopay-ddd]] — 카카오페이 여신코어 DDD 구축기 (Bounded Context, Aggregate, Command)
+- [[src-kakaopay-ddd]] — 카카오페이 여신코어 DDD 구축기
+- [[src-spring-data-access-ref]] — Spring Framework Data Access 공식 레퍼런스 — 카카오페이 여신코어 DDD 구축기 (Bounded Context, Aggregate, Command)
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원

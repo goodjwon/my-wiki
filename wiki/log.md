@@ -95,3 +95,9 @@ title: Wons Wiki 로그
 - raw/kakaopay-ddd.md: 전문 저장 (DDD 개념, 설계, 구현, 코드 예시)
 - wiki/src-kakaopay-ddd.md: 소스 요약 + 관련 페이지 교차참조
 - index.md 업데이트
+
+## [2026-04-19] ingest | Spring Framework Data Access Reference
+- 원본: https://docs.spring.io/spring-framework/reference/data-access.html
+- 수집 범위: Transaction, @Transactional, JDBC, JPA, DAO Support (5개 섹션)
+- raw/spring-data-access-ref.md, wiki/src-spring-data-access-ref.md 생성
+- index.md 업데이트
