@@ -110,30 +110,21 @@ claude   # Claude Code CLI 실행
 
 ## 지식 구조
 
-```
-                    ┌─────────────────────────────────┐
-                    │     [2024-2025] Java 스터디      │
-                    │        (91 pages, 12 ch)         │
-                    └──────────┬──────────────────────┘
-                               │ ingest
-          ┌────────────────────┼────────────────────┐
-          │                    │                    │
-    ┌─────▼─────┐      ┌──────▼──────┐     ┌──────▼──────┐
-    │  Concepts  │      │  Entities   │     │   Sources   │
-    └─────┬──────┘      └──────┬──────┘     └─────────────┘
-          │                    │
-  ┌───────┼───────┐    ┌──────┼──────┐
-  │       │       │    │      │      │
-  ▼       ▼       ▼    ▼      ▼      ▼
- OOP   Design  Spring  JVM  Query  Spring
-       Patterns  Core        dsl    Boot
-  │       │       │    │      │      │
-  └───────┴───┬───┘    └──┬───┘      │
-              │           │          │
-              ▼           ▼          ▼
-        ┌─────────────────────────────────┐
-        │    양방향 교차참조 (wiki links)    │
-        └─────────────────────────────────┘
+```mermaid
+graph TD
+    SRC["<b>raw/ 원본 소스</b><br/>Notion DB · 웹 클리핑 · 문서"]
+    SRC -->|ingest| S["<b>Sources</b><br/>src-java-study-2024-2025<br/>src-spring-boot<br/>src-spring-framework-7"]
+    SRC -->|추출| C["<b>Concepts</b><br/>concept-oop<br/>concept-design-patterns<br/>concept-spring-core"]
+    SRC -->|추출| E["<b>Entities</b><br/>entity-jvm<br/>entity-querydsl<br/>entity-spring-boot"]
+
+    C <-->|교차참조| E
+    S <-->|교차참조| C
+    S <-->|교차참조| E
+
+    style SRC fill:#f9f,stroke:#333,color:#000
+    style S fill:#bbf,stroke:#333,color:#000
+    style C fill:#bfb,stroke:#333,color:#000
+    style E fill:#fbf,stroke:#333,color:#000
 ```
 
 ### 페이지 유형별 역할
@@ -148,17 +139,24 @@ claude   # Claude Code CLI 실행
 
 ### Java 스터디 챕터 맵
 
-```
-Ch00 안내 ─── Ch01 환경 ─── Ch02 문법/객체 ─── Ch03 컬렉션/함수형
-                                    │
-                              Ch04 디자인패턴
-                                    │
-              Ch05 Spring ──── Ch06 데이터/SQL ──── Ch07 서버/인증
-                   │
-              Ch08 테스트 ──── Ch09 JVM/성능 ──── Ch10 입출력/네트워크
-                                                       │
-                                                  Ch11 부록
-                                          (면접, Git, 스레드, 프로젝트)
+```mermaid
+graph LR
+    A["Ch00<br/>안내"] --> B["Ch01<br/>환경"]
+    B --> C["Ch02<br/>문법/객체"]
+    C --> D["Ch03<br/>컬렉션/함수형"]
+    C --> E["Ch04<br/>디자인패턴"]
+    E --> F["Ch05<br/>Spring"]
+    F --> G["Ch06<br/>데이터/SQL"]
+    G --> H["Ch07<br/>서버/인증"]
+    F --> I["Ch08<br/>테스트"]
+    I --> J["Ch09<br/>JVM/성능"]
+    J --> K["Ch10<br/>입출력/네트워크"]
+    K --> L["Ch11<br/>부록"]
+
+    style A fill:#eee,stroke:#999,color:#000
+    style E fill:#ffd,stroke:#999,color:#000
+    style F fill:#dff,stroke:#999,color:#000
+    style L fill:#eee,stroke:#999,color:#000
 ```
 
 ## 기술 스택
