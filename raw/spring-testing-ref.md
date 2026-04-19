@@ -116,3 +116,164 @@ class UserControllerTest {
 - 도메인 로직은 단위테스트, 웹 계층은 `@WebMvcTest`, DB는 `@DataJpaTest`
 
 ---
+
+## MockMvc 상세 가이드
+
+### Setup 옵션
+
+```java
+// Standalone (빠름, 컨텍스트 없음)
+MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new MyController()).build();
+
+// Spring Boot 통합
+@WebMvcTest(UserController.class)
+class UserControllerTest {
+    @Autowired private MockMvc mockMvc;
+    @MockBean private UserService userService;
+}
+```
+
+### 요청 수행 (perform)
+
+```java
+// GET
+mockMvc.perform(get("/users/1"))
+    .andExpect(status().isOk());
+
+// POST with JSON body
+mockMvc.perform(post("/users")
+    .contentType(MediaType.APPLICATION_JSON)
+    .content("{\"name\": \"Kim\"}"))
+    .andExpect(status().isCreated());
+
+// PUT
+mockMvc.perform(put("/users/1")
+    .contentType(MediaType.APPLICATION_JSON)
+    .content("{\"name\": \"Lee\"}"))
+    .andExpect(status().isOk());
+
+// DELETE
+mockMvc.perform(delete("/users/1"))
+    .andExpect(status().isNoContent());
+```
+
+### 검증 (andExpect)
+
+```java
+// 상태 코드
+.andExpect(status().isOk())
+.andExpect(status().isCreated())
+.andExpect(status().isBadRequest())
+.andExpect(status().isNotFound())
+
+// JSON 경로
+.andExpect(jsonPath("$.name").value("Kim"))
+.andExpect(jsonPath("$.users").isArray())
+.andExpect(jsonPath("$.users", hasSize(3)))
+.andExpect(jsonPath("$.users[0].id").exists())
+
+// Content-Type
+.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+// 헤더
+.andExpect(header().string("Location", "/users/1"))
+
+// 모델 & 뷰 (MVC)
+.andExpect(model().attributeExists("user"))
+.andExpect(view().name("userDetail"))
+```
+
+### 파일 업로드 테스트
+
+```java
+mockMvc.perform(multipart("/upload")
+    .file(new MockMultipartFile("file", "test.txt",
+        "text/plain", "content".getBytes())))
+    .andExpect(status().isOk());
+```
+
+### 필터 등록
+
+```java
+MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
+    .addFilters(new SecurityFilter())
+    .build();
+```
+
+### AssertJ 통합 (MockMvcTester)
+
+```java
+mockMvcTester.post().uri("/users")
+    .contentType(MediaType.APPLICATION_JSON)
+    .content(new User("Kim"))
+    .assertThatResponse()
+        .hasStatusOk()
+        .bodyJson().extractingPath("$.name").isEqualTo("Kim");
+```
+
+---
+
+## 통합 테스트 어노테이션 상세
+
+### @SpringBootTest
+
+```java
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class IntegrationTest {
+    @Autowired private TestRestTemplate restTemplate;
+
+    @Test
+    void test() {
+        ResponseEntity<User> response = restTemplate.getForEntity("/users/1", User.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+}
+```
+
+### @DataJpaTest
+
+```java
+@DataJpaTest
+class UserRepositoryTest {
+    @Autowired private TestEntityManager entityManager;
+    @Autowired private UserRepository userRepository;
+
+    @Test
+    void findByName() {
+        entityManager.persist(new User("Kim"));
+        User found = userRepository.findByName("Kim");
+        assertThat(found.getName()).isEqualTo("Kim");
+    }
+}
+```
+
+### @Sql — 테스트 데이터 초기화
+
+```java
+@Test
+@Sql("/test-data.sql")
+@Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+void testWithData() {
+    // test-data.sql이 먼저 실행됨
+}
+```
+
+### @DynamicPropertySource — Testcontainers 연동
+
+```java
+@Testcontainers
+@SpringBootTest
+class ContainerTest {
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+}
+```
+
+---

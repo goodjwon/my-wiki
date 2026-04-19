@@ -97,3 +97,102 @@ public class GlobalExceptionHandler {
 - `@RestControllerAdvice`: `@ControllerAdvice` + `@ResponseBody`
 
 ---
+
+## @RequestMapping 상세
+
+### HTTP Method 축약 어노테이션
+- `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`
+
+### URI 패턴
+
+| 패턴 | 설명 | 예시 |
+|------|------|------|
+| `/users/{id}` | 경로 변수 | `@PathVariable Long id` |
+| `/files/{*path}` | catch-all 변수 | 하위 경로 전체 캡처 |
+| `{name:[a-z]+}` | 정규식 변수 | 영문 소문자만 |
+| `?` | 단일 문자 | `/t?st` → `/test` |
+| `*` | 세그먼트 내 0+ 문자 | `/resources/*.png` |
+| `**` | 0+ 경로 세그먼트 | `/resources/**` |
+
+### 기본 예제
+
+```java
+@RestController
+@RequestMapping("/persons")
+class PersonController {
+
+    @GetMapping("/{id}")
+    public Person getPerson(@PathVariable Long id) { ... }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void add(@RequestBody Person person) { ... }
+}
+```
+
+### Content-Type 제한
+
+```java
+@PostMapping(path = "/pets", consumes = "application/json")
+public void addPet(@RequestBody Pet pet) { ... }
+
+@GetMapping(path = "/pets/{petId}", produces = "application/json")
+public Pet getPet(@PathVariable String petId) { ... }
+```
+
+### 파라미터/헤더 조건
+
+```java
+@GetMapping(path = "/pets", params = "type=dog")
+public List<Pet> findDogs() { ... }
+
+@GetMapping(path = "/pets", headers = "X-API-Version=2")
+public List<Pet> findPetsV2() { ... }
+```
+
+### API 버전 관리 (Spring 7)
+
+```java
+@GetMapping(version = "1.1")
+public Account getAccountV1_1() { }
+
+@GetMapping(version = "1.2+")  // 1.2 이상
+public Account getAccountV1_2Plus() { }
+```
+
+---
+
+## Jackson JSON 처리
+
+### @JsonView — 필드 선택적 직렬화
+
+```java
+public class User {
+    public interface Summary {};
+    public interface Detail extends Summary {};
+
+    @JsonView(Summary.class)
+    private String username;
+
+    @JsonView(Detail.class)
+    private String password;
+}
+
+@GetMapping("/user")
+@JsonView(User.Summary.class)
+public User getUser() { return new User("eric", "secret"); }
+// 결과: {"username": "eric"} (password 제외)
+```
+
+### MappingJacksonValue — 프로그래밍 방식
+
+```java
+@GetMapping("/user")
+public MappingJacksonValue getUser() {
+    MappingJacksonValue value = new MappingJacksonValue(user);
+    value.setSerializationView(User.Summary.class);
+    return value;
+}
+```
+
+---
