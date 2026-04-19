@@ -38,4 +38,6 @@ ZIP, PDF, PPTX, Canva, Claude Code 핸드오프
 
 ## 관련 페이지
 
-- [[src-claude-design-review]]
+- [[src-claude-design-review]] — 리뷰 영상 요약
+- [[entity-obsidian]] — 로컬 지식 관리 도구 (Claude Design과 다른 접근)
+- [[concept-compounding-knowledge]] — AI 도구로 지식을 복리적으로 축적하는 관점
