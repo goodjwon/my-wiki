@@ -48,5 +48,8 @@ updated: 2026-04-18
 ## Synthesis
 _아직 종합 분석이 없습니다._
 
+## Synthesis
+- [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 가이드 (CLAUDE.md 템플릿, ADR, API, 트러블슈팅)
+
 ## Comparisons
 _아직 비교 분석이 없습니다._

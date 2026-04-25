@@ -108,3 +108,8 @@ title: Wons Wiki 로그
 - wiki/src-spring-web-mvc-ref.md, wiki/src-spring-testing-ref.md 생성
 - CLAUDE.md에 콘텐츠 보강 정책 추가
 - index.md 업데이트
+
+## [2026-04-25] synthesis | 프로젝트 문서 시스템 셋업 가이드
+- wiki/guide-project-docs-setup.md 생성
+- CLAUDE.md 템플릿, 디렉터리 구조, 문서 유형별 템플릿 (ADR, API, 트러블슈팅)
+- Step 1~4 셋업 절차, 일상 운영 명령, 체크리스트 포함
