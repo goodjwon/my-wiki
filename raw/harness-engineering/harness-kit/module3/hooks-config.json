@@ -1,0 +1,45 @@
+{
+  "_comment": "Claude Code Hooks 설정 파일",
+  "_location": ".claude/settings.json 또는 프로젝트 루트 claude.json",
+  "_docs": "https://docs.anthropic.com/claude-code/hooks",
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "_comment": "Bash 명령 실행 전 guard.sh로 위험 명령 차단",
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard.sh"
+          }
+        ]
+      }
+    ],
+
+    "PostToolUse": [
+      {
+        "_comment": "파일 수정 후 lint-fix.sh로 자동 포맷 + 규칙 검사",
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/lint-fix.sh"
+          }
+        ]
+      }
+    ],
+
+    "Stop": [
+      {
+        "_comment": "세션 종료 전 claude-progress.txt 자동 업데이트",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/update-progress.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

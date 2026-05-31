@@ -2,7 +2,7 @@
 title: 카카오페이 여신코어 DDD 구축기
 type: source
 tags: [ddd, spring, kotlin, 도메인설계, 카카오페이]
-sources: [kakaopay-ddd.md]
+sources: [kakaopay-ddd/kakaopay-ddd.md]
 created: 2026-04-19
 updated: 2026-04-19
 ---

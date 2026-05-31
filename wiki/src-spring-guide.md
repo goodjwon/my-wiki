@@ -2,7 +2,7 @@
 title: Spring Guide (cheese10yun)
 type: source
 tags: [spring, spring-boot, 가이드, 실무]
-sources: [spring-guide.md]
+sources: [spring/spring-guide.md]
 created: 2026-04-19
 updated: 2026-04-19
 ---

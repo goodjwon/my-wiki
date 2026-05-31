@@ -2,7 +2,7 @@
 title: 나의 링크 (북마크 모음)
 type: source
 tags: [북마크, 링크, 참고자료]
-sources: [my-links.md]
+sources: [my-links/my-links.md]
 created: 2026-04-19
 updated: 2026-04-19
 ---

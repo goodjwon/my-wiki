@@ -2,7 +2,7 @@
 title: Spring Framework Web MVC Reference
 type: source
 tags: [spring, mvc, controller, rest-api, 공식문서]
-sources: [spring-web-mvc-ref.md]
+sources: [spring/spring-web-mvc-ref.md]
 created: 2026-04-19
 updated: 2026-04-19
 ---

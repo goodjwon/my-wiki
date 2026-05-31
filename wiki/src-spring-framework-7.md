@@ -2,7 +2,7 @@
 title: "Spring Framework 7.0 릴리스 노트"
 type: source
 tags: [Spring, Java, 프레임워크, 릴리스노트]
-sources: [Spring Framework Versions.md]
+sources: [spring/Spring Framework Versions.md]
 created: 2026-04-18
 updated: 2026-04-18
 ---

@@ -2,7 +2,7 @@
 title: Spring Framework Testing Reference
 type: source
 tags: [spring, testing, junit, mockMvc, 공식문서]
-sources: [spring-testing-ref.md]
+sources: [spring/spring-testing-ref.md]
 created: 2026-04-19
 updated: 2026-04-19
 ---

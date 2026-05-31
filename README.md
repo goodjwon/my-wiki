@@ -32,19 +32,26 @@ LLM이 유지·관리하는 개인 지식 위키(Second Brain)입니다.
 my-wiki/
 ├── README.md          # 이 파일
 ├── CLAUDE.md          # 위키 스키마·규칙
-├── raw/               # 원본 소스 (불변)
-│   ├── java-study-ch00-안내.md ~ ch11-부록.md  # Notion Java 스터디 (12챕터, 91페이지)
-│   ├── Spring Boot.md, Spring Framework Versions.md
-│   ├── llm-wiki-pattern.md
-│   └── ...
+├── raw/               # 원본 소스 (불변, 주제별 디렉터리)
+│   ├── java-study/           # Notion Java 스터디 (12챕터, 91페이지)
+│   ├── spring/               # Spring Boot·Framework·Guide·Reference (7개)
+│   ├── harness-engineering/  # 하네스 엔지니어링 키트 + PDF/DOCX + 변환본
+│   ├── kakaopay-ddd/         # DDD 구축기
+│   ├── llm-wiki-pattern/     # LLM 위키 패턴
+│   ├── my-links/             # Notion 북마크 DB
+│   ├── claude-design/        # Claude Design 영상 자막
+│   └── assets/               # 이미지·첨부
 ├── wiki/              # LLM이 생성·유지하는 위키 페이지
 │   ├── index.md       # 위키 전체 목록
 │   ├── log.md         # 작업 기록
-│   ├── src-*.md       # 소스 요약 (5건)
-│   ├── concept-*.md   # 개념 정리 (10건)
-│   └── entity-*.md    # 엔티티 (12건)
+│   ├── src-*.md       # 소스 요약
+│   ├── concept-*.md   # 개념 정리
+│   ├── entity-*.md    # 엔티티
+│   └── guide-*.md     # 가이드
 └── .obsidian/         # Obsidian 설정
 ```
+
+> raw 구조 규칙: 모든 원본은 `raw/<주제>/` 디렉터리에 둔다. PDF/DOCX는 같은 디렉터리에 `.md` 변환본을 동봉한다. 자세한 규칙은 `CLAUDE.md` 참조.
 
 ## 현재 규모
 
@@ -95,8 +102,8 @@ cd my-wiki
 # 3. Claude Code로 위키 운영
 claude   # Claude Code CLI 실행
 
-# 새 소스 추가 (raw/ 에 파일 넣고)
-> raw/새파일.md 를 ingest 해줘
+# 새 소스 추가 (raw/<주제>/ 에 파일 넣고)
+> raw/<주제>/새파일.md 를 ingest 해줘
 
 # 위키 질의
 > Spring Security와 JWT의 관계를 설명해줘

@@ -2,7 +2,7 @@
 title: Spring Framework Data Access Reference
 type: source
 tags: [spring, jdbc, jpa, transaction, 공식문서]
-sources: [spring-data-access-ref.md]
+sources: [spring/spring-data-access-ref.md]
 created: 2026-04-19
 updated: 2026-04-19
 ---

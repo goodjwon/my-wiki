@@ -2,7 +2,7 @@
 title: "[2024-2025] Java 스터디 자료"
 type: source
 tags: [java, spring, study, notion]
-sources: [java-study-ch00-안내.md, java-study-ch01-환경과실행.md, java-study-ch02-Java문법과객체.md, java-study-ch03-컬렉션과함수형.md, java-study-ch04-객체지향설계와패턴.md, java-study-ch05-Spring과프로젝트실행.md, java-study-ch06-데이터접근과SQL.md, java-study-ch07-서버와인증.md, java-study-ch08-테스트와품질.md, java-study-ch09-JVM과성능.md, java-study-ch10-입출력과네트워크.md, java-study-ch11-부록.md]
+sources: [java-study/]
 created: 2026-04-18
 updated: 2026-04-18
 ---

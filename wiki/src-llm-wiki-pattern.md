@@ -2,7 +2,7 @@
 title: "LLM Wiki: LLM 기반 개인 지식베이스 구축 패턴"
 type: source
 tags: [LLM, 지식관리, 세컨드브레인, 위키, PKM]
-sources: [llm-wiki-pattern.md]
+sources: [llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
 updated: 2026-04-18
 ---

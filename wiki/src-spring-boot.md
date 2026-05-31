@@ -2,7 +2,7 @@
 title: "Spring Boot — 공식 소개 페이지"
 type: source
 tags: [Java, Spring, 프레임워크, 백엔드]
-sources: [Spring Boot.md]
+sources: [spring/Spring Boot.md]
 created: 2026-04-18
 updated: 2026-04-18
 ---
