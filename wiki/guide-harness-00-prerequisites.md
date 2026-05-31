@@ -153,10 +153,10 @@ EOF
 
 git init
 git add .
-git commit -m "chore: init harness-playground monorepo"
+git commit -m "chore: harness-playground 모노레포 초기화"
 ```
 
-→ git commit: `chore: init harness-playground monorepo`
+→ git commit: `chore: harness-playground 모노레포 초기화`
 
 ### Step A-2: api/ — Express 백엔드 (3분)
 
@@ -274,10 +274,10 @@ EOF
 
 cd ..
 git add api
-git commit -m "feat(api): add express user CRUD with zod validation + tests"
+git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
 ```
 
-→ git commit: `feat(api): add express user CRUD with zod validation + tests`
+→ git commit: `feat(api): Express User CRUD + Zod 검증 + 테스트`
 
 ### Step A-3: web/ — React 프론트 (3분)
 
@@ -357,10 +357,10 @@ EOF
 
 cd ..
 git add web
-git commit -m "feat(web): add react user list + create form"
+git commit -m "feat(web): React 사용자 목록 + 추가 폼"
 ```
 
-→ git commit: `feat(web): add react user list + create form`
+→ git commit: `feat(web): React 사용자 목록 + 추가 폼`
 
 ### Step A-4: 동작 확인 (2분)
 
@@ -412,7 +412,12 @@ git log --oneline
 #   chore: init harness-playground monorepo
 ```
 
-여기까지 통과하면 [[guide-harness-module1]] 로 진입. **본인 프로젝트가 따로 있어도 module1~5는 이 playground에서 진행**, 5모듈 종료 후 본인 프로젝트로 이식 ([5모듈 종료 후 이식](#5모듈-종료-후--본인-기존-프로젝트로-이식하기)).
+여기까지 통과하면:
+
+1. **추천 순서**: 먼저 [[guide-harness-demo]] (5분 데모, 하네스 있음 vs 없음 직접 체험) → [[guide-harness-module1]]
+2. **바로 본격**: [[guide-harness-module1]] 로 진입
+
+**본인 프로젝트가 따로 있어도 module1~5는 이 playground에서 진행**, 5모듈 종료 후 본인 프로젝트로 이식 ([5모듈 종료 후 이식](#5모듈-종료-후--본인-기존-프로젝트로-이식하기)).
 
 ---
 
@@ -571,7 +576,7 @@ cp -r ~/harness-playground/.claude .
 #    (몇 주 동안 주간 리뷰 반복)
 
 git add CLAUDE.md AGENTS.md .claude
-git commit -m "harness: bootstrap from playground"
+git commit -m "harness: playground에서 하네스 자산 가져오기"
 # PR 만들어 팀 리뷰 후 main 머지
 ```
 
@@ -597,7 +602,7 @@ ls -la .claude/hooks/  # 실행 권한(x)이 있는지 확인
 cd <본인-프로젝트>
 git init
 git add .
-git commit -m "initial commit"
+git commit -m "chore: 초기 커밋"
 ```
 
 ### Q. CLAUDE.md를 두긴 했는데 Claude가 진짜 읽었는지 모르겠어요

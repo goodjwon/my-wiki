@@ -114,7 +114,7 @@ cat task-list.md        # 진행 태스크
 EOF
 
 git add README.md .gitignore
-git commit -m "docs: add Claude Code harness onboarding section"
+git commit -m "docs(M5): Claude Code 하네스 온보딩 섹션 추가"
 ```
 
 ---
@@ -218,10 +218,12 @@ EOF
 ```bash
 # CLAUDE.md 섹션 7과 .claude/hooks/guard.sh 수정 후
 git add CLAUDE.md .claude/hooks/guard.sh .claude/weekly-review-*.md
-git commit -m "harness: weekly review $WEEK - add N new rules
+git commit -m "harness(M5): $WEEK 주간 리뷰 — 새 규칙 N개 추가
 
 - [규칙 1 요약]
-- [규칙 2 요약]"
+- [규칙 2 요약]
+
+Reviewed-by: Critic Agent"
 ```
 
 ---
@@ -259,13 +261,13 @@ PR 형태로 삭제 권고 N개 / 유지 권고 M개 제시해줘.
 ```bash
 # Claude가 권고한 규칙을 CLAUDE.md / guard.sh에서 제거
 git add CLAUDE.md .claude/hooks/guard.sh
-git commit -m "harness: ripple unused rules (Rippable cleanup)
+git commit -m "harness(M5): 미사용 규칙 정리 (Rippable cleanup)
 
-Removed (4주 위반 0회):
+삭제 (지난 4주 위반 0회):
 - [규칙 1]
 - [규칙 2]
 
-Kept (위반 0회지만 안전장치):
+유지 (위반 0회지만 안전장치):
 - [규칙 3]"
 ```
 
@@ -320,7 +322,7 @@ cat >> .claude/baseline.md << 'EOF'
 EOF
 
 git add .claude/baseline.md
-git commit -m "harness: M1 vs M5 before/after comparison"
+git commit -m "harness(M5): M1↔M5 Before/After 비교"
 ```
 
 ---

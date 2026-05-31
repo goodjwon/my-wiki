@@ -107,7 +107,7 @@ cat > AGENTS.md << 'EOF'
 EOF
 
 git add AGENTS.md
-git commit -m "harness: add AGENTS.md (Planner/Coder/Critic protocol)"
+git commit -m "harness(M4): AGENTS.md 추가 (Planner/Coder/Critic)"
 ```
 
 ---
@@ -285,7 +285,7 @@ DDD 레이어 순서 대신 Node 흐름 (route → controller → service → re
 ```bash
 # Planner 출력을 그대로 task-list.md에 붙여넣기
 git add task-list.md
-git commit -m "plan: TASK breakdown for auth feature"
+git commit -m "plan(M4): 인증 기능 태스크 분해"
 ```
 
 ---
@@ -326,7 +326,7 @@ task-list.md의 TASK-001 만 구현해.
 
 ```bash
 git add task-list.md src/
-git commit -m "feat: TASK-001 User schema + repository"
+git commit -m "feat(M4): TASK-001 User 스키마 + 리포지토리"
 ```
 
 ---
@@ -375,7 +375,7 @@ REJECT면:
 # 판정 결과 기록
 echo "TASK-001 Critic: APPROVE" >> .claude/critic-log.md
 git add task-list.md .claude/critic-log.md
-git commit -m "review: TASK-001 APPROVE"
+git commit -m "review(M4): TASK-001 APPROVE"
 ```
 
 ---

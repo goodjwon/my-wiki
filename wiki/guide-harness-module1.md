@@ -123,10 +123,10 @@ EOF
 
 ```bash
 git add .claude/failure-audit.md
-git commit -m "harness: module1 step2 - initial failure audit"
+git commit -m "harness(M1): 초기 실패 패턴 감사"
 ```
 
-→ git commit: `harness: module1 step2 - initial failure audit`
+→ git commit: `harness(M1): 초기 실패 패턴 감사`
 
 ---
 
@@ -172,10 +172,10 @@ Claude Code (playground 루트에서) 에 **그대로 붙여넣기**:
 
 ```bash
 git add -A
-git commit -m "baseline(M1-A): add phone field to user (no harness)"
+git commit -m "baseline(M1-A): User에 phone 필드 추가 (하네스 없이)"
 ```
 
-→ git commit: `baseline(M1-A): add phone field to user (no harness)`
+→ git commit: `baseline(M1-A): User에 phone 필드 추가 (하네스 없이)`
 
 ### 태스크 B — 새 조회 API (10분)
 
@@ -201,10 +201,10 @@ GET /users 에 다음을 추가해줘:
 
 ```bash
 git add -A
-git commit -m "baseline(M1-B): add search + paging to GET /users (no harness)"
+git commit -m "baseline(M1-B): GET /users 검색·페이징 추가 (하네스 없이)"
 ```
 
-→ git commit: `baseline(M1-B): add search + paging to GET /users (no harness)`
+→ git commit: `baseline(M1-B): GET /users 검색·페이징 추가 (하네스 없이)`
 
 ### 태스크 C — 버그 수정 (10분)
 
@@ -228,10 +228,10 @@ git commit -m "baseline(M1-B): add search + paging to GET /users (no harness)"
 
 ```bash
 git add -A
-git commit -m "baseline(M1-C): fix empty phone validation bug (no harness)"
+git commit -m "baseline(M1-C): 빈 phone 검증 버그 수정 (하네스 없이)"
 ```
 
-→ git commit: `baseline(M1-C): fix empty phone validation bug (no harness)`
+→ git commit: `baseline(M1-C): 빈 phone 검증 버그 수정 (하네스 없이)`
 
 ### Step 3 체크리스트
 
@@ -300,10 +300,10 @@ cat > .claude/baseline.md << 'EOF'
 EOF
 
 git add .claude/baseline.md
-git commit -m "harness(M1): save baseline measurements"
+git commit -m "harness(M1): 베이스라인 측정 결과 저장"
 ```
 
-→ git commit: `harness(M1): save baseline measurements`
+→ git commit: `harness(M1): 베이스라인 측정 결과 저장`
 
 ---
 

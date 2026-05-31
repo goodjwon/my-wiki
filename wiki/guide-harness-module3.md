@@ -341,7 +341,7 @@ CLAUDE.md 섹션 5 (Goal-Driven Execution) 끝에:
 
 ```bash
 git add .claude/hooks/ .claude/settings.json CLAUDE.md
-git commit -m "harness: install guard.sh + lint-fix.sh + self-verify loop"
+git commit -m "harness(M3): guard.sh + lint-fix.sh + 자기검증 루프 설치"
 ```
 
 > `.claude/settings.json`을 팀과 공유하려면 git 추적, 개인 설정이면 `.gitignore` 추가.
