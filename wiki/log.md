@@ -185,3 +185,17 @@ title: Wons Wiki 로그
 - **frontmatter sources 업데이트**: 모든 src-*.md (11개) + concept 하네스 4개의 sources 경로를 새 디렉터리로 재지정
 - **본문 경로 보정**: src-harness-engineering, concept-claude-md, concept-claude-hooks의 본문 raw/ 경로를 새 경로로 일괄 치환
 - **README.md (루트) 업데이트**: 디렉터리 구조 + 빠른 시작 명령 예시 업데이트
+
+## [2026-05-31] guide | 위키 외부 배포 가이드 (MkDocs Material + Firebase Hosting)
+- **배경**: 위키를 외부에 깔끔하게 공개하고 싶다는 요청. GitHub 종속 회피, 무료 또는 저렴 우선.
+- **결정**:
+  - SSG: MkDocs Material (10년차 안정성, 검색·정보전달력 최강, 한국어 자료 풍부)
+  - 호스팅: Firebase Hosting (무료 티어, CDN·SSL 자동, `firebase deploy` 한 줄, GitHub 종속 없음)
+  - raw/ 는 비공개 — `wiki/` 만 `docs/` 로 복사해 빌드
+- **생성된 페이지**: `guide-deploy-mkdocs-firebase.md` (Step 1~10 + 트러블슈팅 + 비용 예상)
+  - 빌드 흐름 Mermaid 다이어그램, 유지보수 흐름 다이어그램
+  - `mkdocs.yml` 전체 예시 (한국어 검색, 다크모드, navigation, pymdownx 확장)
+  - `scripts/build-site.sh`, `scripts/deploy.sh` 스크립트
+  - `firebase.json` 캐시 헤더 설정 포함
+- **부수 작업**: `.claude/commands/ingest.md`, `query.md`, `lint.md` 슬래시 명령어 신규 작성
+- index.md Synthesis 카테고리에 추가
