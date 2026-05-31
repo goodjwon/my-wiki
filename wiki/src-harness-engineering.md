@@ -139,7 +139,7 @@ cp raw/harness-engineering/harness-kit/module4/{AGENTS.md,task-list.md,claude-pr
 
 ## 원본 파일 위치
 
-`raw/harness-engineering/` 디렉터리. 자세한 자료 구성과 추천 읽기 순서는 [`raw/harness-engineering/README.md`](../raw/harness-engineering/README.md) 참고.
+`raw/harness-engineering/` 디렉터리. 자세한 자료 구성과 추천 읽기 순서는 `raw/harness-engineering/README.md` 참고.
 
 | 파일 | 용도 |
 |------|------|

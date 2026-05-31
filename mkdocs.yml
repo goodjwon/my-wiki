@@ -1,0 +1,138 @@
+site_name: Wons Wiki
+site_description: 박정원의 개인 지식 위키 (Second Brain)
+site_author: JungWon Park
+site_url: https://wons-wiki.web.app
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: ko
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 다크 모드로 전환
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 라이트 모드로 전환
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      lang: ko
+  - glightbox
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - 홈: index.md
+  - 가이드:
+    - 배포 (MkDocs + Firebase): guide-deploy-mkdocs-firebase.md
+    - 프로젝트 문서 시스템: guide-project-docs-setup.md
+    - 하네스 — 사전 안내: guide-harness-00-prerequisites.md
+    - 하네스 — 5분 데모: guide-harness-demo.md
+    - 하네스 — Module 1: guide-harness-module1.md
+    - 하네스 — Module 2: guide-harness-module2.md
+    - 하네스 — Module 3: guide-harness-module3.md
+    - 하네스 — Module 4: guide-harness-module4.md
+    - 하네스 — Module 5: guide-harness-module5.md
+  - 개념:
+    - 복리 지식: concept-compounding-knowledge.md
+    - Memex: concept-memex.md
+    - Ingest 워크플로: concept-ingest.md
+    - Query 워크플로: concept-query.md
+    - Lint 워크플로: concept-lint.md
+    - 하네스 엔지니어링: concept-harness-engineering.md
+    - CLAUDE.md 헌법: concept-claude-md.md
+    - Claude Hooks: concept-claude-hooks.md
+    - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
+    - 객체지향 (OOP): concept-oop.md
+    - 디자인 패턴: concept-design-patterns.md
+    - Spring Core: concept-spring-core.md
+    - API Versioning: concept-api-versioning.md
+    - JSpecify Null Safety: concept-jspecify-null-safety.md
+  - 인물·도구:
+    - Vannevar Bush: entity-vannevar-bush.md
+    - Obsidian: entity-obsidian.md
+    - Obsidian Web Clipper: entity-obsidian-web-clipper.md
+    - Dataview: entity-dataview.md
+    - qmd: entity-qmd.md
+    - Marp: entity-marp.md
+    - Claude Design: entity-claude-design.md
+    - JVM: entity-jvm.md
+    - Querydsl: entity-querydsl.md
+    - Spring Framework: entity-spring-framework.md
+    - Spring Boot: entity-spring-boot.md
+    - Spring Initializr: entity-spring-initializr.md
+  - 소스:
+    - LLM Wiki 패턴: src-llm-wiki-pattern.md
+    - 하네스 엔지니어링 키트: src-harness-engineering.md
+    - Claude Design 리뷰: src-claude-design-review.md
+    - 카카오페이 DDD: src-kakaopay-ddd.md
+    - Java 스터디 2024-2025: src-java-study-2024-2025.md
+    - 나의 링크: src-my-links.md
+    - Spring Boot 소개: src-spring-boot.md
+    - Spring Framework 7: src-spring-framework-7.md
+    - Spring Guide (cheese10yun): src-spring-guide.md
+    - Spring Data Access Ref: src-spring-data-access-ref.md
+    - Spring Web MVC Ref: src-spring-web-mvc-ref.md
+    - Spring Testing Ref: src-spring-testing-ref.md
+
+extra:
+  generator: false
+
+copyright: © 2026 JungWon Park
