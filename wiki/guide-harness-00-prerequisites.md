@@ -18,9 +18,26 @@ updated: 2026-05-31
 - **Node.js (Express/Fastify) + React** 개발자
 - 나중에 **GCP — App Engine / Cloud Run / Cloud Functions** 로 배포할 계획
 - AI 코딩 도구(Claude Code) 사용 중, 같은 실수가 반복돼 답답함을 느낌
-- 본인 프로젝트가 있음 (실습은 본인 프로젝트에 적용하는 것이 핵심)
 
-> 원본 자료(`raw/harness-engineering/`)는 **Spring Boot + DDD** 기준으로 작성됨. 이 위키의 guide는 그 원본을 **Node + GCP 학습자용 step-by-step**으로 옮긴 것. 원칙은 스택 무관.
+> 원본 자료(`raw/harness-engineering/`)는 **Spring Boot + DDD** 기준으로 작성됨. 이 위키의 guide는 그 원본을 **Node 학습자용 step-by-step**으로 옮긴 것. 원칙은 스택 무관.
+
+## 권장 학습 흐름
+
+```
+[Step A] 이 페이지 사전 조건 확인 + 실습용 미니 프로젝트 만들기
+              ↓
+[Step B] Module 01~05 학습 — 모두 임시 프로젝트(harness-playground/)에서 진행
+         · 깨져도 부담 없는 환경에서 하네스 개념·도구를 손에 익힘
+         · CLAUDE.md, hooks, AGENTS.md, 주간 리뷰 루틴까지 한 번 다 돌려 봄
+              ↓
+[Step C] 5모듈 종료 후 — 본인 기존 프로젝트로 이식
+         · 임시 프로젝트에서 검증된 .claude/, CLAUDE.md, AGENTS.md를
+           본인 프로젝트에 복사 + 본인 스택/도메인에 맞춰 커스터마이즈
+         · 본인 프로젝트의 첫 베이스라인을 다시 측정 (Module 01 절차 한 번 더)
+         · 본인 프로젝트만의 STOP 트리거를 발견하면서 진짜 하네스가 됨
+```
+
+핵심: **실습은 임시 프로젝트로, 실전은 본인 프로젝트로.** 처음부터 본인 프로젝트에서 하면 실수·롤백이 부담스럽다.
 
 ## 시간 예상
 
@@ -43,7 +60,7 @@ updated: 2026-05-31
 | **npm** | 패키지 매니저 | `npm --version` | 10+ |
 | **git** | 변경 이력 분석 + 하네스 자산 커밋 | `git --version` | 2.40+ |
 | **Claude Code** | 이 커리큘럼의 실행 도구 | `claude --version` | 최신 |
-| **본인의 Node 프로젝트** | git 저장소 1개 (실습 대상) | `cd <프로젝트> && git log --oneline -5` | — |
+| **실습용 프로젝트** | 임시 프로젝트 권장. 본 페이지 아래 [실습용 미니 프로젝트 만들기](#실습용-미니-프로젝트-만들기) 참고 | `ls ~/harness-playground` | — |
 
 ### Claude Code 설치 (안 돼 있다면)
 
@@ -74,6 +91,330 @@ claude
 ```bash
 npm install --save-dev eslint prettier jest
 ```
+
+## 실습용 미니 프로젝트 만들기 (React + Express 풀스택)
+
+5모듈 학습 동안 **깨져도 부담 없는** 미니 풀스택 프로젝트. 다음 Step을 그대로 따라가면 약 10분에 완성. **각 Step 끝에 git commit 메시지 제공.**
+
+최종 구조:
+```
+~/harness-playground/
+├── api/        # Express 백엔드 (User CRUD API)
+├── web/        # React 프론트 (User 목록 화면)
+└── .git/
+```
+
+### Step A-1: 모노레포 골격 + git 초기화 (1분)
+
+```bash
+mkdir -p ~/harness-playground && cd ~/harness-playground
+
+# 최상위 메타
+cat > package.json << 'EOF'
+{
+  "name": "harness-playground",
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": ["api", "web"],
+  "scripts": {
+    "dev:api": "npm --workspace api run dev",
+    "dev:web": "npm --workspace web run dev",
+    "test": "npm --workspace api test",
+    "lint": "npm --workspace api run lint && npm --workspace web run lint"
+  }
+}
+EOF
+
+cat > .gitignore << 'EOF'
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+coverage/
+*.log
+.DS_Store
+EOF
+
+cat > README.md << 'EOF'
+# harness-playground
+
+하네스 엔지니어링 5모듈 학습용 미니 풀스택.
+
+- api/  : Express + Zod (in-memory User CRUD)
+- web/  : Vite + React (User 목록 화면)
+
+## 실행
+- npm install
+- npm run dev:api   # http://localhost:3000
+- npm run dev:web   # http://localhost:5173
+- npm test
+EOF
+
+git init
+git add .
+git commit -m "chore: init harness-playground monorepo"
+```
+
+→ git commit: `chore: init harness-playground monorepo`
+
+### Step A-2: api/ — Express 백엔드 (3분)
+
+```bash
+mkdir -p api/src && cd api
+
+cat > package.json << 'EOF'
+{
+  "name": "api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "jest",
+    "lint": "eslint src",
+    "format": "prettier --write src"
+  }
+}
+EOF
+
+npm install express zod cors
+npm install --save-dev jest supertest eslint prettier
+
+cat > src/app.js << 'EOF'
+const express = require('express');
+const cors = require('cors');
+const { z } = require('zod');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// in-memory store (실습용)
+const users = [
+  { id: 1, email: 'alice@example.com', name: 'Alice' },
+  { id: 2, email: 'bob@example.com', name: 'Bob' },
+];
+
+const UserInput = z.object({
+  email: z.string().email(),
+  name: z.string().min(1),
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() });
+});
+
+app.get('/users', (req, res) => {
+  res.json(users);
+});
+
+app.post('/users', (req, res) => {
+  const parsed = UserInput.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
+  }
+  const user = { id: users.length + 1, ...parsed.data };
+  users.push(user);
+  res.status(201).json(user);
+});
+
+module.exports = app;
+EOF
+
+cat > src/server.js << 'EOF'
+const app = require('./app');
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`api listening on ${port}`));
+EOF
+
+cat > src/app.test.js << 'EOF'
+const request = require('supertest');
+const app = require('./app');
+
+describe('GET /health', () => {
+  it('returns ok', async () => {
+    const res = await request(app).get('/health');
+    expect(res.status).toBe(200);
+    expect(res.body.status).toBe('ok');
+  });
+});
+
+describe('POST /users', () => {
+  it('rejects invalid email', async () => {
+    const res = await request(app).post('/users').send({ email: 'bad', name: 'X' });
+    expect(res.status).toBe(400);
+  });
+  it('creates a user', async () => {
+    const res = await request(app).post('/users').send({ email: 'c@d.com', name: 'Carol' });
+    expect(res.status).toBe(201);
+    expect(res.body.id).toBeDefined();
+  });
+});
+EOF
+
+cat > eslint.config.js << 'EOF'
+module.exports = [
+  {
+    files: ['src/**/*.js'],
+    languageOptions: { ecmaVersion: 2022, sourceType: 'commonjs', globals: { process: 'readonly', console: 'readonly' } },
+    rules: { 'no-unused-vars': 'warn', 'no-empty': ['error', { allowEmptyCatch: false }] },
+  },
+];
+EOF
+
+cat > .prettierrc.json << 'EOF'
+{ "singleQuote": true, "semi": true, "printWidth": 100 }
+EOF
+
+cat > .env.example << 'EOF'
+PORT=3000
+EOF
+
+cd ..
+git add api
+git commit -m "feat(api): add express user CRUD with zod validation + tests"
+```
+
+→ git commit: `feat(api): add express user CRUD with zod validation + tests`
+
+### Step A-3: web/ — React 프론트 (3분)
+
+```bash
+# Vite로 React 스캐폴딩 (자동 npm install은 끄고 수동으로)
+npm create vite@latest web -- --template react
+cd web
+npm install
+
+# User 목록 화면
+cat > src/App.jsx << 'EOF'
+import { useEffect, useState } from 'react';
+import './App.css';
+
+const API = 'http://localhost:3000';
+
+export default function App() {
+  const [users, setUsers] = useState([]);
+  const [form, setForm] = useState({ email: '', name: '' });
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch(`${API}/users`).then((r) => r.json()).then(setUsers).catch(() => setError('API 연결 실패'));
+  }, []);
+
+  async function addUser(e) {
+    e.preventDefault();
+    setError(null);
+    const res = await fetch(`${API}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    });
+    if (!res.ok) {
+      const body = await res.json();
+      setError(JSON.stringify(body.error));
+      return;
+    }
+    const created = await res.json();
+    setUsers((prev) => [...prev, created]);
+    setForm({ email: '', name: '' });
+  }
+
+  return (
+    <main style={{ fontFamily: 'system-ui', padding: 24, maxWidth: 640, margin: '0 auto' }}>
+      <h1>Harness Playground — Users</h1>
+
+      <form onSubmit={addUser} style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+        <input
+          placeholder="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+        />
+        <input
+          placeholder="name"
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+        />
+        <button type="submit">추가</button>
+      </form>
+
+      {error && <p style={{ color: 'crimson' }}>에러: {error}</p>}
+
+      <ul>
+        {users.map((u) => (
+          <li key={u.id}>
+            #{u.id} — {u.name} ({u.email})
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
+EOF
+
+# 기본 main.jsx는 Vite가 생성한 그대로 유지
+
+cd ..
+git add web
+git commit -m "feat(web): add react user list + create form"
+```
+
+→ git commit: `feat(web): add react user list + create form`
+
+### Step A-4: 동작 확인 (2분)
+
+```bash
+# 1. 의존성 모두 설치
+npm install
+
+# 2. API 띄우기 (백그라운드)
+npm run dev:api &
+sleep 1
+curl http://localhost:3000/health
+# → {"status":"ok",...}
+
+curl http://localhost:3000/users
+# → [{"id":1,...}, {"id":2,...}]
+
+# 3. 백 테스트
+cd api && npm test && cd ..
+# → 3개 통과해야 정상
+
+# 4. 프론트 띄우기 (다른 터미널에서)
+npm run dev:web
+# → 브라우저로 http://localhost:5173 접속, 사용자 목록 보이면 OK
+
+# 5. 띄운 서버 정리
+kill %1 2>/dev/null
+```
+
+### Step A-5: Claude Code 한 번 실행 (1분)
+
+```bash
+cd ~/harness-playground
+claude
+```
+
+첫 메시지로 다음을 그대로 붙여넣어 동작 확인:
+
+```
+이 프로젝트 구조를 확인하고 api/와 web/이 각각 어떤 역할인지 한 줄씩 요약해줘.
+```
+
+응답이 오면 정상. `/exit` 으로 종료.
+
+```bash
+git log --oneline
+# → 4개의 커밋이 보여야 정상:
+#   feat(web): add react user list + create form
+#   feat(api): add express user CRUD with zod validation + tests
+#   chore: init harness-playground monorepo
+```
+
+여기까지 통과하면 [[guide-harness-module1]] 로 진입. **본인 프로젝트가 따로 있어도 module1~5는 이 playground에서 진행**, 5모듈 종료 후 본인 프로젝트로 이식 ([5모듈 종료 후 이식](#5모듈-종료-후--본인-기존-프로젝트로-이식하기)).
+
+---
 
 ### 미래 (Module 05 이후 GCP 배포)
 
@@ -199,9 +540,42 @@ Module 1 (실패 패턴 찾기)
 
 | 유형 | 시작 |
 |------|------|
-| **Claude Code 처음 — 환경부터 모름** | 이 페이지의 [사전 조건](#사전-조건-도구·환경) → Claude Code 설치 → 본인 Node 프로젝트에서 한 번 실행 → 그 다음 [[guide-harness-module1]] |
-| **Claude Code는 써봤지만 하네스는 처음** | 이 페이지 [용어 사전](#핵심-용어-사전) 훑기 → [[concept-harness-engineering]] → [[guide-harness-module1]] |
-| **이미 CLAUDE.md를 만져 봄** | [[guide-harness-module1]]에서 베이스라인만 측정 → [[guide-harness-module2]]~5로 점프 |
+| **Claude Code 처음 — 환경부터 모름** | [사전 조건](#사전-조건-도구·환경) → Claude Code 설치 → [실습용 미니 프로젝트 만들기](#실습용-미니-프로젝트-만들기) → [[guide-harness-module1]] |
+| **Claude Code는 써봤지만 하네스는 처음** | [용어 사전](#핵심-용어-사전) 훑기 → [실습용 미니 프로젝트 만들기](#실습용-미니-프로젝트-만들기) → [[concept-harness-engineering]] → [[guide-harness-module1]] |
+| **이미 CLAUDE.md를 만져 봄** | 미니 프로젝트는 스킵 가능. 본인 프로젝트에 `harness-learn` 브랜치 만들고 [[guide-harness-module1]] 베이스라인부터. |
+
+## 5모듈 종료 후 — 본인 기존 프로젝트로 이식
+
+임시 프로젝트(`~/harness-playground`)에서 5모듈을 다 돌렸다면 다음 흐름으로 본인 프로젝트에 적용:
+
+```bash
+# 1. 본인 프로젝트로 이동, 안전한 별도 브랜치
+cd <본인-기존-프로젝트>
+git checkout -b harness-bootstrap
+
+# 2. 임시 프로젝트의 하네스 자산 복사
+cp ~/harness-playground/CLAUDE.md .
+cp ~/harness-playground/AGENTS.md .
+cp -r ~/harness-playground/.claude .
+
+# 3. 본인 스택/도메인에 맞춰 커스터마이즈
+#    - CLAUDE.md 섹션 1 (Tech Stack)을 실제 의존성으로
+#    - 섹션 6 (프로젝트 구조)을 실제 디렉터리 트리로
+#    - 섹션 7 (STOP)에서 임시 프로젝트에만 해당하는 규칙 제거
+#    - guard.sh의 마이그레이션 패턴을 본인 ORM에 맞춤
+
+# 4. 본인 프로젝트의 첫 베이스라인을 다시 측정
+#    (Module 01 절차 한 번 더, 본인 git log 기준)
+
+# 5. 본인 프로젝트만의 STOP 트리거를 발견하며 진짜 하네스가 됨
+#    (몇 주 동안 주간 리뷰 반복)
+
+git add CLAUDE.md AGENTS.md .claude
+git commit -m "harness: bootstrap from playground"
+# PR 만들어 팀 리뷰 후 main 머지
+```
+
+핵심: **임시에서 배운 형식 + 본인 프로젝트에서 발견한 내용** = 진짜 하네스. 형식만 복사하고 끝내면 죽은 자산.
 
 ## 막힐 때 (공통 FAQ)
 

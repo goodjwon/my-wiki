@@ -12,37 +12,45 @@ updated: 2026-05-31
 
 # 하네스 Module 01 — 베이스라인 측정 + 실패 패턴 감사
 
-> **이 가이드 보기 전에**: [[guide-harness-00-prerequisites]] 를 먼저 끝내세요. Claude Code가 설치돼 있고, 본인 Node 프로젝트 폴더에서 `claude` 명령이 실행되며, git log가 5개 이상 있어야 합니다.
+> **이 가이드 보기 전에**: [[guide-harness-00-prerequisites]] 의 [실습용 미니 프로젝트 만들기](guide-harness-00-prerequisites.md#실습용-미니-프로젝트-만들기-react--express-풀스택)를 끝내세요. `~/harness-playground` 폴더에 api/ + web/ 가 만들어져 있고, `git log`로 3~4개 커밋이 보여야 합니다.
 
 **이 모듈에서 얻을 것**:
-1. `.claude/baseline.md` — 하네스 적용 **전** 본인 프로젝트 성능 기록 (Module 05에서 After와 비교)
+1. `.claude/baseline.md` — 하네스 적용 **전** 성능 기록 (Module 05에서 After와 비교)
 2. **실패 패턴 표 3개 이상** — Module 02에서 CLAUDE.md STOP 트리거로 전환할 재료
 
 **시간**: 약 1시간 (Failure Audit 20분 + 베이스라인 태스크 3개 30분 + 정리 10분)
 
-**전제 스택**: Node.js + Express(또는 Fastify/NestJS) + 본인의 ORM(Prisma/Mongoose/Knex 등). 다른 스택이어도 명령어만 바꾸면 됨.
+**실습 대상**: `~/harness-playground` (prerequisites에서 만든 React + Express 풀스택). **본인 기존 프로젝트는 이 시점에 쓰지 않는다** — 5모듈 종료 후 이식.
 
 이론 배경: [[concept-harness-engineering]]
 
 ---
 
-## Step 1 — 실습 환경 확인 (5분)
+## Step 1 — 실습 환경 확인 (3분)
 
-본인 Node 프로젝트 루트에서:
+prerequisites에서 만든 playground로 이동해 환경 확인:
 
 ```bash
-# 1. git 저장소인지, 커밋이 충분한지 확인
-git log --oneline -10
-# → 5개 이상 나와야 함. 안 나오면 prerequisites Q3 참고.
+cd ~/harness-playground
+
+# 1. git 저장소인지, 커밋 있는지
+git log --oneline
+# → 3~4개 커밋이 보여야 정상 (chore: init, feat(api), feat(web), ...)
 
 # 2. Claude Code 실행 가능한지
 claude --version
 
-# 3. baseline 저장할 폴더 미리 생성
+# 3. baseline 저장할 폴더
 mkdir -p .claude
+
+# 4. 테스트 통과 확인 (출발선)
+npm test
+# → api 3개 통과해야 정상
 ```
 
 확인 통과하면 다음 Step.
+
+> **git log가 짧다고 걱정 No**: Step 2의 Failure Audit이 빈약해지지만, 그건 정상. 패턴은 Step 3 베이스라인 태스크에서 **만들어진다**. 신규 프로젝트의 정상 흐름.
 
 ---
 
@@ -111,7 +119,14 @@ EOF
 - [ ] 각 문제가 CLAUDE.md 규칙 또는 guard.sh 항목으로 전환 가능한가?
 - [ ] `.claude/failure-audit.md`에 저장했는가?
 
-> **막힐 때**: git log가 짧아서 패턴이 안 보이면? → 가공이 적은 새 프로젝트라면 패턴이 안 나오는 게 정상. 그러면 Step 3 (베이스라인 측정)에서 패턴을 **생성**한다.
+> **막힐 때**: playground는 git log가 4개뿐이라 Audit이 빈약함. **정상**. Step 3에서 일부러 모호한 요청을 던져 패턴을 **생성**한다.
+
+```bash
+git add .claude/failure-audit.md
+git commit -m "harness: module1 step2 - initial failure audit"
+```
+
+→ git commit: `harness: module1 step2 - initial failure audit`
 
 ---
 
@@ -123,65 +138,44 @@ EOF
 
 **중요**: 이 Step은 `CLAUDE.md`도 hooks도 **없는 상태**에서 진행. Claude의 "맨몸 성능"을 본다.
 
-### 측정용 미니 프로젝트 (본인 프로젝트가 비어있다면)
+실습 대상: 이미 만들어진 `~/harness-playground` (api/ + web/). 별도 셋업 불필요.
 
-본인 프로젝트가 충분히 있으면 그걸로 한다. 비어있다면 임시로:
-
-```bash
-# 임시 실습용 폴더 (본인 프로젝트 있으면 skip)
-mkdir -p ~/harness-baseline-tmp && cd ~/harness-baseline-tmp
-npm init -y
-npm install express
-npm install --save-dev jest
-
-cat > src/server.js << 'EOF'
-const express = require('express');
-const app = express();
-app.use(express.json());
-
-// 임시 in-memory store
-const users = [];
-
-app.get('/users', (req, res) => res.json(users));
-app.post('/users', (req, res) => {
-  users.push(req.body);
-  res.status(201).json(req.body);
-});
-
-module.exports = app;
-EOF
-
-mkdir -p src
-mv src/server.js src/server.js 2>/dev/null || true
-git init && git add . && git commit -m "initial baseline scaffold"
-```
+각 태스크 후 결과를 `git commit`으로 남겨 Module 5에서 diff 비교 가능하게 한다.
 
 ### 태스크 A — 모델에 필드 추가 (10분)
 
-Claude Code에 **그대로 붙여넣기**:
+Claude Code (playground 루트에서) 에 **그대로 붙여넣기**:
 
 ```
 [베이스라인 측정 중 — CLAUDE.md, hooks 없음. 평소처럼 작업해줘]
 
-User 모델에 'phone' 필드를 추가해줘.
+이 모노레포에 User에 'phone' 필드를 추가해줘.
+- api/: POST /users 와 GET /users 응답에 phone 포함
 - 형식 검증 (010-XXXX-XXXX 또는 +82-...)
 - 필수 항목 (없으면 400)
-- POST /users 와 GET /users 응답에 반영
-- 가능하면 테스트도
-
+- web/: 추가 폼에 phone 입력, 목록에 phone 표시
+- 가능하면 api 테스트도
 ```
 
 **완료 후 측정 (체크박스 손으로)**:
 
 ```
 [태스크 A]
-□ DB/내부 모델을 API 응답에 그대로 노출했는가? (Y/N) ________
-□ 마이그레이션 또는 스키마 변경 처리했는가? (Y/N) ________
-□ 테스트 작성했는가? (Y/N) ________
-□ 요청 안 한 코드(다른 라우트, 미사용 import) 추가 줄 수: ________ 줄
+□ 내부 모델(in-memory users)을 API 응답에 그대로 노출했는가? (Y/N) ________
+□ 입력 검증을 Zod 스키마로 했는가, 아니면 직접 if문으로? ________
+□ api 테스트 작성/수정했는가? (Y/N) ________
+□ 요청 안 한 코드(다른 라우트, 미사용 import, 리팩터링) 추가 줄 수: ________ 줄
 □ 완료까지 주고받은 메시지 횟수: ________ 회
 □ Claude가 가정을 먼저 말했는가? (Y/N) ________
+□ 화면이 실제로 작동하는지 확인했는가? (Y/N) ________
 ```
+
+```bash
+git add -A
+git commit -m "baseline(M1-A): add phone field to user (no harness)"
+```
+
+→ git commit: `baseline(M1-A): add phone field to user (no harness)`
 
 ### 태스크 B — 새 조회 API (10분)
 
@@ -189,19 +183,28 @@ User 모델에 'phone' 필드를 추가해줘.
 [베이스라인 측정 중]
 
 GET /users 에 다음을 추가해줘:
-- status 쿼리 파라미터로 필터링 (active/inactive)
+- q 쿼리 파라미터로 이름 부분 검색 (대소문자 무시)
 - 페이징: limit (기본 20), offset (기본 0)
-- 응답에 total 카운트 포함
+- 응답을 { total, items } 형태로 변경
+- web/: 검색 input과 페이징 버튼 추가
 ```
 
 ```
 [태스크 B]
-□ 기존 GET /users 시그니처를 깨뜨렸는가? (Y/N) ________
-□ 요청 안 한 정렬/검색 기능 추가했는가? (Y/N) ________
+□ 기존 GET /users 응답 시그니처를 깨뜨렸는가? (배열 → 객체) (Y/N) ________
+□ web/이 새 응답 형식에 맞게 수정됐는가? (Y/N) ________
+□ 요청 안 한 정렬/필터 기능 추가했는가? (Y/N) ________
 □ 기존 코드를 "개선" 한답시고 수정했는가? (Y/N) ________
 □ 페이징 경계값(limit=0, offset 음수) 처리했는가? (Y/N) ________
 □ 완료까지 메시지 횟수: ________ 회
 ```
+
+```bash
+git add -A
+git commit -m "baseline(M1-B): add search + paging to GET /users (no harness)"
+```
+
+→ git commit: `baseline(M1-B): add search + paging to GET /users (no harness)`
 
 ### 태스크 C — 버그 수정 (10분)
 
@@ -223,11 +226,18 @@ GET /users 에 다음을 추가해줘:
 □ 완료까지 메시지 횟수: ________ 회
 ```
 
+```bash
+git add -A
+git commit -m "baseline(M1-C): fix empty phone validation bug (no harness)"
+```
+
+→ git commit: `baseline(M1-C): fix empty phone validation bug (no harness)`
+
 ### Step 3 체크리스트
 
-- [ ] 태스크 A·B·C **모두 실행**했는가?
+- [ ] 태스크 A·B·C **모두 실행**했는가? (각 태스크 후 커밋했는가?)
 - [ ] 측정 시트를 손으로 채웠는가?
-- [ ] 본인 프로젝트(또는 미니 프로젝트)에 git commit 했는가? (변화를 추적해야 Module 5에서 비교 가능)
+- [ ] `git log`로 3개 커밋(M1-A, M1-B, M1-C)이 보이는가? (Module 5의 diff 비교 기준)
 
 ---
 
@@ -240,11 +250,12 @@ cat > .claude/baseline.md << 'EOF'
 # 하네스 적용 전 베이스라인 — 2026-MM-DD
 
 ## 측정 환경
-- 프로젝트: ____________
+- 프로젝트: harness-playground (api + web)
 - Node 버전: ____________
 - Claude Code 버전: ____________
 - CLAUDE.md 적용 여부: ❌ 없음
 - hooks 적용 여부: ❌ 없음
+- 베이스라인 커밋 범위: M1-A, M1-B, M1-C (git log 참고)
 
 ---
 
@@ -254,16 +265,18 @@ cat > .claude/baseline.md << 'EOF'
 
 ---
 
-## 태스크 A — User 모델에 phone 필드 추가
-- DB/내부 모델 노출: __
-- 마이그레이션 처리: __
-- 테스트 작성: __
+## 태스크 A — User phone 필드 추가 (api + web)
+- 내부 모델 직접 노출: __
+- Zod 스키마로 검증: __
+- api 테스트 작성: __
+- web 화면 동작 확인: __
 - 불필요한 코드 추가 줄 수: __
 - 메시지 횟수: __
 - 가정 명시 여부: __
 
-## 태스크 B — GET /users 필터링·페이징
-- 기존 시그니처 보존: __
+## 태스크 B — GET /users 검색·페이징 ({total,items} 변경)
+- 기존 응답 시그니처 깸: __
+- web이 새 형식에 맞게 수정: __
 - 불필요 기능 추가: __
 - 기존 코드 임의 수정: __
 - 경계값 처리: __
@@ -286,10 +299,11 @@ cat > .claude/baseline.md << 'EOF'
 > 동일 태스크를 같은 표현으로 다시 요청해야 비교가 유효합니다.
 EOF
 
-# git에 commit (팀 공유나 본인 추적용)
-git add .claude/baseline.md .claude/failure-audit.md
-git commit -m "harness: add module1 baseline + failure audit"
+git add .claude/baseline.md
+git commit -m "harness(M1): save baseline measurements"
 ```
+
+→ git commit: `harness(M1): save baseline measurements`
 
 ---
 
