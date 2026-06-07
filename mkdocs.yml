@@ -28,8 +28,8 @@ theme:
     - navigation.instant
     - navigation.tracking
     - navigation.tabs
-    - navigation.sections
     - navigation.indexes
+    - navigation.prune
     - navigation.top
     - toc.follow
     - search.suggest
@@ -80,59 +80,83 @@ markdown_extensions:
 
 nav:
   - 홈: index.md
-  - 가이드:
-    - 배포 (MkDocs + Firebase): guide-deploy-mkdocs-firebase.md
-    - 프로젝트 문서 시스템: guide-project-docs-setup.md
-    - 하네스 — 사전 안내: guide-harness-00-prerequisites.md
-    - 하네스 — 5분 데모: guide-harness-demo.md
-    - 하네스 — Module 1: guide-harness-module1.md
-    - 하네스 — Module 2: guide-harness-module2.md
-    - 하네스 — Module 3: guide-harness-module3.md
-    - 하네스 — Module 4: guide-harness-module4.md
-    - 하네스 — Module 5: guide-harness-module5.md
-  - 개념:
-    - 복리 지식: concept-compounding-knowledge.md
-    - Memex: concept-memex.md
-    - Ingest 워크플로: concept-ingest.md
-    - Query 워크플로: concept-query.md
-    - Lint 워크플로: concept-lint.md
-    - 하네스 엔지니어링: concept-harness-engineering.md
-    - CLAUDE.md 헌법: concept-claude-md.md
-    - Claude Hooks: concept-claude-hooks.md
-    - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
-    - 객체지향 (OOP): concept-oop.md
-    - 디자인 패턴: concept-design-patterns.md
-    - Spring Core: concept-spring-core.md
-    - API Versioning: concept-api-versioning.md
-    - JSpecify Null Safety: concept-jspecify-null-safety.md
-  - 인물·도구:
-    - Vannevar Bush: entity-vannevar-bush.md
-    - Obsidian: entity-obsidian.md
-    - Obsidian Web Clipper: entity-obsidian-web-clipper.md
-    - Dataview: entity-dataview.md
-    - qmd: entity-qmd.md
-    - Marp: entity-marp.md
-    - Claude Design: entity-claude-design.md
-    - JVM: entity-jvm.md
-    - Querydsl: entity-querydsl.md
-    - Spring Framework: entity-spring-framework.md
-    - Spring Boot: entity-spring-boot.md
-    - Spring Initializr: entity-spring-initializr.md
-  - 소스:
-    - LLM Wiki 패턴: src-llm-wiki-pattern.md
-    - 하네스 엔지니어링 키트: src-harness-engineering.md
-    - Claude Design 리뷰: src-claude-design-review.md
-    - 카카오페이 DDD: src-kakaopay-ddd.md
-    - Java 스터디 2024-2025: src-java-study-2024-2025.md
-    - 나의 링크: src-my-links.md
-    - Spring Boot 소개: src-spring-boot.md
-    - Spring Framework 7: src-spring-framework-7.md
-    - Spring Guide (cheese10yun): src-spring-guide.md
-    - Spring Data Access Ref: src-spring-data-access-ref.md
-    - Spring Web MVC Ref: src-spring-web-mvc-ref.md
-    - Spring Testing Ref: src-spring-testing-ref.md
+  - 위키·지식관리:
+    - 개념:
+      - 복리 지식: concept-compounding-knowledge.md
+      - Memex: concept-memex.md
+      - Ingest 워크플로: concept-ingest.md
+      - Query 워크플로: concept-query.md
+      - Lint 워크플로: concept-lint.md
+    - 도구:
+      - Obsidian: entity-obsidian.md
+      - Obsidian Web Clipper: entity-obsidian-web-clipper.md
+      - Dataview: entity-dataview.md
+      - qmd: entity-qmd.md
+      - Marp: entity-marp.md
+    - 인물:
+      - Vannevar Bush: entity-vannevar-bush.md
+    - 소스:
+      - LLM Wiki 패턴: src-llm-wiki-pattern.md
+      - 나의 링크 (북마크): src-my-links.md
+    - 환경설정:
+      - 위키 배포 (MkDocs + Firebase): guide-deploy-mkdocs-firebase.md
+      - 프로젝트 문서 시스템: guide-project-docs-setup.md
+  - 하네스·AI 에이전트:
+    - 개념:
+      - 하네스 엔지니어링: concept-harness-engineering.md
+      - CLAUDE.md 헌법: concept-claude-md.md
+      - Claude Hooks: concept-claude-hooks.md
+      - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
+    - 도구:
+      - Claude Design: entity-claude-design.md
+    - 소스:
+      - 하네스 엔지니어링 키트: src-harness-engineering.md
+      - Claude Design 리뷰: src-claude-design-review.md
+      - Copilot 토큰 종량제 전환 (2026-06): src-copilot-token-pricing.md
+    - 실습:
+      - 사전 안내 (Module 00): guide-harness-00-prerequisites.md
+      - 5분 데모: guide-harness-demo.md
+      - Module 1 — Failure Audit: guide-harness-module1.md
+      - Module 2 — CLAUDE.md: guide-harness-module2.md
+      - Module 3 — Hooks: guide-harness-module3.md
+      - Module 4 — Multi-Agent: guide-harness-module4.md
+      - Module 5 — 리뷰·Rippable: guide-harness-module5.md
+  - Java·Spring·DDD:
+    - 개념:
+      - 객체지향 (OOP): concept-oop.md
+      - 디자인 패턴: concept-design-patterns.md
+      - Spring Core: concept-spring-core.md
+      - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md
+      - API Versioning: concept-api-versioning.md
+      - API 하위 호환성 (Tolerant Reader): concept-api-backward-compatibility.md
+      - JSpecify Null Safety: concept-jspecify-null-safety.md
+    - 도구·생태계:
+      - JVM: entity-jvm.md
+      - Querydsl: entity-querydsl.md
+      - Spring Framework: entity-spring-framework.md
+      - Spring Boot: entity-spring-boot.md
+      - Spring Initializr: entity-spring-initializr.md
+    - 소스:
+      - Spring Boot 소개: src-spring-boot.md
+      - Spring Framework 7: src-spring-framework-7.md
+      - Spring Guide (cheese10yun): src-spring-guide.md
+      - Spring Data Access Ref: src-spring-data-access-ref.md
+      - Spring Web MVC Ref: src-spring-web-mvc-ref.md
+      - Spring Testing Ref: src-spring-testing-ref.md
+      - Java 스터디 2024-2025: src-java-study-2024-2025.md
+      - 카카오페이 DDD: src-kakaopay-ddd.md
+  - DB·운영·인프라:
+    - 개념:
+      - DB 커넥션 풀 (HikariCP): concept-db-connection-pool.md
+      - VARCHAR 길이 프리픽스 (255 신화): concept-varchar-length-prefix.md
+      - Keep-Alive 타임아웃 race (LB 502): concept-keepalive-timeout-race.md
+      - 크론잡 중복 실행 + Forbid 함정: concept-cronjob-concurrency-trap.md
+      - HTTP 진화와 HOL 블로킹 (1.1 → 2 → 3/QUIC): concept-http-hol-blocking.md
 
 extra:
   generator: false
+
+extra_css:
+  - stylesheets/extra.css
 
 copyright: © 2026 JungWon Park

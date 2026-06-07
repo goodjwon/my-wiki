@@ -89,6 +89,33 @@ my-wiki/
 ### LLM과 함께 사용
 `CLAUDE.md`의 스키마를 따라 새 소스를 `raw/`에 추가하면, LLM이 ingest → wiki 페이지 생성 → index/log 업데이트를 수행합니다.
 
+### 사이트로 빌드 & 배포 (MkDocs Material + Firebase Hosting)
+
+위키를 외부 공개용 정적 사이트로 빌드합니다. 자세한 셋업은 [`guide-deploy-mkdocs-firebase`](wiki/guide-deploy-mkdocs-firebase.md) 참고.
+
+```bash
+# 1) 빌드 (wiki/ → docs/ 복사 + [[wikilink]] 변환 + mkdocs build)
+bash scripts/build-site.sh
+# → site/ 디렉터리 생성
+
+# 2) 로컬 프리뷰
+.venv/bin/mkdocs serve
+# → http://127.0.0.1:8000
+
+# 3) Firebase 배포
+firebase deploy --only hosting
+# → https://<프로젝트>.web.app
+```
+
+**중요**: `mkdocs serve`는 `docs/`만 watch합니다. `wiki/`를 수정한 뒤에는 **반드시 `bash scripts/build-site.sh`를 다시 돌려야** 변경이 반영됩니다.
+
+선택적 자동화 — `wiki/` 변경 시 자동 빌드:
+
+```bash
+# 별도 터미널에서 (fswatch 설치: brew install fswatch)
+fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
+```
+
 ## 빠른 시작
 
 ```bash
@@ -133,6 +160,11 @@ graph TD
     style C fill:#bfb,stroke:#333,color:#000
     style E fill:#fbf,stroke:#333,color:#000
 ```
+
+**구조 설명**:
+- **`raw/`** (원본): Notion DB·웹 클리핑·문서가 들어오는 입구. 불변.
+- **세 갈래 변환**: raw에서 LLM이 ① **Sources**(원본 1개 요약), ② **Concepts**(개념·원칙), ③ **Entities**(인물·도구)를 추출.
+- **교차참조 그물망**: Sources ↔ Concepts ↔ Entities가 양방향으로 엮여 하나의 지식 그래프를 형성. 한 페이지를 읽다가 관련 페이지로 자유롭게 이동 가능.
 
 ### 페이지 유형별 역할
 

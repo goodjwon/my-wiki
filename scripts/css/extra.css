@@ -1,0 +1,16 @@
+/* Mermaid 다이어그램 중앙 정렬 — Material 기본 스타일에 우선 적용 */
+.md-typeset .mermaid,
+.mermaid {
+  text-align: center !important;
+}
+
+.md-typeset .mermaid > svg,
+.md-typeset .mermaid svg,
+.mermaid > svg,
+.mermaid svg {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  max-width: 100%;
+  height: auto;
+}

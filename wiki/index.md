@@ -19,6 +19,7 @@ updated: 2026-05-31
 - [[src-spring-web-mvc-ref]] — Spring Web MVC 레퍼런스 (Controller, REST, 예외처리)
 - [[src-spring-testing-ref]] — Spring Testing 레퍼런스 (MockMvc, 어노테이션, 테스트 피라미드)
 - [[src-harness-engineering]] — 하네스 엔지니어링 실습 키트 (Karpathy × OpenAI × Hashimoto, 5모듈 커리큘럼)
+- [[src-copilot-token-pricing]] — GitHub Copilot 토큰 종량제 전환 (2026-06-01) — 비용 폭증·예산 상한·하네스 적용 후보
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원
@@ -41,14 +42,21 @@ updated: 2026-05-31
 - [[concept-query]] — 위키에 질의하고 답변을 합성·재편입하는 워크플로
 - [[concept-lint]] — 위키 건강 상태 점검·정비 워크플로
 - [[concept-api-versioning]] — Spring 7.0의 API 버전 관리 1급 지원
+- [[concept-api-backward-compatibility]] — API 하위 호환성과 JSON Tolerant Reader 계약 (Gson/Jackson/kotlinx.serialization 비교)
 - [[concept-jspecify-null-safety]] — JSR 305을 대체하는 JSpecify 기반 null 안전성 표준
 - [[concept-oop]] — 객체지향 프로그래밍 4원칙 (캡슐화·상속·다형성·추상화)
 - [[concept-design-patterns]] — Java 디자인 패턴 8가지 (전략·템플릿·팩토리·싱글톤·옵저버·프록시·어댑터·파사드)
 - [[concept-spring-core]] — Spring 핵심 개념 (IoC, DI, Bean, MVC, AOP)
+- [[concept-transactional-rollback-policy]] — @Transactional 롤백 정책: RuntimeException만 자동 롤백 + rollbackFor 패턴 + Java 예외 철학
 - [[concept-harness-engineering]] — 하네스 엔지니어링: 부탁 대신 구조로 AI 에이전트 제어
 - [[concept-claude-md]] — CLAUDE.md 에이전트 헌법 (Karpathy 4원칙 + STOP 트리거)
 - [[concept-claude-hooks]] — Claude Code Hooks (guard.sh + lint-fix.sh 시스템 강제)
 - [[concept-multi-agent-pattern]] — Planner / Coder / Critic 3-tier 멀티 에이전트
+- [[concept-db-connection-pool]] — DB 커넥션 풀: getConnection()이 빠른 이유 + HikariCP 3타이머 + Leak 감지
+- [[concept-keepalive-timeout-race]] — LB ↔ 서버 Keep-Alive 타임아웃 불일치로 인한 새벽 502 race condition
+- [[concept-varchar-length-prefix]] — VARCHAR 길이 프리픽스: 255 신화의 진짜 이유 + utf8mb4 시대의 63 경계
+- [[concept-cronjob-concurrency-trap]] — 크론잡 중복 실행과 Forbid 함정: concurrencyPolicy + activeDeadlineSeconds 조합
+- [[concept-http-hol-blocking]] — HTTP 진화와 HOL 블로킹: 1.1 Keep-Alive → 2 멀티플렉싱 → 3 QUIC over UDP
 
 ## Synthesis
 _아직 종합 분석이 없습니다._

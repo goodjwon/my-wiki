@@ -142,6 +142,73 @@ title: Wons Wiki 로그
 - **GCP 처리**: 모듈 실습 본문에서 제외. prerequisites에만 "추후 배포 시 STOP 트리거에 추가할 것" 가이드.
 - index.md에 prerequisites 항목 추가
 
+## [2026-06-06] ingest | 2분코딩 — HTTP 진화와 HOL 블로킹 (YouTube Shorts)
+- 원본: https://www.youtube.com/watch?v=RZTsrCjpoZc
+- raw: `raw/2bun-coding/http-evolution-quic.md`
+- 생성한 위키 페이지 (1개):
+  - `concept-http-hol-blocking.md` — 3세대 비교표(HTTP 1.0/1.1/2/3), HTTP 1.1 Keep-Alive HOL 메커니즘, HTTP/2 멀티플렉싱과 TCP HOL 재발, HTTP/3 QUIC over UDP 설계 결정, 실무 한계(방화벽 UDP 차단·CPU 비용·운영 도구 미성숙), Spring Boot HTTP/2·3 설정, 빠른 진단(DevTools·curl --http3)
+- **새 인사이트 패턴**: "한 계층의 해결이 다음 계층 문제를 드러낸다" — HTTP/2 → TCP HOL, ORM 풀 → 좀비 커넥션, Keep-Alive → 타임아웃 race
+- mkdocs.yml nav: DB·운영·인프라 > 개념에 추가
+- 교차참조: concept-keepalive-timeout-race, concept-db-connection-pool, src-java-study-2024-2025(Ch10), src-spring-web-mvc-ref
+
+## [2026-06-06] ingest | 2분코딩 — API 하위 호환성 / Tolerant Reader (YouTube Shorts)
+- 원본: https://www.youtube.com/watch?v=LBWefG5zjxk
+- raw: `raw/2bun-coding/api-breaking-change-json.md`
+- 생성한 위키 페이지 (1개):
+  - `concept-api-backward-compatibility.md` — 사고 시나리오(웹/Gson/kotlinx.serialization 차이), 주요 JSON 라이브러리 8종 기본 동작표, Tolerant Reader 패턴(Martin Fowler), 안전한 변경 vs Breaking Change, 4가지 방어선(명세 명시·클라이언트 권장 설정·계약 테스트·v1/v2), 빠른 진단 grep
+- **패턴 누적**: "기본값과 가정의 함정" 비교표에 추가 (총 6개 페이지로 확장)
+- mkdocs.yml nav: Java·Spring·DDD > 개념에 추가 (concept-api-versioning 다음 위치)
+- 교차참조: concept-api-versioning, src-spring-web-mvc-ref, src-spring-data-access-ref, concept-transactional-rollback-policy, concept-cronjob-concurrency-trap, concept-claude-md
+
+## [2026-06-06] ingest | 2분코딩 — @Transactional 롤백 정책 (YouTube Shorts)
+- 원본: https://www.youtube.com/watch?v=L3IFezsV5VI
+- raw: `raw/2bun-coding/transactional-rollback-exception.md`
+- 생성한 위키 페이지 (1개):
+  - `concept-transactional-rollback-policy.md` — 함정 케이스, Java 예외 2분류 철학(Checked/Unchecked/Error), 실무 괴리, rollbackFor 패턴(3가지: 메서드별/메타 어노테이션 @Tx/AOP), noRollbackFor, 현대 트렌드(Kotlin 폐지/모던 Java wrap), CLAUDE.md STOP 트리거 후보, 빠른 진단 grep
+- **패턴 누적**: "프레임워크 기본값은 절대값이 아니다" 비교표 추가 (이 페이지/크론잡/Keep-Alive/풀/VARCHAR 5개)
+- mkdocs.yml nav: Java·Spring·DDD > 개념에 추가 (Spring Core 다음 위치)
+- 교차참조: src-spring-data-access-ref, concept-spring-core, src-java-study-2024-2025(Ch02·Ch06), src-kakaopay-ddd, concept-cronjob-concurrency-trap, concept-keepalive-timeout-race, concept-claude-md
+
+## [2026-06-06] ingest | 2분코딩 — 크론잡 중복 실행 + Forbid 함정 (YouTube Shorts)
+- 원본: https://www.youtube.com/watch?v=JhBiSdXpvk4
+- raw: `raw/2bun-coding/cronjob-concurrency-trap.md`
+- 생성한 위키 페이지 (1개):
+  - `concept-cronjob-concurrency-trap.md` — 월말 정산 2배 사고, 환경별 동시 실행 기본값(Linux cron, K8s Allow, Spring @Scheduled), 1차 방어(flock/Forbid), 2차 방어(activeDeadlineSeconds)와 Hang 함정, 권장 K8s 매니페스트 전체 예시, 모니터링(JobAlreadyActive·Prometheus 메트릭), 진단 체크리스트
+- **패턴 누적**: 4개 인프라 사고 페이지의 공통 인사이트 "단일 방어선의 함정 — 모든 자동화·차단·관습은 부작용을 동반" 비교표 추가 (크론잡/풀/LB/VARCHAR)
+- mkdocs.yml nav: DB·운영·인프라 > 개념에 추가
+- 교차참조: concept-db-connection-pool, concept-keepalive-timeout-race, concept-varchar-length-prefix, src-spring-data-access-ref, concept-harness-engineering
+
+## [2026-06-06] ingest | 2분코딩 — VARCHAR(255)의 진짜 이유 (YouTube Shorts)
+- 원본: https://www.youtube.com/watch?v=EbeSOshOgX4
+- raw: `raw/2bun-coding/varchar-255-prefix.md`
+- 생성한 위키 페이지 (1개):
+  - `concept-varchar-length-prefix.md` — InnoDB 1/2 byte length prefix, 문자셋별 경계표(Latin1 255 / utf8 85 / utf8mb4 63), 성능 영향(저장공간+인덱스 페이지 스플릿), DBMS 비교(MySQL vs PostgreSQL varlena vs SQL Server vs Oracle), 실무 결정 가이드(이메일 RFC 5321 등), 진단 SQL
+- 교차참조: concept-db-connection-pool, concept-keepalive-timeout-race(같은 "관습대로 두면 사고" 패턴), src-spring-data-access-ref(@Column length), src-java-study-2024-2025(Ch06), src-kakaopay-ddd(VO 길이 제약 정합)
+
+## [2026-06-06] ingest | 2분코딩 — 새벽 502 / LB Keep-Alive race (YouTube Shorts)
+- 원본: https://www.youtube.com/watch?v=a-KFzdW_Ybw
+- raw: `raw/2bun-coding/502-keepalive-timeout-race.md`
+- 생성한 위키 페이지 (1개):
+  - `concept-keepalive-timeout-race.md` — 현상·메커니즘·기본값 비교표(ALB 60s, NLB 350s, Gunicorn 2s, Node 5s, Tomcat 20s)·해결 규칙(서버 > LB)·언어별 설정 예시·ALB→NLB 함정·진단 체크리스트
+- 패턴 인식: `concept-db-connection-pool`과 같은 "두 타이머 불일치 → race" 패턴 → 두 페이지 양방향 교차참조
+- 교차참조: concept-db-connection-pool, src-java-study-2024-2025(Ch10), src-spring-data-access-ref, concept-harness-engineering
+
+## [2026-06-06] ingest | 2분코딩 — Copilot 토큰 종량제 전환 (YouTube Shorts)
+- 원본: https://www.youtube.com/watch?v=Ujuy6cSYa6g
+- raw: `raw/2bun-coding/copilot-token-pricing.md` (영상 요약 + 사례 + 타임스탬프)
+- 생성한 위키 페이지 (1개):
+  - `src-copilot-token-pricing.md` — 사건 정리(2026-06-01 종량제 전환), 비용 폭증 사례 표, 에이전트 모드 재귀 토큰 소비, 안전장치 제거, 예산 상한 설정 안내, 하네스 적용 후보 (CLAUDE.md STOP 트리거·주간 리뷰 지표)
+- 교차참조: concept-harness-engineering, concept-claude-md, guide-harness-module2, guide-harness-module5, src-claude-design-review
+- index.md "Sources" 카테고리에 추가
+
+## [2026-06-06] ingest | 2분코딩 — getConnection()이 빠른 이유 (YouTube Shorts)
+- 원본: https://www.youtube.com/shorts/El5lOXM1r5E
+- raw: `raw/2bun-coding/getconnection-pool.md` (영상 요약 + 타임스탬프 보존, 신규 채널 디렉터리)
+- 생성한 위키 페이지 (1개):
+  - `concept-db-connection-pool.md` — JDBC `getConnection()` 빠른 이유, 3단계 흐름(빌리고·쓰고·돌려주기), HikariCP 3타이머(maxLifetime/idleTimeout/keepaliveTime), `maxLifetime < db.wait_timeout` 규칙, leakDetectionThreshold, Spring Boot 설정 예시
+- 교차참조: src-spring-data-access-ref, src-java-study-2024-2025, concept-spring-core, src-kakaopay-ddd
+- index.md "Concepts" 카테고리에 추가
+
 ## [2026-05-31] guide | 하네스 5개 모듈 실습 가이드 페이지 생성 (1차)
 - **배경**: 기존 concept 4개는 module2~4의 핵심 개념만 다뤘음. module1(Failure Audit·베이스라인), module5(주간 리뷰·Rippable), 각 module의 prompt/스크립트는 wiki에 정리 안 됨.
 - **생성한 페이지 (synthesis 타입, 5개)**:

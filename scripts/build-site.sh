@@ -20,6 +20,12 @@ if [ -d "raw/assets" ]; then
   cp -R raw/assets/ docs/assets/
 fi
 
+if [ -d "scripts/css" ]; then
+  echo "▶ 사이트 전용 CSS → docs/stylesheets/ 복사"
+  mkdir -p docs/stylesheets
+  cp scripts/css/*.css docs/stylesheets/
+fi
+
 echo "▶ [[wikilink]] → 표준 마크다운 변환"
 if [ -x ".venv/bin/python3" ]; then
   .venv/bin/python3 scripts/wikilinks.py docs
