@@ -142,6 +142,13 @@ title: Wons Wiki 로그
 - **GCP 처리**: 모듈 실습 본문에서 제외. prerequisites에만 "추후 배포 시 STOP 트리거에 추가할 것" 가이드.
 - index.md에 prerequisites 항목 추가
 
+## [2026-06-07] meta | 위키 작성 표준 + 백로그 신설 (다른 PC 인계용)
+- `wiki/guide-wiki-authoring-standards.md` 신규 — 다이어그램 작성 기준(mermaid 한계·HTML+flexbox·3톤 색·2채널 가독성), 타입별 분량 기준, 페이지 표준 구조, 패턴 누적, 셀프 체크리스트, ingest 워크플로, 빌드·배포 워크플로
+- `wiki/backlog.md` 신규 — 현재 상태, 진행 중·다음 단계 후보, 결정 사항(GCP 배포·다이어그램 표준·raw 구조), 운영 환경, 새 세션 시작 가이드
+- CLAUDE.md 업데이트 — "위키 작성 표준" 섹션 추가 (다이어그램 + 분량 + 셀프 체크), backlog 참조 안내
+- mkdocs.yml nav 추가 — 위키·지식관리 > 환경설정에 표준·백로그 추가
+- index.md Synthesis에 2개 페이지 추가
+
 ## [2026-06-06] ingest | 2분코딩 — HTTP 진화와 HOL 블로킹 (YouTube Shorts)
 - 원본: https://www.youtube.com/watch?v=RZTsrCjpoZc
 - raw: `raw/2bun-coding/http-evolution-quic.md`

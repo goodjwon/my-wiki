@@ -101,6 +101,8 @@ nav:
     - 환경설정:
       - 위키 배포 (MkDocs + Firebase): guide-deploy-mkdocs-firebase.md
       - 프로젝트 문서 시스템: guide-project-docs-setup.md
+      - "📐 위키 작성 표준": guide-wiki-authoring-standards.md
+      - "📋 백로그·진행 상태": backlog.md
   - 하네스·AI 에이전트:
     - 개념:
       - 하네스 엔지니어링: concept-harness-engineering.md

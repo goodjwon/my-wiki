@@ -63,6 +63,8 @@ _아직 종합 분석이 없습니다._
 
 ## Synthesis
 - [[guide-deploy-mkdocs-firebase]] — 위키 외부 배포 가이드 (MkDocs Material + Firebase Hosting, 무료)
+- [[guide-wiki-authoring-standards]] — 위키 작성 표준 (다이어그램·분량·마킹·셀프 체크리스트)
+- [[backlog]] — 위키 백로그·진행 상태 (새 세션 시작 시 먼저 읽기)
 - [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 가이드 (CLAUDE.md 템플릿, ADR, API, 트러블슈팅)
 - [[guide-harness-00-prerequisites]] — 하네스 실습 사전 안내 (Node + GCP 학습자용 환경/용어/FAQ)
 - [[guide-harness-demo]] — 하네스 5분 데모: 있을 때 vs 없을 때 직접 체험 (.env 커밋 차단 시연)
