@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, hooks, harness, automation]
 sources: [harness-engineering/harness-kit/module3/, harness-engineering/harness_engineering.md, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-05-30
+updated: 2026-06-13
 ---
 
 # Claude Code Hooks — 시스템 레벨 강제
@@ -128,6 +128,8 @@ npx prettier --write . && npx eslint --fix .
 Edit 파일 → PostToolUse → ./gradlew test → 실패 → 에이전트가 stderr 보고 재수정
 ```
 
+> **Loop 엔지니어링 관점**: back-pressure는 [[concept-loop-engineering]]에서 말하는 **"루프 안에 거부할 수 있는 무언가"** 의 가장 구체적인 구현이다. 테스트 실패라는 거부 신호가 없으면, 에이전트는 자기 출력에 동의하는 메아리방이 된다. Hooks가 "사이클 안의 reject"를 코드로 보장한다.
+
 ## CLAUDE.md와의 역할 분담
 
 [[concept-claude-md]]는 **선언** (무엇을 기대하는가), Hooks는 **강제** (위반 시 막는다).
@@ -157,6 +159,7 @@ fi
 ## 관련 페이지
 
 - [[concept-harness-engineering]] — 상위 개념
+- [[concept-loop-engineering]] — back-pressure가 "거부할 수 있는 무언가"의 구현임을 다룸
 - [[concept-claude-md]] — Hooks와 짝을 이루는 선언 층
 - [[concept-multi-agent-pattern]] — 세션 인계 (Stop hook이 claude-progress.txt 업데이트)
 - [[src-harness-engineering]] — Module 03 전체 자료

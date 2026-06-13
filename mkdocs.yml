@@ -106,6 +106,7 @@ nav:
   - 하네스·AI 에이전트:
     - 개념:
       - 하네스 엔지니어링: concept-harness-engineering.md
+      - "🆕 Loop 엔지니어링 (2026-06)": concept-loop-engineering.md
       - CLAUDE.md 헌법: concept-claude-md.md
       - Claude Hooks: concept-claude-hooks.md
       - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
@@ -115,6 +116,7 @@ nav:
       - 하네스 엔지니어링 키트: src-harness-engineering.md
       - Claude Design 리뷰: src-claude-design-review.md
       - Copilot 토큰 종량제 전환 (2026-06): src-copilot-token-pricing.md
+      - "Loop 엔지니어링 커뮤니티 발화 (2026-06)": src-loop-engineering.md
     - 실습:
       - 사전 안내 (Module 00): guide-harness-00-prerequisites.md
       - 5분 데모: guide-harness-demo.md

@@ -4,6 +4,18 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-13] ingest | Loop 엔지니어링 (2026-06 커뮤니티 발화)
+- 원본: `raw/loop-engineering/loop-engineering-notes.md` (외부 AI 어시스턴트 정리본, 원전 URL 미확보)
+- 계기: 2026-06-08 Peter Steinberger X 게시물(650만 조회) + Boris Cherny / Addy Osmani 발언
+- 생성된 페이지 (2개):
+  - `src-loop-engineering.md` — 발화·인용·맥락 정리
+  - `concept-loop-engineering.md` — 정의·ReAct 골격·4가지 설계 질문·"거부 신호 없는 자동화는 폭주한다" 패턴 비교표 (AI 루프 ↔ Hooks ↔ Critic ↔ 크론잡 Forbid ↔ Keep-Alive race)
+- 기존 페이지 보강 (3개):
+  - `concept-harness-engineering.md` — 시대 진화표를 4단(2026중 Loop)으로 확장, "인간 노력의 단위" 컬럼 추가
+  - `concept-claude-hooks.md` — back-pressure가 "거부할 수 있는 무언가"의 구현임을 명시 + 양방향 링크
+  - `concept-multi-agent-pattern.md` — Critic의 REJECT가 거부 신호 구현임을 명시 + 양방향 링크
+- index.md / mkdocs.yml nav 갱신 완료
+
 ## [2026-04-18] init | 위키 초기화
 - 폴더 구조 생성: `raw/`, `raw/assets/`, `wiki/`
 - 스키마 파일 생성: `CLAUDE.md`

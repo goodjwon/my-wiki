@@ -1,6 +1,6 @@
 ---
 title: Wons Wiki 인덱스
-updated: 2026-05-31
+updated: 2026-06-13
 
 ---
 
@@ -20,6 +20,7 @@ updated: 2026-05-31
 - [[src-spring-testing-ref]] — Spring Testing 레퍼런스 (MockMvc, 어노테이션, 테스트 피라미드)
 - [[src-harness-engineering]] — 하네스 엔지니어링 실습 키트 (Karpathy × OpenAI × Hashimoto, 5모듈 커리큘럼)
 - [[src-copilot-token-pricing]] — GitHub Copilot 토큰 종량제 전환 (2026-06-01) — 비용 폭증·예산 상한·하네스 적용 후보
+- [[src-loop-engineering]] — Loop 엔지니어링 (2026-06 Steinberger·Cherny·Osmani 발화 정리)
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원
@@ -49,6 +50,7 @@ updated: 2026-05-31
 - [[concept-spring-core]] — Spring 핵심 개념 (IoC, DI, Bean, MVC, AOP)
 - [[concept-transactional-rollback-policy]] — @Transactional 롤백 정책: RuntimeException만 자동 롤백 + rollbackFor 패턴 + Java 예외 철학
 - [[concept-harness-engineering]] — 하네스 엔지니어링: 부탁 대신 구조로 AI 에이전트 제어
+- [[concept-loop-engineering]] — Loop 엔지니어링: 사람을 시스템으로 대체 (하네스의 다음 단계, 2026-06)
 - [[concept-claude-md]] — CLAUDE.md 에이전트 헌법 (Karpathy 4원칙 + STOP 트리거)
 - [[concept-claude-hooks]] — Claude Code Hooks (guard.sh + lint-fix.sh 시스템 강제)
 - [[concept-multi-agent-pattern]] — Planner / Coder / Critic 3-tier 멀티 에이전트
