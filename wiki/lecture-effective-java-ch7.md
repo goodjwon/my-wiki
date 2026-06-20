@@ -1,0 +1,561 @@
+---
+title: "Effective Java 실전 강의 — 7장"
+type: source
+tags: [book, effective-java, bloch, lecture]
+sources: [effective_java/이펙티브 자바 실전 강의 교재 7장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 이펙티브 자바 실전 강의 교재
+
+## 7장 — 람다와 스트림
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 따라하기(실습) → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 3.x
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 익명 클래스를 **람다**로, 람다를 **메서드 참조**로 줄이는 단계별 사고를 익힌다.
+- `Function`/`Predicate`/`Consumer`/`Supplier` 같은 **표준 함수형 인터페이스**를 외워서 직접 만들지 않는다.
+- 스트림을 **언제 쓰고, 언제 쓰지 말지** 판단한다 (가독성·디버깅·성능 트레이드오프).
+- 반환 타입을 정할 때 **컬렉션이 기본, 스트림은 예외**라는 기준을 갖는다.
+- 병렬 스트림의 함정(순서·공유 가변 상태·성능 역효과)을 안다.
+
+### 0.2 큰 그림 — "함수를 어떻게 전달할까"와 "데이터를 어떻게 흐르게 할까"
+
+7장은 두 가지 큰 주제로 갈립니다.
+
+```
+[ 함수를 값으로 표현 ]                [ 데이터를 파이프로 흐르게 ]
+ 아이템 42  익명 클래스 → 람다 ⭐핵심   아이템 45  스트림은 주의해서 ⭐핵심
+ 아이템 43  람다 → 메서드 참조           아이템 46  부작용 없는 함수
+ 아이템 44  표준 함수형 인터페이스        아이템 47  반환은 컬렉션이 낫다
+                                          아이템 48  병렬화는 신중히 ⭐주의
+```
+
+> **비유 — 람다는 "주문서", 스트림은 "컨베이어 벨트"입니다.**
+>
+> - **람다(42·43·44)**: 손님이 종이에 "에스프레소 30ml, 우유 200ml" 라고 적어 카운터에 건네는 **주문서**. 직원(`Comparator`, `Runnable`)이 그 종이를 받아 그대로 실행합니다.
+> - **스트림(45·46·47·48)**: 데이터(공장 부품)가 **컨베이어 벨트** 위를 흐르며 단계마다 자동 가공(필터→매핑→집계)됩니다. 단, 벨트 위에서 다른 작업자에게 손짓하면(부작용) 라인이 엉킵니다.
+
+### 0.3 현업에서 왜 중요한가
+
+여러분이 매일 쓰는 Spring·Java 표준 라이브러리는 이미 7장으로 깔려 있습니다.
+
+- `list.stream().filter(...).map(...).toList()` → **스트림 파이프라인(45·46)**
+- `Comparator.comparing(User::getName)` → **메서드 참조 + 표준 함수형 인터페이스(43·44)**
+- `repository.findAll().forEach(this::publishEvent)` → **람다 + 부작용 있는 forEach(46의 함정)**
+- `Optional.map(...)`, `CompletableFuture.thenApply(...)` → **함수형 인터페이스(44)**
+
+즉 이 장은 "새로운 문법"이 아니라, **이미 쓰고 있는 코드의 함정을 언어화**하는 과정입니다.
+
+---
+
+## 아이템 42. 익명 클래스보다는 람다를 사용하라 ⭐핵심
+
+### 한 줄 요약
+
+**함수형 인터페이스**(추상 메서드 1개)의 구현이 필요하면, 익명 클래스 대신 **람다**로 줄여라. 줄지 않는다면 그 클래스는 함수형 인터페이스가 아닐 가능성이 높다.
+
+### 비유 — "긴 위임장 vs 한 줄 메모"
+
+같은 일("이 기준으로 정렬해라")을 시키는데, 익명 클래스는 **공증된 위임장 한 장**을 들고 가는 격이고, 람다는 **한 줄 메모**만 건네는 격입니다. 받는 사람의 동작은 같지만, 읽는 사람·관리하는 사람의 피로가 다릅니다.
+
+### 문제: 익명 클래스 — 의도가 보일러플레이트에 묻힘
+
+```java
+// Java 7 이전 — Comparator 익명 클래스
+Collections.sort(words, new Comparator<String>() {
+    @Override
+    public int compare(String s1, String s2) {
+        return Integer.compare(s1.length(), s2.length());
+    }
+});
+```
+
+핵심 의도(**"길이로 비교"**)가 6줄에 묻혀 있습니다. 코드 리뷰어가 한 번에 못 봅니다.
+
+### 해법: 람다 → 메서드 참조까지
+
+```java
+// 1) 람다
+Collections.sort(words, (s1, s2) -> Integer.compare(s1.length(), s2.length()));
+
+// 2) Comparator의 표준 정적 메서드 + 메서드 참조 (아이템 43으로 자연스럽게 이어짐)
+words.sort(Comparator.comparingInt(String::length));
+```
+
+> **언어 트렌드**: Java 8(2014) 이후 자바 API는 거의 모두 **함수형 인터페이스 기반**으로 진화했습니다. `Stream`/`Optional`/`CompletableFuture`/`Comparator`/`Map.computeIfAbsent` 모두 람다를 받습니다.
+
+### Spring/JPA 현업 예제
+
+```java
+// EventPublisher — 익명 Runnable
+executor.execute(new Runnable() {
+    @Override public void run() { publisher.publishEvent(new OrderPaidEvent(order)); }
+});
+
+// → 람다
+executor.execute(() -> publisher.publishEvent(new OrderPaidEvent(order)));
+
+// → 메서드 참조 (43)
+executor.execute(() -> publisher.publishEvent(event));   // event가 외부에 있다면 그대로
+```
+
+### 함정
+
+1. **`this` 의미가 다르다**. 익명 클래스의 `this`는 **자기 자신(익명 인스턴스)**, 람다의 `this`는 **둘러싼 클래스 인스턴스**. 재귀가 필요하면 람다로 표현할 수 없다 → 익명 클래스를 그대로 둬라.
+2. **직렬화에 약하다**. 람다·익명 클래스의 직렬화 형식은 JVM·구현마다 달라질 수 있다. 직렬화가 필요하면 **`private static` 중첩 클래스**로 빼라.
+3. **타입 추론이 안 되면 람다도 못 줄인다**. 컴파일러가 `Comparator<String>` 타입을 추론할 문맥이 없으면 명시 캐스트가 필요해 길어진다.
+4. **여러 줄 람다는 메서드로 추출하라**. 람다가 3줄 넘으면 가독성이 익명 클래스보다 나빠진다. 의도가 있는 이름으로 메서드 추출 후 메서드 참조로(43).
+
+### 체크리스트
+
+- [ ] 함수형 인터페이스(추상 메서드 1개)인가? → 람다 가능
+- [ ] 람다가 3줄 이내인가? → 그대로, 아니면 메서드 추출
+- [ ] `this` 의미가 익명 클래스의 자기 자신이어야 하는가? → 익명 클래스 유지
+- [ ] 직렬화가 필요한가? → 람다 회피
+
+---
+
+## 아이템 43. 람다보다는 메서드 참조를 사용하라
+
+### 한 줄 요약
+
+람다가 **다른 메서드를 그대로 호출**하기만 한다면 **메서드 참조(`Class::method`)** 가 더 간결하고 의도가 드러난다. 단, 람다가 더 짧고 명확하면 람다를 둬라.
+
+### 비유 — "직접 요리 vs 단골 가게 전화"
+
+람다는 그 자리에서 직접 요리하는 거고, 메서드 참조는 "그 가게에 전화해" 하고 가게 이름을 가리키는 거예요. 가게가 분명히 있으면 가게 이름이 더 짧고 의도가 드러납니다.
+
+### 5가지 메서드 참조 유형
+
+| 유형 | 예시 | 같은 람다 |
+|------|------|-----------|
+| **정적** | `Integer::parseInt` | `s -> Integer.parseInt(s)` |
+| **한정적 인스턴스** | `Instant.now()::isAfter` | `t -> now.isAfter(t)` |
+| **비한정적 인스턴스** | `String::toLowerCase` | `s -> s.toLowerCase()` |
+| **클래스 생성자** | `TreeMap::new` | `() -> new TreeMap<>()` |
+| **배열 생성자** | `int[]::new` | `len -> new int[len]` |
+
+### 현업 예제
+
+```java
+// 람다
+users.stream().map(u -> u.getEmail()).forEach(e -> System.out.println(e));
+
+// 메서드 참조
+users.stream().map(User::getEmail).forEach(System.out::println);
+```
+
+### 람다가 더 나은 경우
+
+```java
+// 메서드 참조 — 클래스 이름이 길어 오히려 의미가 흐려짐
+service.execute(GoshThisClassNameIsHumongous::action);
+
+// 람다 — 의미가 또렷
+service.execute(() -> action());
+```
+
+### 함정
+
+- **동일 클래스 정적 메서드는 클래스명 생략 불가**. `parseInt(s)`만 쓰던 습관 그대로 메서드 참조를 쓰면 컴파일 오류.
+- **오버로딩이 있는 메서드**는 컴파일러가 어떤 시그니처인지 추론 못 해 모호성 오류. 이때는 람다로 명시.
+
+### 체크리스트
+
+- [ ] 람다가 메서드 1개 호출만 하고 끝나는가? → 메서드 참조 후보
+- [ ] 메서드 참조로 바꿨더니 오히려 길어졌는가? → 람다 유지
+- [ ] 오버로드 모호성 경고가 뜨는가? → 람다로 명시
+
+---
+
+## 아이템 44. 표준 함수형 인터페이스를 사용하라
+
+### 한 줄 요약
+
+직접 함수형 인터페이스를 만들기 전에 **`java.util.function`의 43개 표준 인터페이스**부터 살펴라. 6개 기본형만 외워도 거의 다 해결된다.
+
+### 6개 기본형 (반드시 암기)
+
+| 인터페이스 | 시그니처 | 의미 | 대표 사용처 |
+|-----------|----------|------|-------------|
+| `Function<T,R>` | `R apply(T t)` | 1입력 → 1출력 | `Stream.map` |
+| `Predicate<T>` | `boolean test(T t)` | 1입력 → 참/거짓 | `Stream.filter` |
+| `Consumer<T>` | `void accept(T t)` | 1입력 → 부작용 | `Stream.forEach` |
+| `Supplier<T>` | `T get()` | 입력 X → 1출력 | `Optional.orElseGet`, 지연 평가 |
+| `UnaryOperator<T>` | `T apply(T t)` | 같은 타입 1입력 → 1출력 | `String::trim` |
+| `BinaryOperator<T>` | `T apply(T a, T b)` | 같은 타입 2입력 → 1출력 | `Stream.reduce` |
+
+확장형: `BiFunction`, `BiPredicate`, `BiConsumer`, `IntFunction`/`LongFunction`/`DoubleFunction` 등 박싱 회피용 변종.
+
+### 직접 만들면 안 되는 이유
+
+```java
+// ❌ 안티패턴 — 표준에 이미 있는데 새로 만듦
+@FunctionalInterface
+interface MyConverter<T, R> { R convert(T value); }
+```
+
+→ 그냥 `Function<T, R>`. 새 인터페이스를 만든 만큼 호환성·재사용성이 떨어집니다.
+
+### 직접 만들어도 되는 경우
+
+1. **이름 자체가 도메인 의미를 강하게 전달**해야 할 때 (예: `Comparator<T>`도 사실 `BiFunction<T,T,Integer>`인데 별도 인터페이스로 둠)
+2. **검사 예외**를 던져야 할 때 (`Function`은 검사 예외를 던지지 못함)
+3. **추상 메서드 2개 이상** (이건 함수형 인터페이스가 아니라 SAM이 아님)
+
+```java
+// 도메인 의미가 강해서 별도 인터페이스가 정당한 예
+@FunctionalInterface
+public interface DiscountPolicy {
+    Money apply(Order order);   // Function<Order, Money>로 줄여도 되지만 의도가 흐려짐
+}
+```
+
+### `@FunctionalInterface` 애너테이션은 항상 붙여라
+
+- 컴파일러가 "추상 메서드 1개" 규칙 위반을 막아준다
+- IDE/JavaDoc에서 함수형 인터페이스임을 명시한다
+- 누가 실수로 추상 메서드를 추가하면 컴파일 오류로 잡힌다
+
+### 함정
+
+- **박싱 비용**. `Function<Integer, Integer>` 대신 `IntUnaryOperator` 사용으로 박싱 회피. 핫패스에서 차이 큼.
+- **표준에 같은 시그니처가 있는데 못 찾는 경우**. `java.util.function` 카탈로그를 한 번 정독하면 평생 시간이 절약됨.
+
+### 체크리스트
+
+- [ ] 새 함수형 인터페이스를 만들기 전에 `java.util.function`을 봤는가?
+- [ ] 박싱이 핫패스에 영향이 있는가? → `IntXxx`/`LongXxx`/`DoubleXxx` 사용
+- [ ] `@FunctionalInterface` 애너테이션을 붙였는가?
+
+---
+
+## 아이템 45. 스트림은 주의해서 사용하라 ⭐핵심
+
+### 한 줄 요약
+
+**스트림은 만능이 아니다.** 함수형 변환에 적합하면 강력하지만, 반복문이 더 명료한 경우도 많다. **가독성**이 1순위 기준.
+
+### 비유 — "컨베이어 벨트 vs 작업대"
+
+- **스트림**: 부품(데이터)이 흘러가는 **공장 컨베이어 벨트**. 같은 가공을 대량으로 일관되게 적용할 때 강력.
+- **반복문**: 작업자가 직접 손에 들고 보는 **작업대**. 부품마다 다른 결정·예외 처리·중단이 자유롭다.
+
+### 스트림이 빛나는 경우
+
+```java
+// Map<String, Long> — 단어별 빈도
+Map<String, Long> freq = words.stream()
+    .collect(Collectors.groupingBy(String::toLowerCase, Collectors.counting()));
+```
+
+→ 변환·집계가 일관되고, 함수형 인터페이스로 의도가 또렷.
+
+### 스트림이 오히려 나쁜 경우
+
+```java
+// ❌ — Anagram 그룹화 (Effective Java 본문 예제)
+words.stream().collect(
+    Collectors.groupingBy(w -> w.chars().sorted()
+        .collect(StringBuilder::new, (sb, c) -> sb.append((char) c), StringBuilder::append).toString()))
+    .values().stream().filter(g -> g.size() >= minGroupSize)
+    .forEach(g -> System.out.println(g.size() + ": " + g));
+```
+
+읽을 수 있겠습니까? 같은 작업을 반복문 + 헬퍼 메서드로 쓰면 훨씬 명료합니다.
+
+### 스트림이 못 하는 것 (반복문 유지)
+
+1. **지역 변수 수정**. 람다는 effectively final만 캡처 가능. 카운터·누적 변수가 필요하면 반복문.
+2. **`return`/`break`/`continue`로 흐름 제어**. 람다 안에서는 안 됨.
+3. **검사 예외 던지기**. 표준 함수형 인터페이스가 못 받음.
+
+### Spring/JPA 현업 예제
+
+```java
+// 좋음 — 변환·집계가 일관됨
+List<OrderSummary> summaries = orders.stream()
+    .filter(o -> o.getStatus() == PAID)
+    .map(OrderSummary::from)
+    .toList();
+
+// 나쁨 — 외부 호출(부작용)이 섞임 → 46의 함정과 직결
+orders.stream()
+    .filter(o -> o.getStatus() == PAID)
+    .forEach(o -> emailService.send(o.getEmail(), summary));   // 부작용 forEach는 신호
+```
+
+### 함정
+
+- **모든 반복을 스트림으로 바꾸려는 강박**. 결과 코드가 더 어려우면 반복문을 둬라.
+- **스트림은 한 번만 소비된다**. 두 번 사용하려면 다시 만들거나 컬렉션으로 받아라.
+
+### 체크리스트
+
+- [ ] 변환·집계 위주인가? → 스트림 적합
+- [ ] 흐름 제어(`break`)·검사 예외·외부 변수 수정이 필요한가? → 반복문 유지
+- [ ] 스트림으로 바꿨더니 가독성이 더 떨어졌는가? → 반복문 복귀
+
+---
+
+## 아이템 46. 스트림에서는 부작용 없는 함수를 사용하라
+
+### 한 줄 요약
+
+스트림 파이프라인의 람다는 **순수 함수**여야 한다. 외부 상태를 바꾸는 람다(부작용)는 스트림이 아니라 반복문 신호다.
+
+### 비유 — "컨베이어 벨트 위에서 다른 작업자에게 손짓하지 마라"
+
+벨트는 부품(데이터)이 단계대로 흐르는 곳입니다. 중간에 작업자가 옆에 있는 노트(외부 상태)에 뭔가 적기 시작하면 라인 전체가 흔들립니다.
+
+### 안티패턴 — `forEach`로 외부 상태 수정
+
+```java
+// ❌
+Map<String, Long> freq = new HashMap<>();
+words.stream().forEach(w -> freq.merge(w.toLowerCase(), 1L, Long::sum));
+```
+
+스트림처럼 보이지만, 사실은 반복문에 함수형 코트만 입힌 격. **`forEach`는 결과를 보고하는 용도로만 써라**.
+
+### 권장 — `Collectors`로 결과 만들기
+
+```java
+Map<String, Long> freq = words.stream()
+    .collect(Collectors.groupingBy(String::toLowerCase, Collectors.counting()));
+```
+
+### 핵심 `Collectors` 4종
+
+| Collector | 용도 |
+|-----------|------|
+| `toList()` / `toSet()` / `toUnmodifiableList()` | 컬렉션 생성 |
+| `toMap(key, value, [merge])` | 맵 생성, 키 충돌 시 merge 지정 |
+| `groupingBy(classifier, [downstream])` | 분류 + 하위 집계 (가장 자주 씀) |
+| `joining(", ", "[", "]")` | 문자열 연결 |
+
+### Spring/JPA 현업 예제
+
+```java
+// ❌ — 스트림 안에서 DB 저장(부작용)
+orders.stream().forEach(o -> orderRepository.save(o));
+
+// 의도가 명확함 — 그냥 saveAll
+orderRepository.saveAll(orders);
+```
+
+```java
+// ❌ — 스트림 안에서 이벤트 발행(부작용)
+orders.stream().forEach(o -> eventPublisher.publishEvent(new OrderPaidEvent(o)));
+
+// 명료한 반복문
+for (Order o : orders) {
+    eventPublisher.publishEvent(new OrderPaidEvent(o));
+}
+```
+
+### 함정
+
+- **`peek`도 부작용 검열 대상**. 디버깅 외에는 쓰지 마라.
+- **`forEachOrdered`**: 병렬에서 순서를 지키려면 사용하지만, 그럴 거면 보통 직렬 스트림이 낫다.
+
+### 체크리스트
+
+- [ ] 스트림 람다가 외부 변수·필드·DB를 수정하는가? → 반복문 또는 saveAll/Collectors
+- [ ] `forEach`가 결과 출력·로깅 외 용도로 쓰이는가? → 의심 신호
+
+---
+
+## 아이템 47. 반환 타입으로는 스트림보다 컬렉션이 낫다
+
+### 한 줄 요약
+
+API의 **반환 타입**은 기본적으로 **컬렉션**(`List`/`Set`/`Collection`)을 써라. `Stream`은 호출자가 한 번만 소비 가능하고, `for-each`로 직접 못 돌린다는 큰 제약이 있다.
+
+### 비유 — "받자마자 분해되는 도시락 vs 다시 열어볼 수 있는 도시락"
+
+- 스트림 반환: 받는 사람이 **한 번만 먹을 수 있는 도시락**. 두 번째 꺼내면 비어 있음.
+- 컬렉션 반환: 몇 번이고 꺼내볼 수 있고, 그 위에서 `for-each`도 돌고, 필요하면 스트림으로 바꾸기도 자유.
+
+### 안티패턴 — 스트림 반환
+
+```java
+public Stream<Order> findRecentOrders() {   // ❌
+    return repository.findRecent().stream();
+}
+
+// 호출자 측 — for-each 못 씀, stream() 두 번 못 함
+findRecentOrders().forEach(...);    // OK
+findRecentOrders().count();          // OK
+// 두 번 사용? → 한 번 더 호출해야 함 (DB 두 번 hit)
+```
+
+### 권장 — 컬렉션 반환
+
+```java
+public List<Order> findRecentOrders() {
+    return repository.findRecent();
+}
+
+// 호출자 자유
+list.stream().filter(...).toList();   // 필요하면 스트림 변환
+for (Order o : list) { ... }           // for-each 가능
+```
+
+### 예외 — 스트림 반환이 합리적인 좁은 경우
+
+1. **무한 시퀀스** (`Stream.iterate`, `Stream.generate`)
+2. **메모리에 안 올라갈 정도로 큰 결과**를 단방향 소비
+3. **호출자가 명백히 스트림 파이프라인의 일부로 쓸 것**임이 API 계약상 분명
+
+### Spring/JPA 현업 메모
+
+```java
+// JpaRepository — 기본은 List 반환. Stream<T> 반환도 지원하지만
+// @Transactional 안에서만 안전 (커서 기반 — 트랜잭션 닫히면 깨짐)
+@Query("select o from Order o where o.status = :s")
+Stream<Order> streamByStatus(OrderStatus s);   // 매우 큰 결과 + 트랜잭션 내 처리에만
+```
+
+### 체크리스트
+
+- [ ] 반환 타입 기본은 `List`/`Set`인가?
+- [ ] 스트림 반환의 정당한 이유(무한·초대형·파이프라인 일부)가 있는가?
+- [ ] JPA에서 `Stream<T>` 반환을 트랜잭션 밖에서 쓰고 있지 않은가?
+
+---
+
+## 아이템 48. 스트림 병렬화는 주의해서 적용하라 ⭐주의
+
+### 한 줄 요약
+
+`.parallel()` 한 줄로 빨라지는 경우는 **드물고**, 잘못 적용하면 **성능이 더 떨어지거나 결과가 깨진다**. 측정 없이 붙이지 마라.
+
+### 비유 — "주방을 4개로 늘리면 빨라질까"
+
+요리에 따라 답이 다릅니다.
+- **재료 손질·튀김·구이가 독립적**이면 주방 4개가 4배 빠를 수 있음 (CPU 바운드, 독립 작업)
+- **반죽이 한 그릇에서 발효되어야** 한다면 주방을 늘려도 의미 없음 (공유 자원 + 순서 의존)
+- **메뉴 하나 만드는 시간이 30초**라면 주방 분리·동기화 오버헤드가 30초보다 더 길 수도
+
+### 병렬이 효과적인 조건 (모두 만족해야 함)
+
+1. **소스가 분할 잘 됨**: `ArrayList`, `HashMap`, `ConcurrentHashMap`, 배열, `int`/`long` 범위 — OK. `LinkedList`/`Stream.iterate` — NG.
+2. **작업이 CPU 바운드 + 독립적**: 한 원소 처리에 시간이 들고, 다른 원소에 의존하지 않음.
+3. **종단 연산이 병렬에 적합**: `reduce`, `min`, `max`, `count` — OK. `collect`로 가변 컬렉터 — 조심.
+4. **순서가 중요하지 않거나 `forEachOrdered`로 비용 감수**.
+
+### 안티패턴 — 측정 없이 `.parallel()`
+
+```java
+// ❌ — 결과가 망가지거나 더 느려질 수 있음
+Stream.iterate(1L, n -> n + 1)
+      .parallel()
+      .limit(1_000_000)
+      .filter(...).count();
+```
+
+`Stream.iterate`는 본질적으로 순차 의존이라 병렬화가 효과를 못 낸다. `limit`도 병렬과 궁합 나쁨.
+
+### 권장 — 측정 후 적용
+
+```java
+// IntStream.rangeClosed — 분할 잘 됨
+long count = IntStream.rangeClosed(1, 1_000_000)
+    .parallel()
+    .filter(MyMath::isPrime)
+    .count();
+```
+
+`MyMath.isPrime`처럼 CPU 바운드 + 독립적인 작업이 모인 경우만 의미 있음.
+
+### 함정
+
+1. **공유 가변 상태 사용 시 결과 손상**. 부작용 없는 함수(46) 원칙이 병렬에서는 **선택 아님 필수**.
+2. **`Collectors.toMap`/`groupingBy`의 가변 컬렉터**는 병렬에서 비용이 크다. `toConcurrentMap`/`groupingByConcurrent` 변형 사용 검토.
+3. **`forEach` 순서 없음**. 순서가 중요하면 `forEachOrdered`(병렬 이점 일부 상실) 또는 직렬.
+4. **이미 비동기 환경(WebFlux, Reactor)에서 병렬 스트림을 또 쓰는 것**은 스레드 풀 경쟁 유발 — 보통 안 함.
+
+### Spring/JPA 현업 메모
+
+- 일반 비즈니스 로직에서 `.parallel()` 사용은 **거의 없음**. CPU 바운드 배치(영상 처리, 대량 계산)에만.
+- JPA 엔티티를 병렬 스트림에서 다루지 마라. 영속성 컨텍스트는 스레드 안전하지 않다.
+
+### 체크리스트
+
+- [ ] 소스가 분할 잘 되는가 (ArrayList/배열/range)?
+- [ ] 작업이 CPU 바운드 + 독립적인가?
+- [ ] `forEach`가 부작용을 일으키지 않는가?
+- [ ] **JMH 등으로 직렬 vs 병렬을 측정했는가?** (이게 가장 중요)
+
+---
+
+## 7장 종합 정리
+
+### 한눈에 보는 결정 가이드
+
+| 상황 | 선택 |
+|------|------|
+| 함수형 인터페이스 구현이 필요 | **람다(42)** — 익명 클래스는 `this`나 직렬화 필요할 때만 |
+| 람다가 메서드 1개 호출만 함 | **메서드 참조(43)** — 단, 더 짧고 명료한 경우만 |
+| 함수형 인터페이스가 필요 | **표준 인터페이스(44)** — `Function`/`Predicate`/`Consumer`/`Supplier` |
+| 변환·집계 위주 처리 | **스트림(45)** — 단, 가독성 우선 |
+| 결과를 만들고 싶다 | **`Collectors`(46)** — `forEach` + 외부 수정 금지 |
+| API 반환 타입 | **컬렉션(47)** — 스트림은 무한·초대형·파이프라인일 때만 |
+| 빠르게 만들고 싶다 | **측정 후 병렬화(48)** — 무측정 `.parallel()` 금지 |
+
+### 종합 체크리스트 (코드 리뷰용)
+
+- [ ] 익명 클래스 5줄짜리를 람다 1줄로 줄였는가
+- [ ] 람다 → 메서드 참조 변환 시 오히려 길어지지 않았는가
+- [ ] `java.util.function` 표준을 두고 새 함수형 인터페이스를 만들고 있지 않은가
+- [ ] 스트림 안 람다가 외부 변수·DB·이벤트를 건드리지 않는가
+- [ ] API 반환이 무지성 `Stream<T>`이 아니라 `List<T>`인가
+- [ ] `.parallel()`을 측정 없이 붙이지 않았는가
+
+### 종합 퀴즈
+
+<details><summary>Q1. 람다가 익명 클래스를 완전히 대체하지 못하는 경우 2가지는?</summary>
+
+(1) 재귀 같이 **자기 자신(`this`)을 가리켜야 할 때**, (2) **직렬화**가 필요할 때.
+
+</details>
+
+<details><summary>Q2. `forEach` + 외부 `HashMap` 갱신이 안티패턴인 이유를 한 문장으로?</summary>
+
+스트림의 람다는 **순수 함수여야** 하며, 외부 상태 수정은 결과를 부정확하게 만들 뿐 아니라 병렬화 시 데이터 경합으로 깨지기 때문이다. → `Collectors.groupingBy/counting`으로 표현하라.
+
+</details>
+
+<details><summary>Q3. JPA Repository에서 <code>Stream&lt;T&gt;</code> 반환을 트랜잭션 밖에서 소비하면 왜 위험한가?</summary>
+
+`Stream<T>` 반환은 보통 **DB 커서 기반**이라 트랜잭션이 닫히면 더 이상 결과를 가져올 수 없다. 트랜잭션 경계 안에서 모두 소비해야 한다(또는 `List` 반환으로 바꿔라).
+
+</details>
+
+<details><summary>Q4. <code>.parallel()</code>을 붙이기 전에 반드시 확인할 4가지는?</summary>
+
+(1) 소스가 분할 잘 되는 자료구조인가, (2) 작업이 CPU 바운드 + 독립적인가, (3) 종단 연산이 병렬에 적합한가, (4) **측정** 결과 실제로 빨라지는가.
+
+</details>
+
+<details><summary>Q5. <code>Comparator.comparing(User::getName)</code>이 7장의 어떤 아이템 3개를 동시에 보여주는가?</summary>
+
+아이템 **44(표준 함수형 인터페이스 — `Function<User, String>`)**, **43(메서드 참조)**, **42(람다 — 익명 비교자를 람다로 대체한 진화의 마지막 단계)**.
+
+</details>
+
+---
+
+## 다음 장 예고 — 8장: 메서드
+
+`equals`/`hashCode`/`toString` 같은 객체의 공통 메서드(3장)는 다뤘으니, 8장은 **여러분이 직접 작성할 메서드**의 설계 원칙입니다 — 매개변수 검증, 방어적 복사, 시그니처 설계, 다중정의의 함정, 가변인수, `null`을 반환하지 마라, Optional 활용, 문서화 등 **API 표면을 다듬는 12개 아이템(Item 49~56)**.
+
+> 이어서 만들까요? (8장으로 진행 / 9장 일반적인 프로그래밍 원칙으로 점프 / 지금까지 만든 장들을 통합 교재로 묶기)

@@ -1,0 +1,564 @@
+---
+title: "Effective Java 실전 강의 — 10장"
+type: source
+tags: [book, effective-java, bloch, lecture]
+sources: [effective_java/이펙티브 자바 실전 강의 교재 10장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 이펙티브 자바 실전 강의 교재
+
+## 10장 — 예외
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 따라하기(실습) → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 3.x
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- **언제 예외를 던지고**, **어떤 종류**(checked/unchecked)를 쓸지 분별한다.
+- **표준 예외**를 활용하고, 직접 만들 때는 **추상화 수준**에 맞춘다.
+- 메서드가 던지는 예외를 **Javadoc으로 문서화**한다.
+- 실패해도 객체가 깨지지 않도록 **실패 원자성**을 확보한다.
+- 예외를 **무시하지 않는다** — `catch { /* nothing */ }`를 멈춘다.
+
+### 0.2 큰 그림 — 예외 라이프사이클
+
+```
+[ 던지기 결정 ]                    [ 종류 선택 ]                  [ 처리·문서 ]
+ 아이템 69  진짜 예외 상황만 ⭐     아이템 70  checked vs unchecked  아이템 73  추상화 수준 ⭐
+                                    아이템 71  checked 남용 회피     아이템 74  Javadoc 문서화
+                                    아이템 72  표준 예외 사용         아이템 75  상세 메시지
+                                                                       아이템 76  실패 원자성
+                                                                       아이템 77  예외 무시 금지 ⭐
+```
+
+> **비유 — 예외는 "병원 응급실 트리아지"입니다.**
+>
+> - **트리아지 결정(69)**: 진짜 응급(예외)만 응급실로. 단순 감기(정상 흐름)는 일반 진료(if/else)로.
+> - **응급 종류(70~72)**: 외상(checked, 호출자가 복구 가능)인지 내과적 쇼크(unchecked, 프로그래밍 버그)인지.
+> - **기록·인계(73~77)**: 어떤 처치를 했고, 다음 단계가 무엇인지 차트(Javadoc)·메시지에 남긴다. 무시(77)는 절대 금물.
+
+### 0.3 현업에서 왜 중요한가
+
+- 예외 설계가 잘못되면 **사고 분석이 며칠 걸린다** — 로그에 진짜 원인이 안 남거나, `RuntimeException("뭔가 잘못됨")`만 잔뜩.
+- Spring의 `@Transactional` 롤백 정책은 **unchecked만 자동 롤백** — 70번 아이템과 직결 ([[concept-transactional-rollback-policy]]).
+- `@ControllerAdvice` + `@ExceptionHandler`는 73~75번 아이템의 자동화 통로.
+
+---
+
+## 아이템 69. 예외는 진짜 예외 상황에만 사용하라
+
+### 한 줄 요약
+
+**정상 제어 흐름**에 예외를 쓰지 마라. 가독성·성능·디버깅이 모두 망가진다.
+
+### 비유 — "응급실에 감기로 가지 않기"
+
+응급실(예외)은 진짜 응급에 쓰는 곳. 가벼운 증상까지 응급실로 가면 진짜 응급 환자가 묻히고 비용이 폭증합니다.
+
+### 안티패턴 — 루프 종료를 예외로
+
+```java
+// ❌
+try {
+    int i = 0;
+    while (true) {
+        process(arr[i++]);   // ArrayIndexOutOfBoundsException으로 루프 종료
+    }
+} catch (ArrayIndexOutOfBoundsException e) {
+    // 정상 종료
+}
+```
+
+- **느림**: JVM이 예외 객체·스택 트레이스 생성. 일반 분기보다 수십~수백 배.
+- **버그 가림**: 다른 위치의 진짜 OOB가 정상으로 묻힘.
+- **디버깅 어려움**: 정상 흐름이 catch에 잡혀 break point가 무용.
+
+### 권장
+
+```java
+for (Element e : arr) process(e);
+```
+
+### 상태 의존 메서드 — "검사 후 동작" vs "예외"
+
+```java
+Iterator<E> it = c.iterator();
+while (it.hasNext()) {   // ✅ 검사 메서드(hasNext) 우선
+    E e = it.next();
+    ...
+}
+
+// ❌
+try {
+    while (true) it.next();
+} catch (NoSuchElementException e) { ... }
+```
+
+### Spring/JPA 현업 메모
+
+```java
+// ❌ — 존재 확인을 예외로
+try {
+    User u = userRepository.findById(id).orElseThrow();
+    return existing(u);
+} catch (NoSuchElementException e) {
+    return createNew(id);
+}
+
+// ✅
+return userRepository.findById(id)
+    .map(this::existing)
+    .orElseGet(() -> createNew(id));
+```
+
+### 체크리스트
+
+- [ ] try/catch가 정상 분기로 쓰이고 있지 않은가
+- [ ] 상태 검사 메서드(`hasNext`/`isPresent`/`containsKey`)가 있다면 그걸 쓰는가
+- [ ] 핫패스에서 의도적 예외 발생이 없는가
+
+---
+
+## 아이템 70. 복구할 수 있는 상황에는 검사 예외를, 프로그래밍 오류에는 런타임 예외를 사용하라
+
+### 한 줄 요약
+
+| 종류 | 의미 | 예시 |
+|------|------|------|
+| **Checked Exception** | 호출자가 **합리적으로 복구 가능** | `IOException` (파일 잠금 풀리길 기다림), `SQLException` (재시도) |
+| **Runtime Exception** | **프로그래밍 오류** (전제·계약 위반) | `NullPointerException`, `IllegalArgumentException`, `IllegalStateException` |
+| **Error** | JVM 자원 부족, 회복 불가 | `OutOfMemoryError` — 잡지 마라 |
+
+### 비유
+
+- **Checked**: 진료 후 처방전을 줌 — 환자가 약 사 먹고 나아질 수 있음.
+- **Runtime**: 시스템 자체가 잘못 만들어진 것 — 환자가 아니라 의사의 잘못.
+- **Error**: 병원이 무너지는 중 — 진료가 의미 없음.
+
+### 검사 예외 vs 런타임 예외 분기 결정
+
+```
+복구가 합리적인가? ─ Yes → Checked Exception
+                    └ No  → Runtime Exception
+```
+
+### 함정 — Java 커뮤니티의 변화
+
+Effective Java 3판 시점부터 **검사 예외의 가치는 의심받는 중**. 현대 Java/Kotlin/Scala/Rust는 모두 검사 예외를 줄이거나 없애는 방향. Item 71 참조.
+
+### Spring/JPA 현업 메모
+
+- Spring은 모든 데이터 접근 예외를 **`DataAccessException`(unchecked)** 로 변환 → 호출자가 굳이 try-catch 안 해도 됨.
+- `@Transactional`은 **unchecked만 자동 롤백**, checked는 명시적 `rollbackFor` 필요 ([[concept-transactional-rollback-policy]]).
+
+### 체크리스트
+
+- [ ] 던지려는 예외가 호출자에게 복구 의미가 있는가
+- [ ] 프로그래밍 버그라면 RuntimeException 계열
+- [ ] Error를 잡고 있지 않은가
+
+---
+
+## 아이템 71. 필요 없는 검사 예외 사용은 피하라
+
+### 한 줄 요약
+
+검사 예외는 호출자에 **try/catch 또는 throws 강제** 부담을 준다. 합리적 복구가 의심스러우면 **unchecked로**.
+
+### 대안 1 — Optional 반환
+
+```java
+// ❌ checked
+public User findByEmail(String email) throws UserNotFoundException { ... }
+
+// ✅ Optional — "없을 수 있음"을 타입으로 표현
+public Optional<User> findByEmail(String email) { ... }
+```
+
+### 대안 2 — 상태 검사 메서드 분리
+
+```java
+// ❌
+try { obj.action(); } catch (NotReadyException e) { /* 준비될 때까지 대기 */ }
+
+// ✅
+while (!obj.isReady()) Thread.sleep(100);
+obj.action();   // 이제 안 던짐
+```
+
+(단, 멀티스레드 환경에서는 `isReady`와 `action` 사이의 race 조건 주의.)
+
+### 검사 예외가 정당한 좁은 경우
+
+1. 진짜로 호출자가 합리적으로 복구 가능
+2. **표준 라이브러리에서 강제**(`IOException`, `InterruptedException`)되어 어쩔 수 없을 때
+
+### 체크리스트
+
+- [ ] 새 checked 예외를 만들기 전에 Optional·상태 검사로 대체 가능한가
+- [ ] 라이브러리 API의 throws가 호출자에게 의미 없는 부담만 주는가
+
+---
+
+## 아이템 72. 표준 예외를 사용하라
+
+### 한 줄 요약
+
+새 예외 클래스 만들기 전에 **표준 예외**가 있는지 확인하라.
+
+### 자주 쓰는 표준 예외
+
+| 예외 | 용도 |
+|------|------|
+| `IllegalArgumentException` | 인자 값이 부적절 (가장 자주) |
+| `IllegalStateException` | 객체 상태가 메서드 호출에 적합하지 않음 |
+| `NullPointerException` | 인자가 null인데 허용하지 않을 때 (`Objects.requireNonNull`) |
+| `IndexOutOfBoundsException` | 인덱스 범위 밖 |
+| `ConcurrentModificationException` | 단일 스레드 가정 자료구조가 동시 수정됨 |
+| `UnsupportedOperationException` | 미지원 연산 (`List.of(...).add(...)`) |
+| `ArithmeticException` | 산술 오류 (0으로 나누기) |
+
+### 결정 가이드
+
+```
+인자가 잘못됐다?       → IllegalArgumentException (단, null이면 NullPointerException)
+객체 상태가 잘못됐다?  → IllegalStateException
+인덱스가 범위 밖?      → IndexOutOfBoundsException
+미지원 연산?            → UnsupportedOperationException
+```
+
+### 안티패턴 — 무지성 RuntimeException
+
+```java
+// ❌
+if (amount < 0) throw new RuntimeException("음수");
+
+// ✅
+if (amount < 0) throw new IllegalArgumentException("amount must be >= 0: " + amount);
+```
+
+### 함정
+
+- **`Exception`/`RuntimeException`/`Throwable`/`Error`** 직접 던지지/잡지 마라 — 너무 일반적이라 정보가 없음.
+- **표준 예외에 의미 부여**: 메시지에 인자 값을 담아 디버깅에 도움.
+
+### 체크리스트
+
+- [ ] 새 예외를 만들기 전 표준 예외가 있는가
+- [ ] 메시지에 문제가 된 값을 담았는가
+- [ ] 너무 일반적인 `Exception`을 던지지 않는가
+
+---
+
+## 아이템 73. 추상화 수준에 맞는 예외를 던지라
+
+### 한 줄 요약
+
+저수준 예외(`SQLException`, `IOException`)를 그대로 흘려보내지 마라. **현재 계층의 추상화에 맞는 예외**로 **변환(translate)** 하거나 **연쇄(chain)** 하라.
+
+### 비유 — "주방의 사고를 손님에게 그대로 보고하지 않기"
+
+"오븐 압력 센서 32번 고장" 같은 저수준 사실을 손님에게 그대로 말하지 않습니다. "오늘 메뉴 A는 30분 지연 예상" 으로 의미 있는 추상화 수준으로 번역합니다.
+
+### 예외 번역 (Exception Translation)
+
+```java
+public Order findById(OrderId id) {
+    try {
+        return jdbc.query(...);
+    } catch (SQLException e) {                                  // 저수준
+        throw new OrderRepositoryException("주문 조회 실패: " + id, e);   // 추상 수준
+    }
+}
+```
+
+`cause`(`e`)로 **연쇄(chaining)** 하면 스택 트레이스에 원인이 보존됨.
+
+### Spring의 자동 번역
+
+`JdbcTemplate`/`JpaTemplate`/`PlatformTransactionManager`는 모든 SQL·JPA 예외를 **`DataAccessException`** (unchecked + 의미 있는 하위 타입)으로 자동 번역.
+
+```
+DataAccessException
+├── DataIntegrityViolationException
+├── EmptyResultDataAccessException
+├── DuplicateKeyException
+├── DeadlockLoserDataAccessException
+└── ...
+```
+
+→ 우리가 직접 번역할 일이 줄지만, **서비스 계층 → 도메인 예외**로 한 번 더 번역하는 건 여전히 우리 몫.
+
+### 함정 — 무지성 연쇄
+
+원인(cause)이 정말 의미 있을 때만 chain. 무관한 예외를 cause로 묶으면 노이즈.
+
+### 체크리스트
+
+- [ ] 컨트롤러·서비스에서 저수준 예외(`SQLException`, `IOException`)가 그대로 새지 않는가
+- [ ] 변환할 때 `cause`로 원인을 보존했는가
+- [ ] 도메인 예외 계층(`OrderException`, `PaymentException`)이 있는가
+
+---
+
+## 아이템 74. 메서드가 던지는 모든 예외를 문서화하라
+
+### 한 줄 요약
+
+`@throws` Javadoc으로 메서드가 던지는 모든 예외(checked + unchecked) 의미를 설명하라.
+
+### 권장
+
+```java
+/**
+ * 주문에 결제를 적용한다.
+ *
+ * @param order 적용 대상 (null 불가)
+ * @param amount 결제 금액 (0 이상)
+ * @throws IllegalArgumentException order가 null이거나 amount < 0
+ * @throws InsufficientBalanceException 잔액 부족
+ * @throws PaymentGatewayException 외부 게이트웨이 통신 실패
+ */
+public Receipt pay(Order order, Money amount) { ... }
+```
+
+### 권장 패턴
+
+- **각 예외를 개별 `@throws`** 로 (한 줄에 묶지 말 것)
+- **언제 던지는지 조건**을 명시
+- **`throws` 선언에는 checked만**, Javadoc에는 unchecked도 포함
+
+### 함정
+
+- **상위 인터페이스에 던지는 예외를 다 묶지 않기**. `throws Exception`은 사용자 입장에서 정보 0.
+
+### 체크리스트
+
+- [ ] 메서드가 던질 수 있는 모든 예외에 `@throws` 가 있는가
+- [ ] 조건이 구체적인가 ("xxx가 ...일 때")
+- [ ] `throws Exception` 같은 광범위 선언이 없는가
+
+---
+
+## 아이템 75. 예외의 상세 메시지에 실패 관련 정보를 담으라
+
+### 한 줄 요약
+
+예외 메시지에 **실패와 관련된 모든 매개변수·필드 값**을 포함하라. 사후 추적에서 결정적.
+
+### 권장 — 인자 값 포함
+
+```java
+// ❌
+throw new IllegalArgumentException("범위 위반");
+
+// ✅
+throw new IllegalArgumentException(
+    String.format("amount must be in [%d, %d] but was %d", min, max, value));
+```
+
+### 권장 — 생성자에 의미 있는 필드를 받기
+
+```java
+public class InsufficientBalanceException extends RuntimeException {
+    private final Money current, required;
+    public InsufficientBalanceException(Money current, Money required) {
+        super(String.format("잔액 부족: 현재=%s, 필요=%s", current, required));
+        this.current = current;
+        this.required = required;
+    }
+    public Money getCurrent() { return current; }
+    public Money getRequired() { return required; }
+}
+```
+
+### 보안 메모
+
+비밀번호·토큰·주민번호 같은 **민감 정보는 메시지에 넣지 마라** (로그에 그대로 남음).
+
+### 체크리스트
+
+- [ ] 메시지에 문제가 된 값이 들어 있는가
+- [ ] 민감 정보가 메시지에 누출되지 않는가
+- [ ] 도메인 예외가 의미 있는 필드를 노출하는가 (사용자에게 회복 정보 전달)
+
+---
+
+## 아이템 76. 가능한 한 실패 원자적으로 만들라
+
+### 한 줄 요약
+
+호출이 실패해도 **객체는 호출 전 상태**를 유지해야 한다. "반쯤 변경된" 상태를 남기지 마라.
+
+### 비유 — "주방 도중 사고 시 원상 복귀"
+
+요리 중 사고 나면, 손님은 음식이 안 나오는 건 받아들이지만, **잘못 섞인 음식**이 나오는 건 받아들이지 못합니다.
+
+### 4가지 기법
+
+1. **불변 객체**: 애초에 상태가 안 바뀜 → 자동 원자적
+2. **검증 먼저, 변경 나중**:
+```java
+public void pop() {
+    if (size == 0) throw new EmptyStackException();   // 검사 먼저
+    Object result = elements[--size];                    // 변경
+    elements[size] = null;
+    return result;
+}
+```
+3. **임시 복사본에 작업 후 교체**: 정렬·계산 등은 복사본에 한 뒤 마지막에 atomic swap
+4. **복구 코드**: `finally`로 롤백 (DB 트랜잭션이 대표적)
+
+### Spring/JPA 현업 예제
+
+`@Transactional` 자체가 실패 원자성의 인프라.
+
+```java
+@Transactional
+public void transfer(AccountId from, AccountId to, Money amount) {
+    Account fromAcc = repo.findById(from).orElseThrow();
+    Account toAcc = repo.findById(to).orElseThrow();
+    fromAcc.withdraw(amount);    // 예외 시 자동 롤백
+    toAcc.deposit(amount);
+}
+```
+
+### 함정
+
+- **외부 부작용은 롤백 불가**: 이메일 발송·외부 API 호출은 트랜잭션과 분리해 보상 트랜잭션 패턴 사용.
+- **모든 메서드가 원자적일 필요는 없음**: 비용이 클 때는 **계약상 부분 실패 허용**을 문서화 (Item 74).
+
+### 체크리스트
+
+- [ ] 변경이 실패할 가능성이 있다면 검증을 먼저 하는가
+- [ ] 트랜잭션 경계 안에 의미 있는 모든 변경이 들어 있는가
+- [ ] 외부 부작용을 트랜잭션 안에서 일으키지 않는가 (실패해도 못 되돌림)
+
+---
+
+## 아이템 77. 예외를 무시하지 말라 ⭐
+
+### 한 줄 요약
+
+빈 catch 블록은 화재경보기를 끄는 행위. 무시해야만 한다면 **그 이유를 주석**으로 남겨라.
+
+### 비유 — "경보기 떼기"
+
+화재 경보가 시끄럽다고 떼면, 진짜 불 났을 때 알 길이 없습니다.
+
+### 안티패턴
+
+```java
+// ❌
+try {
+    repository.save(order);
+} catch (Exception e) {
+    // 무시
+}
+```
+
+### 권장 — 무시해야 한다면 의도 명시
+
+```java
+try {
+    closeable.close();
+} catch (IOException ignored) {
+    // close 실패는 무시 — 이미 닫혔거나 자원 회수 중이므로 운영에 영향 없음
+}
+```
+
+변수명을 `ignored`로, 주석으로 이유 명시.
+
+### 더 권장 — 최소한 로깅
+
+```java
+try {
+    optionalCleanup();
+} catch (Exception e) {
+    log.warn("optional cleanup failed", e);   // 무시는 하되 흔적은 남김
+}
+```
+
+### 함정
+
+- **`catch (Exception e) {}`** 한 번이라도 들어가면 운영 중 어떤 사고도 안 보임.
+- **테스트 코드에서도 안 좋음**: 의도된 예외라면 `assertThrows(...)` 사용.
+
+### Spring/JPA 현업 메모
+
+`@Async` 메서드의 예외는 호출자가 못 받으므로 별도 `AsyncUncaughtExceptionHandler`를 등록하지 않으면 사라진다.
+
+### 체크리스트
+
+- [ ] 빈 catch 블록이 없는가
+- [ ] 의도적 무시는 변수명·주석으로 명시했는가
+- [ ] 최소한 로그(`warn`/`error`)를 남기는가
+
+---
+
+## 10장 종합 정리
+
+### 한눈에 보는 결정 가이드
+
+| 상황 | 선택 |
+|------|------|
+| 정상 흐름인가 | **if/else(69)** — 예외로 흐름 제어 금지 |
+| 호출자가 복구 가능 | **Checked(70)** — 단, 신중 |
+| 프로그래밍 오류 | **Runtime(70)** — `IllegalArgument`/`IllegalState` |
+| 검사 예외가 호출자 부담만 큼 | **Optional·unchecked로 전환(71)** |
+| 새 예외 만들기 전 | **표준 예외(72) 우선** |
+| 저수준 예외 노출 위험 | **추상화 수준에 맞춰 번역(73)**, cause 보존 |
+| 메서드 계약 | **`@throws` 모두 명시(74)** |
+| 예외 메시지 | **인자 값·상태 포함(75)**, 민감정보 제외 |
+| 변경이 실패할 수 있음 | **검증 먼저·트랜잭션·복사 후 교체(76)** |
+| catch 블록 | **무시 금지, 최소 로깅(77)** |
+
+### 종합 체크리스트 (코드 리뷰용)
+
+- [ ] try/catch가 정상 흐름 제어로 쓰이지 않음
+- [ ] 도메인 예외가 추상화 수준에 맞고 cause 보존
+- [ ] `@throws` Javadoc 빠짐 없음
+- [ ] 예외 메시지에 인자 값 포함 + 민감 정보 제외
+- [ ] `@Transactional` 안에 의미 있는 모든 변경이 들어 있음
+- [ ] 빈 catch 블록 없음, 무시는 명시적
+- [ ] 검사 예외 남용 없음 — Optional/표준 unchecked 우선
+- [ ] `throws Exception` 같은 광범위 선언 없음
+
+### 종합 퀴즈
+
+<details><summary>Q1. <code>@Transactional</code>이 기본적으로 checked 예외에 롤백하지 않는 역사적 이유는?</summary>
+
+EJB 시대의 관행: 비즈니스 예외(체크드)는 호출자가 처리 가능하므로 트랜잭션을 굳이 롤백하지 않는다. Java 예외 철학(70번)과 맞물려, 명시적 `rollbackFor`로만 롤백 ([[concept-transactional-rollback-policy]] 상세).
+
+</details>
+
+<details><summary>Q2. 추상화 수준에 맞는 예외 변환에서 <code>cause</code>를 보존해야 하는 이유는?</summary>
+
+번역된 예외만 던지면 진짜 원인(SQL 오류 코드, IOException 메시지)이 사라져 사고 분석이 불가능해진다. `cause`로 묶어 두면 스택 트레이스에 "Caused by:" 사슬로 보존된다.
+
+</details>
+
+<details><summary>Q3. 검사 예외를 의심하라는 71번의 현대적 대안 2가지는?</summary>
+
+(1) **Optional 반환**: "없을 수 있음"을 타입으로 표현. (2) **상태 검사 메서드 분리**: `isPresent`/`hasNext`/`canRetry` 같은 boolean 검사 후 액션.
+
+</details>
+
+<details><summary>Q4. 빈 catch 블록의 진짜 위험은?</summary>
+
+당장의 에러는 사라져 보이지만, **운영 중 진짜 사고가 발생해도 흔적이 안 남는다**. 추적·재현 모두 불가능. 무시해야 한다면 변수명 `ignored` + 주석으로 의도를 명시하고, 최소한 `log.warn`은 남겨야 한다.
+
+</details>
+
+---
+
+## 다음 장 예고 — 11장: 동시성
+
+스레드, 동기화, 락, 데드락, `ConcurrentHashMap`, `ExecutorService`, `CompletableFuture` — **멀티스레드 환경에서 안전하게 동작하는 코드 7개 아이템(Item 78~84)**. 단일 스레드에서는 안 보이는 함정이 한꺼번에 드러나는 장. 자바에서 가장 어려운 영역이지만, Spring·Web 환경에서는 매일 마주칩니다.
+
+> 이어서 만들까요? (11장으로 진행 / 12장 직렬화로 점프 / 지금까지 만든 장들을 통합 교재로 묶기)

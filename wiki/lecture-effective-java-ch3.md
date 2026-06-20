@@ -1,3 +1,12 @@
+---
+title: "Effective Java 실전 강의 — 3장"
+type: source
+tags: [book, effective-java, bloch, lecture]
+sources: [effective_java/이펙티브 자바 실전 강의 교재 3장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
 # 이펙티브 자바 실전 강의 교재
 
 ## 3장 — 모든 객체의 공통 메서드

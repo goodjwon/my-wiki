@@ -1,0 +1,555 @@
+---
+title: "Effective Java 실전 강의 — 11장"
+type: source
+tags: [book, effective-java, bloch, lecture]
+sources: [effective_java/이펙티브 자바 실전 강의 교재 11장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 이펙티브 자바 실전 강의 교재
+
+## 11장 — 동시성
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 따라하기(실습) → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 3.x
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- **공유 가변 상태**에 대한 동기화 책임을 안다.
+- 동기화의 **과도/부족** 양 끝 위험을 분간한다.
+- **저수준 스레드**(Thread, wait/notify) 대신 **고수준 추상화**(ExecutorService, CompletableFuture, 동시성 컬렉션) 를 쓴다.
+- 스레드 안전성 수준을 **문서화**한다.
+- **지연 초기화**의 함정과 패턴을 이해한다.
+
+### 0.2 큰 그림 — "공유 가변 상태"를 어떻게 다루나
+
+```
+[ 가변 공유 ]                  [ 추상화 사다리 올라가기 ]      [ 계약·세부 ]
+ 78 동기화 필수 ⭐             80 Thread보다 ExecutorService    82 스레드 안전성 문서화
+ 79 과도 동기화 회피 ⭐         81 wait/notify보다 동시성 유틸    83 지연 초기화 신중
+                                                                  84 스레드 스케줄러 X
+```
+
+> **비유 — 동시성은 "공용 주방의 도마 한 장"입니다.**
+>
+> 여러 요리사가 한 도마(공유 가변 상태)에 동시에 칼질하면 사고가 납니다.
+> - **78**: 도마를 쓸 때는 "지금 내 차례" 표시(락).
+> - **79**: 너무 길게 들고 있으면 다른 요리사 모두 멈춤 → 짧고 빨리.
+> - **80~81**: 도마 자체를 늘리거나(`ConcurrentHashMap`), 도마 대신 컨베이어(큐)로 대체.
+> - **82**: 이 도마의 사용 규칙(스레드 안전성)을 벽에 붙여 둠.
+
+### 0.3 현업에서 왜 중요한가
+
+- Spring MVC는 **요청마다 다른 스레드**. 빈은 싱글턴이므로 빈의 가변 상태는 곧 공유 가변 상태.
+- JPA `EntityManager`/Hibernate `Session`은 **스레드 안전하지 않음** — 트랜잭션·요청 스코프로 관리됨.
+- HikariCP·Tomcat 스레드풀·`@Async` — 모두 11장의 추상화 위에서 작동.
+
+---
+
+## 아이템 78. 공유 중인 가변 데이터는 동기화해 사용하라 ⭐
+
+### 한 줄 요약
+
+여러 스레드가 **읽고 쓰는** 가변 데이터는 동기화하라. `synchronized`/`volatile`/`Atomic*` 중 적절한 것 선택.
+
+### 비유 — "도마에 칼질 표시"
+
+도마(공유 변수)에 누가 칼질 중인지 표시(락) 없이 동시에 들어가면, 결과는 운에 맡깁니다.
+
+### 동기화의 두 가지 효과 (모두 필요)
+
+1. **상호 배제(Mutual Exclusion)**: 한 번에 한 스레드만 접근
+2. **가시성(Visibility)**: 한 스레드의 변경이 다른 스레드에 보임 (메모리 모델)
+
+> 두 효과를 헷갈리면 안 됨 — `volatile`은 (2)만 보장, `synchronized`/락은 (1)+(2) 보장.
+
+### 함정 — boolean 플래그도 동기화 필요
+
+```java
+// ❌ — JVM 최적화로 스레드 B가 stopRequested 변경을 영원히 못 볼 수 있음 (가시성)
+private static boolean stopRequested;
+
+public static void main(String[] args) {
+    new Thread(() -> {
+        while (!stopRequested) i++;   // 컴파일러가 무한 루프로 변환 가능
+    }).start();
+    Thread.sleep(1000);
+    stopRequested = true;
+}
+```
+
+### 해법 1 — `volatile`
+
+```java
+private static volatile boolean stopRequested;   // 가시성 보장
+```
+
+### 해법 2 — 동기화 메서드
+
+```java
+private static boolean stopRequested;
+private static synchronized void requestStop() { stopRequested = true; }
+private static synchronized boolean stopRequested() { return stopRequested; }
+```
+
+### 해법 3 — `AtomicBoolean` (volatile + atomic)
+
+```java
+private static final AtomicBoolean stopRequested = new AtomicBoolean(false);
+
+while (!stopRequested.get()) i++;
+stopRequested.set(true);
+```
+
+### 비교 정리
+
+| 도구 | 상호 배제 | 가시성 | atomic | 비용 |
+|------|-----------|--------|--------|------|
+| `volatile` | ✗ | ✓ | 단일 변수 읽기/쓰기만 | 매우 낮음 |
+| `synchronized`/`ReentrantLock` | ✓ | ✓ | 전체 블록 | 중간 |
+| `Atomic*` | 단일 변수 | ✓ | 단일 변수 CAS | 낮음 |
+| `concurrent` 컬렉션 | 컬렉션 단위 | ✓ | 표준 연산 | 낮음~중간 |
+
+### Spring/JPA 현업 메모
+
+- Bean 필드를 가변 상태로 들면 다른 스레드와 공유됨 — 거의 항상 불변 필드 + 메서드 내 지역 상태로.
+- `@Async`/`@Scheduled` 사이의 공유는 항상 동기화 책임.
+
+### 체크리스트
+
+- [ ] 두 스레드 이상이 같은 변수를 읽고 쓰는가
+- [ ] 쓰기만/읽기만 보장된 단순 플래그는 `volatile`로 충분한가
+- [ ] 복합 연산(read-modify-write)이면 `synchronized`/`Atomic*`/락
+- [ ] Spring 빈 필드는 불변인가
+
+---
+
+## 아이템 79. 과도한 동기화는 피하라 ⭐
+
+### 한 줄 요약
+
+동기화 영역 안에서 **외부 코드(콜백, 비-final 메서드)** 를 호출하지 마라. **데드락·예외·성능 저하**의 근본 원인.
+
+### 비유 — "도마 든 채 옆 가게에 전화"
+
+도마를 손에 든 채(락 보유) 옆 가게에 전화(외부 콜백)하면, 옆 가게가 마침 다른 줄에 묶여 있으면 영원히 못 돌아옴 → 데드락.
+
+### 안티패턴 — 동기화 안에서 외부 콜백
+
+```java
+public class ObservableSet<E> {
+    private final Set<E> set = new HashSet<>();
+    private final List<Observer<E>> observers = new ArrayList<>();
+
+    public synchronized void add(E e) {
+        if (set.add(e)) {
+            for (Observer<E> o : observers) {
+                o.added(this, e);   // ❌ 외부 코드 호출 (락 보유 중)
+            }
+        }
+    }
+}
+```
+
+- Observer가 콜백 안에서 또 `add`를 호출하면 → **재진입 데드락 위험** (재진입 락은 통과하지만 ConcurrentModificationException 등 무더기 사고)
+- Observer가 다른 락을 요구하면 → **데드락**
+
+### 해법 1 — 콜백을 락 밖에서
+
+```java
+public void add(E e) {
+    boolean added;
+    synchronized (this) {
+        added = set.add(e);
+    }
+    if (added) {
+        List<Observer<E>> snapshot;
+        synchronized (this) { snapshot = new ArrayList<>(observers); }
+        for (Observer<E> o : snapshot) o.added(this, e);   // 락 밖에서 호출
+    }
+}
+```
+
+### 해법 2 — `CopyOnWriteArrayList`
+
+```java
+private final List<Observer<E>> observers = new CopyOnWriteArrayList<>();
+// 순회는 락 없이 안전 (스냅샷 기반)
+```
+
+### 동기화 영역의 일 최소화
+
+- 락 안에서는 **빠른 일**만
+- I/O·블로킹 호출·외부 코드 호출 **절대 금지**
+
+### 체크리스트
+
+- [ ] `synchronized` 블록 안에 외부 콜백·I/O·블로킹 호출이 없는가
+- [ ] 리스너 리스트는 `CopyOnWriteArrayList` 또는 스냅샷 복사 후 순회
+- [ ] 락 보유 시간이 짧은가
+
+---
+
+## 아이템 80. 스레드보다는 실행자, 태스크, 스트림을 애용하라
+
+### 한 줄 요약
+
+`new Thread()` 직접 만들지 마라. **`ExecutorService`** 로 풀 관리하고, **`CompletableFuture`/병렬 스트림**으로 비동기 흐름 구성.
+
+### 비유 — "직원을 매번 새로 뽑지 말고 풀(인력 풀)에서 배치"
+
+새 스레드 생성은 비싸고, 무제한 생성은 OOM. 풀에 일감을 던지는 게 정석.
+
+### 권장 — `ExecutorService`
+
+```java
+ExecutorService exec = Executors.newFixedThreadPool(10);
+Future<String> f = exec.submit(() -> heavyComputation());
+String result = f.get();
+exec.shutdown();
+```
+
+### 풀 종류 (자주 쓰는 것)
+
+| 종류 | 용도 |
+|------|------|
+| `newFixedThreadPool(n)` | 고정 크기, 큐 무한 |
+| `newCachedThreadPool()` | 필요할 때마다 생성, 60초 유휴 후 회수 — 단, **무제한 생성 위험** |
+| `newSingleThreadExecutor()` | 순차 실행 보장 |
+| `newScheduledThreadPool(n)` | 지연·주기 실행 |
+| **`new ThreadPoolExecutor(...)`** | **현업 권장 — 명시적 코어/맥스/큐 사이즈 지정** |
+
+### 현업 권장 — 명시적 ThreadPoolExecutor
+
+```java
+ThreadPoolExecutor pool = new ThreadPoolExecutor(
+    10,                                    // corePoolSize
+    20,                                    // maximumPoolSize
+    60L, TimeUnit.SECONDS,                  // keepAlive
+    new ArrayBlockingQueue<>(1000),         // 큐 — 무한 큐 위험
+    new ThreadPoolExecutor.AbortPolicy()    // 거부 정책
+);
+```
+
+→ `Executors.newCachedThreadPool()`/`newFixedThreadPool()`의 기본 큐가 `LinkedBlockingQueue()`(무한)라 운영 사고 자주 발생. 직접 구성 권장.
+
+### 더 권장 — `CompletableFuture` 조합
+
+```java
+CompletableFuture<User> userFuture = CompletableFuture.supplyAsync(() -> findUser(id), exec);
+CompletableFuture<List<Order>> ordersFuture = CompletableFuture.supplyAsync(() -> findOrders(id), exec);
+
+CompletableFuture<UserDashboard> dashboard = userFuture.thenCombine(
+    ordersFuture,
+    (user, orders) -> new UserDashboard(user, orders)
+);
+```
+
+### Spring/JPA 현업 메모
+
+- Spring MVC 자체가 Tomcat/Jetty의 스레드 풀 위에서 동작 — 컨트롤러에서 스레드를 새로 만드는 일은 매우 드물어야 함.
+- `@Async` + `TaskExecutor`로 풀 관리 위임.
+- `@Scheduled`도 별도 풀 (`TaskScheduler`).
+- WebFlux는 이벤트 루프 — 스레드 모델이 완전히 다름.
+
+### 체크리스트
+
+- [ ] `new Thread()` 직접 호출이 비즈니스 코드에 없는가
+- [ ] 풀 크기·큐 사이즈·거부 정책이 명시되어 있는가
+- [ ] 셧다운(`shutdown`/`shutdownNow`)이 정상 종료 시점에 호출되는가
+
+---
+
+## 아이템 81. wait와 notify보다는 동시성 유틸리티를 애용하라
+
+### 한 줄 요약
+
+`Object.wait`/`notify`/`notifyAll`은 저수준 + 함정 많음. `java.util.concurrent`의 **고수준 동시성 유틸**(`BlockingQueue`, `CountDownLatch`, `CyclicBarrier`, `Semaphore`, `ConcurrentHashMap`) 사용.
+
+### 고수준 동시성 유틸 카탈로그
+
+| 유틸 | 용도 |
+|------|------|
+| `BlockingQueue` | 생산자-소비자 큐 (대표: `LinkedBlockingQueue`, `ArrayBlockingQueue`) |
+| `ConcurrentHashMap` | 스레드 안전 맵 (synchronized Map보다 훨씬 빠름) |
+| `CopyOnWriteArrayList` | 읽기 위주 리스트 (리스너 패턴) |
+| `CountDownLatch(n)` | N개 작업 완료 대기 (한 번 사용) |
+| `CyclicBarrier(n)` | N개 스레드 모임 (재사용 가능) |
+| `Semaphore(n)` | 동시 접근 N개로 제한 (rate limiter) |
+| `Phaser` | 동적 단계별 동기화 |
+| `Exchanger<V>` | 두 스레드의 데이터 교환 |
+
+### 안티패턴 — wait/notify 수동 구현
+
+```java
+synchronized (obj) {
+    while (!condition) obj.wait();   // 반드시 while (signal lost 방지)
+    // condition 충족
+}
+```
+
+### 권장 — `BlockingQueue`로 생산자-소비자
+
+```java
+BlockingQueue<Order> queue = new LinkedBlockingQueue<>(1000);
+
+// 생산자
+queue.put(order);   // 가득 차면 자동 대기
+
+// 소비자
+Order order = queue.take();   // 비어 있으면 자동 대기
+```
+
+### Spring/JPA 현업 메모
+
+- `ConcurrentHashMap.computeIfAbsent`는 캐싱 패턴의 정석.
+- Spring Integration·Reactor·Kafka가 내부적으로 이 유틸들을 적극 활용.
+
+### 체크리스트
+
+- [ ] `wait`/`notify` 직접 사용을 동시성 유틸로 교체했는가
+- [ ] 생산자-소비자 패턴에 `BlockingQueue`를 쓰는가
+- [ ] 스레드 안전한 맵이 필요할 때 `ConcurrentHashMap`인가 (`Collections.synchronizedMap` 아님)
+
+---
+
+## 아이템 82. 스레드 안전성 수준을 문서화하라
+
+### 한 줄 요약
+
+클래스가 **어느 수준으로 스레드 안전**한지 Javadoc으로 명시하라. 사용자가 락 책임을 못 알면 사고.
+
+### 5단계 분류
+
+| 수준 | 의미 | 예시 |
+|------|------|------|
+| **Immutable** | 불변 — 외부 동기화 불필요 | `String`, `Long`, `BigInteger` |
+| **Unconditionally thread-safe** | 모든 메서드가 스스로 동기화 | `AtomicLong`, `ConcurrentHashMap` |
+| **Conditionally thread-safe** | 일부 메서드 시퀀스만 외부 동기화 필요 | `Collections.synchronizedMap`의 iteration |
+| **Not thread-safe** | 외부에서 모든 사용을 동기화 | `ArrayList`, `HashMap`, `SimpleDateFormat` |
+| **Thread-hostile** | 외부 동기화로도 안전하지 않음 — 피하라 | 시스템 전역 상태 변경 클래스 (드뭄) |
+
+### Javadoc 권장
+
+```java
+/**
+ * 사용자 정보를 표현한다.
+ *
+ * <p>This class is <b>immutable</b> and therefore thread-safe.
+ */
+public final class User { ... }
+
+/**
+ * 가변 카운터.
+ *
+ * <p>This class is <b>not thread-safe</b>. 외부 동기화가 필요하다.
+ */
+public class Counter { ... }
+```
+
+### 함정 — `Collections.synchronizedMap`의 iteration
+
+```java
+Map<String, Integer> map = Collections.synchronizedMap(new HashMap<>());
+
+// 기본 연산은 안전
+map.put("a", 1);
+
+// 순회는 외부 동기화 필요 (Conditionally thread-safe)
+synchronized (map) {
+    for (Map.Entry<String, Integer> e : map.entrySet()) { ... }
+}
+```
+
+### 체크리스트
+
+- [ ] 공개 클래스가 어느 수준의 스레드 안전성인지 Javadoc에 명시했는가
+- [ ] "조건부 안전"이면 외부 동기화가 필요한 메서드 시퀀스를 설명했는가
+- [ ] `SimpleDateFormat` 같은 not thread-safe 도구를 멀티스레드에서 공유하지 않는가
+
+---
+
+## 아이템 83. 지연 초기화는 신중히 사용하라
+
+### 한 줄 요약
+
+지연 초기화(lazy init)는 **꼭 필요할 때만**. 멀티스레드에서 잘못 쓰면 **이중 초기화·가시성** 사고.
+
+### 일반 원칙
+
+> "**대부분은 지연 초기화하지 마라.** 정상 초기화가 단순하고 안전하다."
+
+### 정상 초기화
+
+```java
+private final FieldType field = computeFieldValue();   // 단순·안전
+```
+
+### 지연 초기화가 필요한 경우 + 정석 패턴
+
+#### 단일 스레드 — 그냥 if-check
+
+```java
+private FieldType field;
+private FieldType getField() {
+    if (field == null) field = computeFieldValue();
+    return field;
+}
+```
+
+#### 멀티스레드 정적 필드 — Holder Idiom (가장 권장)
+
+```java
+private static class FieldHolder {
+    static final FieldType FIELD = computeFieldValue();
+}
+private static FieldType getField() { return FieldHolder.FIELD; }
+```
+
+JVM이 클래스 로딩 시점에 한 번만 초기화 — 동기화 비용 없음.
+
+#### 멀티스레드 인스턴스 필드 — Double-Check Idiom
+
+```java
+private volatile FieldType field;
+
+private FieldType getField() {
+    FieldType result = field;       // 첫 검사 (락 없음)
+    if (result == null) {
+        synchronized (this) {
+            if (field == null) field = computeFieldValue();   // 두 번째 검사 (락 안)
+            result = field;
+        }
+    }
+    return result;
+}
+```
+
+`volatile` 필수, 지역 변수 `result` 패턴(성능).
+
+### 함정
+
+- **동기화 빠뜨림**: 단순 if-null 체크는 멀티스레드에서 이중 초기화·가시성 사고.
+- **초기화 비용이 작음**: 정상 초기화로 충분.
+
+### 체크리스트
+
+- [ ] 정말 지연 초기화가 필요한가 (성능 측정 후)
+- [ ] 정적 필드면 Holder Idiom인가
+- [ ] 인스턴스 필드면 `volatile` + Double-Check인가
+
+---
+
+## 아이템 84. 프로그램의 동작을 스레드 스케줄러에 기대지 말라
+
+### 한 줄 요약
+
+`Thread.yield()`·우선순위(`setPriority`)·`Thread.sleep()`으로 **타이밍에 기대는 코드**는 OS·JVM 변경 시 깨진다. 정확한 동기화·동시성 유틸을 써라.
+
+### 안티패턴 — sleep으로 race 회피
+
+```java
+// ❌
+producer.start();
+Thread.sleep(100);   // "그동안 produce 끝났겠지"
+consumer.consume();
+```
+
+`sleep(100)`이 운영체제·JIT 상태에 따라 부족할 수 있음 → 간헐적 실패.
+
+### 권장 — 명시적 동기화
+
+```java
+CountDownLatch latch = new CountDownLatch(1);
+producer.start();
+producer.onComplete(latch::countDown);
+latch.await();   // 정확한 대기
+consumer.consume();
+```
+
+### `Thread.yield()` 사용 시기
+
+- 거의 없음. 성능 튜닝 단서로 마지막 시도.
+- 대신 작업 분할·`Executors`·동시성 유틸로 해결.
+
+### `Thread.sleep()` 정당한 경우
+
+- 폴링 간격 (외부 시스템 상태 확인)
+- 테스트의 의도된 지연 — 단, 가능하면 `Awaitility` 같은 명시적 도구
+
+### 체크리스트
+
+- [ ] 핵심 동작이 `Thread.sleep()`/우선순위에 의존하지 않는가
+- [ ] 스레드 간 신호는 `CountDownLatch`/`CompletableFuture`/`BlockingQueue`로
+- [ ] 운영 환경 변경 시 (코어 수, 부하) 깨질 수 있는 가정을 두지 않았는가
+
+---
+
+## 11장 종합 정리
+
+### 한눈에 보는 결정 가이드
+
+| 상황 | 선택 |
+|------|------|
+| 공유 가변 데이터 | **`volatile`/`synchronized`/`Atomic*`(78)** |
+| 락 안에서 외부 콜백 호출 | **금지(79)** — 락 밖으로 |
+| 새 스레드 생성 | **`ExecutorService`(80)** — 직접 `new Thread()` 금지 |
+| 생산자-소비자 | **`BlockingQueue`(81)** |
+| 스레드 안전 맵 | **`ConcurrentHashMap`(81)** |
+| 클래스 공개 | **스레드 안전성 Javadoc(82)** |
+| 지연 초기화 | **정상 초기화 우선(83)**, 필요 시 Holder/Double-Check |
+| 타이밍 동기화 | **`CountDownLatch`/`CompletableFuture`(84)** — sleep 금지 |
+
+### 종합 체크리스트 (코드 리뷰용)
+
+- [ ] Spring 빈 필드가 가변 + 공유 가능 → 동기화 또는 불변화
+- [ ] `synchronized` 안에 I/O·콜백·블로킹 호출 없음
+- [ ] `new Thread()`/`Executors.newCachedThreadPool()` 직접 호출이 없거나, 명시적 `ThreadPoolExecutor`로 교체
+- [ ] `HashMap`/`ArrayList`를 멀티스레드 공유하지 않는가 (`ConcurrentHashMap`/`CopyOnWriteArrayList`)
+- [ ] `SimpleDateFormat`·`Random` 공유 없음 (`DateTimeFormatter`·`ThreadLocalRandom` 사용)
+- [ ] 지연 초기화에 `volatile` + Double-Check 또는 Holder
+- [ ] 테스트가 `Thread.sleep`에 의존하지 않음
+
+### 종합 퀴즈
+
+<details><summary>Q1. <code>volatile</code>이 <code>synchronized</code>를 대체할 수 없는 경우는?</summary>
+
+**복합 연산**(read-modify-write). `volatile int count; count++;` 는 가시성은 보장되지만 atomic이 아니라 race 발생. `synchronized` 또는 `AtomicInteger`로.
+
+</details>
+
+<details><summary>Q2. 락을 든 채 외부 콜백 호출이 위험한 이유 3가지?</summary>
+
+(1) 콜백이 같은 락을 요구하면 재진입(또는 다른 자료 락 요구 시 데드락), (2) 콜백 안 예외가 락 보유 상태를 깨거나 무한 대기 유발, (3) 콜백이 블로킹 I/O면 락 보유 시간이 폭증해 시스템 전체가 멈춤.
+
+</details>
+
+<details><summary>Q3. <code>Executors.newCachedThreadPool()</code>이 현업에서 위험한 이유는?</summary>
+
+기본 큐가 `SynchronousQueue` + 최대 스레드 수가 `Integer.MAX_VALUE` — 부하가 몰리면 스레드를 무제한 생성해 **OOM/시스템 정지**. 명시적 `ThreadPoolExecutor`로 풀 크기·큐·거부 정책을 지정해야 안전.
+
+</details>
+
+<details><summary>Q4. 정적 필드 지연 초기화의 정석 패턴은?</summary>
+
+**Holder Idiom**: 정적 내부 클래스 안에 `static final` 필드를 두면, JVM 클래스 로딩 시점에 한 번만 초기화되며 동기화 비용이 없다. 가장 단순하고 안전한 패턴.
+
+</details>
+
+<details><summary>Q5. 테스트에서 <code>Thread.sleep</code>이 안티패턴인 이유는?</summary>
+
+타이밍 가정이 OS·JIT·부하에 따라 깨져 **간헐적 실패(flaky test)** 가 발생한다. `CountDownLatch`·`CompletableFuture.get(timeout)`·`Awaitility` 같은 명시적 동기화로 대체해야 한다.
+
+</details>
+
+---
+
+## 다음 장 예고 — 12장: 직렬화
+
+자바 직렬화의 **위험**(보안 취약점·역호환·성능)과 그 대안 — 6개 아이템(Item 85~90). "Effective Java 3판이 가장 격하게 경고하는 장." JSON/Protobuf로 가야 할 이유, 그래도 어쩔 수 없이 자바 직렬화를 써야 할 때의 방어 패턴(`readObject` 방어적 작성, 직렬화 프록시)을 다룹니다.
+
+> 이어서 만들까요? (12장으로 진행 / 책 전체 종합 정리 + 통합 교재 묶기로 마무리)

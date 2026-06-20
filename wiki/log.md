@@ -4,6 +4,39 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-20] expand | 강의 교재 본문 23편을 wiki로 노출 — 사이트에서 실습 본문 검색 가능
+- 문제: src-*-lecture.md 인덱스 페이지가 있어도 raw 파일 링크라 사이트(wons-wiki.web.app)에서 본문 접근 불가
+- 해결: raw 강의 교재 23편(EJ 11편 + 리팩터링 12편) 을 wiki/로 복사, mkdocs nav에 모두 등록
+- raw 디렉터리 정리: `raw/clean-code/리팩터링*` 12편 → `raw/refactoring/` 이동, 빈 clean-code 제거
+- 신규 wiki 페이지:
+  - `lecture-refactoring-ch1.md` ~ `ch12.md` (12개)
+  - `lecture-effective-java-ch2.md` ~ `ch12.md` (11개)
+- 인덱스 갱신:
+  - `src-refactoring-lecture.md` — raw 경로 → `[[lecture-refactoring-chN]]` 위키링크
+  - `src-effective-java-lecture.md` — raw 경로 → `[[lecture-effective-java-chN]]` 위키링크
+- mkdocs.yml nav 23개 항목 추가 (📚 도서 > 각 책 하위)
+- 효과: 사이트 nav에서 각 장 클릭 → 본문(학습 목표·비유·Before/After·Spring 현업·체크리스트·퀴즈) 바로 진입
+
+## [2026-06-20] expand | 📚 리팩터링 2판 실전 강의 교재 12장 작성·인덱스
+- 원본 입력: `raw/clean-code/리팩터링 실전 강의 교재 1·2장.md` (사용자 직접 작성)
+- 본 세션 추가 작성: 3~12장 10편 (약 4,200줄). 1·2장 형식 그대로 (0.도입·기법별 비유→Before/After→절차→Spring 현업·종합 정리·퀴즈).
+- 위키 신규 페이지 (1개):
+  - `src-refactoring-lecture.md` — 12편 강의 교재 통합 인덱스 (각 장 raw 링크·시그니처 비유 모음·★ 핵심 9개·6원칙·활용 가이드)
+- 기존 페이지 보강:
+  - `entity-refactoring.md` — 원본 출처·관련 페이지에 강의 교재 12편 링크 추가
+- raw 디렉터리: 사용자가 `raw/clean-code/` 에 입력해 현 위치 유지 (디렉터리명 정리는 사용자 결정 사항으로 미룸)
+
+## [2026-06-20] ingest | 📚 리팩터링 2판 (Martin Fowler, 2018) 책 entity
+- 원본: `raw/refactoring/toc.md` — 사용자 입력 목차 (책 본문 미보유)
+- 생성된 페이지 (1개):
+  - `entity-refactoring.md` — 책 카드 + 8개 핵심 메시지 + 3부 구조 + **24개 코드 악취 표(악취 ↔ 리팩터링 기법 매핑)** + 6~12장 카탈로그 요약(약 66개 리팩터링) + 위키 기존 페이지 매핑 + "이름 있는 메커니즘이 즉흥보다 안전" 패턴 비교 + 세 책 삼각형 관계(*오브젝트*·*Effective Java*·*리팩터링*)
+- 기존 페이지 보강 (4개):
+  - `concept-oop.md` — 4원칙 위배 = 악취
+  - `concept-design-patterns.md` — 10.4 → Strategy, 11.8 → Factory Method
+  - `entity-object.md` — 책임 주도 설계가 도달점, 리팩터링이 거기까지 가는 카탈로그
+  - `entity-effective-java.md` — 매일의 권고 vs 이미 짠 코드의 카탈로그
+- 4권 도서 ingest 계획 중 3권 완료 (실제로는 책 진행 흐름 변경: 오브젝트·Effective Java·리팩터링). 남은: Clean Code, 테스트 주도 개발
+
 ## [2026-06-20] ingest | 📚 Effective Java (Joshua Bloch, 3판 2018) 전체
 - 원본 입력:
   - `raw/effective_java/이펙티브 자바 실전 강의 교재 2~6장.md` (사용자 제공, 약 2,900줄)

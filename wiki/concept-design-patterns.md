@@ -243,6 +243,7 @@ public class OrderFacade {
 - [[concept-oop]] — 패턴의 기반이 되는 OO 원칙
 - [[entity-object]] — *오브젝트* 15장 "디자인 패턴과 프레임워크" + 11장 "객체 합성이 클래스 상속보다 더 좋다" (한국어 시나리오 기반 재증명)
 - [[entity-effective-java]] — Joshua Bloch *Effective Java* (Item 1 정적 팩터리·2 빌더·17 불변·18 컴포지션이 GoF 패턴의 자바 실전 가이드)
+- [[entity-refactoring]] — Martin Fowler *리팩터링 2판* (10.4 조건부 로직 → 다형성 = Strategy 패턴, 11.8 생성자 → 팩터리 = Factory Method. 패턴이 리팩터링의 도달점)
 - [[concept-spring-core]] — 패턴이 실무에서 적용되는 Spring 구조
 - [[src-java-study-2024-2025]] — Ch04 객체지향 설계와 패턴
 - [[src-kakaopay-ddd]] — DDD에서 패턴 활용

@@ -1,3 +1,12 @@
+---
+title: "Effective Java 실전 강의 — 4장"
+type: source
+tags: [book, effective-java, bloch, lecture]
+sources: [effective_java/이펙티브 자바 실전 강의 교재 4장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
 # 이펙티브 자바 실전 강의 교재
 
 ## 4장 — 클래스와 인터페이스

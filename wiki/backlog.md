@@ -64,10 +64,13 @@ updated: 2026-06-20
 
 ### 즉시 가능 (입력 대기 중)
 
-- [ ] **📚 Java 도서 ingest 진행 중 (2/4)** — *오브젝트*·*Effective Java* 완료, 남은 2권 목차 입력 대기
+- [ ] **📚 Java 도서 ingest 진행 중 (3권 완료, 1권은 강의 교재까지)** — *오브젝트*·*Effective Java*·*리팩터링 2판* 완료
+  - *Effective Java* + *리팩터링*: 강의 교재 11·12편 완성 (약 1만 줄)
+  - *오브젝트*: 책 카드만 (백로그의 신규 concept 4개 후보 그대로)
   - [ ] Clean Code (Robert C. Martin)
   - [ ] 테스트 주도 개발 (Kent Beck)
-  - 4권 모두 ingest 후 → 4권 비교표 1개 추가 예정
+  - 최종 도서 모두 ingest 후 → 도서 비교표 1개 추가 예정 (관점·단위·시점·언어)
+- [x] ~~**raw 디렉터리 정리**~~ — 2026-06-20 완료. `raw/clean-code/리팩터링*` 12편 → `raw/refactoring/`
 - [ ] **오브젝트 책 기반 신규 concept 페이지 4개** — 사용자 노트·발췌 입력 대기
   - [ ] `concept-solid` — SOLID 5원칙 (OCP·LSP·DIP 포함, 책 9·13장 기반)
   - [ ] `concept-grasp` — GRASP 책임 할당 9패턴 (책 5장 기반)

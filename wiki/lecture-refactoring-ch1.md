@@ -1,0 +1,491 @@
+---
+title: "리팩터링 2판 실전 강의 — 1장"
+type: source
+tags: [book, refactoring, fowler, lecture]
+sources: [refactoring/리팩터링 실전 강의 교재 1장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 리팩터링 실전 강의 교재
+
+## 1장 — 리팩터링: 첫 번째 예시
+
+> **원서**: 마틴 파울러 『리팩터링 2판』 **대상**: Java/Spring·JS/TS 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 프로그램 → 따라하기(단계별 리팩터링) → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈 **코드 언어**: 원서를 따라 JavaScript로 진행하고, 필요한 곳에 TypeScript/Java·Spring 대응을 덧붙입니다.
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 리팩터링이 "코드를 한 번에 뜯어고치는 것"이 아니라 **아주 작은 단계의 연속**임을 체감한다.
+- 매 단계 **테스트로 안전을 확인**하며 나아가는 리듬을 익힌다.
+- 거대한 함수 하나가 **함수 추출 → 단계 분리 → 다형성**을 거쳐 어떻게 변하는지 끝까지 따라간다.
+
+### 0.2 큰 그림 — 1장은 "리팩터링의 맛보기"
+
+1장은 규칙 목록이 아니라, **공연료 청구서를 출력하는 함수 하나**를 처음부터 끝까지 리팩터링하는 실황 중계입니다. 흐름은 이렇습니다.
+
+```
+[더러운 큰 함수] →(함수 추출)→ [작은 함수들] →(단계 쪼개기)→ [계산/포맷 분리]
+                                                        →(다형성)→ [타입별 계산 객체]
+```
+
+### 0.3 비유 — "요리하면서 틈틈이 정리하는 주방"
+
+요리(기능 개발)를 하다 보면 주방(코드)이 어질러집니다. 좋은 요리사는 다음 재료를 꺼내기 **직전에** 도마를 닦습니다. 리팩터링은 "큰맘 먹고 날 잡아서 대청소"가 아니라, **요리 중 틈틈이 하는 정리**입니다. 그래야 다음 기능을 빠르고 안전하게 얹을 수 있습니다.
+
+> **두 개의 모자(2장 예고)**: 요리사 모자(기능 추가)와 청소부 모자(리팩터링)를 **동시에 쓰지 않습니다.** 지금 무슨 모자를 썼는지 늘 의식하세요.
+
+### 0.4 현업에서 왜 중요한가
+
+- 운영 코드의 거대한 `Service` 메서드, 끝없는 `switch`/`if`는 1장의 출발점 코드와 똑같이 생겼습니다.
+- 1장에서 쓰는 기법(함수 추출, 단계 쪼개기, 조건부 로직→다형성)은 그대로 **레거시 길들이기**에 적용됩니다.
+
+---
+
+## 1. 예시 프로그램 — 공연료 청구서
+
+연극 공연 기획사가 고객에게 청구서를 출력합니다. 공연 장르는 비극(tragedy)·희극(comedy)이고, 관객 수에 따라 요금과 적립 포인트(volume credit)가 달라집니다.
+
+데이터(외부 JSON):
+
+```javascript
+// plays.json
+const plays = {
+  "hamlet":  { name: "Hamlet",       type: "tragedy" },
+  "as-like": { name: "As You Like It", type: "comedy" },
+  "othello": { name: "Othello",      type: "tragedy" },
+};
+
+// invoices.json
+const invoice = {
+  customer: "BigCo",
+  performances: [
+    { playID: "hamlet",  audience: 55 },
+    { playID: "as-like", audience: 35 },
+    { playID: "othello", audience: 40 },
+  ],
+};
+```
+
+출발점 코드(리팩터링 전):
+
+```javascript
+function statement(invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+  const format = new Intl.NumberFormat("en-US",
+      { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format;
+
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    let thisAmount = 0;
+
+    switch (play.type) {
+      case "tragedy":
+        thisAmount = 40000;
+        if (perf.audience > 30) thisAmount += 1000 * (perf.audience - 30);
+        break;
+      case "comedy":
+        thisAmount = 30000;
+        if (perf.audience > 20) thisAmount += 10000 + 500 * (perf.audience - 20);
+        thisAmount += 300 * perf.audience;
+        break;
+      default:
+        throw new Error(`알 수 없는 장르: ${play.type}`);
+    }
+
+    // 포인트 적립
+    volumeCredits += Math.max(perf.audience - 30, 0);
+    if (play.type === "comedy") volumeCredits += Math.floor(perf.audience / 5);
+
+    // 청구 내역 한 줄
+    result += `  ${play.name}: ${format(thisAmount / 100)} (${perf.audience}석)\n`;
+    totalAmount += thisAmount;
+  }
+  result += `총액: ${format(totalAmount / 100)}\n`;
+  result += `적립 포인트: ${volumeCredits}점\n`;
+  return result;
+}
+```
+
+### 이 코드를 본 소감
+
+지금은 짧아서 "그럭저럭 읽힌다"고 느낄 수 있습니다. 하지만 요구사항이 들어옵니다.
+
+- **요구 1**: 청구서를 **HTML로도** 출력해 달라.
+- **요구 2**: 장르가 **여러 개 더** 추가될 예정이다(역사극, 전원극, 사극...).
+
+이 두 요구를 지금 구조에 그냥 욱여넣으면, `statement`는 HTML 분기와 장르 분기가 뒤엉켜 빠르게 손댈 수 없는 코드가 됩니다. **기능을 추가하기 어렵다면, 먼저 추가하기 쉽게 리팩터링한 뒤 추가하라.** 이것이 1장의 핵심 메시지입니다.
+
+---
+
+## 2. 리팩터링의 대전제 — 자가 테스트
+
+> **리팩터링하기 전에, 제대로 된 테스트부터 마련하라.**
+
+리팩터링은 "겉보기 동작을 바꾸지 않으면서 내부 구조를 개선"하는 작업입니다. "동작이 안 바뀌었음"을 매 단계 확인할 **안전망**이 없으면, 리팩터링은 그냥 도박입니다.
+
+```javascript
+test("BigCo 청구서 출력", () => {
+  const result = statement(invoice, plays);
+  expect(result).toMatchSnapshot();   // 또는 정확한 기대 문자열 비교
+});
+```
+
+이제부터 모든 단계 뒤에 이 테스트를 돌려, 초록불(통과)을 확인하고 커밋합니다.
+
+> **리듬**: 작은 변경 → 테스트 → 커밋 → 작은 변경 → 테스트 → 커밋 … 한 번에 조금씩, 항상 동작하는 상태를 유지합니다.
+
+---
+
+## 3. 따라하기 — 단계별 리팩터링
+
+### 단계 1. `statement` 쪼개기 — 함수 추출하기 (6.1)
+
+가장 복잡한 덩어리인 `switch`문부터 별도 함수로 빼냅니다.
+
+```javascript
+function amountFor(perf, play) {   // 추출
+  let result = 0;
+  switch (play.type) {
+    case "tragedy":
+      result = 40000;
+      if (perf.audience > 30) result += 1000 * (perf.audience - 30);
+      break;
+    case "comedy":
+      result = 30000;
+      if (perf.audience > 20) result += 10000 + 500 * (perf.audience - 20);
+      result += 300 * perf.audience;
+      break;
+    default:
+      throw new Error(`알 수 없는 장르: ${play.type}`);
+  }
+  return result;
+}
+```
+
+`statement` 안에서는 이렇게 호출합니다.
+
+```javascript
+let thisAmount = amountFor(perf, play);
+```
+
+> **포인트**: 반환값 변수를 `result`로 통일하는 등 **사소한 정리도 같이** 합니다. 추출 후 반드시 테스트.
+
+### 단계 2. `play` 매개변수 제거 — 임시 변수를 질의 함수로 (7.4)
+
+`play`는 `perf`로부터 매번 구할 수 있는 **파생값**입니다. 지역 변수를 함수로 바꾸면, 나중에 추출이 훨씬 쉬워집니다.
+
+```javascript
+function playFor(perf) { return plays[perf.playID]; }
+```
+
+이제 `amountFor`는 `play` 인자가 필요 없습니다.
+
+```javascript
+function amountFor(perf) {
+  switch (playFor(perf).type) { /* ... */ }
+}
+```
+
+> **왜 임시 변수를 줄이나?** 임시 변수가 많을수록 함수 추출이 어렵습니다. 매개변수가 줄면 추출/이동이 자유로워집니다.
+
+### 단계 3. 적립 포인트 계산 추출 — 함수 추출 (6.1)
+
+```javascript
+function volumeCreditsFor(perf) {
+  let result = Math.max(perf.audience - 30, 0);
+  if (playFor(perf).type === "comedy") result += Math.floor(perf.audience / 5);
+  return result;
+}
+```
+
+### 단계 4. `format` 임시 변수 정리 — 함수 추출 (6.1)
+
+임시 변수에 담긴 함수는 이름이 모호합니다(`format`이 뭘 한다는 거지?). 의도를 드러내는 함수로 바꿉니다.
+
+```javascript
+function usd(aNumber) {
+  return new Intl.NumberFormat("en-US",
+    { style: "currency", currency: "USD", minimumFractionDigits: 2 })
+    .format(aNumber / 100);   // 100으로 나누는 책임까지 이 함수로 모음
+}
+```
+
+### 단계 5. 총액·총포인트를 질의 함수로 — 반복문 쪼개기(8.7) + 임시 변수 제거(7.4)
+
+`totalAmount`, `volumeCredits`는 반복문 안에서 **누산되는 임시 변수**라 추출을 가로막습니다. 계산 전용 함수로 분리합니다.
+
+```javascript
+function totalAmount() {
+  let result = 0;
+  for (let perf of invoice.performances) result += amountFor(perf);
+  return result;
+}
+function totalVolumeCredits() {
+  let result = 0;
+  for (let perf of invoice.performances) result += volumeCreditsFor(perf);
+  return result;
+}
+```
+
+이제 `statement`는 누산 로직 없이 깔끔해집니다.
+
+```javascript
+function statement(invoice, plays) {
+  let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+  for (let perf of invoice.performances) {
+    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
+  }
+  result += `총액: ${usd(totalAmount())}\n`;
+  result += `적립 포인트: ${totalVolumeCredits()}점\n`;
+  return result;
+}
+```
+
+> "반복문을 두 번 도니 느려지지 않나요?" → 보통 **무시할 수준**입니다. 성능은 측정으로 판단하고, 우선은 **명료함**을 택합니다(2장 "리팩터링과 성능").
+
+### 🔎 중간 점검
+
+`statement`는 이제 **"무엇을 출력하는가"의 골격**만 남고, 세부 계산은 작은 함수들에 위임됐습니다. 함수 하나하나가 작고 이름으로 의도를 드러냅니다. 여기까지가 "함수 추출"의 힘입니다.
+
+---
+
+### 단계 6. 계산 단계와 포맷팅 단계 분리 — 단계 쪼개기 (6.11)
+
+이제 첫 요구사항(**HTML 출력**)을 받을 준비를 합니다. 핵심 아이디어: **데이터를 계산하는 단계**와 **그 데이터를 문자열로 그리는 단계**를 분리합니다.
+
+```javascript
+// 1단계: 계산 — 중간 데이터 구조를 만든다
+function createStatementData(invoice, plays) {
+  const result = {};
+  result.customer = invoice.customer;
+  result.performances = invoice.performances.map(enrich);
+  result.totalAmount = totalAmount(result);
+  result.totalVolumeCredits = totalVolumeCredits(result);
+  return result;
+
+  function enrich(perf) {
+    const calc = createPerformanceCalculator(perf, playFor(perf));  // 단계 7에서 도입
+    return {
+      ...perf,
+      play: calc.play,
+      amount: calc.amount,
+      volumeCredits: calc.volumeCredits,
+    };
+  }
+  // playFor, totalAmount, totalVolumeCredits 등은 이 모듈로 이동
+}
+```
+
+```javascript
+// 2단계: 포맷 — 계산 결과(data)만 받아 문자열로 그린다
+function renderPlainText(data) {
+  let result = `청구 내역 (고객명: ${data.customer})\n`;
+  for (let perf of data.performances) {
+    result += `  ${perf.play.name}: ${usd(perf.amount)} (${perf.audience}석)\n`;
+  }
+  result += `총액: ${usd(data.totalAmount)}\n`;
+  result += `적립 포인트: ${data.totalVolumeCredits}점\n`;
+  return result;
+}
+
+function statement(invoice, plays) {
+  return renderPlainText(createStatementData(invoice, plays));
+}
+```
+
+> 파울러는 여기서 계산부를 **별도 파일(statement.js → createStatementData.js)**로 옮깁니다. 단계가 물리적으로도 분리되어, 한쪽을 건드려도 다른 쪽이 안전합니다.
+
+### 단계 6의 보상 — HTML 출력은 이제 공짜에 가깝다
+
+```javascript
+function htmlStatement(invoice, plays) {
+  return renderHtml(createStatementData(invoice, plays));
+}
+function renderHtml(data) {
+  let result = `<h1>청구 내역 (고객명: ${data.customer})</h1>\n<table>\n`;
+  for (let perf of data.performances) {
+    result += `  <tr><td>${perf.play.name}</td><td>${perf.audience}석</td>`;
+    result += `<td>${usd(perf.amount)}</td></tr>\n`;
+  }
+  result += `</table>\n<p>총액: <em>${usd(data.totalAmount)}</em></p>\n`;
+  result += `<p>적립 포인트: <em>${data.totalVolumeCredits}점</em></p>\n`;
+  return result;
+}
+```
+
+계산 로직을 **단 한 줄도 복제하지 않고** 새 출력 형식을 추가했습니다. 이것이 단계 분리의 보상입니다.
+
+---
+
+### 단계 7. 다형성으로 계산 코드 재구성 — 조건부 로직을 다형성으로 (10.4)
+
+이제 둘째 요구사항(**장르 추가**)을 준비합니다. 장르별 분기(`switch`)를 **타입별 계산 객체**로 바꿉니다.
+
+```javascript
+class PerformanceCalculator {
+  constructor(performance, play) {
+    this.performance = performance;
+    this.play = play;
+  }
+  get amount() { throw new Error("서브클래스에서 구현하세요"); }   // 추상
+  get volumeCredits() { return Math.max(this.performance.audience - 30, 0); }
+}
+
+class TragedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 40000;
+    if (this.performance.audience > 30) result += 1000 * (this.performance.audience - 30);
+    return result;
+  }
+}
+
+class ComedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 30000;
+    if (this.performance.audience > 20) result += 10000 + 500 * (this.performance.audience - 20);
+    result += 300 * this.performance.audience;
+    return result;
+  }
+  get volumeCredits() {   // 희극만의 추가 규칙은 여기서 오버라이드
+    return super.volumeCredits + Math.floor(this.performance.audience / 5);
+  }
+}
+
+// 타입에 맞는 계산기를 생성 (생성자를 팩터리 함수로 — 11.8)
+function createPerformanceCalculator(perf, play) {
+  switch (play.type) {
+    case "tragedy": return new TragedyCalculator(perf, play);
+    case "comedy":  return new ComedyCalculator(perf, play);
+    default: throw new Error(`알 수 없는 장르: ${play.type}`);
+  }
+}
+```
+
+이제 `switch`는 **객체를 만드는 한 곳(팩터리)**에만 남고, 계산 로직은 각 클래스로 흩어집니다.
+
+### 단계 7의 보상 — 새 장르 추가가 안전해진다
+
+역사극(history)을 추가한다면? **기존 코드를 건드리지 않고** 새 클래스 하나만 추가하면 됩니다.
+
+```javascript
+class HistoryCalculator extends PerformanceCalculator {
+  get amount() { /* 역사극 요금 규칙 */ return 0; }
+}
+// 팩터리에 한 줄 추가
+//   case "history": return new HistoryCalculator(perf, play);
+```
+
+> 이것이 **개방-폐쇄 원칙(OCP)**입니다: 확장에는 열려 있고(새 클래스 추가), 수정에는 닫혀 있다(기존 계산 코드 불변).
+
+---
+
+## 4. 핵심 교훈
+
+1. **리팩터링은 작은 단계의 연속이다.** 한 번에 큰 변경을 하지 않는다. 매 단계 코드는 항상 동작한다.
+2. **테스트가 안전망이다.** 자가 테스트 없이는 리팩터링하지 않는다.
+3. **함수 추출이 가장 기본기다.** 의도를 함수 이름으로 드러내면 코드가 설명서가 된다.
+4. **임시 변수를 줄이면 추출이 쉬워진다.** 임시 변수 → 질의 함수.
+5. **단계 쪼개기**로 "계산"과 "표현(포맷)"을 분리하면, 새 출력 형식을 공짜로 얻는다.
+6. **조건부 로직을 다형성으로** 바꾸면, 새 종류 추가가 기존 코드 수정 없이 가능해진다.
+7. **"먼저 쉽게 만든 뒤, 기능을 추가하라."** 리팩터링은 기능 개발을 느리게 하는 게 아니라 **빠르게** 한다.
+
+> 좋은 코드의 척도는 "사람이 수정하기 얼마나 쉬운가"입니다. 컴퓨터만 이해하는 코드는 누구나 짜지만, **사람이 이해하기 쉬운 코드**는 훈련된 개발자가 짭니다.
+
+---
+
+## 5. 현업 예제 — Java/Spring으로 옮기면
+
+1장의 기법은 Spring 백엔드의 **거대 서비스 메서드**에 그대로 적용됩니다.
+
+**Before — 흔한 레거시 서비스**
+
+```java
+public String createStatement(Invoice invoice) {
+    // 100줄짜리 메서드: 계산 + 포맷 + 장르별 switch가 한 덩어리
+    switch (play.getType()) {
+        case TRAGEDY: ...
+        case COMEDY: ...
+    }
+    // ... 문자열 조립 ...
+}
+```
+
+**After — 단계 분리 + 다형성(전략)**
+
+```java
+// 1) 계산과 표현을 분리 (단계 쪼개기)
+StatementData data = statementCalculator.calculate(invoice);
+return plainTextRenderer.render(data);   // htmlRenderer.render(data)도 가능
+
+// 2) 장르별 계산은 다형성으로 (조건부 로직 → 다형성)
+public interface PerformanceCalculator {
+    Money amount(Performance perf);
+    int volumeCredits(Performance perf);
+}
+// TragedyCalculator, ComedyCalculator ... 구현체로 분리
+```
+
+> **이펙티브 자바와의 연결**: 단계 7의 다형성 재구성은 EJ **아이템 34(전략 enum)**·**아이템 18(컴포지션)**과 같은 사고입니다. `switch` 떡칠을 다형성으로 대체하는 이 패턴은 두 책이 공유하는 핵심입니다.
+
+> **공공/엔터프라이즈 메모**: 계약·정산·수수료 계산처럼 "규칙이 자주 추가되는 도메인"이 다형성 재구성의 1순위 후보입니다. 단, 운영 코드는 **테스트(특성화 테스트, characterization test)부터** 씌운 뒤 손대세요(4장에서 상술).
+
+---
+
+## 6. 함정 / 주의
+
+- **테스트 없이 리팩터링 금지.** 안전망 없는 구조 변경은 사고입니다.
+- **한 번에 크게 바꾸지 말 것.** 큰 변경은 작은 단계로 쪼개세요. 깨지면 직전 커밋으로 돌아갑니다.
+- **두 개의 모자를 동시에 쓰지 말 것.** 리팩터링 중에는 기능을 추가하지 않습니다(반대도 마찬가지).
+- **성급한 일반화(YAGNI) 경계.** 단계 7의 다형성도 "장르가 늘어난다"는 **실제 압력**이 있어서 정당화됩니다. 추측만으로 구조를 복잡하게 만들지 마세요.
+- **성능 걱정은 측정 후에.** 반복문을 한 번 더 도는 정도는 대개 문제가 안 됩니다.
+
+---
+
+## 7. 체크리스트 (리팩터링 시작 전/중)
+
+- [ ] 손대기 전에 **자가 테스트**가 있는가
+- [ ] 변경을 **작은 단계**로 쪼갰는가 (매 단계 테스트 통과)
+- [ ] 지금 쓴 모자가 "리팩터링"인지 "기능 추가"인지 의식하고 있는가
+- [ ] 큰 함수를 **함수 추출**로 분해했는가, 이름이 의도를 드러내는가
+- [ ] **계산/표현**을 분리할 여지가 있는가 (단계 쪼개기)
+- [ ] 반복되는 `switch`를 **다형성**으로 바꿀 실제 압력이 있는가
+
+---
+
+## 8. 퀴즈
+
+<details><summary>Q1. "리팩터링"의 정의를 한 문장으로 말하라.</summary>
+
+**겉으로 드러나는 동작은 그대로 유지한 채**, 코드의 내부 구조를 이해하기 쉽고 수정하기 저렴하게 개선하는 작업.
+
+</details> <details><summary>Q2. 리팩터링을 시작하기 전 반드시 갖춰야 할 것은?</summary>
+
+**제대로 된 자가 테스트**(안전망). 동작이 바뀌지 않았음을 매 단계 검증할 수 없으면 리팩터링이 아니라 도박입니다.
+
+</details> <details><summary>Q3. "단계 쪼개기(계산/표현 분리)"가 준 구체적 보상은 무엇이었나?</summary>
+
+계산 로직을 한 줄도 복제하지 않고 **HTML 출력(renderHtml)**을 추가할 수 있게 됐습니다.
+
+</details> <details><summary>Q4. switch 분기를 다형성으로 바꾸자 "새 장르 추가"가 어떻게 달라졌나?</summary>
+
+기존 계산 코드를 **수정하지 않고**, 새 계산기 클래스 하나를 **추가**하고 팩터리에 한 줄만 더하면 됩니다(개방-폐쇄 원칙).
+
+</details> <details><summary>Q5. "두 개의 모자"가 뜻하는 바는?</summary>
+
+**기능 추가**와 **리팩터링**은 별개의 작업이며, 한 번에 하나의 모자만 써야 한다는 것. 지금 무엇을 하는 중인지 늘 자각하라는 규율입니다.
+
+</details>
+
+---
+
+## 다음 장 예고 — 2장: 리팩터링 원칙
+
+1장이 "맛보기 실습"이었다면, 2장은 그 원칙을 언어화합니다. **리팩터링의 정의, 두 개의 모자, 언제/왜 리팩터링하는가, YAGNI, 성능과의 관계**를 다룹니다. 1장에서 손으로 느낀 감각에 이론적 뼈대를 붙이는 장입니다.
+
+> 이어서 만들까요? (2장으로 진행 / 악취 카탈로그인 3장으로 점프 / 1장을 Java·Spring 버전으로 다시 써서 강의용으로 묶기)

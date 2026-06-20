@@ -23,6 +23,7 @@ updated: 2026-06-20
 - [[src-loop-engineering]] — Loop 엔지니어링 (2026-06 Steinberger·Cherny·Osmani 발화 정리)
 - [[src-effective-java-summary]] — 📚 *Effective Java* 12장 한 페이지 요약 (모찌모찝 블로그)
 - [[src-effective-java-lecture]] — 📚 *Effective Java* 실전 강의 교재 11장 인덱스 (5,200+줄)
+- [[src-refactoring-lecture]] — 📚 *리팩터링 2판* 실전 강의 교재 12장 인덱스 (약 5,000줄)
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원
@@ -39,6 +40,7 @@ updated: 2026-06-20
 - [[entity-querydsl]] — Java 타입 안전 쿼리 프레임워크, 동적 쿼리 조합
 - [[entity-object]] — 📚 *오브젝트* (조영호, 위키북스 2019) — 한국어 책임 주도 설계 표준 해설서
 - [[entity-effective-java]] — 📚 *Effective Java* (Joshua Bloch, 3판 2018) — 자바 90개 권고 + ⭐현업 최핵심 20개
+- [[entity-refactoring]] — 📚 *리팩터링 2판* (Martin Fowler, 2018) — 24 코드 악취 + 66+ 리팩터링 카탈로그
 
 ## Concepts
 - [[concept-compounding-knowledge]] — 새 정보가 기존 지식과 결합하며 복리적으로 가치 증가
