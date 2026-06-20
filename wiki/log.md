@@ -4,6 +4,36 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-20] ingest | 📚 Effective Java (Joshua Bloch, 3판 2018) 전체
+- 원본 입력:
+  - `raw/effective_java/이펙티브 자바 실전 강의 교재 2~6장.md` (사용자 제공, 약 2,900줄)
+  - `raw/effective_java/개발서적 이펙티브 자바...핵심 요약.md` (모찌모찝 블로그 12장 요약, 출처 명시)
+- 본 세션 추가 작성 (raw):
+  - `이펙티브 자바 실전 강의 교재 7~12장.md` 6편 (Item 42~90, 약 3,500줄)
+  - 형식: 학습 목표·큰 그림·아이템별 비유→문제→해법→Spring/JPA·함정·체크리스트·종합 정리·퀴즈·다음 장 예고. 12장 끝에 책 전체 6원칙 요약.
+- 위키 신규 페이지 (3개):
+  - `entity-effective-java.md` — 책 카드 + 90 아이템 인덱스 + ⭐현업 최핵심 20개 + 위키 매핑 + "공개 API는 영원하다" 패턴 비교 + *오브젝트*와의 관계
+  - `src-effective-java-summary.md` — 블로그 12장 한 페이지 요약 source
+  - `src-effective-java-lecture.md` — 강의 교재 11장 통합 인덱스 source (각 장 raw 링크·시그니처 비유 모음·Spring/JPA 연결 표)
+- 기존 페이지 보강 (5개, "관련 페이지" + 인용):
+  - `concept-oop.md` — Item 17·18·20 인용
+  - `concept-design-patterns.md` — Item 1·2·17·18 (정적 팩터리·빌더·불변·컴포지션)
+  - `concept-spring-core.md` — Item 5(DI 이론)·3(싱글턴)·39(애너테이션)
+  - `concept-transactional-rollback-policy.md` — Item 70(checked vs runtime 철학)·71
+  - `concept-db-connection-pool.md` — Item 9 (try-with-resources 정석 사례)
+- 신규 concept 후보 4개 (사용자 노트 입력 대기, 백로그 등록): `concept-jpa-enum-mapping`, `concept-functional-interfaces`, `concept-generics-pecs`, `concept-java-serialization-risk`
+- 4권 도서 ingest 계획 중 2권 완료. 남은: Clean Code, TDD
+
+## [2026-06-20] ingest | 📚 오브젝트 (조영호, 위키북스 2019) 책 entity
+- 원본: `raw/object/toc.md` — 사용자 입력 목차 (책 본문 미보유)
+- 생성된 페이지 (1개):
+  - `entity-object.md` — 책 카드 + 9개 핵심 메시지 + 4부 구조 + 시그니처 예제(영화 예매·핸드폰 과금) + 위키 기존 페이지 매핑 + "데이터부터 그리면 망한다" 패턴 비교표
+- 기존 페이지 보강 (2개):
+  - `concept-oop.md` — 책 출처 인용 추가 (메시지가 객체를 결정한다)
+  - `concept-design-patterns.md` — 책 15장·11장 인용
+- 신규 concept 후보 4개 (사용자 노트 입력 대기): SOLID, GRASP, 계약에 의한 설계(DbC), DDD 모델 종류
+- 4권 도서 ingest 계획 중 1권 완료. 남은: Clean Code, TDD, Effective Java
+
 ## [2026-06-13] ingest | Loop 엔지니어링 (2026-06 커뮤니티 발화)
 - 원본: `raw/loop-engineering/loop-engineering-notes.md` (외부 AI 어시스턴트 정리본, 원전 URL 미확보)
 - 계기: 2026-06-08 Peter Steinberger X 게시물(650만 조회) + Boris Cherny / Addy Osmani 발언

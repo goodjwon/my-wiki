@@ -140,6 +140,12 @@ nav:
       - Spring Framework: entity-spring-framework.md
       - Spring Boot: entity-spring-boot.md
       - Spring Initializr: entity-spring-initializr.md
+    - "📚 도서":
+      - "오브젝트 (조영호, 2019)": entity-object.md
+      - "Effective Java (Joshua Bloch, 3판 2018)":
+        - 책 카드: entity-effective-java.md
+        - 12장 한 페이지 요약 (블로그): src-effective-java-summary.md
+        - 실전 강의 교재 11장 인덱스: src-effective-java-lecture.md
     - 소스:
       - Spring Boot 소개: src-spring-boot.md
       - Spring Framework 7: src-spring-framework-7.md

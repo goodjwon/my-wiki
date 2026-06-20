@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-06-07
+updated: 2026-06-20
 ---
 
 # 위키 백로그
@@ -64,6 +64,20 @@ updated: 2026-06-07
 
 ### 즉시 가능 (입력 대기 중)
 
+- [ ] **📚 Java 도서 ingest 진행 중 (2/4)** — *오브젝트*·*Effective Java* 완료, 남은 2권 목차 입력 대기
+  - [ ] Clean Code (Robert C. Martin)
+  - [ ] 테스트 주도 개발 (Kent Beck)
+  - 4권 모두 ingest 후 → 4권 비교표 1개 추가 예정
+- [ ] **오브젝트 책 기반 신규 concept 페이지 4개** — 사용자 노트·발췌 입력 대기
+  - [ ] `concept-solid` — SOLID 5원칙 (OCP·LSP·DIP 포함, 책 9·13장 기반)
+  - [ ] `concept-grasp` — GRASP 책임 할당 9패턴 (책 5장 기반)
+  - [ ] `concept-design-by-contract` — 계약에 의한 설계 (책 부록 A 기반)
+  - [ ] `concept-domain-model-kinds` — 분석/설계/구현 모델 구분 (책 부록 C 기반)
+- [ ] **Effective Java 책 기반 신규 concept 페이지 4개** — 강의 교재 본문 일부 발췌 ingest 대기
+  - [ ] `concept-jpa-enum-mapping` — Item 34·35 + `@Enumerated(STRING)` 함정
+  - [ ] `concept-functional-interfaces` — Item 44 표준 함수형 인터페이스 6개 + Spring 활용
+  - [ ] `concept-generics-pecs` — Item 31 한정적 와일드카드 (Producer Extends Consumer Super)
+  - [ ] `concept-java-serialization-risk` — Item 85·88·90 + Apache Commons Collections gadget chain 사례
 - [ ] **2분코딩 추가 영상** — 사용자가 새 영상 요약 보내면 같은 패턴으로 ingest
 - [ ] **본인 프로젝트 GCP 배포 학습** — 하네스 5모듈 후 단계
   - playground (api/ + web/) → Cloud Run 또는 Cloud Functions

@@ -115,4 +115,5 @@ spring:
 - [[src-spring-data-access-ref]] — Spring Data Access 레퍼런스 (Transaction, JDBC, JPA)
 - [[src-java-study-2024-2025]] — Ch06 데이터 접근과 SQL, Ch10 입출력과 네트워크
 - [[concept-spring-core]] — Spring DataSource는 IoC 컨테이너가 관리
+- [[entity-effective-java]] — *Effective Java* Item 9 (try-finally보다 try-with-resources)의 정석 사례. `try (var conn = dataSource.getConnection())` 패턴이 곧 풀 반납 자동화
 - [[src-kakaopay-ddd]] — DDD에서 Repository ↔ DataSource 의존 경계

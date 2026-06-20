@@ -166,6 +166,7 @@ grep -rn "@Transactional" src/main/java/ \
 
 - [[src-spring-data-access-ref]] — Spring `@Transactional` 전체 동작
 - [[concept-spring-core]] — Spring AOP·트랜잭션 동작 원리
+- [[entity-effective-java]] — *Effective Java* Item 70(복구 가능 → checked, 프로그래밍 오류 → runtime)의 자바 예외 철학이 이 정책의 뿌리. Item 71(검사 예외 남용 회피)도 같은 맥락
 - [[src-java-study-2024-2025]] — Ch02 Java 문법(예외), Ch06 데이터 접근
 - [[src-kakaopay-ddd]] — Application Layer 트랜잭션 경계 설계
 - [[concept-cronjob-concurrency-trap]] / [[concept-keepalive-timeout-race]] — 같은 "기본값 함정" 패턴

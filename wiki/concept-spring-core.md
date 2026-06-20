@@ -351,6 +351,7 @@ curl -s http://localhost:8080/actuator/metrics/jvm.memory.used
 ## 관련 페이지
 
 - [[entity-spring-framework]] / [[entity-spring-boot]] — Spring 제품군
+- [[entity-effective-java]] — Spring DI의 이론적 근거는 *Effective Java* Item 5(자원을 직접 명시하지 말고 의존성 주입을 사용하라). `@Bean`=Item 3 싱글턴, `@Transactional`=Item 39 애너테이션
 - [[concept-transactional-rollback-policy]] — `@Transactional`의 또 다른 함정
 - [[concept-api-backward-compatibility]] — Controller 응답 설계 시 고려
 - [[src-spring-data-access-ref]] — `@Repository`, `@Transactional` 자세히

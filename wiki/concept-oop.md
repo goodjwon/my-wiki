@@ -6,7 +6,7 @@ sources: [java-study/java-study-ch02-Java문법과객체.md]
 external:
   - https://docs.oracle.com/javase/tutorial/java/concepts/
 created: 2026-04-18
-updated: 2026-06-07
+updated: 2026-06-20
 ---
 
 # 객체지향 프로그래밍 (OOP)
@@ -16,6 +16,7 @@ updated: 2026-06-07
 상태(state)와 행위(behavior)를 객체 단위로 묶고, **책임(responsibility)을 객체들 사이에 분배**하는 프로그래밍 패러다임. Java/C#/Kotlin/Python/Ruby 등의 핵심 설계 철학.
 
 > **본질**: "함수가 데이터를 처리한다"에서 "객체가 자기 데이터에 책임을 진다"로 관점 전환.
+> 한국어 표준 해설서로는 조영호 *오브젝트* (위키북스, 2019) → [[entity-object]]. 책의 핵심 메시지 "메시지가 객체를 결정한다 / 행동이 상태를 결정한다" 가 본 페이지 본질 문장과 같은 관점.
 
 ## 4대 원칙
 
@@ -209,6 +210,8 @@ assert r.area() == 50;  // 실패! Square 때문에 100
 
 ## 관련 페이지
 
+- [[entity-object]] — 조영호 *오브젝트* (한국어 OO 설계 표준 해설서)
+- [[entity-effective-java]] — Joshua Bloch *Effective Java* (Item 17 불변·18 컴포지션·20 인터페이스 우선이 OOP 4원칙의 실전 적용)
 - [[concept-design-patterns]] — OOP 원칙을 구조화한 23패턴
 - [[concept-spring-core]] — Spring에서 OOP가 실현되는 구조
 - [[src-kakaopay-ddd]] — DDD = OOP를 도메인에 적용한 설계법
