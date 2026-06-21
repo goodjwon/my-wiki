@@ -96,5 +96,5 @@ Kent Beck *Test-Driven Development: By Example* (2002) 의 **3부 32장 + 부록
 ## 관련 페이지
 
 - [[entity-tdd]] — 책 카드 (상위)
-- [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-object]] — 5권 사각형
+- [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-object]] — 5권 오각형 (entity 마다 동일 표)
 - [[src-spring-testing-ref]] — JUnit 5 실무

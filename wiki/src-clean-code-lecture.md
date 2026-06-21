@@ -146,4 +146,4 @@ Robert C. Martin *Clean Code* (Prentice Hall, 2008) 의 **1~17장** 을 Java/Spr
 - [[entity-clean-code]] — 책 카드 (상위)
 - [[entity-effective-java]] / [[src-effective-java-lecture]] — 같은 패턴 강의 교재
 - [[entity-refactoring]] / [[src-refactoring-lecture]] — 같은 패턴 강의 교재
-- [[entity-object]] — 4권 사각형 비교
+- [[entity-object]] / [[entity-tdd]] — 5권 오각형 비교 (entity 마다 동일 표)
