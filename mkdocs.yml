@@ -125,25 +125,17 @@ nav:
       - Module 3 — Hooks: guide-harness-module3.md
       - Module 4 — Multi-Agent: guide-harness-module4.md
       - Module 5 — 리뷰·Rippable: guide-harness-module5.md
-  - Java·Spring·DDD:
-    - 개념:
+  - 개발방법론·OO:
+    - 가이드:
+      - 실습 환경 (5권 공통): guide-java-book-study-lab.md
+      - 코드 작성·점검 가이드: guide-code-authoring-and-review.md
+    - OO 개념:
       - 객체지향 (OOP): concept-oop.md
       - 디자인 패턴: concept-design-patterns.md
-      - Spring Core: concept-spring-core.md
-      - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md
-      - API Versioning: concept-api-versioning.md
-      - API 하위 호환성 (Tolerant Reader): concept-api-backward-compatibility.md
-      - JSpecify Null Safety: concept-jspecify-null-safety.md
-    - 도구·생태계:
-      - JVM: entity-jvm.md
-      - Querydsl: entity-querydsl.md
-      - Spring Framework: entity-spring-framework.md
-      - Spring Boot: entity-spring-boot.md
-      - Spring Initializr: entity-spring-initializr.md
-    - "📚 도서":
-      - "5권 실습 환경 가이드": guide-java-book-study-lab.md
-      - "5권 코드 작성·점검 가이드": guide-code-authoring-and-review.md
-      - "오브젝트 (조영호, 2019)":
+    - DDD:
+      - 카카오페이 DDD: src-kakaopay-ddd.md
+    - 도서:
+      - Object:
         - 책 카드: entity-object.md
         - "실전 강의 교재 — 인덱스": src-object-lecture.md
         - "실전 강의 — 1장 객체, 설계": lecture-object-ch1.md
@@ -164,7 +156,7 @@ nav:
         - "부록 A — 계약에 의한 설계": lecture-object-appendixA.md
         - "부록 B — 타입 계층의 구현": lecture-object-appendixB.md
         - "부록 C — 동적인 협력, 정적인 코드": lecture-object-appendixC.md
-      - "Effective Java (Joshua Bloch, 3판 2018)":
+      - Effective Java:
         - 책 카드: entity-effective-java.md
         - 12장 한 페이지 요약 (블로그): src-effective-java-summary.md
         - "실전 강의 교재 — 인덱스": src-effective-java-lecture.md
@@ -179,7 +171,7 @@ nav:
         - "실전 강의 — 10장 예외": lecture-effective-java-ch10.md
         - "실전 강의 — 11장 동시성": lecture-effective-java-ch11.md
         - "실전 강의 — 12장 직렬화": lecture-effective-java-ch12.md
-      - "테스트 주도 개발 (Kent Beck, 2002)":
+      - TDD:
         - 책 카드: entity-tdd.md
         - "실전 강의 교재 — 인덱스": src-tdd-lecture.md
         - "1부 — 1장 Money 객체": lecture-tdd-ch1.md
@@ -217,7 +209,7 @@ nav:
         - "부록 A — 영향도": lecture-tdd-appendixA.md
         - "부록 B — 피보나치": lecture-tdd-appendixB.md
         - "마치는 글 (Fowler)": lecture-tdd-afterword.md
-      - "Clean Code (Robert C. Martin, 2008)":
+      - Clean Code:
         - 책 카드: entity-clean-code.md
         - "실전 강의 교재 — 인덱스": src-clean-code-lecture.md
         - "실전 강의 — 1장 깨끗한 코드": lecture-clean-code-ch1.md
@@ -237,7 +229,7 @@ nav:
         - "실전 강의 — 15장 JUnit": lecture-clean-code-ch15.md
         - "실전 강의 — 16장 SerialDate 리팩터링": lecture-clean-code-ch16.md
         - "실전 강의 — 17장 냄새와 휴리스틱": lecture-clean-code-ch17.md
-      - "리팩터링 2판 (Martin Fowler, 2018)":
+      - Refactoring:
         - 책 카드: entity-refactoring.md
         - "실전 강의 교재 — 인덱스": src-refactoring-lecture.md
         - "실전 강의 — 1장 첫 번째 예시": lecture-refactoring-ch1.md
@@ -252,6 +244,19 @@ nav:
         - "실전 강의 — 10장 조건부 로직 간소화": lecture-refactoring-ch10.md
         - "실전 강의 — 11장 API 리팩터링": lecture-refactoring-ch11.md
         - "실전 강의 — 12장 상속 다루기": lecture-refactoring-ch12.md
+  - Java·Spring:
+    - 개념:
+      - Spring Core: concept-spring-core.md
+      - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md
+      - API Versioning: concept-api-versioning.md
+      - API 하위 호환성 (Tolerant Reader): concept-api-backward-compatibility.md
+      - JSpecify Null Safety: concept-jspecify-null-safety.md
+    - 도구·생태계:
+      - JVM: entity-jvm.md
+      - Querydsl: entity-querydsl.md
+      - Spring Framework: entity-spring-framework.md
+      - Spring Boot: entity-spring-boot.md
+      - Spring Initializr: entity-spring-initializr.md
     - 소스:
       - Spring Boot 소개: src-spring-boot.md
       - Spring Framework 7: src-spring-framework-7.md
@@ -260,7 +265,6 @@ nav:
       - Spring Web MVC Ref: src-spring-web-mvc-ref.md
       - Spring Testing Ref: src-spring-testing-ref.md
       - Java 스터디 2024-2025: src-java-study-2024-2025.md
-      - 카카오페이 DDD: src-kakaopay-ddd.md
   - DB·운영·인프라:
     - 개념:
       - DB 커넥션 풀 (HikariCP): concept-db-connection-pool.md
