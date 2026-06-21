@@ -22,7 +22,11 @@ argument-hint: <대상> (예: 파일 경로, "diff", "staged", 생략 시 git di
 
 ### 2. 가이드 본문 로드
 
-`wiki/guide-code-authoring-and-review.md` 의 **3. 코드 점검 체크리스트** 활용:
+먼저 가이드 본문 로드:
+- **로컬 my-wiki 프로젝트**: `wiki/guide-code-authoring-and-review.md` 직접 읽기
+- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wons-wiki.web.app/guide-code-authoring-and-review/`
+
+다음 섹션의 **3. 코드 점검 체크리스트** 활용:
 - 3.1 리팩터링 24 악취
 - 3.2 Clean Code 17장 ⭐ 휴리스틱 (G19·G23·G25·G30·G34·N1·T5 등)
 - 3.3 EJ ⭐ 20 (Item 5·17·18·49·64·77·78·79·85)
@@ -64,11 +68,29 @@ argument-hint: <대상> (예: 파일 경로, "diff", "staged", 생략 시 git di
 
 ## 참조 페이지
 
+**my-wiki 프로젝트에서**: 위키 링크로 직접
 - [[guide-code-authoring-and-review]] — 본 점검 체크리스트
 - 24 악취: [[lecture-refactoring-ch3]]
 - 17장 휴리스틱: [[lecture-clean-code-ch17]]
-- EJ ⭐ 20: [[entity-effective-java]] 의 핵심 아이템 표
+- EJ ⭐ 20: [[entity-effective-java]]
 - GRASP: [[lecture-object-ch5]]
+
+**다른 프로젝트에서**: WebFetch URL
+- https://wons-wiki.web.app/guide-code-authoring-and-review/
+- https://wons-wiki.web.app/lecture-refactoring-ch3/ — 24 악취
+- https://wons-wiki.web.app/lecture-clean-code-ch17/ — 17장 휴리스틱
+- https://wons-wiki.web.app/entity-effective-java/ — EJ ⭐ 20
+- https://wons-wiki.web.app/lecture-object-ch5/ — GRASP
+
+## 다른 프로젝트로 가져가기
+
+```bash
+mkdir -p .claude/commands
+cp /Users/jungwonpark/Documents/my-wiki/.claude/commands/code-check.md .claude/commands/
+# 또는
+curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/commands/code-check.md \
+  -o .claude/commands/code-check.md
+```
 
 ## 사용 예
 

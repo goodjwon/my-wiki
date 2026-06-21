@@ -13,7 +13,11 @@ argument-hint: <대상 영역> (예: function, class, exception, test, all)
 
 ### 1. 가이드 본문 로드
 
-`wiki/guide-code-authoring-and-review.md` 를 읽고 다음 섹션 우선 활용:
+먼저 가이드 본문을 로드:
+- **로컬 my-wiki 프로젝트**: `wiki/guide-code-authoring-and-review.md` 직접 읽기
+- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wons-wiki.web.app/guide-code-authoring-and-review/` fetch
+
+우선 활용 섹션:
 - **2. 코드 작성 체크리스트** (Writing)
 - **1.2 6원칙** — 객체 협력·추상 의존·합성>상속·불변·단순 설계·테스트
 
@@ -71,9 +75,28 @@ public Money totalFee(Order order) {
 
 ## 참조 페이지
 
+**my-wiki 프로젝트에서**: 위키 링크로 직접 읽기
 - [[guide-code-authoring-and-review]] — 본 가이드 (전체 체크리스트)
 - [[guide-java-book-study-lab]] — 실습 환경 (Java 17·JUnit 5)
 - 5권 entity: [[entity-object]]·[[entity-effective-java]]·[[entity-refactoring]]·[[entity-clean-code]]·[[entity-tdd]]
+
+**다른 프로젝트에서**: WebFetch URL
+- https://wons-wiki.web.app/guide-code-authoring-and-review/ — 본 가이드
+- https://wons-wiki.web.app/guide-java-book-study-lab/ — 실습 환경
+- https://wons-wiki.web.app/entity-object/ ·  /entity-effective-java/ · /entity-refactoring/ · /entity-clean-code/ · /entity-tdd/
+
+## 다른 프로젝트로 가져가기
+
+```bash
+# 새 프로젝트에 이 명령 추가
+mkdir -p .claude/commands
+cp /Users/jungwonpark/Documents/my-wiki/.claude/commands/code-guide.md .claude/commands/
+# 또는
+curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/commands/code-guide.md \
+  -o .claude/commands/code-guide.md
+```
+
+→ 다른 프로젝트에서도 `/code-guide` 사용. WebFetch 로 위키 본문 자동 fetch (인터넷 필요).
 
 ## 사용 예
 

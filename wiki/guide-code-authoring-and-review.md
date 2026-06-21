@@ -328,6 +328,60 @@ EJ Item 49 — public 메서드 첫 줄에 매개변수 검증 추가
 
 ---
 
+## 6.5 다른 프로젝트로 가져가기 (Portable)
+
+이 가이드와 슬래시 명령을 **다른 프로젝트** (회사·사이드) · **다른 AI** (ChatGPT·Cursor) 에서도 그대로 쓰는 법.
+
+### 방법 1 — 위키 페이지 본문을 컨텍스트로 (가장 빠름)
+
+별도 설치 0:
+
+```
+1. https://wons-wiki.web.app/guide-code-authoring-and-review/ 열기
+2. 본문 전체 복사
+3. AI 채팅 첫 메시지로:
+   "다음은 내가 따를 코드 작성·점검 원칙이다. 이 컨텍스트로 작업해줘.
+   [본문 붙여넣기]"
+4. 이후 "이 원칙으로 OrderService 짜줘" / "이 코드 점검해줘"
+```
+
+Claude·ChatGPT·Gemini·Cursor 어디서나 작동.
+
+### 방법 2 — 슬래시 명령을 다른 Claude Code 프로젝트로 복사
+
+각 프로젝트에서 `/code-guide`·`/code-check` 가 필요하면 `.claude/commands/` 에 수동 복사:
+
+```bash
+# 새 프로젝트 디렉터리에서
+mkdir -p .claude/commands
+
+# 로컬에서 복사
+cp /Users/jungwonpark/Documents/my-wiki/.claude/commands/code-guide.md .claude/commands/
+cp /Users/jungwonpark/Documents/my-wiki/.claude/commands/code-check.md .claude/commands/
+
+# 또는 GitHub 에서 직접
+curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/commands/code-guide.md \
+  -o .claude/commands/code-guide.md
+curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/commands/code-check.md \
+  -o .claude/commands/code-check.md
+```
+
+⚠️ **함정**: 슬래시 명령 내부의 `[[guide-code-authoring-and-review]]` 위키 링크는 다른 프로젝트에 없음. AI 가 자동으로 `https://wons-wiki.web.app/guide-code-authoring-and-review/` 를 WebFetch — **인터넷 연결 필요**.
+
+### 방법 3 — AI 프롬프트 템플릿만 (Cursor·다른 AI)
+
+위 4.1 절의 프롬프트 템플릿 2개를 그대로 복붙. 가이드 다른 부분 안 가져와도 됨. Cursor 시스템 프롬프트로도 활용 가능.
+
+### 비교 — 어느 방법?
+
+| 방법 | 설치 | 다른 AI | 오프라인 | 자동 갱신 |
+|------|------|---------|----------|----------|
+| 1 (본문 복붙) | 0 | ✅ 모두 | 가이드 저장 시 ✅ | ❌ 매번 새로 복사 |
+| 2 (슬래시 명령 복사) | `.claude/commands/` 2 파일 | Claude Code 만 | ❌ WebFetch 필요 | ⚠️ URL fetch (위키 갱신 자동 반영) |
+| 3 (프롬프트만) | 0 (메모에 보관) | ✅ 모두 | ✅ | ❌ 위키 갱신 시 수동 |
+
+---
+
 ## 7. 관련 페이지
 
 - **[[guide-java-book-study-lab]] — 5권 실습 환경 가이드 (Java 17·JUnit 5·Python·Node)** ← 이 가이드의 환경 전제
