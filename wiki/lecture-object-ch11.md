@@ -1,0 +1,351 @@
+---
+title: "오브젝트 실전 강의 — 11장"
+type: source
+tags: [book, object, cho-young-ho, lecture]
+sources: [object/오브젝트 실전 강의 교재 11장.md]
+created: 2026-06-21
+updated: 2026-06-21
+---
+
+# 오브젝트 실전 강의 교재
+
+## 11장 — 합성과 유연한 설계
+
+> **원서**: 조영호 『오브젝트』 **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈(정답 분리)
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 10장 상속 함정을 **합성** 으로 해결.
+- 핸드폰 과금 시스템의 **상속 조합 폭증** → 합성으로 해결.
+- **믹스인 (Mixin)** — 상속과 합성의 중간.
+- *Effective Java* Item 18·*리팩터링* 12.10 의 살아있는 사례.
+
+### 0.2 큰 그림 — 상속 vs 합성
+
+```
+[ 상속 (extends) ]                   [ 합성 (composition) ]
+ 컴파일타임 고정                       런타임 교체
+ 부모-자식 강 결합                     필드로 들고 위임
+ 1:1 (자바)                          N:M (여러 위임 객체)
+ 정적                                 동적
+ → "is-a"                             → "has-a"
+```
+
+> **비유 — "혈연 vs 계약"**
+>
+> 상속 = 혈연 (못 끊음, 부모 변화에 영향). 합성 = 계약 (필요 시 갈아탐, 독립). 안정적 부모면 상속, 변화 잦으면 합성.
+
+### 0.3 현업에서 왜 중요한가
+
+- *Effective Java* Item 18 ("상속보다 컴포지션") 의 가장 중요한 OO 원칙.
+- 도메인 모델링의 대부분이 합성 — Order has-a Customer, has-a List<OrderItem>.
+- Strategy 패턴이 합성의 정형.
+
+---
+
+## 1. 상속을 합성으로 변경하기
+
+### 1.1 불필요한 인터페이스 상속 문제 — Stack
+
+```java
+// ❌ Stack extends Vector — Vector 모든 메서드 노출
+public class Stack<E> extends Vector<E> { ... }
+
+// ✅ Stack 이 Vector 를 합성
+public class Stack<E> {
+    private final Vector<E> elements = new Vector<>();
+    public void push(E e) { elements.add(e); }
+    public E pop() { return elements.remove(elements.size() - 1); }
+}
+```
+
+→ Stack 이 필요한 메서드만 노출. LIFO 보장.
+
+### 1.2 메서드 오버라이딩의 오작용 문제 — InstrumentedHashSet
+
+```java
+// ❌
+public class InstrumentedHashSet<E> extends HashSet<E> {
+    private int addCount = 0;
+    @Override public boolean add(E e) { addCount++; return super.add(e); }
+    @Override public boolean addAll(Collection<? extends E> c) {
+        addCount += c.size();
+        return super.addAll(c);   // 내부적으로 add 호출 → 중복 카운트
+    }
+}
+
+// ✅ 합성
+public class InstrumentedSet<E> implements Set<E> {
+    private final Set<E> s;
+    private int addCount = 0;
+    public InstrumentedSet(Set<E> s) { this.s = s; }
+    @Override public boolean add(E e) { addCount++; return s.add(e); }
+    @Override public boolean addAll(Collection<? extends E> c) {
+        addCount += c.size();
+        return s.addAll(c);   // s 내부 호출은 우리 add 안 부름
+    }
+    // 나머지 Set 메서드는 위임만
+}
+```
+
+→ 부모 구현 디테일 의존 X. *Effective Java* Item 18 의 핵심 예제.
+
+### 1.3 부모-자식 동시 수정 문제 — PersonalPlaylist
+
+부모에 새 메서드 추가 시 자식도 같이 봐야 (오버라이드 필요 가능성).
+
+→ 합성은 위임만, 부모 메서드 추가가 자식 영향 X.
+
+---
+
+## 2. 상속으로 인한 조합의 폭발
+
+### 2.1 핸드폰 과금 — 기본 정책 + 부가 정책
+
+기본 정책 (2종): RegularPhone·NightlyDiscountPhone.
+부가 정책 (2종): 세금·기본 요금 할인.
+
+조합: 2 × 2 = 4 자식 클래스.
+
+```
+RegularPhone
+RegularPhoneWithTax
+RegularPhoneWithBasicDiscount
+RegularPhoneWithTaxAndBasicDiscount
+NightlyDiscountPhone
+NightlyDiscountPhoneWithTax
+...
+```
+
+부가 정책 1개 추가 → 자식 클래스 2배 폭증.
+
+### 2.2 상속으로 기본 정책 구현하기
+
+```java
+public abstract class Phone { ... }
+public class RegularPhone extends Phone { ... }
+public class NightlyDiscountPhone extends Phone { ... }
+```
+
+### 2.3 세금 추가하기 (상속)
+
+```java
+public class TaxableRegularPhone extends RegularPhone { ... }
+public class TaxableNightlyDiscountPhone extends NightlyDiscountPhone { ... }
+```
+
+→ 2 자식 추가.
+
+### 2.4 기본 요금 할인 추가 (상속)
+
+```java
+public class RateDiscountableRegularPhone extends RegularPhone { ... }
+public class RateDiscountableNightlyDiscountPhone extends NightlyDiscountPhone { ... }
+public class TaxableAndRateDiscountableRegularPhone extends TaxableRegularPhone { ... }
+public class TaxableAndRateDiscountableNightlyDiscountPhone extends TaxableNightlyDiscountPhone { ... }
+```
+
+→ 4 자식 추가. 폭증.
+
+### 2.5 중복 코드의 덫
+
+각 조합 클래스에 세금 계산·할인 계산 중복. 부가 정책 변경 시 모든 자식 수정.
+
+---
+
+## 3. 합성 관계로 변경하기
+
+### 3.1 기본 정책 합성하기
+
+```java
+public class Phone {
+    private final RatePolicy ratePolicy;   // 합성
+    public Phone(RatePolicy ratePolicy) { this.ratePolicy = ratePolicy; }
+    public Money calculateFee() { return ratePolicy.calculateFee(this); }
+}
+
+public interface RatePolicy {
+    Money calculateFee(Phone phone);
+}
+
+public class RegularPolicy implements RatePolicy { ... }
+public class NightlyDiscountPolicy implements RatePolicy { ... }
+```
+
+### 3.2 부가 정책 적용하기
+
+부가 정책도 `RatePolicy` 구현 + 다른 정책을 합성:
+
+```java
+public abstract class AdditionalRatePolicy implements RatePolicy {
+    private final RatePolicy next;
+    public AdditionalRatePolicy(RatePolicy next) { this.next = next; }
+
+    @Override
+    public Money calculateFee(Phone phone) {
+        Money fee = next.calculateFee(phone);   // 다음 정책 위임
+        return afterCalculated(fee);             // 추가 처리
+    }
+
+    protected abstract Money afterCalculated(Money fee);
+}
+
+public class TaxablePolicy extends AdditionalRatePolicy {
+    private final double rate;
+    @Override
+    protected Money afterCalculated(Money fee) {
+        return fee.plus(fee.times(rate));   // 세금 추가
+    }
+}
+
+public class BasicDiscountPolicy extends AdditionalRatePolicy {
+    private final Money discount;
+    @Override
+    protected Money afterCalculated(Money fee) {
+        return fee.minus(discount);
+    }
+}
+```
+
+### 3.3 조합 — 데코레이터 패턴
+
+```java
+Phone phone = new Phone(
+    new TaxablePolicy(0.05,
+        new BasicDiscountPolicy(Money.won(1000),
+            new RegularPolicy(...)
+        )
+    )
+);
+```
+
+→ **자식 클래스 0**. 정책 객체의 **체인** 으로 모든 조합 표현.
+
+### 3.4 새 정책 추가
+
+새 부가 정책 = 새 `AdditionalRatePolicy` 클래스 1개. 기존 무변경. **OCP 충족**.
+
+### 3.5 객체 합성이 클래스 상속보다 더 좋다
+
+| | 상속 | 합성 |
+|---|------|------|
+| 결합 시점 | 컴파일타임 | 런타임 |
+| 결합 정도 | 강 (구현 디테일) | 약 (인터페이스) |
+| 새 조합 추가 | 자식 클래스 폭증 | 객체 체인 |
+| 정책 교체 | 불가 (객체 새로 생성) | 가능 |
+| 다중 결합 | 단일 부모 | N개 합성 |
+
+---
+
+## 4. 믹스인 (Mixin)
+
+### 4.1 정의
+
+> **다른 클래스에 행동을 섞어 넣는** 메커니즘. 상속과 합성의 중간.
+
+- Java 에는 직접 없음 — interface default method 가 유사.
+- Scala 의 trait, Kotlin 의 delegation 이 정형.
+
+### 4.2 예: Java default method
+
+```java
+public interface Loggable {
+    default void log(String msg) {
+        System.out.println("[" + getClass().getSimpleName() + "] " + msg);
+    }
+}
+
+public class OrderService implements Loggable { ... }
+```
+
+→ `Loggable` 의 기본 구현을 가져옴 — 다중 상속 제한 우회.
+
+### 4.3 한계
+
+- Java 의 default method 는 필드 못 가짐 — 진짜 믹스인은 아님.
+- 다중 default method 충돌 시 명시 해결 필요.
+
+---
+
+## 핵심 교훈
+
+1. **합성 > 상속** — 결합도 낮음·교체 자유·조합 자유.
+2. **상속의 조합 폭증** = 거의 항상 합성으로 해결.
+3. **데코레이터 패턴** = 합성의 정형 — 정책 체인으로 모든 조합.
+4. **OCP 충족** — 새 정책 = 새 클래스 1개.
+5. **믹스인** = 상속·합성의 중간 — Java default method 로 일부 표현.
+
+---
+
+## 현업 예제 — Spring 의 합성
+
+### 정책 체인 (인터셉터·필터)
+
+```java
+// Spring Security FilterChain — 합성 체인
+http
+    .addFilter(new JwtAuthFilter())
+    .addFilterAfter(new RoleCheckFilter(), JwtAuthFilter.class)
+    .addFilterAfter(new LoggingFilter(), RoleCheckFilter.class);
+```
+
+→ 새 필터 = 새 클래스, 기존 무변경. 11장 합성 그대로.
+
+### Strategy 주입
+
+```java
+@Service
+public class OrderService {
+    private final DiscountPolicy discountPolicy;   // 합성
+    private final PaymentProcessor paymentProcessor;
+    // 정책 객체 주입 → 교체 자유
+}
+```
+
+→ 합성 + DI = Spring DI 의 핵심.
+
+---
+
+## 함정 / 주의
+
+- **합성도 과하면 추적 어려움** — 정책 체인이 5단계 넘으면 디버깅 비용.
+- **`extends` 무지성 금지 도그마** — Template Method 같은 정당한 상속은 OK.
+- **순환 합성** — A → B, B → A 는 의존성 사이클 (악취).
+
+---
+
+## 체크리스트
+
+- [ ] 자식 클래스 폭증 (조합 폭발) 이 있는가 → 합성 검토
+- [ ] 자식이 부모 구현 디테일에 의존하는가 → 합성으로 격리
+- [ ] 정책 교체가 런타임에 필요한가 → 합성 (상속은 컴파일타임 고정)
+- [ ] 데코레이터 패턴이 정책 조합에 적합한가
+- [ ] Spring AOP 가 더 적합한 횡단 관심사인가 (로깅·트랜잭션)
+
+---
+
+## 퀴즈
+
+1. **합성이 상속보다 좋은 결정적 이유**?
+2. 핸드폰 과금에서 자식 클래스 폭증이 일어난 직접 원인?
+3. **데코레이터 패턴** 이 어떻게 조합 폭증을 해결하는가?
+4. *Effective Java* Item 18 ("상속보다 컴포지션") 이 11장과 같은 메시지인 이유?
+5. **믹스인** 이 상속·합성의 중간인 이유?
+
+### 정답·해설
+
+1. **런타임 교체 자유 + 약한 결합**. 상속은 컴파일타임 고정 + 부모 구현 의존, 합성은 인터페이스에만 의존 + 정책 객체 교체 자유. 결과: OCP·DIP·테스트 용이성 모두 합성 승.
+2. **N × M 조합을 자식 클래스로 표현**. 기본 정책 2 × 부가 정책 2 = 4 자식. 부가 정책 1개 추가 시 자식 2배. 상속 = 컴파일타임 고정이라 모든 조합을 미리 만들어야.
+3. **정책 객체 체인** 으로 표현 — 자식 클래스 X. `new Taxable(new Discount(new Regular(...)))` 같이 런타임 조합. 새 부가 정책 = 새 클래스 1개. OCP.
+4. **상속의 함정 (취약한 기반·구현 의존·조합 폭증) 을 컴포지션으로 회피**. *EJ* Item 18 의 Stack·Properties 사례가 11장의 핸드폰 과금과 같은 구조 — 상속 → 합성 전환.
+5. **상속처럼 행동을 가져옴 + 합성처럼 다중 가능**. Java default method 는 일부 표현 (필드 X). Scala trait, Kotlin delegation 이 정형. 상속 단일성·합성 명시성의 트레이드오프 중간.
+
+---
+
+## 다음 장 예고 — 12장: 다형성
+
+상속·합성을 통한 코드 재사용을 다뤘으니, 12장은 **다형성의 메커니즘** 깊이 — 업캐스팅·동적 바인딩·메시지 위임·self vs super. 다형성이 OO 의 강력함을 만드는 이유.

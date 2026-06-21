@@ -1,0 +1,282 @@
+---
+title: "오브젝트 실전 강의 — 10장"
+type: source
+tags: [book, object, cho-young-ho, lecture]
+sources: [object/오브젝트 실전 강의 교재 10장.md]
+created: 2026-06-21
+updated: 2026-06-21
+---
+
+# 오브젝트 실전 강의 교재
+
+## 10장 — 상속과 코드 재사용
+
+> **원서**: 조영호 『오브젝트』 **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈(정답 분리)
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 상속을 통한 코드 재사용의 **매력과 함정**.
+- **취약한 기반 클래스 문제** — 부모 변경이 자식 깨뜨림.
+- **DRY 의 함정** — 코드는 같지만 의미가 다른 경우.
+- **차이에 의한 프로그래밍** — 새 기능을 부모와 다른 점만으로 표현.
+- 11장 "합성으로 갈아타기" 의 전제.
+
+### 0.2 큰 그림 — 상속의 양면
+
+```
+[ 매력 ]                          [ 함정 ]
+ 부모 코드 자동 재사용              부모 변경이 자식 영향
+ 차이만 자식에 작성                 부모-자식 동시 수정
+ 다형성 가능                      LSP 위배 위험
+ 짧고 빠른 첫 구현                 진화에 취약
+```
+
+> **비유 — "물려받은 옷"**
+>
+> 부모 옷을 그대로 받아 입으면 (상속) 처음엔 편하지만, 부모 체형 (변경) 이 바뀌면 자식 옷도 안 맞음. 자기 옷 (합성) 을 만들면 처음엔 비싸지만 변화에 자유.
+
+### 0.3 현업에서 왜 중요한가
+
+- Java 클래스 계층의 가장 흔한 실수 — 무지성 상속.
+- *Effective Java* Item 18·19 의 깊이.
+- Spring `extends JpaRepository<...>` 같은 패턴은 정당, 도메인 상속은 신중.
+
+---
+
+## 1. 상속과 중복 코드
+
+### 1.1 DRY 원칙
+
+> **같은 코드를 두 곳에 쓰지 마라** (Don't Repeat Yourself).
+
+가장 흔한 적용 — 부모 클래스로 공통 코드 끌어올림.
+
+### 1.2 중복과 변경
+
+DRY 위반의 진짜 문제 = **한 곳 고쳐도 다른 곳 안 고치면 사고**. 부모로 끌어올리면 한 곳만.
+
+### 1.3 상속을 이용한 중복 제거
+
+```java
+// Before — 중복
+public class Phone {
+    public Money calculateFee() {
+        return amount.times(seconds);
+    }
+}
+
+public class NightlyDiscountPhone {
+    public Money calculateFee() {
+        if (isNightCall()) {
+            return nightlyAmount.times(seconds);
+        }
+        return regularAmount.times(seconds);
+    }
+}
+
+// After — 상속
+public class Phone {
+    protected Money amount;
+    public Money calculateFee() {
+        return amount.times(seconds);
+    }
+}
+
+public class NightlyDiscountPhone extends Phone {
+    private Money nightlyAmount;
+    @Override
+    public Money calculateFee() {
+        if (isNightCall()) {
+            return nightlyAmount.times(seconds);
+        }
+        return super.calculateFee();
+    }
+}
+```
+
+### 1.4 강하게 결합된 Phone 과 NightlyDiscountPhone
+
+문제:
+- `NightlyDiscountPhone` 은 `Phone` 의 `amount` 필드·`calculateFee` 구조에 의존.
+- `Phone` 변경이 `NightlyDiscountPhone` 도 영향 (취약한 기반 클래스).
+- 세금 추가 같은 새 요구사항이 두 클래스 모두 수정 강요.
+
+---
+
+## 2. 취약한 기반 클래스 문제
+
+### 2.1 불필요한 인터페이스 상속 문제
+
+`java.util.Stack extends Vector` — Stack 이 Vector 의 모든 메서드 노출 → `add(int, E)` 같은 메서드로 LIFO 깨짐.
+
+### 2.2 메서드 오버라이딩의 오작용
+
+`InstrumentedHashSet extends HashSet` — `add` 와 `addAll` 카운트가 중복 (HashSet 내부 구현 의존).
+
+### 2.3 부모 클래스와 자식 클래스의 동시 수정
+
+새 기능 (세금) 추가 시 부모 + 모든 자식 수정 → 산탄총 수술.
+
+→ **상속은 부모 구현에 자식이 강하게 결합**. 부모 변경이 자식 위험.
+
+---
+
+## 3. Phone 다시 살펴보기 — 합성 검토 전 정련
+
+### 3.1 추상화에 의존하자
+
+```java
+public abstract class Phone {
+    public Money calculateFee() {
+        Money result = Money.ZERO;
+        for (Call call : calls) {
+            result = result.plus(calculateCallFee(call));   // 추상 메서드 호출
+        }
+        return result;
+    }
+    protected abstract Money calculateCallFee(Call call);   // ← 차이만 자식에
+}
+
+public class RegularPhone extends Phone {
+    @Override
+    protected Money calculateCallFee(Call call) {
+        return amount.times(call.duration());
+    }
+}
+
+public class NightlyDiscountPhone extends Phone {
+    @Override
+    protected Money calculateCallFee(Call call) {
+        if (call.isNightCall()) return nightlyAmount.times(call.duration());
+        return regularAmount.times(call.duration());
+    }
+}
+```
+
+→ Template Method 패턴. 알고리즘 골격 = 부모, 차이 = 자식.
+
+### 3.2 의도 드러나는 이름
+
+- `calculateFee` → `calculate` 가 호출자에게 의미.
+- `calculateCallFee` → 자식이 구현할 정확한 의도.
+
+### 3.3 세금 추가하기 (산탄총 수술 vs 합성)
+
+세금이 추가되면? `calculateFee` 의 모든 자식이 세금 처리해야 → 산탄총 수술.
+
+→ **합성으로 갈아타기** 가 답 (11장).
+
+---
+
+## 4. 차이에 의한 프로그래밍
+
+### 4.1 정의
+
+> **부모와 다른 점만 자식에 작성** — 같은 부분은 부모 재사용.
+
+### 4.2 매력
+
+- 빠른 첫 구현 — 차이만 짜면 됨.
+- 다형성 자연 — 같은 인터페이스 (Phone) 로 처리.
+
+### 4.3 함정
+
+- 부모와 자식이 **강하게 결합** — 부모 변경 영향.
+- 자식이 **부모의 구현 디테일** 에 의존 (오버라이드된 메서드의 호출 순서·내부 호출 등).
+- **LSP 위배** 위험 — 자식이 부모 계약 깨뜨림.
+
+---
+
+## 핵심 교훈
+
+1. **DRY 가 상속의 매력** — 그러나 결합도 폭증의 대가.
+2. **취약한 기반 클래스 문제** — 부모 변경이 자식 위험.
+3. **상속은 부모 구현에 자식이 결합** — 합성보다 결합도 큼.
+4. **차이에 의한 프로그래밍** = 빠르지만 진화에 취약.
+5. **Template Method** 패턴이 상속의 정당한 사용 — 알고리즘 골격 공유.
+6. **합성으로 갈아타기** (11장) 가 거의 항상 더 안전.
+
+---
+
+## 현업 예제 — Spring 의 상속 패턴
+
+### 정당한 상속
+
+```java
+// Spring Data Repository — 인터페이스 상속
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    // 표준 CRUD 자동 + 커스텀 쿼리만 추가
+}
+```
+
+→ 인터페이스 상속, 자식이 부모 구현 디테일 모름. 안전.
+
+### 의심스러운 상속
+
+```java
+public abstract class BaseService {
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+    protected void log(String msg) { logger.info(msg); }
+}
+
+@Service
+public class OrderService extends BaseService { ... }
+```
+
+→ "로깅 공통" 인 듯하지만 **AOP 가 더 적절**. 상속으로 묶으면 BaseService 변경이 모든 자식 영향.
+
+### 위험한 상속
+
+```java
+@Entity
+public class SpecialOrder extends Order { ... }
+```
+
+→ JPA 상속 매핑은 신중. 도메인 모델 상속은 거의 항상 합성 (`Order.kind = SPECIAL`) 이 안전.
+
+---
+
+## 함정 / 주의
+
+- **무지성 `extends`** — 도메인 모델 상속은 거의 항상 함정.
+- **Template Method 의 한계** — 알고리즘 골격이 안정적일 때만 안전.
+- **`super.method()` 호출** = 부모 구현 디테일 의존 — 부모 변경에 깨짐.
+- **상속을 위해 설계되지 않은 클래스 상속** = 가장 큰 함정 (*Effective Java* Item 19).
+
+---
+
+## 체크리스트
+
+- [ ] 상속하기 전 합성 가능성을 검토했는가
+- [ ] 부모가 **상속을 위해 설계** 됐는가 (`@Override` 가능 메서드 명시·문서화)
+- [ ] 자식이 부모의 구현 디테일에 의존하는가 (`super.method()` 호출 순서 등)
+- [ ] 새 기능 추가가 산탄총 수술 (부모 + 자식 동시 수정) 인가
+- [ ] 도메인 모델 상속이라면 합성으로 대체 가능한가
+
+---
+
+## 퀴즈
+
+1. **취약한 기반 클래스 문제** 를 한 문장으로?
+2. **차이에 의한 프로그래밍** 의 매력과 함정?
+3. `Stack extends Vector` 가 왜 잘못된 상속인가?
+4. **Template Method** 가 상속의 정당한 사용인 이유?
+5. 도메인 모델에 상속이 거의 항상 위험한 이유?
+
+### 정답·해설
+
+1. **부모 클래스 변경이 자식 클래스를 깨뜨릴 수 있다**. 자식이 부모의 구현 디테일 (필드·메서드 호출 순서) 에 의존하므로, 부모가 합리적으로 보이는 변경을 해도 자식이 깨짐.
+2. **매력**: 차이만 짜면 빠른 첫 구현 + 다형성 자연. **함정**: 부모-자식 강하게 결합, 부모 변경 영향, LSP 위배 위험, 진화에 취약.
+3. **Stack 이 LIFO 보장 책임** 인데 Vector 의 `add(int, E)` 같은 메서드가 노출 → 호출자가 임의 위치 삽입 가능 → LIFO 깨짐. 상속이 부모의 모든 메서드 노출 → 자식 불변식 위험. *Effective Java* Item 18 (상속보다 컴포지션) 의 대표 사례.
+4. **알고리즘 골격 = 안정적, 단계 구현 = 자식별 차이**. 골격이 변경 안 되면 자식도 안전. 부모가 명시적으로 자식에게 "이 메서드만 오버라이드하라" 신호 (`abstract` 메서드).
+5. **도메인 변화 = 행동 변화**. 상속으로 자식 만들면 행동이 자식별로 흩어짐 + 부모 변경이 모든 자식 영향. 합성 + Strategy 가 새 행동 = 새 정책 객체 1개로 끝 → OCP 충족.
+
+---
+
+## 다음 장 예고 — 11장: 합성과 유연한 설계
+
+10장의 상속 함정을 **합성** 으로 해결. **Stack → 합성 기반 Stack**, **상속으로 인한 조합 폭증** → 합성으로, **믹스인** 까지. *Effective Java* Item 18·*리팩터링* 12.10 의 살아있는 사례.

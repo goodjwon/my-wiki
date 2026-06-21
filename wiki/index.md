@@ -45,6 +45,7 @@ updated: 2026-06-20
 - [[entity-tdd]] — 📚 *테스트 주도 개발* (Kent Beck, 2002) — 빨강→초록→리팩터 + 화폐 예제 + xUnit + 패턴 카탈로그
 - [[src-clean-code-lecture]] — 📚 *Clean Code* 실전 강의 교재 17장 인덱스 (약 5,500줄)
 - [[src-tdd-lecture]] — 📚 *TDD* (Kent Beck) 실전 강의 교재 35편 인덱스 (1·2·3부 + 부록)
+- [[src-object-lecture]] — 📚 *오브젝트* (조영호) 실전 강의 교재 18편 인덱스 (15장 + 부록 A·B·C)
 
 ## Concepts
 - [[concept-compounding-knowledge]] — 새 정보가 기존 지식과 결합하며 복리적으로 가치 증가

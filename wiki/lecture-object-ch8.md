@@ -1,0 +1,322 @@
+---
+title: "오브젝트 실전 강의 — 8장"
+type: source
+tags: [book, object, cho-young-ho, lecture]
+sources: [object/오브젝트 실전 강의 교재 8장.md]
+created: 2026-06-21
+updated: 2026-06-21
+---
+
+# 오브젝트 실전 강의 교재
+
+## 8장 — 의존성 관리하기
+
+> **원서**: 조영호 『오브젝트』 **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈(정답 분리)
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- **의존성** 의 정확한 정의 — "변경의 길".
+- **컴파일타임·런타임 의존성** 의 분리가 유연성의 비결.
+- `new` 의 함정 — 직접 생성은 결합도 폭증.
+- **명시적 의존성** (생성자 주입) 의 중요성.
+- *Effective Java* Item 5 (DI)·64 (인터페이스 참조) 의 깊이 있는 적용.
+
+### 0.2 큰 그림 — 의존성이 변경의 통로
+
+```
+[ A → B ]
+A 가 B 의존
+   ↓
+B 변경 시 A 도 영향 받을 수 있음
+   ↓
+의존성 = 변경 전파의 길
+   ↓
+좋은 설계 = 의존성을 최소화 + 명시 + 추상에 의존
+```
+
+> **비유 — "도로망"**
+>
+> 도로 (의존성) 가 많을수록 한 곳 공사 (변경) 가 다른 곳에 영향. 도로를 줄이거나·우회로 (인터페이스) 를 만들거나·우회 가능한 큰 도로 (추상) 를 만들면 영향 제한.
+
+### 0.3 현업에서 왜 중요한가
+
+- Spring DI 의 핵심 가치를 깊이 있게 이해.
+- 테스트 가능성 = 의존성 명시 + 추상 의존.
+- "왜 new 가 해롭다고 하는가" 의 진짜 이유.
+
+---
+
+## 1. 의존성 이해하기
+
+### 1.1 변경과 의존성
+
+> **A 가 B 에 의존한다 = B 의 변경이 A 에 영향을 줄 수 있다**.
+
+이 정의가 핵심. 단순히 "A 가 B 를 사용" 보다 더 정확.
+
+### 1.2 의존성 종류
+
+- **클래스 의존성**: A 가 B 를 필드·매개변수·반환·지역 변수로 사용.
+- **메서드 의존성**: A 가 B 의 특정 메서드 호출.
+- **모듈 의존성**: A 가 B 와 같은 모듈에.
+
+### 1.3 의존성 전이
+
+A → B, B → C 면 A 는 C 에 **간접 의존**. C 변경이 B 거쳐 A 영향 가능.
+
+### 1.4 런타임 의존성과 컴파일타임 의존성
+
+```java
+public class Movie {
+    private DiscountPolicy policy;   // 컴파일타임: 추상 DiscountPolicy
+    public Money fee(Screening s) {
+        return discount(policy);     // 런타임: 실제 AmountDiscountPolicy 인스턴스
+    }
+}
+```
+
+- **컴파일타임 의존성**: 코드에 명시된 타입 (`DiscountPolicy`).
+- **런타임 의존성**: 실제 협력하는 객체 (`AmountDiscountPolicy`).
+
+**두 의존성의 분리** = 유연성의 비결.
+
+### 1.5 컨텍스트 독립성
+
+객체가 **자신이 사용될 컨텍스트를 모르고** 자기 일에만 집중. 외부에서 결정되어 주입.
+
+```java
+// ❌ — 자신의 컨텍스트를 안다
+public class Movie {
+    public Money fee(Screening s) {
+        if (System.getProperty("env").equals("prod")) {   // 외부 환경 알기
+            ...
+        }
+    }
+}
+
+// ✅ — 컨텍스트 독립
+public class Movie {
+    public Money fee(Screening s) {
+        return fee.minus(discountPolicy.calculateDiscountAmount(s));
+        // 정책은 외부에서 주입
+    }
+}
+```
+
+### 1.6 의존성 해결하기
+
+런타임 의존성 결정 방식:
+1. **생성자 주입** — 권장.
+2. **세터 주입** — 선택적 의존만.
+3. **메서드 매개변수** — 임시 협력.
+4. **직접 생성** (`new`) — 피해라.
+
+---
+
+## 2. 유연한 설계
+
+### 2.1 의존성과 결합도
+
+- **의존성 자체는 나쁘지 않음** — 협력이 곧 의존.
+- **나쁜 결합도** = 변경의 길이 많고·구체에 의존·내부 구조에 의존.
+- **좋은 결합도** = 의존성 최소 + 추상에 의존 + 명시.
+
+### 2.2 지식이 결합을 낳는다
+
+A 가 B 에 대해 **알면 알수록 결합도 ↑**.
+
+- "B 가 있다" 만 알기 = 약한 결합.
+- "B 의 인터페이스만 알기" = 적절한 결합.
+- "B 의 내부 구조 알기" = 강한 결합.
+
+### 2.3 추상화에 의존하라 (DIP)
+
+> **구체 클래스가 아니라 추상에 의존**.
+
+```java
+// ❌ 구체 의존
+public class OrderService {
+    private final JpaOrderRepository repo = new JpaOrderRepository();   // 구체
+}
+
+// ✅ 추상 의존
+public class OrderService {
+    private final OrderRepository repo;   // 인터페이스
+    public OrderService(OrderRepository repo) { this.repo = repo; }
+}
+```
+
+→ 구현 교체 자유 + 테스트 mock 주입 자유.
+
+### 2.4 명시적인 의존성
+
+> **숨겨진 의존성 (전역 변수·싱글턴·정적 호출) 보다 생성자 매개변수로 명시**.
+
+```java
+// ❌ 숨김
+public class OrderService {
+    public Order create() {
+        EmailSender.getInstance().send("주문");   // 정적 호출 — 의존성 숨김
+    }
+}
+
+// ✅ 명시
+public class OrderService {
+    private final EmailSender emailSender;
+    public OrderService(EmailSender emailSender) { this.emailSender = emailSender; }
+}
+```
+
+→ 생성자가 의존성을 **선언** — 사용자가 한눈에 인지. 테스트 시 mock 주입 가능.
+
+### 2.5 new 는 해롭다
+
+```java
+public class OrderService {
+    public Order process(...) {
+        EmailSender sender = new EmailSender(host, port, user, password);   // ❌
+        sender.send(...);
+    }
+}
+```
+
+문제:
+1. **구체 클래스에 결합** — EmailSender 가 인터페이스 아니라 구체.
+2. **생성 매개변수 (host·port) 도 알아야** — 책임 폭증.
+3. **테스트 어려움** — mock 주입 불가.
+4. **변경 영향 큼** — EmailSender 생성자 변경이 모든 호출자 영향.
+
+### 2.6 가끔은 생성해도 무방하다
+
+- **단순 값 객체** (`new Money(...)`, `new Address(...)`) — 가볍고 불변.
+- **메서드 안 임시 객체** — 외부에 노출 안 되는 헬퍼.
+
+→ 도메인 객체·서비스·외부 리소스 (DB·HTTP) 는 주입, 단순 값·임시 객체는 직접 생성 OK.
+
+### 2.7 표준 클래스에 대한 의존은 해롭지 않다
+
+`String`·`Integer`·`List`·`Map` 같은 표준 라이브러리는 변경 거의 없음 → 직접 사용 OK.
+
+### 2.8 컨텍스트 확장하기
+
+새 컨텍스트 (테스트·다른 환경) 에 객체 재사용 = 컨텍스트 독립성의 보상.
+
+```java
+// 운영
+new OrderService(new JpaOrderRepository(...));
+
+// 테스트
+new OrderService(new InMemoryOrderRepository());
+
+// 다른 모듈에서 재사용
+new OrderService(new RemoteOrderRepository(...));
+```
+
+### 2.9 조합 가능한 행동
+
+작은 의존성 + 추상 의존 = 객체들을 **레고처럼 조합** 가능.
+
+---
+
+## 핵심 교훈
+
+1. **의존성 = 변경의 길**. 의존성 관리가 좋은 설계의 핵심.
+2. **컴파일타임 vs 런타임 의존성 분리** = 유연성의 비결.
+3. **추상에 의존** (DIP) — 구체에 결합하지 마라.
+4. **명시적 의존성** (생성자 주입) — 숨김 의존 (싱글턴·정적) 회피.
+5. **`new` 는 신중** — 도메인·서비스·외부 리소스는 주입, 값 객체는 직접 OK.
+6. **컨텍스트 독립성** = 재사용·테스트 자유.
+
+---
+
+## 현업 예제 — Spring DI 의 깊이
+
+### 안티패턴 (숨겨진 의존)
+
+```java
+@Service
+public class OrderService {
+    public void process(Order o) {
+        // 정적 호출 — 의존성 숨김
+        DBConnection.execute("INSERT ...");
+        EmailUtil.send(o.email(), "주문");
+        LoggerFactory.get(OrderService.class).info("...");
+    }
+}
+```
+
+→ 테스트 시 mock 주입 불가. 의존성이 코드 안에 숨어 있음.
+
+### 권장 (생성자 주입)
+
+```java
+@Service
+public class OrderService {
+    private final OrderRepository repo;
+    private final EmailSender emailSender;
+
+    public OrderService(OrderRepository repo, EmailSender emailSender) {
+        this.repo = repo;
+        this.emailSender = emailSender;
+    }
+
+    public void process(Order o) {
+        repo.save(o);
+        emailSender.send(o.email(), "주문");
+    }
+}
+
+// 테스트
+new OrderService(new InMemoryOrderRepository(), new FakeEmailSender());
+```
+
+→ 생성자가 의존성 명시. 테스트 자유.
+
+→ *Effective Java* Item 5 와 동일.
+
+---
+
+## 함정 / 주의
+
+- **모든 것을 주입** = 과한 설계. 단순 값 객체·임시 헬퍼는 직접 생성 OK.
+- **추상에 의존 도그마** — 구현이 1개뿐이면 인터페이스 도입은 추측성 일반화 ([[entity-refactoring]] 3.15).
+- **DI 컨테이너 의존** — 컨테이너 없이 도메인 객체를 만들지 못하면 컨텍스트 독립성 잃음.
+- **세터 주입 남용** — 객체 생성 후 미설정 상태 가능, NPE 위험. 생성자 주입 우선.
+
+---
+
+## 체크리스트
+
+- [ ] 도메인·서비스 클래스가 인터페이스에 의존하는가 (구체 X)
+- [ ] 의존성이 생성자 매개변수로 명시되어 있는가 (정적 호출·싱글턴 X)
+- [ ] 테스트 시 mock 주입이 자연스럽게 가능한가
+- [ ] `new` 가 단순 값 객체·임시 헬퍼에 한정되어 있는가
+- [ ] 단일 구현 인터페이스가 있는가 (추측성 일반화 의심)
+
+---
+
+## 퀴즈
+
+1. **의존성의 정의** 를 한 문장으로?
+2. **컴파일타임과 런타임 의존성 분리** 가 유연성의 비결인 이유?
+3. `new` 가 해로운 직접 이유 두 가지?
+4. **명시적 의존성** (생성자 주입) 의 두 가지 이점?
+5. *Effective Java* Item 5 와 8장이 같은 메시지인 이유?
+
+### 정답·해설
+
+1. **A 가 B 에 의존한다 = B 의 변경이 A 에 영향을 줄 수 있다**. 단순 사용보다 정확한 정의 — "변경 영향" 이 핵심.
+2. **코드에 명시된 타입 (추상) 과 실제 협력하는 객체 (구체) 가 분리** 되어 있어 구체 교체 시 코드 무변경. Movie 코드가 `DiscountPolicy` 만 알면 새 정책 (AmountDiscountPolicy → PercentDiscountPolicy) 으로 교체해도 Movie 무변경.
+3. **(1) 구체 클래스에 결합** — 새 구현 교체 불가. **(2) 생성 매개변수까지 알아야** — 책임 폭증. 테스트 어려움도 추가 (mock 주입 불가).
+4. **(1) 생성자가 의존성 선언** — 사용자가 한눈에 인지. **(2) 테스트 시 mock 주입 자유** — 외부 시스템 없이 단위 테스트 가능.
+5. Item 5 = "**자원을 직접 명시하지 말고 의존성 주입을 사용하라**". 8장 = "**`new` 는 해롭다·추상에 의존·명시적 의존성**". 같은 OO 원칙 (DIP) 의 다른 표현. Item 5 가 Java 권고 형태, 8장이 OO 사고 원리 형태.
+
+---
+
+## 다음 장 예고 — 9장: 유연한 설계
+
+8장의 의존성 관리 원칙을 **SOLID 의 OCP·DIP** 와 함께 체계화. **생성/사용 분리**, **의존성 주입**, **유연성에 대한 조언**. "유연한 설계는 유연성이 필요할 때만" — 도그마 회피.

@@ -1,0 +1,364 @@
+---
+title: "오브젝트 실전 강의 — 4장"
+type: source
+tags: [book, object, cho-young-ho, lecture]
+sources: [object/오브젝트 실전 강의 교재 4장.md]
+created: 2026-06-21
+updated: 2026-06-21
+---
+
+# 오브젝트 실전 강의 교재
+
+## 4장 — 설계 품질과 트레이드오프
+
+> **원서**: 조영호 『오브젝트: 코드로 이해하는 객체지향 설계』 **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈(정답 분리)
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- **데이터 중심 설계**가 왜 망가지는지 영화 예매 시스템으로 직접 본다.
+- **캡슐화**·**응집도**·**결합도**의 정의와 측정 감각을 익힌다.
+- 같은 도메인 (영화 예매) 을 **데이터 중심 vs 책임 중심** 으로 두 번 짜 본 뒤 차이를 비교.
+- "**데이터 먼저 그리면 망한다**" 라는 *오브젝트* 의 핵심 메시지를 손에 익힌다.
+
+### 0.2 큰 그림 — 두 가지 설계 흐름
+
+```
+[ 데이터 중심 (4장 비판 대상) ]         [ 책임 중심 (2·3장 + 5장 정답) ]
+ 1. 필드부터 그린다                       1. 협력부터 그린다
+ 2. 데이터 접근자(getter/setter) 노출      2. 책임을 객체에게 할당
+ 3. 행동은 외부 (Service) 에 둔다         3. 객체가 자기 데이터를 책임
+ → 빈혈 모델·캡슐화 무력·결합도 폭증       → 응집도 높음·결합도 낮음
+```
+
+> **비유 — "도구 vs 사람"**
+>
+> 데이터 중심 = 망치·드라이버 같은 **도구** 묶음 (객체) + 그 도구를 쓰는 **목수** (Service). 도구는 자기 자리를 모름. 목수가 모든 결정.
+> 책임 중심 = 일을 알아서 하는 **사람** (객체). 자기 도구는 자기 안에. 다른 사람에게 요청만.
+
+### 0.3 현업에서 왜 중요한가
+
+- JPA Entity 의 가장 흔한 안티패턴 = 데이터 중심 (`@Data` + getter/setter 폭증 + Service 가 모든 결정). 4장이 그 처방.
+- Spring `@Service` 가 1,000줄 넘는 거대 클래스가 되는 진짜 이유 = 도메인 책임이 다 Service 로 흡수돼서. 4장에서 진단.
+- *Effective Java* Item 17 (불변)·Item 18 (컴포지션)·*리팩터링* 12.7 (서브클래스 제거) 모두 같은 결.
+
+---
+
+## 1. 데이터 중심의 영화 예매 시스템 — 다시 짜기
+
+### 1.1 데이터부터 준비하기
+
+데이터 중심으로 시작하면 객체가 **자료 구조** 가 됨:
+
+```java
+public class Movie {
+    private String title;
+    private Duration runningTime;
+    private Money fee;
+    private List<DiscountCondition> discountConditions;
+    private MovieType movieType;        // ← 타입을 데이터로 표현
+    private Money discountAmount;        // 정책별 데이터 모두 노출
+    private double discountPercent;
+
+    // getter/setter 폭증
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public MovieType getMovieType() { return movieType; }
+    public void setMovieType(MovieType movieType) { this.movieType = movieType; }
+    // ...
+}
+
+public enum MovieType {
+    AMOUNT_DISCOUNT, PERCENT_DISCOUNT, NONE_DISCOUNT
+}
+
+public class DiscountCondition {
+    private DiscountConditionType type;
+    private int sequence;
+    private DayOfWeek dayOfWeek;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    // 모든 조건 필드를 한 클래스에 — 일부만 쓰임
+}
+```
+
+→ 정책·조건 종류별 데이터가 한 클래스에 다 들어옴 (타입 코드 + 분기).
+
+### 1.2 영화를 예매하는 코드 — 외부 Service
+
+```java
+public class ReservationAgency {
+
+    public Reservation reserve(Screening screening, Customer customer, int audienceCount) {
+        Movie movie = screening.getMovie();   // getter 호출
+
+        // 조건 만족 검사 — 외부에서 분기
+        boolean discountable = false;
+        for (DiscountCondition condition : movie.getDiscountConditions()) {
+            if (condition.getType() == DiscountConditionType.PERIOD) {
+                discountable = screening.getWhenScreened().getDayOfWeek().equals(condition.getDayOfWeek())
+                        && condition.getStartTime().compareTo(screening.getWhenScreened().toLocalTime()) <= 0
+                        && condition.getEndTime().compareTo(screening.getWhenScreened().toLocalTime()) >= 0;
+            } else {
+                discountable = condition.getSequence() == screening.getSequence();
+            }
+            if (discountable) break;
+        }
+
+        // 요금 계산 — switch 분기
+        Money fee;
+        if (discountable) {
+            Money discountAmount = Money.ZERO;
+            switch (movie.getMovieType()) {
+                case AMOUNT_DISCOUNT: discountAmount = movie.getDiscountAmount(); break;
+                case PERCENT_DISCOUNT: discountAmount = movie.getFee().times(movie.getDiscountPercent()); break;
+                case NONE_DISCOUNT: discountAmount = Money.ZERO; break;
+            }
+            fee = movie.getFee().minus(discountAmount).times(audienceCount);
+        } else {
+            fee = movie.getFee().times(audienceCount);
+        }
+        return new Reservation(customer, screening, fee, audienceCount);
+    }
+}
+```
+
+이게 **데이터 중심 설계**. 객체들 (Movie·Screening·DiscountCondition) 은 단순 자료 구조이고, `ReservationAgency` 가 모든 결정 + 분기.
+
+---
+
+## 2. 설계 트레이드오프 — 3가지 측정 기준
+
+### 2.1 캡슐화 (Encapsulation)
+
+**변경 가능한 부분 (구현 디테일) 을 안정적인 부분 (인터페이스) 뒤로 숨기기**.
+
+- 핵심: "**변경의 영향을 좁히기**".
+- 절대 비밀: 외부에 데이터를 그대로 노출 = 캡슐화 실패.
+
+### 2.2 응집도 (Cohesion)
+
+**한 모듈 안의 요소가 얼마나 밀접하게 관련**되어 있는가.
+
+- 높음: 모듈 안의 모든 메서드가 모듈의 모든 변수를 사용 → "한 가지 일에 집중".
+- 낮음: 일부 메서드가 일부 변수만 사용 → 사실은 여러 클래스가 한 곳에.
+
+### 2.3 결합도 (Coupling)
+
+**한 모듈이 다른 모듈에 얼마나 의존**하는가.
+
+- 낮음: 인터페이스에만 의존, 구현은 모름 → 교체 자유.
+- 높음: 구체 클래스 직접 의존, 내부 구조 알기 → 한 곳 변경이 다른 곳 깨뜨림.
+
+### 좋은 설계 = 높은 응집도 + 낮은 결합도 + 캡슐화
+
+---
+
+## 3. 데이터 중심 설계의 문제점
+
+### 3.1 캡슐화 위반
+
+```java
+movie.getDiscountAmount();        // 내부 필드 노출
+movie.getMovieType();             // 정책 종류 노출 (외부가 분기)
+movie.getDiscountConditions();    // 컬렉션 그대로 노출
+```
+
+→ 내부 표현 (필드 이름·타입·구조) 이 외부 코드에 그대로 박힘. 필드 이름만 바꿔도 외부 곳곳이 깨짐.
+
+### 3.2 높은 결합도
+
+`ReservationAgency` 가 알아야 하는 것:
+- Movie 의 모든 필드 (title·runningTime·fee·conditions·type·discountAmount·discountPercent)
+- DiscountCondition 의 모든 필드 (type·sequence·dayOfWeek·startTime·endTime)
+- Screening 의 모든 필드
+
+→ Movie 클래스의 어떤 필드 추가·변경도 `ReservationAgency` 영향. 산탄총 수술.
+
+### 3.3 낮은 응집도
+
+- Movie 의 `discountAmount` 는 `AMOUNT_DISCOUNT` 타입일 때만 의미.
+- `discountPercent` 는 `PERCENT_DISCOUNT` 일 때만.
+- 한 클래스에 **타입별로 다른 필드 묶음** 이 섞임 → 임시 필드 악취.
+
+### 3.4 데이터 중심 설계는 객체를 고립시킨다
+
+`Movie` 는 자기 데이터만 들고 있고 행동 없음 → **빈혈 도메인 모델 (Anemic Domain Model)**. 행동은 모두 외부 (`ReservationAgency`). 객체 협력 X.
+
+---
+
+## 4. 자율적인 객체를 향해 — 일부 해법
+
+### 4.1 데이터를 스스로 책임지는 객체
+
+자료 노출 대신 행동 제공:
+
+```java
+public class Movie {
+    private Money fee;
+    private List<DiscountCondition> discountConditions;
+    private MovieType movieType;
+    private Money discountAmount;
+    private double discountPercent;
+
+    public Money calculateMovieFee(Screening screening) {
+        if (isDiscountable(screening)) {
+            return fee.minus(calculateDiscountAmount());
+        }
+        return fee;
+    }
+
+    private boolean isDiscountable(Screening screening) {
+        return discountConditions.stream()
+            .anyMatch(c -> c.isSatisfiedBy(screening));
+    }
+
+    private Money calculateDiscountAmount() {
+        switch (movieType) {
+            case AMOUNT_DISCOUNT: return discountAmount;
+            case PERCENT_DISCOUNT: return fee.times(discountPercent);
+            case NONE_DISCOUNT: return Money.ZERO;
+        }
+        throw new IllegalStateException();
+    }
+}
+```
+
+→ 외부가 getter 안 부르고 `movie.calculateMovieFee(screening)` 만 호출. 캡슐화 일부 회복.
+
+### 4.2 하지만 여전히 부족하다
+
+- **switch 분기** 가 Movie 안에 남아 있음 — 새 정책 추가 시 Movie 수정.
+- 정책별 필드 (`discountAmount`·`discountPercent`) 가 여전히 같은 Movie 에 모두 있음 — 일부만 쓰임.
+- **새로운 할인 정책 추가 = Movie 수정 + enum 수정** → OCP 위배.
+
+→ 5장의 **책임 주도 설계 (RDD)** + **다형성** 으로 진짜 해결.
+
+---
+
+## 5. 데이터 중심 설계의 근본 문제
+
+| 문제 | 증상 | 다음 장 처방 |
+|------|------|-------------|
+| 캡슐화 위반 | getter/setter 폭증, 외부가 내부 구조 알아야 | 5장 — 책임을 객체에게 |
+| 높은 결합도 | 외부 Service 가 모든 필드 알아야 | 5장 — 책임 주도 설계 |
+| 낮은 응집도 | 한 클래스에 타입별 다른 필드 묶음 | 5·6장 — 다형성 |
+| 빈혈 도메인 모델 | 객체 = 자료 구조, 행동 = 외부 | 5장 + 2장 회고 |
+| OCP 위배 | 새 정책 추가 시 기존 코드 곳곳 수정 | 5장 — 추상 의존 |
+
+→ **데이터부터 그리는 사고 자체가 문제**. 5장에서 "**행동부터 그려라**" 라는 반대 방향.
+
+---
+
+## 핵심 교훈
+
+1. **데이터 먼저 X — 행동·책임 먼저**. 데이터는 행동을 위해 필요한 만큼만.
+2. **getter/setter 자동 생성 ≠ 캡슐화**. 진짜 캡슐화는 행동을 통한 접근만.
+3. **빈혈 도메인 모델** = 데이터 중심의 증상. Service 가 비대해지면 의심.
+4. **응집도·결합도·캡슐화** 가 설계 품질의 3축. 한 클래스의 좋고 나쁨을 객관적으로 잴 수 있는 기준.
+5. **타입 코드 + switch = 다형성 신호** ([[entity-refactoring]] 3.12·10.4).
+
+---
+
+## 현업 예제 — JPA Entity 의 빈혈 모델
+
+### 안티패턴
+
+```java
+// ❌ Lombok @Data — 모든 필드 노출 + setter 폭증
+@Entity @Data
+public class Order {
+    @Id private Long id;
+    private OrderStatus status;
+    private List<OrderItem> items;
+    private Money totalAmount;
+}
+
+@Service
+public class OrderService {
+    public void cancel(Long orderId) {
+        Order order = repo.findById(orderId).orElseThrow();
+        if (order.getStatus() != OrderStatus.PAID) throw new IllegalStateException();
+        order.setStatus(OrderStatus.CANCELLED);   // 외부에서 검증 + 상태 변경
+        order.setTotalAmount(Money.ZERO);          // 일관성 깨질 위험
+        // ...
+    }
+}
+```
+
+→ Order 가 자료 구조, OrderService 가 모든 결정. 4장의 ReservationAgency 와 동일 구조.
+
+### 책임 중심 (5장 처방)
+
+```java
+@Entity
+public class Order {
+    @Id private Long id;
+    private OrderStatus status;
+    private List<OrderItem> items;
+    private Money totalAmount;
+
+    public void cancel() {
+        if (status != OrderStatus.PAID) throw new IllegalStateException();
+        this.status = OrderStatus.CANCELLED;
+        this.totalAmount = Money.ZERO;
+        registerEvent(new OrderCancelledEvent(this.id));
+    }
+}
+
+@Service
+public class OrderService {
+    public void cancel(Long orderId) {
+        Order order = repo.findById(orderId).orElseThrow();
+        order.cancel();   // 위임
+    }
+}
+```
+
+→ 도메인 불변식이 Order 안에. Service 는 트랜잭션 + DB 호출만.
+
+---
+
+## 함정 / 주의
+
+- **무지성 `@Data` 사용** = 데이터 중심 설계의 직행. 도메인 객체에는 신중.
+- **DTO 는 데이터 클래스가 정당** — 외부 시스템 경계 (HTTP·DB) 에서. 도메인 모델과 구분.
+- "**행동부터** 그려라" 도그마 X — 단순 CRUD 는 데이터 중심도 OK. 복잡한 도메인에 책임 중심.
+- 5장이 정답을 보여주기 전까지는 데이터 중심 vs 책임 중심의 **체험적 비교** 가 4장의 목표.
+
+---
+
+## 체크리스트 (설계 리뷰용)
+
+- [ ] 도메인 객체에 `@Data` / 모든 필드 `@Setter` 가 있는가 → 의심
+- [ ] Service 가 도메인 객체의 getter 를 줄줄 호출하는가 → 빈혈 신호
+- [ ] 한 클래스에 타입별로 다른 필드 묶음 (`discountAmount` + `discountPercent`) → 다형성 후보
+- [ ] 새 비즈니스 규칙 추가 시 도메인 객체가 아닌 Service 수정인가 → 책임 잘못 할당
+- [ ] DTO 와 도메인 모델이 같은 클래스를 공유하는가 → 분리 검토
+
+---
+
+## 퀴즈
+
+1. 데이터 중심 설계가 **캡슐화** 를 위반하는 직접 이유는?
+2. `ReservationAgency` 가 비대해진 진짜 원인은?
+3. **응집도·결합도·캡슐화** 의 정의를 각각 한 문장으로?
+4. **빈혈 도메인 모델** 의 증상 세 가지?
+5. 4장이 5장 (책임 주도 설계) 의 어떤 전제를 만들었나?
+
+### 정답·해설
+
+1. **내부 표현 (필드) 을 그대로 노출**. 외부가 모든 필드를 알아야 일을 처리할 수 있음 → 필드 이름·타입·구조 변경이 외부 코드에 그대로 영향. 변경의 영향 좁히기 (캡슐화의 본질) 실패.
+2. **도메인 객체가 자료 구조라 행동을 받지 못함**. 모든 결정 (조건 검사·정책 선택·요금 계산) 이 한 외부 Service 로 흡수. 객체에게 행동을 줘야 비대화 해소.
+3. **응집도** = 한 모듈의 요소가 한 가지 일에 얼마나 집중. **결합도** = 한 모듈이 다른 모듈에 얼마나 의존. **캡슐화** = 변경 가능한 구현을 안정적 인터페이스 뒤로 숨김으로써 변경 영향을 좁힘.
+4. (1) 객체가 getter/setter 만 있고 행동 없음, (2) Service 가 비대해짐, (3) 도메인 불변식이 코드에 명시되지 않고 흩어짐 — 잘못 수정 위험 큼.
+5. **데이터 중심 설계가 왜 망가지는지 체험**. 5장에서 그 반대 방향 (책임 먼저) 을 제시할 때 학습자가 "왜 이게 더 좋은가" 를 비교 기준으로 가질 수 있게 됨.
+
+---
+
+## 다음 장 예고 — 5장: 책임 할당하기
+
+4장이 데이터 중심의 함정을 보였다면, 5장은 그 정답 — **책임 주도 설계 (RDD)**. **데이터보다 행동을 먼저 결정**, **협력 안에서 책임을 결정**, **GRASP 패턴** (정보 전문가·창조자·낮은 결합도·높은 응집도) 으로 책임 할당. 영화 예매를 책임 중심으로 다시 짜며 4장과 비교.

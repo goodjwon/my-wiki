@@ -141,7 +141,27 @@ nav:
       - Spring Boot: entity-spring-boot.md
       - Spring Initializr: entity-spring-initializr.md
     - "📚 도서":
-      - "오브젝트 (조영호, 2019)": entity-object.md
+      - "오브젝트 (조영호, 2019)":
+        - 책 카드: entity-object.md
+        - "실전 강의 교재 — 인덱스": src-object-lecture.md
+        - "실전 강의 — 1장 객체, 설계": lecture-object-ch1.md
+        - "실전 강의 — 2장 객체지향 프로그래밍": lecture-object-ch2.md
+        - "실전 강의 — 3장 역할·책임·협력": lecture-object-ch3.md
+        - "실전 강의 — 4장 설계 품질·트레이드오프": lecture-object-ch4.md
+        - "실전 강의 — 5장 책임 할당하기 (GRASP)": lecture-object-ch5.md
+        - "실전 강의 — 6장 메시지와 인터페이스": lecture-object-ch6.md
+        - "실전 강의 — 7장 객체 분해": lecture-object-ch7.md
+        - "실전 강의 — 8장 의존성 관리하기": lecture-object-ch8.md
+        - "실전 강의 — 9장 유연한 설계": lecture-object-ch9.md
+        - "실전 강의 — 10장 상속과 코드 재사용": lecture-object-ch10.md
+        - "실전 강의 — 11장 합성과 유연한 설계": lecture-object-ch11.md
+        - "실전 강의 — 12장 다형성": lecture-object-ch12.md
+        - "실전 강의 — 13장 서브클래싱과 서브타이핑": lecture-object-ch13.md
+        - "실전 강의 — 14장 일관성 있는 협력": lecture-object-ch14.md
+        - "실전 강의 — 15장 디자인 패턴과 프레임워크": lecture-object-ch15.md
+        - "부록 A — 계약에 의한 설계": lecture-object-appendixA.md
+        - "부록 B — 타입 계층의 구현": lecture-object-appendixB.md
+        - "부록 C — 동적인 협력, 정적인 코드": lecture-object-appendixC.md
       - "Effective Java (Joshua Bloch, 3판 2018)":
         - 책 카드: entity-effective-java.md
         - 12장 한 페이지 요약 (블로그): src-effective-java-summary.md

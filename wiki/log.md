@@ -4,6 +4,14 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-21] ingest | 📚 오브젝트 강의 교재 18편 — 5권 도서 모두 강의 교재 완성
+- 사용자 입력: 1·2·3장 강의 교재 (raw/object/)
+- 본 세션 작성: 4~15장 + 부록 A·B·C (15편, 약 3,500줄)
+- wiki 신규 (19개): lecture-object-ch1~15 (15편) + appendixA·B·C (3편) + src-object-lecture 인덱스
+- entity-object 보강 (강의 교재 18편 링크 추가)
+- mkdocs.yml nav 18편 모두 등록 (📚 도서 > 오브젝트 하위)
+- **5권 도서 모두 강의 교재 완성**: 오브젝트 18편 + EJ 11편 + 리팩터링 12편 + Clean Code 17편 + TDD 35편 = **91편**
+
 ## [2026-06-20] ingest | 📚 테스트 주도 개발 (Kent Beck, 2002) 전체 ingest — 5권 도서 오각형 완성
 - 사용자 입력: `raw/tdd/toc.md` + 강의 교재 1·2장
 - 본 세션 작성: 3~32장 + 부록 A·B + 마치는 글 (Fowler) = **33편 신규** (raw)

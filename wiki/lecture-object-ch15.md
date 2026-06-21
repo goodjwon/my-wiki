@@ -1,0 +1,317 @@
+---
+title: "오브젝트 실전 강의 — 15장"
+type: source
+tags: [book, object, cho-young-ho, lecture]
+sources: [object/오브젝트 실전 강의 교재 15장.md]
+created: 2026-06-21
+updated: 2026-06-21
+---
+
+# 오브젝트 실전 강의 교재
+
+## 15장 — 디자인 패턴과 프레임워크
+
+> **원서**: 조영호 『오브젝트』 **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈(정답 분리)
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 14장의 일관된 협력 패턴을 **GoF 23 디자인 패턴 카탈로그** 로 체계화.
+- **패턴 분류** — 생성·구조·행위 + 각 카테고리의 대표 패턴 학습.
+- **패턴과 책임 주도 설계** 의 관계 — 패턴은 사고의 출발점이지 도그마 X.
+- **프레임워크** — 라이브러리와의 차이, **제어 역전 (IoC)** 의 본질.
+- *오브젝트* 책 전체의 마무리 — 1~15장 통찰 정리.
+
+### 0.2 큰 그림 — 추상화의 사다리
+
+```
+[ 개별 구현 ]              [ 디자인 패턴 ]            [ 프레임워크 ]
+ 한 협력 한 구현            반복 협력 → 카탈로그       구조 + 흐름 통째 재사용
+ 짧고 빠름                  공통 어휘                 IoC (제어 역전)
+ 재사용 X                   설계 재사용                코드 + 설계 재사용
+                          → 의도 명시                → 표준 흐름 + 비즈니스만
+```
+
+> **비유 — "조리법 → 요리 책 → 식당 시스템"**
+>
+> 한 요리 (협력) → 검증된 조리법 모음 (패턴) → 운영 시스템 (프레임워크). 후자로 갈수록 재사용 범위 ↑, 자유도 ↓. 트레이드오프 인지 필수.
+
+### 0.3 현업에서 왜 중요한가
+
+- *오브젝트* 책 전체 (1~14장) 의 통찰이 패턴·프레임워크에서 만남.
+- Spring 이 IoC + 디자인 패턴 활용의 종합 — 15장이 그 이론적 근거.
+- 패턴 이름 = 코드 리뷰의 공통 어휘 ("이건 Strategy 적용", "이건 Composite 입니다").
+
+---
+
+## 1. 디자인 패턴과 설계 재사용
+
+### 1.1 소프트웨어 패턴
+
+> **반복되는 설계 문제에 대한 검증된 해법** — Christopher Alexander (1977, 건축) 의 *A Pattern Language* 에서 영감.
+
+소프트웨어 패턴 = **이름이 붙은 해법의 카탈로그**. GoF (Gang of Four — Gamma·Helm·Johnson·Vlissides) 가 1994 년 23 패턴으로 정형화.
+
+패턴의 4 요소:
+- **이름** — 어휘. 팀 공통 언어.
+- **문제** — 어떤 상황·콘텍스트.
+- **해법** — 객체·메시지·협력 구조.
+- **결과 (trade-off)** — 적용 후 무엇이 좋아지고 무엇이 나빠지는가.
+
+### 1.2 패턴 분류 (GoF 3 카테고리)
+
+#### 생성 (Creational, 5 패턴) — 객체 생성
+
+| 패턴 | 의도 | 영화 예매 적용 가능성 |
+|------|------|----------------------|
+| **Factory Method** | 생성 메서드를 자식이 구현 | `Movie.createFee()` 가 정책별 자식에 위임 |
+| **Abstract Factory** | 관련 객체 군의 생성 | 모든 정책 객체를 한 Factory 에서 |
+| **Builder** | 복잡한 객체의 단계적 생성 | Movie 의 옵션 많은 생성자 |
+| **Prototype** | 기존 객체 복제로 생성 | 자주 안 씀 |
+| **Singleton** | 인스턴스 1개 보장 | `Bank` 같은 전역 정책 (단, 거의 안 권장) |
+
+#### 구조 (Structural, 7 패턴) — 객체 결합
+
+| 패턴 | 의도 | 사례 |
+|------|------|------|
+| **Adapter** | 인터페이스 변환 | 외부 API → 도메인 인터페이스 |
+| **Bridge** | 추상과 구현의 독립 | 정책 (추상) ↔ 구체 알고리즘 |
+| **Composite** | 잎과 가지가 같은 인터페이스 | TDD Money + Sum (12·16장) |
+| **Decorator** | 객체에 행동 추가 | 핸드폰 과금 부가 정책 (11장) |
+| **Facade** | 복잡 서브시스템의 단순 인터페이스 | Service 가 여러 Repository 묶음 |
+| **Flyweight** | 다수 객체 공유로 메모리 절약 | 자주 안 씀 |
+| **Proxy** | 다른 객체 대리 | Spring AOP 트랜잭션 |
+
+#### 행위 (Behavioral, 11 패턴) — 객체 협력
+
+| 패턴 | 의도 | 사례 |
+|------|------|------|
+| **Strategy** | 알고리즘을 정책 객체로 교체 | `DiscountPolicy` (영화 예매) |
+| **Template Method** | 알고리즘 골격 + 단계 자식 | `BasicRatePolicy.calculateFee` (14장) |
+| **Observer** | 이벤트 + 구독자 | Spring `@EventListener` |
+| **State** | 상태에 따른 행동 변화 | Order 의 PAID→SHIPPED→DELIVERED |
+| **Command** | 요청을 객체로 | 큐·재시도·취소 가능 작업 |
+| **Iterator** | 컬렉션 순회 추상화 | Java `Iterator` |
+| **Mediator** | 객체 간 결합을 중재자로 | UI 컴포넌트 협력 |
+| **Memento** | 객체 상태 스냅샷 | Undo 기능 |
+| **Visitor** | 데이터 구조와 연산 분리 | AST 처리·컴파일러 |
+| **Chain of Responsibility** | 요청을 처리기 체인에 전달 | Servlet Filter, Security FilterChain |
+| **Interpreter** | 도메인 언어 해석 | SQL 파서·룰 엔진 |
+
+→ 23 패턴 모두 외울 필요 X. **자주 마주치는 8~10 개** 정도가 실무 핵심.
+
+### 1.3 패턴과 책임-주도 설계
+
+패턴 = **이미 검증된 책임 할당** 의 카탈로그. RDD 의 사고를 매번 새로 하지 않아도 됨.
+
+**연결**:
+- Strategy = "알고리즘 책임을 별도 객체로" (RDD 의 책임 분리).
+- State = "상태에 따른 행동 책임을 상태 객체로".
+- Observer = "변경 통지 책임을 별도 흐름으로".
+- Command = "작업 요청 책임을 객체로".
+
+→ 패턴 이름을 알면 **RDD 사고 도구가 풍부**.
+
+### 1.4 캡슐화와 디자인 패턴
+
+대부분의 패턴이 **변하는 것을 캡슐화**:
+- Strategy = 알고리즘 캡슐화.
+- State = 상태 캡슐화.
+- Observer = 이벤트 발행/구독 캡슐화.
+- Decorator = 행동 확장 캡슐화.
+- Command = 요청 캡슐화.
+
+→ **변화하는 것을 식별** + **그것을 객체로** = 디자인 패턴의 공통 사고.
+
+### 1.5 패턴은 출발점이다
+
+> 패턴은 **최종 코드 X, 설계 시작점**. 도메인에 맞춰 변형 필수.
+
+함정: "이건 Strategy 적용해야" 같은 도그마 사고. 사용 사례 1개로 패턴 도입은 추측성 일반화 ([[entity-refactoring]] 3.15).
+
+**적용 기준**:
+- 사용 사례 2~3 개 누적.
+- **변하는 것** 이 명확히 분리됨.
+- 패턴의 트레이드오프가 콘텍스트와 맞음.
+
+---
+
+## 2. 프레임워크와 코드 재사용
+
+### 2.1 코드 재사용 vs 설계 재사용
+
+| | 코드 재사용 (라이브러리) | 설계 재사용 (프레임워크) |
+|---|------------------------|-------------------------|
+| 단위 | 함수·클래스 | 패턴·구조·흐름 |
+| 호출 방향 | **내가 라이브러리 호출** | **프레임워크가 나를 호출 (IoC)** |
+| 자유도 | 큼 — 내가 흐름 결정 | 작음 — 틀 따라야 |
+| 학습 비용 | 작음 (필요한 함수만) | 큼 (프레임워크 구조 학습) |
+| 예 | Apache Commons Lang, Guava | Spring, JPA Hibernate, Django |
+
+### 2.2 상위 정책과 하위 정책으로 패키지 분리하기
+
+DIP 의 적용 — **상위 (도메인) 가 하위 (인프라) 를 모름**:
+
+```
+domain/                  # OrderService, OrderRepository (interface)
+infrastructure/jpa/      # JpaOrderRepository (구체)
+infrastructure/redis/    # RedisOrderRepository (구체)
+infrastructure/http/     # PaymentGatewayHttpClient (구체)
+```
+
+- domain 패키지는 infrastructure 를 모름.
+- 의존 화살표: infrastructure → domain (역전).
+
+→ 도메인이 인프라 교체 자유 + 테스트 자유.
+
+### 2.3 제어 역전 (Inversion of Control) — 프레임워크의 본질
+
+#### 정의
+
+> **"내가 프레임워크를 부르는 게 아니라 프레임워크가 나를 부른다"** (Hollywood Principle: "Don't call us, we'll call you").
+
+#### 라이브러리 vs 프레임워크 흐름
+
+```
+[ 라이브러리 사용 ]                    [ 프레임워크 사용 ]
+ main() {                              framework_main() {
+   parseArgs();                          // ... 프레임워크 흐름 ...
+   library.doX();                        my_callback()   ← 프레임워크가 호출
+   library.doY();                        // ... 프레임워크 흐름 ...
+ }                                     }
+```
+
+#### Spring 의 IoC 사례
+
+```java
+// 내가 직접 HTTP 요청 받아 처리 X
+// Spring 이 받아서 내 메서드 호출
+@RestController
+public class OrderController {
+    @PostMapping("/orders")
+    public OrderResponse create(@RequestBody CreateOrderRequest req) {
+        // Spring 이 HTTP 파싱·DI·트랜잭션 모두 처리 후 여기 호출
+    }
+}
+```
+
+→ 흐름 책임 = Spring, 비즈니스 로직 = 내 코드. **분담**.
+
+### 2.4 IoC 의 효과
+
+1. **표준 흐름 + 내 비즈니스만 집중** — HTTP·DB·트랜잭션·DI 처리 = 프레임워크.
+2. **자동 통합** — 컨테이너가 객체 생명주기·의존성 관리.
+3. **횡단 관심사 분리** — `@Transactional`·`@Async`·`@Cacheable` 같은 AOP 가 IoC 위에서.
+4. **테스트** — 일부 슬라이스 (`@WebMvcTest`·`@DataJpaTest`) 로 한정 가능.
+
+### 2.5 프레임워크 학습의 함정
+
+- **표준 흐름 모르고 사용** — 매번 검색·복붙. 학습 곡선 큰 만큼 깊이 학습 필요.
+- **프레임워크 의존이 도메인까지 침투** — 도메인 객체가 Spring 없이는 못 만들어지면 DIP 위배.
+- **IoC 컨테이너 마법** — `@Autowired` 가 어떻게 작동하는지 모르면 디버깅 어려움.
+
+---
+
+## 3. 마치며 — 책 전체 회고
+
+### *오브젝트* 가 가르친 것 (1~15장 종합)
+
+1. **객체지향의 본질** = 클래스가 아니라 **객체 협력** (1·2·7장).
+2. **메시지가 객체를 결정** — 협력 → 책임 → 객체 순 (3·5장).
+3. **데이터 중심 X → 책임 중심** (4·5장).
+4. **추상에 의존** — OCP·DIP (8·9장).
+5. **합성 > 상속** — Stack 함정·핸드폰 과금 (10·11장).
+6. **다형성 + LSP** = 진짜 다형성 (12·13장).
+7. **일관된 협력 → 디자인 패턴 → 프레임워크** (14·15장).
+8. **계약** (사전·사후·불변) 이 LSP 의 형식적 기반 (부록 A).
+9. **타입 계층 표현** = 인터페이스 + 추상 클래스 + 합성 (부록 B).
+10. **동적 협력 먼저, 정적 코드 나중** (부록 C).
+
+### 다음 단계 — 5권 도서 학습
+
+- ***리팩터링*** (Fowler) — 이미 짠 코드를 *오브젝트* 원칙으로 개선.
+- ***Effective Java*** (Bloch) — Java 매일의 권고 90 개.
+- ***Clean Code*** (Martin) — 줄·이름·함수 단위 가독성 + 17장 휴리스틱.
+- ***TDD*** (Beck) — 테스트로 설계 끌어내기.
+- ***DDD*** (Evans/Vernon) — 도메인 모델링 큰 그림.
+
+→ *오브젝트* + 4권 = OO 설계 학습의 완성. [[entity-object]] 안 5권 오각형 비교 참조.
+
+---
+
+## 핵심 교훈
+
+1. **디자인 패턴** = 검증된 책임 할당 카탈로그.
+2. **GoF 3 카테고리** — 생성·구조·행위 + 자주 쓰는 8~10 패턴.
+3. **패턴 = 출발점**, 도메인에 맞춰 변형. 도그마 X.
+4. **프레임워크 = 코드 + 설계 재사용 + IoC**.
+5. **IoC** = 흐름 책임을 프레임워크에 위임, 비즈니스만 집중.
+6. **객체지향의 본질 = 객체 협력** (책 전체).
+
+---
+
+## 현업 예제 — Spring 의 디자인 패턴 종합
+
+| 패턴 | Spring 사례 | 코드 위치 |
+|------|-------------|-----------|
+| **Factory Method** | `BeanFactory.getBean(Class)` | DI 컨테이너 |
+| **Abstract Factory** | `@Configuration` + `@Bean` | 빈 정의 |
+| **Singleton** | `@Bean` 기본 스코프 | 빈 스코프 |
+| **Builder** | `RestTemplateBuilder`, `HttpSecurity.headers().frameOptions()...` | 설정 API |
+| **Adapter** | `HandlerAdapter`, `HandlerMethodArgumentResolver` | MVC 처리 |
+| **Decorator** | `BeanPostProcessor`, `HandlerInterceptor` | 빈 후처리·요청 |
+| **Proxy** | `@Transactional`, `@Async`, `@Cacheable` AOP | 모든 AOP |
+| **Strategy** | `AuthenticationProvider`, `PasswordEncoder` | Security |
+| **Template Method** | `JdbcTemplate.query`, `JmsTemplate` | 데이터 접근 |
+| **Observer** | `ApplicationEventPublisher` + `@EventListener` | 이벤트 |
+| **Composite** | Spring Security `FilterChain` | 인증 체인 |
+| **Chain of Responsibility** | `Filter` 체인, `HandlerInterceptor` 체인 | MVC·Security |
+| **Command** | `@Async` 메서드, `TaskExecutor.submit(Runnable)` | 비동기 작업 |
+
+→ **Spring 자체가 디자인 패턴 학습 자료**. 한 프레임워크를 깊이 파면 패턴이 자연 습득.
+
+---
+
+## 함정 / 주의
+
+- **패턴 도그마** — "이건 Strategy 적용해야" 같은 사고. 사용 사례 + 트레이드오프 확인.
+- **패턴 외우기** — 23 패턴 다 외울 필요 X. 의도·문제·해법 골격만.
+- **프레임워크 의존이 도메인까지** — 도메인 객체가 Spring 없이 만들어지지 않으면 DIP 위배. 도메인은 POJO.
+- **IoC 마법 모르고 사용** — `@Transactional` self-invocation 함정 같이 IoC 메커니즘 이해 필수.
+
+---
+
+## 체크리스트
+
+- [ ] 패턴 적용 전 사용 사례 2~3 개 누적 확인
+- [ ] 패턴 이름이 코드 (인터페이스·클래스 이름) 에 드러나는가
+- [ ] 프레임워크 의존이 도메인 패키지까지 침투 X
+- [ ] IoC 의 본질 (Hollywood Principle) 을 인지하고 활용
+- [ ] Spring AOP 의 self-invocation 함정 같은 메커니즘 이해
+
+---
+
+## 퀴즈
+
+1. **디자인 패턴의 정의** 와 4 요소는?
+2. **GoF 3 카테고리** 와 각 카테고리의 대표 패턴 2~3 개?
+3. **패턴 = 출발점** 의 실용적 의미와 도그마 회피 기준은?
+4. **IoC** 의 정의와 라이브러리와의 차이?
+5. *오브젝트* 책 전체의 한 줄 메시지?
+
+### 정답·해설
+
+1. **반복되는 설계 문제에 대한 검증된 해법의 카탈로그**. 4 요소: **이름** (어휘), **문제** (상황), **해법** (객체·협력 구조), **결과** (트레이드오프). 검증된 해법 → 매번 사고 안 해도 됨, 팀 공통 언어 형성.
+2. **생성**: Factory Method·Singleton·Builder. **구조**: Adapter·Decorator·Proxy·Composite. **행위**: Strategy·Template Method·Observer·State·Command. 23 패턴 중 자주 쓰는 8~10 개가 실무 핵심.
+3. **최종 코드가 아닌 설계 시작점**. 패턴은 추상 구조 — 도메인에 맞춰 이름·필드·세부 협력 변형 필요. **도그마 회피 기준**: 사용 사례 2~3 개 누적 + 변하는 것 분리됨 + 트레이드오프 콘텍스트 적합.
+4. **"내가 프레임워크를 부르는 게 아니라 프레임워크가 나를 부른다" (Hollywood Principle)**. **라이브러리**: 내가 함수 호출, 흐름 책임 내 코드. **프레임워크**: 프레임워크가 흐름, 내 코드는 콜백. Spring 의 `@Controller` 메서드가 정확히 이 구조.
+5. **객체지향의 본질은 클래스가 아니라 객체 협력이다**. 데이터 중심 X, 책임 중심. 메시지가 객체를 결정. 추상 의존·합성·다형성·일관된 협력 — 모두 "협력 잘하기" 의 도구. 패턴·프레임워크는 그 협력의 정형화.
+
+---
+
+## 다음 — 부록 A: 계약에 의한 설계
+
+13장에서 잠깐 다룬 **계약** (사전·사후·불변) 의 본격적 깊이. Bertrand Meyer 의 Eiffel 에서 시작된 사고. LSP 의 형식적 기반 + 자바에서의 표현 방법.
