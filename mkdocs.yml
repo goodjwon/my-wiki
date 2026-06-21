@@ -125,7 +125,7 @@ nav:
       - Module 3 — Hooks: guide-harness-module3.md
       - Module 4 — Multi-Agent: guide-harness-module4.md
       - Module 5 — 리뷰·Rippable: guide-harness-module5.md
-  - 개발방법론·OO:
+  - 개발방법론:
     - 가이드:
       - 실습 환경 (5권 공통): guide-java-book-study-lab.md
       - 코드 작성·점검 가이드: guide-code-authoring-and-review.md
