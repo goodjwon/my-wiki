@@ -7,7 +7,7 @@ external:
   - https://www.oreilly.com/library/view/effective-java-3rd/9780134686097/
   - https://ekis.github.io/effective-java-3rd-edition
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-06-21
 ---
 
 # Effective Java — 자바를 "잘" 쓰는 90가지 원칙

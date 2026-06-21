@@ -6,7 +6,7 @@ sources: [clean-code/toc.md]
 external:
   - https://www.oreilly.com/library/view/clean-code/9780136083238/
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-06-21
 ---
 
 # Clean Code — 깨끗한 코드를 어떻게 알아보고 만드는가

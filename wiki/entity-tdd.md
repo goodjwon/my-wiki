@@ -6,7 +6,7 @@ sources: [tdd/]
 external:
   - https://www.oreilly.com/library/view/test-driven-development/0321146530/
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-06-21
 ---
 
 # 테스트 주도 개발 — Kent Beck

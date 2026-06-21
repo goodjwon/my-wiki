@@ -4,6 +4,19 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-21] lint | 전체 점검 — 5권 entity 비교표 통일 후 일관성 검증
+- 영역 1 인덱스 일관성: ✅ 165 페이지 모두 등록 (lecture-* 93편은 src-*-lecture 인덱스 hub 역할). 깨진 링크 0건.
+- 영역 2 고아 페이지: ✅ entity·concept·src·guide 모두 인바운드 1+
+- 영역 3 교차참조·sources: ✅ 모든 source/entity/concept 에 frontmatter `sources:` 존재
+- 영역 4 모순·오래된 정보: ⚠️ 발견 + 자동 수정 (sed)
+  - 5권 entity `updated: 2026-06-20` → `2026-06-21` (오늘 비교표 갱신 반영)
+  - backlog.md "마지막 업데이트" 본문 2026-06-07 → 2026-06-21
+  - backlog "오브젝트 entity 만" → "강의 18편 완성" 수정
+  - backlog 위키 규모 "~50개" → "165개" 수정
+  - backlog 최근 완료 작업에 6/13·20·21 5건 추가 기록
+- 영역 5 raw 추적 마킹: ✅ 모든 페이지 통과
+- 영역 6 새 제안: 백로그에 신규 concept 페이지 후보 11건 등록 상태 유지 (오브젝트 4·EJ 4·Clean Code 3) — 사용자 노트 입력 대기
+
 ## [2026-06-21] ingest | 📚 오브젝트 강의 교재 18편 — 5권 도서 모두 강의 교재 완성
 - 사용자 입력: 1·2·3장 강의 교재 (raw/object/)
 - 본 세션 작성: 4~15장 + 부록 A·B·C (15편, 약 3,500줄)

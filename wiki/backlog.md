@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-06-20
+updated: 2026-06-21
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-06-20
 
 ## 📅 마지막 업데이트
 
-2026-06-07
+2026-06-21
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -37,6 +37,24 @@ updated: 2026-06-20
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
 ## ✅ 최근 완료 작업 (2026-06 누적)
+
+### 2026-06-21
+- ✅ **📚 5권 도서 강의 교재 모두 완성** — 오브젝트 18편 + EJ 11편 + 리팩터링 12편 + Clean Code 17편 + TDD 35편 = **93편**
+- ✅ **5권 entity 모두 동일 5권 오각형 비교표** + "이 책의 자리" 한 문장 통일
+- ✅ **오브젝트 강의 교재 18편** 작성 (사용자 1·2·3장 + 본 세션 4~15장 + 부록 A·B·C)
+- ✅ **TDD 1부 4~16장 풍성하게 재작성** (각 200~240줄급)
+- ✅ Q/A 토글 → `**Q.**` + `**A.**` 일괄 변환 (47편) + `scripts/convert_quiz.py`
+
+### 2026-06-20
+- ✅ **TDD (Kent Beck) ingest** — entity + 강의 교재 35편 (1·2·3부 + 부록·마치는 글)
+- ✅ **Clean Code ingest** — entity + 강의 교재 17편
+- ✅ **리팩터링 2판 ingest** — entity + 강의 교재 12편
+- ✅ **Effective Java 강의 교재 wiki 노출 11편**
+- ✅ **오브젝트 entity** 책 카드
+
+### 2026-06-13
+- ✅ **Loop 엔지니어링 ingest** (2026-06 Steinberger 발화) — concept-loop-engineering + src + 하네스 4단 진화 확장
+- ✅ **"거부 신호 없는 자동화는 폭주한다" 패턴 비교표** 6행 누적
 
 ### 2026-06-07
 - ✅ **부실 페이지 9개 공식 문서 기반 대폭 보강** (concept-spring-core, entity-jvm, concept-oop, concept-design-patterns, entity-spring-framework, entity-spring-boot, entity-querydsl, concept-api-versioning, concept-jspecify-null-safety)
@@ -64,13 +82,14 @@ updated: 2026-06-20
 
 ### 즉시 가능 (입력 대기 중)
 
-- [x] ~~**📚 Java 도서 ingest 5권 모두 완료**~~ (2026-06-20)
-  - *오브젝트* — entity 만
-  - *Effective Java* — entity + 강의 11편
-  - *리팩터링* — entity + 강의 12편
-  - *Clean Code* — entity + 강의 17편
-  - *TDD* — entity + 강의 35편 ← 마지막
-  - **5권 오각형 비교표** (관점·단위·시점·언어) `entity-tdd` 안에 정리
+- [x] ~~**📚 Java 도서 ingest 5권 entity + 강의 교재 모두 완성**~~ (2026-06-21)
+  - *오브젝트* — entity + 강의 18편 (15장 + 부록 A·B·C)
+  - *Effective Java* — entity + 강의 11편 (2~12장)
+  - *리팩터링* — entity + 강의 12편 (1~12장)
+  - *Clean Code* — entity + 강의 17편 (1~17장)
+  - *TDD* — entity + 강의 35편 (1~32장 + 부록 A·B + 마치는 글)
+  - **총 강의 교재 93편**
+  - **5권 오각형 비교표** (관점·단위·시점·언어 + "이 책의 자리") 5권 entity 모두 동일 형식
 - [ ] **Clean Code 책 기반 신규 concept 페이지 3개** — 사용자 노트·발췌 입력 대기
   - [ ] `concept-naming-conventions` — 2장 + 17장 N1~N7
   - [ ] `concept-tdd-laws-and-first` — 9장 TDD 3법칙 + F.I.R.S.T.
@@ -133,22 +152,23 @@ updated: 2026-06-20
 | Git 원격 | `git@github.com:goodjwon/my-wiki.git` |
 | 로컬 path | `/Users/jungwonpark/Documents/my-wiki/` |
 
-## 📊 위키 규모 (2026-06-07 기준)
+## 📊 위키 규모 (2026-06-21 기준)
 
 ```bash
 # 빠른 통계 (다른 PC에서 확인)
 wc -l wiki/*.md | tail -1
-ls wiki/ | wc -l
+ls wiki/*.md | wc -l
 find raw -type f | wc -l
 git log --oneline | wc -l
 ```
 
 | 구분 | 수 |
 |------|---|
-| wiki 페이지 | ~50개 |
-| raw 원본 | 30+ 파일 (7개 주제 디렉터리) |
-| nav 카테고리 | 4개 |
-| 커밋 | 10+ (5월 30일~) |
+| wiki 페이지 | **165개** (entity·concept·src·guide·lecture·index·log·backlog 종합) |
+| 5권 도서 강의 교재 | **93편** (lecture-*) |
+| raw 원본 | 약 130 파일 (15개 주제 디렉터리) |
+| nav 카테고리 | 5개 (위키관리·하네스·Java/Spring·DB운영·📚도서) |
+| 커밋 | 50+ (5월 30일~) |
 
 ## 🗺️ 새 세션 시작 가이드
 
