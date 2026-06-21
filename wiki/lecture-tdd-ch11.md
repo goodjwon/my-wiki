@@ -1,0 +1,226 @@
+---
+title: "TDD 실전 강의 — 11장"
+type: source
+tags: [book, tdd, kent-beck, lecture]
+sources: [tdd/테스트 주도 개발 실전 강의 교재 11장.md]
+created: 2026-06-20
+updated: 2026-06-21
+---
+
+# 테스트 주도 개발 실전 강의 교재
+
+## 11장 — 모든 악의 근원
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 자식 클래스 `Dollar`·`Franc` 를 **완전히 제거**.
+- Money 한 클래스 + currency 필드로 통합.
+- 호출자 (`Money.dollar(5)`) 가 8장에서 자식을 모르도록 설계해 둔 덕에 호출자 무영향.
+- *Effective Java* Item 18 (상속 대신 컴포지션) + *리팩터링* 12.7 (서브클래스 제거) 의 살아있는 사례.
+
+### 0.2 큰 그림 — "캡슐화의 보상"
+
+```
+[ 1·2·3 사이클 ]                 [ 11장 ]
+ (8장에서 호출자에 Money.dollar 만 노출)
+ ↓                                자식 클래스 제거
+ 호출자가 구체 자식 모름          호출자 코드 무변경
+                                  Money 단일 클래스로
+```
+
+> **비유 — "주방 통합"**
+>
+> 8장에서 메뉴판 (`Money.dollar`) 만 손님에게 보였음. 그래서 11장에서 주방 (Dollar·Franc 자식 클래스) 을 통째로 통합해도 손님 (호출자) 은 모름. **캡슐화의 보상은 미래 변경의 자유**.
+
+### 0.3 현업에서 왜 중요한가
+
+- 자식 클래스 폭증 (`*Strategy`, `*Handler`, `*Processor` 가 20개+) 이 흔한 안티패턴.
+- 차이가 데이터로 환원 가능하면 자식 → 필드.
+- 단, 자식별 동작이 진짜 다양하면 다형성이 정답 — 11장 Money 는 특수 사례.
+
+---
+
+## 1. 할 일 목록 갱신
+
+```
+[x] times 를 부모로
+[ ] Dollar / Franc 자식 클래스 제거    ← 이번
+[ ] $5 + 10 CHF = $10
+[ ] hashCode()
+```
+
+---
+
+## 2. REFACTOR — 자식 클래스 제거
+
+### 단계 1: 정적 팩터리에서 자식 생성자 직접 호출 제거
+
+```java
+public class Money {
+    public static Money dollar(int amount) { return new Money(amount, "USD"); }   // ← Dollar → Money
+    public static Money franc(int amount)  { return new Money(amount, "CHF"); }   // ← Franc → Money
+    // ...
+}
+```
+
+→ 모든 테스트 여전히 통과. (호출자는 `Money.dollar(5)` 만 쓰니 영향 0)
+
+### 단계 2: Dollar·Franc 클래스 파일 삭제
+
+```java
+// Dollar.java — 삭제
+// Franc.java — 삭제
+```
+
+→ 컴파일 에러? 호출자가 `Dollar` / `Franc` 타입을 직접 쓰는 곳이 있다면 그곳만 영향. 8장의 정적 팩터리 도입 + Money 반환으로 자식 타입 노출이 없었다면 **에러 0**.
+
+### 단계 3: 최종 Money 클래스
+
+```java
+public class Money {
+    private final int amount;
+    private final String currency;
+
+    private Money(int amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    public static Money dollar(int amount) { return new Money(amount, "USD"); }
+    public static Money franc(int amount)  { return new Money(amount, "CHF"); }
+
+    public Money times(int multiplier) {
+        return new Money(amount * multiplier, currency);
+    }
+
+    public String currency() { return currency; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Money m)) return false;
+        return amount == m.amount && currency.equals(m.currency);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(amount, currency);
+    }
+}
+```
+
+→ 1~11장의 모든 작업이 단 30줄 안에. 자식 클래스 0.
+
+---
+
+## 3. 통과한 시점에서의 회고
+
+### 진화 정리
+
+| 장 | 변화 |
+|----|------|
+| 1 | Dollar 생성 (부작용 있음) |
+| 2 | 새 객체 반환 (불변) |
+| 3 | equals |
+| 4 | private 필드 |
+| 5 | Franc 추가 (복붙) |
+| 6 | Money 슈퍼클래스 추출 |
+| 7 | getClass 비교 (LSP 함정 인지) |
+| 8 | 정적 팩터리 (Item 1) |
+| 9 | currency 필드 |
+| 10 | times 통합 |
+| **11** | **자식 클래스 제거 — Money 단일** |
+
+→ 11장이 자식 진화의 **종착점**.
+
+### record 로 가면 더 간단
+
+```java
+public record Money(int amount, String currency) {
+    public static Money dollar(int amount) { return new Money(amount, "USD"); }
+    public static Money franc(int amount)  { return new Money(amount, "CHF"); }
+    public Money times(int multiplier)     { return new Money(amount * multiplier, currency); }
+}
+```
+
+→ equals·hashCode·toString·생성자·accessor 자동. 1~11장 작업이 한 record 로.
+
+> 책이 쓰일 당시 (2002) record 없었기에 11장까지의 진화가 살아있는 학습 자료. record 시대에는 처음부터 record 로 가는 것도 정당 — 단, "왜 record 가 좋은가" 의 이유를 손으로 익히려면 책의 진화 따라가기 가치 있음.
+
+---
+
+## 4. 현업 예제 — Effective Java Item 18 의 실전
+
+### 사례: Stack extends Vector 의 함정 (Item 18·*리팩터링* 12.11)
+
+```java
+public class Stack<E> extends Vector<E> {   // ❌
+    public void push(E item) { add(item); }
+    public E pop() { return remove(size() - 1); }
+}
+
+// 문제
+Stack<Integer> stack = new Stack<>();
+stack.push(1);
+stack.push(2);
+stack.add(0, 999);   // ❌ Vector 의 add(index, element) 가 노출 — LIFO 깨짐
+```
+
+→ 상속이 부모의 모든 메서드를 노출 → 자식의 불변식 깨뜨림. **합성 (composition) 으로**:
+
+```java
+public class Stack<E> {
+    private final List<E> list = new ArrayList<>();
+    public void push(E item) { list.add(item); }
+    public E pop() { return list.remove(list.size() - 1); }
+}
+```
+
+→ 노출 메서드 통제. 11장의 자식 제거와 같은 정신 — **상속의 위험을 합성으로**.
+
+---
+
+## 5. 함정 / 주의
+
+- **모든 자식 클래스를 제거하라 X**. 자식별로 본질적으로 다른 동작이 있으면 다형성이 정답.
+- 11장의 Money 는 **차이가 데이터 (currency) 로 환원 가능** 한 특수 사례.
+- 호출자가 자식 타입을 직접 알았다면 (8장 정적 팩터리 안 했다면) 11장 변경이 호출자 전체 영향 — 큰 비용.
+
+---
+
+## 6. 체크리스트 (11장 완료 기준)
+
+- [ ] Dollar·Franc 자식 클래스 파일이 사라졌는가
+- [ ] Money 정적 팩터리가 직접 `new Money` 호출하는가
+- [ ] 모든 테스트 초록인가
+- [ ] 호출자 코드 (테스트) 가 무변경인가
+- [ ] record 로 더 단순화 가능한지 검토했는가
+
+---
+
+## 7. 퀴즈
+
+1. 11장 변환이 호출자에 영향 없는 이유 (어느 장의 결정 덕)?
+2. *리팩터링* 의 어떤 기법?
+3. record 로 갈음할 수 있는 이유?
+4. 자식 클래스 제거가 항상 정답 아닌 경우?
+5. *Effective Java* Item 18 의 메시지가 11장과 어떻게 연결?
+
+### 정답·해설
+
+1. **8장 정적 팩터리** — 호출자가 `Money.dollar(5)` 만 사용. 구체 자식 타입을 모름. 그래서 자식이 사라져도 호출자 코드 무변경. **캡슐화의 미래 변경 자유**.
+2. **12.7 서브클래스 제거** (Remove Subclass) + 12.9 계층 합치기 (Collapse Hierarchy). 차이가 데이터로 환원되면 자식 → 필드.
+3. **record 가 자동으로** 불변 필드 + equals + hashCode + toString + accessor + 생성자 제공. 1~11장의 모든 작업이 record 한 줄. 단, 상속·setter 가 필요한 도메인엔 부적합.
+4. **자식별로 본질적으로 다른 알고리즘** 이 있을 때. 예: `EmailNotification.send()` 와 `SmsNotification.send()` 가 다른 외부 API 호출. 데이터로 환원하기 어렵고 다형성이 더 명료.
+5. **"상속보다 컴포지션"**. 상속은 부모의 모든 메서드를 노출 → 자식 불변식 깨짐 위험 (Stack extends Vector 사례). 11장은 자식을 아예 제거하는 정반대 방향 — 둘 다 "**상속의 위험에서 벗어나기**" 라는 공통 정신.
+
+---
+
+## 다음 장 예고 — 12장: 드디어, 더하기
+
+지금까지 곱셈 (`times`) 만 했음. 이제 **더하기 (`plus`)**. 같은 통화 더하기는 단순하지만, **다른 통화 더하기** ($5 + 10 CHF) 는 환율 필요. 즉시 계산 X — **표현 (Expression)** 으로 표현 후 환산 시점에 결정. 컴포지트 패턴의 자연 도입.

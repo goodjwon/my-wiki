@@ -1,0 +1,229 @@
+---
+title: "TDD 실전 강의 — 7장"
+type: source
+tags: [book, tdd, kent-beck, lecture]
+sources: [tdd/테스트 주도 개발 실전 강의 교재 7장.md]
+created: 2026-06-20
+updated: 2026-06-21
+---
+
+# 테스트 주도 개발 실전 강의 교재
+
+## 7장 — 사과와 오렌지
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → RED → GREEN → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 6장 끝의 빨강 (`Franc(5) == Dollar(5)`) 을 해결한다.
+- `equals` 에 **클래스 비교** 를 추가 — "통화가 다르면 다른 객체".
+- **`getClass()` vs `instanceof`** 의 트레이드오프를 안다.
+- *Effective Java* Item 10 의 equals 일반 규약 (반사성·대칭성·이행성·일관성·null) 과 LSP 의 충돌을 본다.
+
+### 0.2 큰 그림 — "동일성의 의미는 도메인이 결정"
+
+```
+[ 6장 끝 ]                              [ 7장 ]
+ Money.equals 가 amount 만 비교         Money.equals 가 클래스도 비교
+ Franc(5) == Dollar(5) true (❌)        Franc(5) != Dollar(5) (✅)
+```
+
+> **비유 — "5달러 지폐 vs 5프랑 지폐"**
+>
+> 둘 다 액면가 "5" 이지만 누구도 같다고 인정 안 함. 환율 따라 가치가 다르고, 가게에서 받는 통화도 다름. **숫자만 같다고 같은 게 아님**.
+
+### 0.3 현업에서 왜 중요한가
+
+- 도메인 객체의 동일성은 **비즈니스 의미** 가 결정. 단순 필드 비교 X.
+- JPA Entity 의 `equals` 가 같은 사고 단골 — ID 만 비교? 모든 필드? 비즈니스 키?
+- LSP 위배가 거의 항상 `equals` 와 얽힘 — 상속 + equals = 함정.
+
+---
+
+## 1. 할 일 목록 갱신
+
+```
+[x] $5 * 2 = $10
+[x] Dollar 부작용 제거
+[x] equals()
+[x] amount private
+[x] CHF * 2 = 10 CHF
+[x] Dollar 와 Franc 중복 제거
+[ ] 통화가 다르면 equals false   ← 이번
+[ ] hashCode()
+[ ] $5 + 10 CHF = $10
+```
+
+---
+
+## 2. RED — 통화 비교 테스트
+
+```java
+@Test
+void Franc_와_Dollar_는_같지_않다() {
+    assertNotEquals(new Franc(5), new Dollar(5));
+}
+```
+
+→ 빨강 (현재 코드는 true 반환).
+
+---
+
+## 3. GREEN — `getClass()` 비교
+
+### 단계 1: equals 에 getClass 추가
+
+```java
+public class Money {
+    protected final int amount;
+    protected Money(int amount) { this.amount = amount; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (getClass() != o.getClass()) return false;   // ← 추가
+        Money m = (Money) o;
+        return amount == m.amount;
+    }
+}
+```
+
+→ 통과. `Franc.getClass()` ≠ `Dollar.getClass()` 라서 false.
+
+### 단계 2: 기존 테스트 모두 초록 확인
+
+```java
+@Test void Dollar_5_equals_Dollar_5() { ... }    // OK (같은 클래스)
+@Test void Franc_5_equals_Franc_5() { ... }      // OK
+@Test void Franc_5_notEquals_Dollar_5() { ... }  // OK (다른 클래스)
+```
+
+전부 초록. 추출이 가져온 빨강을 7장에서 해결.
+
+---
+
+## 4. REFACTOR — getClass vs instanceof
+
+### `getClass()` 의 함정 — LSP
+
+```java
+public class Money {
+    public boolean equals(Object o) {
+        if (getClass() != o.getClass()) return false;   // ← 자식 클래스 거부
+        ...
+    }
+}
+```
+
+**문제**: `Money` 를 상속한 새 자식 (예: `LoggingDollar`) 이 자기 부모 `Dollar` 와 다르다고 판정됨. 자식이 부모를 대체할 수 있어야 한다는 **LSP (리스코프 치환 원칙)** 위배 가능성.
+
+### `instanceof` 의 함정 — 대칭성
+
+```java
+public class Money {
+    public boolean equals(Object o) {
+        if (!(o instanceof Money m)) return false;   // 자식도 같은 타입
+        return amount == m.amount;
+    }
+}
+```
+
+**문제**: `LoggingDollar(5).equals(Dollar(5))` true 이면, `Dollar(5).equals(LoggingDollar(5))` 도 true 여야 함 (대칭성). 자식이 자기 필드를 비교에 추가하면 대칭성 깨짐.
+
+→ *Effective Java* Item 10 의 유명한 문제. 결론: **상속 가능한 클래스에 equals 추가는 매우 신중**.
+
+### TDD 책의 선택
+
+이 책에서는 **현재 `getClass()`** 로 갑니다. 이유:
+1. `Money` 가 곧 단일 클래스 + 통화 필드로 통합될 예정 (8~11장)
+2. 자식 클래스가 사라지면 LSP 문제도 사라짐
+3. 일단 통과 → 다음 단계에서 더 좋은 구조로
+
+> **TDD 실용주의**: 현재 가장 단순한 해법으로 통과시키고, 더 좋은 구조가 보이면 다음 사이클에서 정련.
+
+---
+
+## 5. 현업 예제 — JPA Entity 의 equals
+
+### 사례 1: 잘못된 ID 만 비교
+
+```java
+@Entity
+public class Order {
+    @Id private Long id;
+    private String number;
+    // ...
+
+    @Override public boolean equals(Object o) {
+        if (!(o instanceof Order other)) return false;
+        return Objects.equals(id, other.id);   // ❌ 영속화 전 id == null
+    }
+}
+```
+
+**함정**: 영속화 전 두 새 Order 가 둘 다 id null → equals true. HashSet 에 넣으면 사고.
+
+### 사례 2: 비즈니스 키 비교
+
+```java
+@Override public boolean equals(Object o) {
+    if (!(o instanceof Order other)) return false;
+    return Objects.equals(number, other.number);   // 비즈니스 키
+}
+```
+
+→ 도메인 의미 있는 키로 비교. JPA 영속화 상태와 무관하게 일관.
+
+### 사례 3: record DTO
+
+```java
+public record OrderResponse(Long id, String number, OrderStatus status) {}
+```
+
+→ 자동 equals (모든 필드). DTO 는 단순 데이터라 가장 안전.
+
+---
+
+## 6. 함정 / 주의
+
+- **`equals` + 상속 = 거의 항상 함정**. *Effective Java* Item 10 의 결론. 상속 가능 클래스는 신중.
+- **`getClass()` 만 쓰면** LSP 위배 가능성. **`instanceof` 만 쓰면** 대칭성 위배 가능성. 둘 다 만족하는 해법은 컴포지션.
+- **JPA Entity 의 `equals` 는 ID 만 X** — 영속화 전 null 사고. 비즈니스 키 또는 신중한 설계.
+- **`hashCode` 도 같이 재정의** — 다음 장 빚.
+
+---
+
+## 7. 체크리스트 (7장 완료 기준)
+
+- [ ] 통화 다른 Money 가 equals false 인가
+- [ ] 같은 통화 같은 금액은 equals true 인가
+- [ ] `hashCode` 가 다음 장 빚으로 적혔는가
+- [ ] LSP·대칭성 트레이드오프를 인지했는가
+
+---
+
+## 8. 퀴즈
+
+1. 6장 끝 빨강을 7장에서 해결한 방법은?
+2. `getClass()` 와 `instanceof` 의 트레이드오프?
+3. TDD 책이 이 장에서 `getClass()` 를 선택한 실용적 이유?
+4. JPA Entity 의 `equals` 가 ID 만 비교하면 위험한 이유?
+5. record 가 이 문제에 깔끔한 이유?
+
+### 정답·해설
+
+1. **`equals` 에 `getClass()` 비교 추가**. `Franc.getClass() != Dollar.getClass()` 라서 false 반환. 도메인 의미 "통화 다르면 다른 객체" 가 코드에 명시.
+2. **`getClass()`**: 정확한 타입 일치만 — LSP 위배 가능 (자식이 부모와 다르다고 판정). **`instanceof`**: 자식도 같은 타입 — 대칭성 위배 가능 (자식이 추가 필드 비교 시). 둘 다 완벽 해법 아님 → *EJ* Item 10 의 결론 "상속 + equals 는 매우 신중, 가능하면 컴포지션".
+3. **자식 클래스가 곧 사라질 예정**. 8~11장에서 `Dollar`·`Franc` 자체를 제거하고 `Money` 단일 클래스 + `currency` 필드로 통합. 자식이 없으면 LSP 문제도 없음. **현재 가장 단순한 해법** + 다음 사이클의 진화 계획.
+4. **영속화 전 ID 가 null**. 두 새 Order 둘 다 id null → equals true. HashSet 에 넣으면 같은 객체로 취급되어 중복 저장 사고. 비즈니스 키 또는 자연 키로 비교 권장.
+5. record 는 **상속 불가** + 자동 equals (모든 필드 + 클래스 비교) + 불변. 7장의 모든 함정 (LSP·대칭성·상속) 이 구조적으로 불가능. 단, 도메인 엔티티는 가변 필요해 record 부적합.
+
+---
+
+## 다음 장 예고 — 8장: 객체 만들기
+
+`Dollar`·`Franc` 자식 클래스를 호출자에게 노출하지 않도록 **정적 팩터리 메서드** (`Money.dollar(5)`) 도입. *Effective Java* Item 1 의 살아있는 사례. 호출자가 구체 클래스를 모르면, 11장에서 자식 클래스 자체를 제거할 때 호출자 영향 0.

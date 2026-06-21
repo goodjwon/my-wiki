@@ -700,35 +700,25 @@ public boolean isValid() { return ...; }
 
 ### 종합 퀴즈
 
-<details><summary>Q1. <code>new BigDecimal(0.1)</code>이 부정확한 이유는?</summary>
+**Q1. `new BigDecimal(0.1)`이 부정확한 이유는?**
 
-double 매개변수 생성자는 인자로 받은 `double` 값을 그대로 이진 부동소수점으로 해석한다. `0.1`은 이진으로 정확히 표현이 안 되므로 이미 부정확한 값을 그대로 옮긴다. **`new BigDecimal("0.1")`** 처럼 String 생성자를 써야 한다.
+**A.** double 매개변수 생성자는 인자로 받은 `double` 값을 그대로 이진 부동소수점으로 해석한다. `0.1`은 이진으로 정확히 표현이 안 되므로 이미 부정확한 값을 그대로 옮긴다. **`new BigDecimal("0.1")`** 처럼 String 생성자를 써야 한다.
 
-</details>
+**Q2. 박싱 타입을 `==`로 비교하면 왜 위험한가?**
 
-<details><summary>Q2. 박싱 타입을 <code>==</code>로 비교하면 왜 위험한가?</summary>
+**A.** `Integer.valueOf`가 -128~127 캐시를 쓰므로 작은 값은 같은 객체 참조라 `==`가 우연히 true가 되지만, 그 범위를 벗어나면 false가 된다. 박싱 타입은 항상 `equals` 또는 `compareTo`로 비교.
 
-`Integer.valueOf`가 -128~127 캐시를 쓰므로 작은 값은 같은 객체 참조라 `==`가 우연히 true가 되지만, 그 범위를 벗어나면 false가 된다. 박싱 타입은 항상 `equals` 또는 `compareTo`로 비교.
+**Q3. 변수 타입을 인터페이스로 선언하는 가장 큰 이점은?**
 
-</details>
+**A.** **구현 교체 자유** — 성능·테스트·요구사항에 따라 구현(`HashMap` → `ConcurrentHashMap`)을 바꿔도 호출 코드 변경이 한 줄. Spring DI에서 mock 주입도 같은 원리.
 
-<details><summary>Q3. 변수 타입을 인터페이스로 선언하는 가장 큰 이점은?</summary>
+**Q4. Knuth의 "premature optimization is the root of all evil"이 9장에서 의미하는 바는?**
 
-**구현 교체 자유** — 성능·테스트·요구사항에 따라 구현(`HashMap` → `ConcurrentHashMap`)을 바꿔도 호출 코드 변경이 한 줄. Spring DI에서 mock 주입도 같은 원리.
+**A.** 측정 없이 미세 최적화에 가독성·구조를 희생하면, 실제 병목은 다른 곳에 있을 가능성이 높다. 좋은 설계 + 측정 후 진짜 핫스팟만 최적화한다. 공개 API·데이터 모델 결정은 미래 비용이 크니 신중히.
 
-</details>
+**Q5. JPA에서 enum 컬럼은 왜 `EnumType.STRING`이 안전한가?**
 
-<details><summary>Q4. Knuth의 "premature optimization is the root of all evil"이 9장에서 의미하는 바는?</summary>
-
-측정 없이 미세 최적화에 가독성·구조를 희생하면, 실제 병목은 다른 곳에 있을 가능성이 높다. 좋은 설계 + 측정 후 진짜 핫스팟만 최적화한다. 공개 API·데이터 모델 결정은 미래 비용이 크니 신중히.
-
-</details>
-
-<details><summary>Q5. JPA에서 enum 컬럼은 왜 <code>EnumType.STRING</code>이 안전한가?</summary>
-
-기본값 `ORDINAL`은 enum 정의 순서(0,1,2...)를 DB에 저장하므로, 나중에 enum 상수의 순서가 바뀌면 기존 데이터가 다른 의미로 해석된다. `STRING`은 이름으로 저장되어 순서 변경에 안전 (6장 Item 35와 9장 Item 62 결합).
-
-</details>
+**A.** 기본값 `ORDINAL`은 enum 정의 순서(0,1,2...)를 DB에 저장하므로, 나중에 enum 상수의 순서가 바뀌면 기존 데이터가 다른 의미로 해석된다. `STRING`은 이름으로 저장되어 순서 변경에 안전 (6장 Item 35와 9장 Item 62 결합).
 
 ---
 

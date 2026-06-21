@@ -1,0 +1,526 @@
+---
+title: "Clean Code 실전 강의 — 3장"
+type: source
+tags: [book, clean-code, uncle-bob, lecture]
+sources: [clean-code/클린 코드 실전 강의 교재 3장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 클린 코드 실전 강의 교재
+
+## 3장 — 함수
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → Before/After → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 3.x
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 함수를 **작게, 한 가지만, 한 추상화 수준** 으로 만든다.
+- 인수는 **0~2개**, 부수 효과·플래그 인수를 멀리한다.
+- **명령과 조회를 분리(CQS)** 하고 **오류 코드 대신 예외** 를 던진다.
+- 반복을 제거(DRY) 하고, 함수를 **이름이 곧 문서** 가 되게 만든다.
+
+### 0.2 큰 그림 — 함수의 4대 규율
+
+```
+[ 크기·구조 ]                     [ 인수·부작용 ]                [ 흐름·중복 ]
+ 3.1 작게                          3.5 인수 (0~2개)               3.7 CQS 분리
+ 3.2 한 가지만                     3.6 부수 효과 금지              3.8 오류 코드 → 예외
+ 3.3 추상화 수준 하나               · 출력 인수 회피                 3.9 반복 제거 (DRY)
+ 3.4 switch 분리                   · 플래그 인수 분리                3.10 구조적 프로그래밍
+```
+
+> **비유 — 함수는 "공구 한 자루"입니다.**
+>
+> 좋은 공구는 **한 가지 일** 을 잘 합니다(망치는 박는 일만). 한 자루가 너무 많은 일을 하면 (스위스 군용칼) 다 어설퍼져요. 함수도 같습니다.
+
+### 0.3 현업에서 왜 중요한가
+
+- *Effective Java* Item 49·51·52, *리팩터링* 6장 전체 가 모두 같은 메시지의 다른 표현.
+- PR 리뷰에서 가장 자주 지적되는 항목 1순위 (긴 함수·매개변수 다수·플래그 boolean).
+- "함수가 작아야 모든 다른 리팩터링이 가능" → 6장(클래스), 12장(창발) 의 전제.
+
+---
+
+## 3.1 작게 만들어라!
+
+### 한 줄 정의
+
+함수는 **작아야 한다**. 작아야 한다는 말로 충분치 않다. **더 작아야 한다**.
+
+### 비유 — "한 화면, 한 의도"
+
+스크롤 없이 한 화면에 다 들어와야 합니다. 의도가 한 문장으로 설명돼야 합니다.
+
+### 책의 권장 크기
+
+- 한 함수 **4~5줄** (Uncle Bob 원칙, 다소 과격)
+- 현실적으로는 **10~15줄 이내**
+- 한 함수에 빈 줄로 구분된 블록이 2개 이상 → 추출 후보
+
+### 블록과 들여쓰기
+
+- if/else/while 블록은 **한 줄** — 함수 호출 또는 단순 표현
+- 들여쓰기는 **2단계 이하** — 3단계 이상이면 조건문/루프 자체를 함수로 추출
+
+### Before / After
+
+```java
+// Before — 25줄, 들여쓰기 3단계
+public void renderPageWithSetupsAndTeardowns(PageData pageData, boolean isSuite) {
+    if (isTestPage(pageData)) {
+        WikiPage testPage = pageData.getWikiPage();
+        StringBuilder newPageContent = new StringBuilder();
+        includeSetupPages(testPage, newPageContent, isSuite);
+        newPageContent.append(pageData.getContent());
+        includeTeardownPages(testPage, newPageContent, isSuite);
+        pageData.setContent(newPageContent.toString());
+    }
+    return pageData.getHtml();
+}
+
+// After — 의도 한 줄
+public void renderPageWithSetupsAndTeardowns(PageData pageData, boolean isSuite) {
+    if (isTestPage(pageData)) includeSetupAndTeardownPages(pageData, isSuite);
+    return pageData.getHtml();
+}
+```
+
+---
+
+## 3.2 한 가지만 해라!
+
+### 한 줄 정의
+
+함수는 **한 가지** 일을 해야 한다. 그 한 가지를 잘 해야 한다. 그 한 가지만 해야 한다.
+
+### "한 가지"의 판별 기준
+
+함수 안의 모든 단계가 **함수 이름의 추상화 수준에서 한 단계 아래** 일 것. 다른 수준이 섞이면 여러 가지를 하는 것.
+
+### 함수 내 섹션 — 신호
+
+함수 안에 주석으로 "// 설정 / // 처리 / // 정리" 같이 단락을 나누고 있다면, **그건 한 가지가 아니다**. 각 섹션을 함수로 추출해라.
+
+### Spring 현업 예제
+
+```java
+// ❌ — Controller가 파싱·검증·DB·이메일 다 함
+@PostMapping("/orders")
+public OrderResponse create(@RequestBody Map<String, Object> raw) {
+    // 파싱
+    String userId = (String) raw.get("userId");
+    int amount = (Integer) raw.get("amount");
+    // 검증
+    if (userId == null) throw ...;
+    if (amount < 0) throw ...;
+    // 도메인
+    Order order = new Order(userId, amount);
+    repository.save(order);
+    // 이메일
+    emailService.send(userId, "주문 완료");
+    return new OrderResponse(order);
+}
+
+// ✅ — 한 가지
+@PostMapping("/orders")
+public OrderResponse create(@Valid @RequestBody CreateOrderRequest req) {
+    return orderService.create(req.toCommand());
+}
+```
+
+---
+
+## 3.3 함수 당 추상화 수준은 하나로!
+
+### 한 줄 정의
+
+한 함수 안의 코드는 **모두 같은 추상화 수준** 이어야 한다.
+
+### 안티패턴 — 수준이 섞임
+
+```java
+public String renderPage() {
+    String html = render();                                   // 고수준
+    html = html.replaceAll("<br>", "<br/>");                  // 저수준 — XHTML 변환
+    return wrapInHeader(html, "<!DOCTYPE html><html>...");    // 고수준
+}
+```
+
+### 권장
+
+각 수준을 별도 함수로:
+```java
+public String renderPage() {
+    String html = render();
+    String xhtml = toXhtml(html);
+    return wrapInHeader(xhtml);
+}
+```
+
+### 내려가기 규칙
+
+> 코드는 **위에서 아래로 이야기처럼** 읽혀야 한다. 한 함수가 끝나면 그 다음에 **한 단계 아래** 함수가 등장.
+
+```
+TO renderPage:
+  TO render the body
+  TO convert to XHTML
+  TO wrap in header
+```
+
+영어 문장처럼 흘러야 함.
+
+---
+
+## 3.4 Switch 문
+
+### 한 줄 정의
+
+`switch` 문은 본질적으로 N가지 일을 하므로 **작게 만들기 어렵다**. **다형성** 으로 분리하라.
+
+### 권장 — 한 번만, 추상 팩터리 뒤로
+
+```java
+// 한 번만 등장하는 switch — Factory 안에
+public abstract class Employee {
+    public abstract Money calculatePay();
+}
+
+public class EmployeeFactory {
+    public Employee makeEmployee(EmployeeRecord r) {
+        return switch (r.type) {
+            case COMMISSIONED -> new CommissionedEmployee(r);
+            case HOURLY       -> new HourlyEmployee(r);
+            case SALARIED     -> new SalariedEmployee(r);
+        };
+    }
+}
+```
+
+이후 `Employee` 다형성으로 분기 0.
+
+### *Effective Java*·*리팩터링* 연결
+
+- [[entity-effective-java]] Item 34 (int 상수 대신 enum)
+- [[entity-refactoring]] 10.4 (조건부 로직 → 다형성)
+
+---
+
+## 3.5 함수 인수
+
+### 한 줄 정의
+
+**0개 (이상적) → 1개 (단항) → 2개 (이항) → 3개 (삼항, 피하라) → 그 이상 (특별한 정당화 필요)**
+
+### 많이 쓰는 단항 형식
+
+| 패턴 | 예 |
+|------|----|
+| **변환** | `String.valueOf(int)` — 입력을 받아 새 타입 반환 |
+| **사건/이벤트** | `passwordAttemptFailedNtimes(int)` — 시스템 상태 변경 |
+| **질의** | `boolean fileExists("MyFile")` |
+
+### 플래그 인수
+
+**boolean 인수는 안티패턴**. 함수가 두 가지 일을 한다는 선언.
+
+```java
+// ❌
+render(true);   // true가 뭐?
+
+// ✅
+renderForSuite();
+renderForSingleTest();
+```
+
+→ *Effective Java* Item 51·*리팩터링* 11.3 과 같은 처방.
+
+### 이항·삼항 함수
+
+이항은 자연스러운 경우만:
+- `Point p = new Point(0, 0)` — 좌표는 본질이 쌍
+- `assertEquals(expected, actual)` — 순서가 흐름
+
+삼항 이상은 **인수 객체로 묶어라**:
+```java
+// ❌
+Circle drawCircle(double x, double y, double r);
+
+// ✅
+Circle drawCircle(Point center, double radius);
+```
+
+### 동사와 키워드
+
+함수 이름은 동사 + (목적어). 키워드 형식으로 인수 의미 드러내기:
+```java
+assertEquals(expected, actual)       // 모호
+assertExpectedEqualsActual(expected, actual)   // 명확
+```
+
+---
+
+## 3.6 부수 효과를 일으키지 마라!
+
+### 한 줄 정의
+
+함수가 이름이 약속한 일 외의 **숨겨진 행동** 을 해선 안 된다.
+
+### 안티패턴
+
+```java
+public boolean checkPassword(String userName, String password) {
+    User user = repository.findByName(userName);
+    if (user != null && user.password.equals(password)) {
+        Session.initialize();   // ❌ 숨겨진 부수 효과
+        return true;
+    }
+    return false;
+}
+```
+
+`checkPassword` 이름만 보고 호출했다 → 세션이 초기화됨. 시간 의존 결합 발생.
+
+### 해법 — 분리
+
+```java
+public boolean checkPassword(String userName, String password) { ... }
+public void initializeSession() { ... }
+
+if (checkPassword(...)) initializeSession();
+```
+
+### 출력 인수
+
+매개변수를 변경하는 것도 부수 효과의 일종.
+
+```java
+// ❌
+appendFooter(report);   // report가 변경됨? 그냥 출력?
+
+// ✅
+report.appendFooter();   // 객체지향 — 명확
+// 또는
+Report newReport = withFooter(report);   // 함수형 — 새 객체 반환
+```
+
+---
+
+## 3.7 명령과 조회를 분리하라!
+
+### 한 줄 정의
+
+함수는 **명령(상태 변경)** 또는 **조회(값 반환)** 중 하나만 해야 한다. CQS (Command-Query Separation).
+
+### 안티패턴
+
+```java
+public boolean set(String attribute, String value);
+// 두 가지 일: 속성 설정 + 성공 여부 반환
+
+if (set("username", "unclebob")) ...   // 이게 "현재 값이 unclebob이면" 인지 "설정 성공" 인지 모호
+```
+
+### 권장
+
+```java
+public void setAttribute(String attribute, String value);
+public boolean attributeExists(String attribute);
+
+if (attributeExists("username")) setAttribute("username", "unclebob");
+```
+
+### *Effective Java*·*리팩터링* 연결
+
+- *Effective Java* Item 70
+- [[entity-refactoring]] 11.1 (질의-변경 분리)
+- *오브젝트* 6.04
+
+---
+
+## 3.8 오류 코드보다 예외를 사용하라!
+
+### 한 줄 정의
+
+함수가 `int code = doSomething(); if (code != 0) ...` 처럼 오류 코드를 반환하면, 호출자가 **즉시 처리하도록 강제**된다 → 깊은 중첩.
+
+### Before / After
+
+```java
+// Before
+if (deletePage(page) == E_OK) {
+    if (registry.deleteReference(page.name) == E_OK) {
+        if (configKeys.deleteKey(page.name.makeKey()) == E_OK) {
+            logger.log("page deleted");
+        } else {
+            logger.log("deleteKey failed");
+        }
+    } else {
+        logger.log("deleteReference failed");
+    }
+} else {
+    logger.log("delete failed");
+}
+
+// After
+try {
+    deletePage(page);
+    registry.deleteReference(page.name);
+    configKeys.deleteKey(page.name.makeKey());
+} catch (Exception e) {
+    logger.log(e.getMessage());
+}
+```
+
+### Try/Catch 블록 뽑아내기
+
+try/catch는 의도가 두 가지 (정상/오류) 라 한 가지만 원칙 위배. **try/catch 자체를 함수로 추출**:
+
+```java
+public void delete(Page page) {
+    try {
+        deletePageAndAllReferences(page);
+    } catch (Exception e) {
+        logError(e);
+    }
+}
+
+private void deletePageAndAllReferences(Page page) throws Exception { ... }
+private void logError(Exception e) { ... }
+```
+
+### 오류 처리도 한 가지 작업
+
+**오류 처리 함수는 오류 처리만**. 다른 일과 섞이면 안 됨.
+
+### Error.java 의존성 자석
+
+오류 코드를 `enum` 으로 모아 두면 → 변경 시 모든 모듈 재컴파일. **예외는 클래스라 새 예외 = 새 클래스 추가** — OCP 친화.
+
+### *Effective Java*·*리팩터링* 연결
+
+- *Effective Java* Item 69, 70
+- [[entity-refactoring]] 11.12, [[concept-transactional-rollback-policy]]
+
+---
+
+## 3.9 반복하지 마라! (DRY)
+
+### 한 줄 정의
+
+중복은 모든 악의 근원. 같은 코드를 두 곳에 두면 둘이 어긋날 때 사고.
+
+### 처방
+
+- 같은 클래스 안 → 함수 추출 (6.1)
+- 형제 클래스 → 메서드 올리기 (12.1)
+- 무관한 클래스 → 새 유틸 / 패턴 (Template Method, Strategy)
+
+### *리팩터링* 연결
+
+[[entity-refactoring]] 악취 3.2 (중복 코드), 12장 "단순한 설계" 두 번째 규칙.
+
+---
+
+## 3.10 구조적 프로그래밍
+
+### 한 줄 정의
+
+데이크스트라의 원칙 — 모든 함수가 **입구 하나, 출구 하나** 여야 한다. **단, 현대에는 그렇지 않다**.
+
+### Uncle Bob의 입장
+
+작은 함수에서는 **여러 return / break / continue / 보호 구문** 이 단일 출구점보다 의도를 더 명확히 드러낸다.
+
+```java
+// ✅ 보호 구문 — 여러 return
+public double getPayAmount() {
+    if (isDead) return deadAmount();
+    if (isSeparated) return separatedAmount();
+    if (isRetired) return retiredAmount();
+    return normalPayAmount();
+}
+```
+
+→ [[entity-refactoring]] 10.3 보호 구문과 동일한 메시지.
+
+---
+
+## 3.11 함수를 어떻게 짜죠? (워크플로)
+
+### Uncle Bob의 작성 과정
+
+1. **일단 짠다** — 길고, 복잡하고, 들여쓰기 깊고, 인수 많고 중복.
+2. **테스트를 짠다** — 한 줄도 빠짐 없이 커버.
+3. **다듬는다** — 함수 추출, 이름 바꾸기, 중복 제거, 인수 정리. **테스트가 항상 통과하는** 상태로.
+
+→ 처음부터 깨끗하게 쓰려 하지 마라. 추한 초안 → 점진적 정련.
+
+---
+
+## 핵심 교훈
+
+1. **함수는 작아야 한다**. 작아야 한다. **더 작아야 한다**.
+2. **한 가지만**, 한 추상화 수준, 위에서 아래로 이야기처럼.
+3. **인수는 0~2개**. boolean 플래그·삼항 이상은 안티패턴.
+4. **부수 효과 금지**. 이름이 약속한 일만.
+5. **CQS** 와 **예외 (오류 코드 X)** 는 짝.
+6. **DRY** — 중복은 즉시 제거.
+7. **테스트가 안전망**. 그 위에서 자유롭게 정련.
+
+---
+
+## 함정 / 주의
+
+- "4~5줄" 도그마 위험 — 의도가 명확하면 10~15줄도 OK. **이름·의도 > 줄 수**.
+- 한 가지만 = **추상화 수준의 한 가지**. "한 줄짜리만 OK" 아님.
+- 출력 인수 vs 부수 효과 — 객체지향에서는 인스턴스 메서드의 `this` 변경은 자연스러움. **숨겨짐** 이 핵심.
+
+---
+
+## 체크리스트 (코드 리뷰용)
+
+- [ ] 함수가 한 화면 (15줄) 안에 들어오는가
+- [ ] 들여쓰기가 2단계 이내인가
+- [ ] 함수 안에 빈 줄로 구분된 블록이 2개 이상인가 (= 추출 후보)
+- [ ] 매개변수 4개 이상인가 (= 객체화 후보)
+- [ ] boolean 매개변수가 동작을 갈라놓고 있는가
+- [ ] 이름이 약속하지 않은 부수 효과를 일으키는가
+- [ ] 같은 함수가 값을 반환하면서 상태도 변경하는가 (CQS 위배)
+- [ ] 오류 처리가 정상 흐름과 한 함수에 섞여 있는가
+- [ ] 같은 코드 블록이 다른 곳에 또 있는가
+
+---
+
+## 퀴즈
+
+**Q1. "함수는 한 가지만 해야 한다" 의 판별 기준은?**
+
+**A.** 함수 안의 모든 단계가 **함수 이름의 추상화 수준에서 한 단계 아래** 여야 한다. 수준이 섞이면 여러 가지를 하는 것.
+
+**Q2. boolean 플래그 인수가 안티패턴인 이유?**
+
+**A.** 함수가 **두 가지 일** 을 한다는 선언이기 때문. `render(true)` vs `render(false)` 가 사실상 다른 함수. 분리해서 `renderForSuite()` / `renderForSingleTest()` 로.
+
+**Q3. switch 문을 "다형성으로" 옮기는 핵심 이유?**
+
+**A.** 새 타입 추가가 **새 클래스 1개**로 끝나기 때문. switch는 새 case마다 모든 switch 위치를 찾아 수정해야 함 (산탄총 수술). [[entity-refactoring]] 10.4 와 같은 메시지.
+
+**Q4. "추상화 수준 하나" 원칙을 어기면 무엇이 어려워지는가?**
+
+**A.** **읽기** — 코드가 큰 그림과 세부 구현을 오가서 독자가 매번 추상 수준을 전환해야 한다. 그리고 **수정** — 한 수준만 바꾸려 해도 다른 수준이 같이 흔들림.
+
+**Q5. Uncle Bob이 "처음부터 깨끗한 함수를 못 쓴다" 고 인정하면서도 정련을 강조하는 이유?**
+
+**A.** 깨끗한 코드는 **타고난 능력이 아니라 다듬는 과정의 결과** 라는 메시지. 초안 + 테스트 + 정련 사이클이 그 자체로 직업 기술. 테스트가 안전망이라 자유롭게 정련 가능.
+
+---
+
+## 다음 장 예고 — 4장: 주석
+
+"주석은 나쁜 코드를 보완하지 못한다" — 가장 격한 장. 좋은 주석 8종 vs 나쁜 주석 16종을 카탈로그로 정리합니다. **함수 추출(3장)** 이 대부분의 주석을 불필요하게 만든다는 점이 4장의 전제.

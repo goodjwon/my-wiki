@@ -522,35 +522,25 @@ long count = IntStream.rangeClosed(1, 1_000_000)
 
 ### 종합 퀴즈
 
-<details><summary>Q1. 람다가 익명 클래스를 완전히 대체하지 못하는 경우 2가지는?</summary>
+**Q1. 람다가 익명 클래스를 완전히 대체하지 못하는 경우 2가지는?**
 
-(1) 재귀 같이 **자기 자신(`this`)을 가리켜야 할 때**, (2) **직렬화**가 필요할 때.
+**A.** (1) 재귀 같이 **자기 자신(`this`)을 가리켜야 할 때**, (2) **직렬화**가 필요할 때.
 
-</details>
+**Q2. `forEach` + 외부 `HashMap` 갱신이 안티패턴인 이유를 한 문장으로?**
 
-<details><summary>Q2. `forEach` + 외부 `HashMap` 갱신이 안티패턴인 이유를 한 문장으로?</summary>
+**A.** 스트림의 람다는 **순수 함수여야** 하며, 외부 상태 수정은 결과를 부정확하게 만들 뿐 아니라 병렬화 시 데이터 경합으로 깨지기 때문이다. → `Collectors.groupingBy/counting`으로 표현하라.
 
-스트림의 람다는 **순수 함수여야** 하며, 외부 상태 수정은 결과를 부정확하게 만들 뿐 아니라 병렬화 시 데이터 경합으로 깨지기 때문이다. → `Collectors.groupingBy/counting`으로 표현하라.
+**Q3. JPA Repository에서 `Stream<T>` 반환을 트랜잭션 밖에서 소비하면 왜 위험한가?**
 
-</details>
+**A.** `Stream<T>` 반환은 보통 **DB 커서 기반**이라 트랜잭션이 닫히면 더 이상 결과를 가져올 수 없다. 트랜잭션 경계 안에서 모두 소비해야 한다(또는 `List` 반환으로 바꿔라).
 
-<details><summary>Q3. JPA Repository에서 <code>Stream&lt;T&gt;</code> 반환을 트랜잭션 밖에서 소비하면 왜 위험한가?</summary>
+**Q4. `.parallel()`을 붙이기 전에 반드시 확인할 4가지는?**
 
-`Stream<T>` 반환은 보통 **DB 커서 기반**이라 트랜잭션이 닫히면 더 이상 결과를 가져올 수 없다. 트랜잭션 경계 안에서 모두 소비해야 한다(또는 `List` 반환으로 바꿔라).
+**A.** (1) 소스가 분할 잘 되는 자료구조인가, (2) 작업이 CPU 바운드 + 독립적인가, (3) 종단 연산이 병렬에 적합한가, (4) **측정** 결과 실제로 빨라지는가.
 
-</details>
+**Q5. `Comparator.comparing(User::getName)`이 7장의 어떤 아이템 3개를 동시에 보여주는가?**
 
-<details><summary>Q4. <code>.parallel()</code>을 붙이기 전에 반드시 확인할 4가지는?</summary>
-
-(1) 소스가 분할 잘 되는 자료구조인가, (2) 작업이 CPU 바운드 + 독립적인가, (3) 종단 연산이 병렬에 적합한가, (4) **측정** 결과 실제로 빨라지는가.
-
-</details>
-
-<details><summary>Q5. <code>Comparator.comparing(User::getName)</code>이 7장의 어떤 아이템 3개를 동시에 보여주는가?</summary>
-
-아이템 **44(표준 함수형 인터페이스 — `Function<User, String>`)**, **43(메서드 참조)**, **42(람다 — 익명 비교자를 람다로 대체한 진화의 마지막 단계)**.
-
-</details>
+**A.** 아이템 **44(표준 함수형 인터페이스 — `Function<User, String>`)**, **43(메서드 참조)**, **42(람다 — 익명 비교자를 람다로 대체한 진화의 마지막 단계)**.
 
 ---
 

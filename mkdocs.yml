@@ -157,6 +157,64 @@ nav:
         - "실전 강의 — 10장 예외": lecture-effective-java-ch10.md
         - "실전 강의 — 11장 동시성": lecture-effective-java-ch11.md
         - "실전 강의 — 12장 직렬화": lecture-effective-java-ch12.md
+      - "테스트 주도 개발 (Kent Beck, 2002)":
+        - 책 카드: entity-tdd.md
+        - "실전 강의 교재 — 인덱스": src-tdd-lecture.md
+        - "1부 — 1장 Money 객체": lecture-tdd-ch1.md
+        - "1부 — 2장 타락한 객체": lecture-tdd-ch2.md
+        - "1부 — 3장 모두를 위한 평등": lecture-tdd-ch3.md
+        - "1부 — 4장 프라이버시": lecture-tdd-ch4.md
+        - "1부 — 5장 솔직히 말하자면": lecture-tdd-ch5.md
+        - "1부 — 6장 돌아온 평등": lecture-tdd-ch6.md
+        - "1부 — 7장 사과와 오렌지": lecture-tdd-ch7.md
+        - "1부 — 8장 객체 만들기": lecture-tdd-ch8.md
+        - "1부 — 9장 times": lecture-tdd-ch9.md
+        - "1부 — 10장 흥미로운 times": lecture-tdd-ch10.md
+        - "1부 — 11장 자식 클래스 제거": lecture-tdd-ch11.md
+        - "1부 — 12장 드디어 더하기": lecture-tdd-ch12.md
+        - "1부 — 13장 진짜로 만들기 (Bank)": lecture-tdd-ch13.md
+        - "1부 — 14장 바꾸기 (Pair)": lecture-tdd-ch14.md
+        - "1부 — 15장 $5 + 10 CHF": lecture-tdd-ch15.md
+        - "1부 — 16장 드디어 추상화": lecture-tdd-ch16.md
+        - "1부 — 17장 Money 회고": lecture-tdd-ch17.md
+        - "2부 — 18장 xUnit 첫걸음": lecture-tdd-ch18.md
+        - "2부 — 19장 setUp": lecture-tdd-ch19.md
+        - "2부 — 20장 tearDown": lecture-tdd-ch20.md
+        - "2부 — 21장 TestResult": lecture-tdd-ch21.md
+        - "2부 — 22장 실패 처리": lecture-tdd-ch22.md
+        - "2부 — 23장 TestSuite": lecture-tdd-ch23.md
+        - "2부 — 24장 xUnit 회고": lecture-tdd-ch24.md
+        - "3부 — 25장 TDD 패턴": lecture-tdd-ch25.md
+        - "3부 — 26장 빨강 막대 패턴": lecture-tdd-ch26.md
+        - "3부 — 27장 테스팅 패턴": lecture-tdd-ch27.md
+        - "3부 — 28장 초록 막대 패턴": lecture-tdd-ch28.md
+        - "3부 — 29장 xUnit 패턴": lecture-tdd-ch29.md
+        - "3부 — 30장 디자인 패턴": lecture-tdd-ch30.md
+        - "3부 — 31장 리팩토링": lecture-tdd-ch31.md
+        - "3부 — 32장 TDD 마스터하기": lecture-tdd-ch32.md
+        - "부록 A — 영향도": lecture-tdd-appendixA.md
+        - "부록 B — 피보나치": lecture-tdd-appendixB.md
+        - "마치는 글 (Fowler)": lecture-tdd-afterword.md
+      - "Clean Code (Robert C. Martin, 2008)":
+        - 책 카드: entity-clean-code.md
+        - "실전 강의 교재 — 인덱스": src-clean-code-lecture.md
+        - "실전 강의 — 1장 깨끗한 코드": lecture-clean-code-ch1.md
+        - "실전 강의 — 2장 의미 있는 이름": lecture-clean-code-ch2.md
+        - "실전 강의 — 3장 함수": lecture-clean-code-ch3.md
+        - "실전 강의 — 4장 주석": lecture-clean-code-ch4.md
+        - "실전 강의 — 5장 형식 맞추기": lecture-clean-code-ch5.md
+        - "실전 강의 — 6장 객체와 자료 구조": lecture-clean-code-ch6.md
+        - "실전 강의 — 7장 오류 처리": lecture-clean-code-ch7.md
+        - "실전 강의 — 8장 경계": lecture-clean-code-ch8.md
+        - "실전 강의 — 9장 단위 테스트": lecture-clean-code-ch9.md
+        - "실전 강의 — 10장 클래스": lecture-clean-code-ch10.md
+        - "실전 강의 — 11장 시스템": lecture-clean-code-ch11.md
+        - "실전 강의 — 12장 창발성": lecture-clean-code-ch12.md
+        - "실전 강의 — 13장 동시성": lecture-clean-code-ch13.md
+        - "실전 강의 — 14장 점진적 개선": lecture-clean-code-ch14.md
+        - "실전 강의 — 15장 JUnit": lecture-clean-code-ch15.md
+        - "실전 강의 — 16장 SerialDate 리팩터링": lecture-clean-code-ch16.md
+        - "실전 강의 — 17장 냄새와 휴리스틱": lecture-clean-code-ch17.md
       - "리팩터링 2판 (Martin Fowler, 2018)":
         - 책 카드: entity-refactoring.md
         - "실전 강의 교재 — 인덱스": src-refactoring-lecture.md

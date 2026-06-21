@@ -64,12 +64,17 @@ updated: 2026-06-20
 
 ### 즉시 가능 (입력 대기 중)
 
-- [ ] **📚 Java 도서 ingest 진행 중 (3권 완료, 1권은 강의 교재까지)** — *오브젝트*·*Effective Java*·*리팩터링 2판* 완료
-  - *Effective Java* + *리팩터링*: 강의 교재 11·12편 완성 (약 1만 줄)
-  - *오브젝트*: 책 카드만 (백로그의 신규 concept 4개 후보 그대로)
-  - [ ] Clean Code (Robert C. Martin)
-  - [ ] 테스트 주도 개발 (Kent Beck)
-  - 최종 도서 모두 ingest 후 → 도서 비교표 1개 추가 예정 (관점·단위·시점·언어)
+- [x] ~~**📚 Java 도서 ingest 5권 모두 완료**~~ (2026-06-20)
+  - *오브젝트* — entity 만
+  - *Effective Java* — entity + 강의 11편
+  - *리팩터링* — entity + 강의 12편
+  - *Clean Code* — entity + 강의 17편
+  - *TDD* — entity + 강의 35편 ← 마지막
+  - **5권 오각형 비교표** (관점·단위·시점·언어) `entity-tdd` 안에 정리
+- [ ] **Clean Code 책 기반 신규 concept 페이지 3개** — 사용자 노트·발췌 입력 대기
+  - [ ] `concept-naming-conventions` — 2장 + 17장 N1~N7
+  - [ ] `concept-tdd-laws-and-first` — 9장 TDD 3법칙 + F.I.R.S.T.
+  - [ ] `concept-simple-design-rules` — 12장 Kent Beck 단순 설계 4규칙
 - [x] ~~**raw 디렉터리 정리**~~ — 2026-06-20 완료. `raw/clean-code/리팩터링*` 12편 → `raw/refactoring/`
 - [ ] **오브젝트 책 기반 신규 concept 페이지 4개** — 사용자 노트·발췌 입력 대기
   - [ ] `concept-solid` — SOLID 5원칙 (OCP·LSP·DIP 포함, 책 9·13장 기반)

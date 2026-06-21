@@ -1,0 +1,264 @@
+---
+title: "TDD 실전 강의 — 12장"
+type: source
+tags: [book, tdd, kent-beck, lecture]
+sources: [tdd/테스트 주도 개발 실전 강의 교재 12장.md]
+created: 2026-06-20
+updated: 2026-06-21
+---
+
+# 테스트 주도 개발 실전 강의 교재
+
+## 12장 — 드디어, 더하기
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → RED → GREEN → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- `plus` 도입 — 같은 통화 더하기부터.
+- **다른 통화** 더하기 ($5 + 10 CHF) 는 환율 없이 못 함 → **즉시 계산 X**.
+- 결과를 **`Expression` 추상화** 로 표현 → 환산 시점 (`reduce(rate)`) 에 계산.
+- **지연 평가 (lazy evaluation)** + 컴포지트 패턴의 자연 도입.
+
+### 0.2 큰 그림 — "결과 객체 vs 표현 객체"
+
+```
+[ 즉시 계산 ]                     [ 지연 평가 (12장 도입) ]
+ Money.plus(Money) → Money         Money.plus(Money) → Expression (Sum)
+                                   Expression.reduce(rate) → Money
+
+문제: $5 + 10 CHF 는?              해법: Sum 으로 표현 후 환율 적용 시 계산
+       (환율 모름)                       (관심사 분리 — 더하기 vs 환산)
+```
+
+> **비유 — "주문서 vs 음식"**
+>
+> 카페에서 "아메리카노 + 라떼" 주문해도 즉시 음식 안 나옴. 주문서 (Expression) 가 주방으로 가서 만들어진 뒤 음식 (Money) 으로. 더하기 (`plus`) 는 주문서 만들기, 환산 (`reduce`) 은 음식 만들기.
+
+### 0.3 현업에서 왜 중요한가
+
+- **즉시 계산이 불가능한 도메인** 이 흔함 — 환율·세금·할인 정책이 외부에 있을 때.
+- 표현 (Expression) 으로 미루기 = 컴포지트 + 지연 평가 + Strategy 패턴의 조합.
+- DB 쿼리 빌더·Spring Specification·Mockito Matcher 등 모두 같은 원리.
+
+---
+
+## 1. 할 일 목록 갱신
+
+```
+[x] Dollar / Franc 제거
+[ ] $5 + $5 = $10           ← 이번 (같은 통화)
+[ ] $5 + 10 CHF = $10        ← 12~15장 누적
+[ ] hashCode()
+```
+
+---
+
+## 2. RED — 같은 통화 더하기
+
+```java
+@Test
+void 같은_통화_더하기() {
+    Money sum = Money.dollar(5).plus(Money.dollar(5));
+    assertEquals(Money.dollar(10), sum);
+}
+```
+
+→ 컴파일 실패. `plus` 없음.
+
+---
+
+## 3. GREEN — 가장 단순한 통과
+
+### 단계 1: 즉시 더하기
+
+```java
+public Money plus(Money other) {
+    return new Money(amount + other.amount, currency);   // 같은 통화 가정
+}
+```
+
+→ 통과. 단, 다른 통화 면 amount 그냥 합쳐버려 도메인 위반.
+
+### 단계 2: 다른 통화 더하기 빨강
+
+```java
+@Test
+void 다른_통화_더하기() {
+    Bank bank = new Bank();
+    bank.addRate("CHF", "USD", 2);   // 2 CHF = 1 USD
+    Money sum = Money.dollar(5).plus(Money.franc(10));
+    Money reduced = bank.reduce(sum, "USD");
+    assertEquals(Money.dollar(10), reduced);   // 5 + 10/2 = 10
+}
+```
+
+→ 컴파일 실패 (Bank·reduce 없음). 또 `plus` 가 즉시 Money 반환이라 환산 시점에 환율 적용 불가.
+
+---
+
+## 4. REFACTOR — Expression 도입
+
+### 단계 1: Expression 인터페이스
+
+```java
+public interface Expression {
+    Money reduce(Bank bank, String to);
+}
+```
+
+### 단계 2: Money 가 Expression 구현
+
+Money 도 표현의 한 형태 (단일 금액).
+
+```java
+public class Money implements Expression {
+    // ... 기존 코드
+    @Override
+    public Money reduce(Bank bank, String to) {
+        int rate = bank.rate(currency, to);
+        return new Money(amount / rate, to);
+    }
+
+    public Expression plus(Money other) {
+        return new Sum(this, other);   // 즉시 계산 X, 표현 반환
+    }
+}
+```
+
+### 단계 3: Sum 클래스 (덧셈 표현)
+
+```java
+public class Sum implements Expression {
+    private final Money augend;
+    private final Money addend;
+
+    public Sum(Money augend, Money addend) {
+        this.augend = augend;
+        this.addend = addend;
+    }
+
+    @Override
+    public Money reduce(Bank bank, String to) {
+        Money a = augend.reduce(bank, to);
+        Money b = addend.reduce(bank, to);
+        return new Money(a.amount() + b.amount(), to);
+    }
+}
+```
+
+### 단계 4: Bank 의 골조
+
+```java
+public class Bank {
+    private final Map<Pair, Integer> rates = new HashMap<>();
+
+    public void addRate(String from, String to, int rate) {
+        rates.put(new Pair(from, to), rate);
+    }
+
+    public int rate(String from, String to) {
+        if (from.equals(to)) return 1;
+        return rates.get(new Pair(from, to));
+    }
+
+    public Money reduce(Expression source, String to) {
+        return source.reduce(this, to);
+    }
+}
+```
+
+(`Pair` 는 14장에서 만듦 — 일단 단순한 record 가정)
+
+→ 모든 테스트 초록.
+
+---
+
+## 5. 통과한 시점에서 보이는 것
+
+도메인이 풍부해짐:
+- **Money** — 단일 금액 (Expression 의 잎)
+- **Sum** — 두 Expression 의 합 (Expression 의 가지)
+- **Bank** — 환율 정책의 단일 책임
+- **Expression** — 모든 표현의 공통 인터페이스 (컴포지트)
+
+> **컴포지트 패턴 자연 등장** — Money (잎) + Sum (가지) 가 같은 Expression 인터페이스. 호출자는 둘을 구분 안 해도 됨.
+
+---
+
+## 6. 현업 예제 — 지연 평가의 다른 사례
+
+### Spring Data Specification
+
+```java
+Specification<Order> spec = Specification
+    .where(byStatus(PAID))
+    .and(byPeriod(from, to))
+    .and(byUser(userId));
+// 즉시 쿼리 X — 표현. repository.findAll(spec) 호출 시 SQL 생성·실행.
+```
+
+### Stream API
+
+```java
+list.stream()
+    .filter(x -> x.amount > 1000)
+    .map(Order::user)
+    .distinct();   // 즉시 실행 X — 표현
+    // terminal 연산 (collect·count·forEach) 에서 실제 평가
+```
+
+### Mockito
+
+```java
+when(repo.findById(any())).thenReturn(Optional.of(order));
+// when, thenReturn 자체는 표현. 실제 호출 시 매칭.
+```
+
+→ 모두 같은 패턴: **표현 객체 + 평가 시점 분리**.
+
+---
+
+## 7. 함정 / 주의
+
+- **지연 평가 = 디버깅 어려움**. 표현 시점과 실행 시점이 분리 → 어디서 실패했는지 추적 비용.
+- 무지성 도입 X — 즉시 계산이 가능하면 굳이 표현 객체 만들지 마라.
+- 표현 객체가 너무 깊어지면 (`Sum.augend` 가 또 Sum 인 경우 등) 성능 우려 — 보통은 무시 가능.
+
+---
+
+## 8. 체크리스트 (12장 완료 기준)
+
+- [ ] Expression 인터페이스가 있는가
+- [ ] Money 가 Expression 구현 (reduce)
+- [ ] Sum 이 augend·addend 보관 + reduce 가 재귀 호출
+- [ ] Bank 가 환율 보관 + reduce 진입점
+- [ ] 같은 통화 + 다른 통화 더하기 테스트 둘 다 초록
+
+---
+
+## 9. 퀴즈
+
+1. `plus` 가 즉시 Money 반환 X 한 이유는?
+2. Expression 인터페이스가 가져온 OO 효과?
+3. 컴포지트 패턴이 12장에 등장한 이유?
+4. Spring Data Specification 이 같은 원리인 이유?
+5. 지연 평가의 단점 한 가지?
+
+### 정답·해설
+
+1. **환율 없이 계산 불가** — $5 + 10 CHF 가 얼마인지 환율을 모르면 모름. 그래서 즉시 계산하지 않고 **표현 (Sum)** 으로 묶어두고, 환산 시점 (`Bank.reduce(rate)`) 에 계산. 관심사 분리.
+2. **Money 와 Sum 이 같은 인터페이스** → 호출자가 둘을 구분 안 해도 됨. 새 표현 (예: Difference·Times) 추가 자유. 컴포지트 패턴.
+3. **단일 금액 (Money 잎) + 표현 합성 (Sum 가지) 이 같은 Expression 인터페이스**. 컴포지트 패턴의 정의 그대로. 트리 구조 + 일관된 처리.
+4. **즉시 쿼리 X**. Specification 은 조건 표현. `repository.findAll(spec)` 호출 시 비로소 SQL 생성·실행. 12장의 Bank.reduce 와 같은 평가 진입점.
+5. **디버깅 어려움**. 표현 시점 (`stream.filter`) 과 실행 시점 (`collect`) 이 분리되어 어디서 실패했는지 추적 비용. 또 표현 객체가 깊어지면 성능 우려 (보통 무시 가능).
+
+---
+
+## 다음 장 예고 — 13장: 진짜로 만들기
+
+12장에서 Bank 골조만. **`reduce` 구현 + 환율 적용** 을 본격적으로. Money 의 reduce 가 환율 1:1 이면 같은 통화 — 도메인 의미 명시.

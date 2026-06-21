@@ -1,0 +1,145 @@
+---
+title: "TDD 실전 강의 — 3장"
+type: source
+tags: [book, tdd, kent-beck, lecture]
+sources: [tdd/테스트 주도 개발 실전 강의 교재 3장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 테스트 주도 개발 실전 강의 교재
+
+## 3장 — 모두를 위한 평등
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → RED → GREEN → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- 값 객체에 **`equals`** 를 도입해 "값이 같으면 같은 객체" 를 만든다.
+- 한 번의 빨강 → 빠른 초록 → 정련 사이클.
+- **이펙티브 자바 Item 10** (equals 일반 규약) 의 점진 도입.
+
+### 0.2 1·2장 회고
+
+- 1장: `times` 가 자기를 변경 → 빨강
+- 2장: 새 `Dollar` 반환 → 값 객체 (불변) → 초록
+- 남은 빚: **값 비교** (`equals`)
+
+---
+
+## 1. 할 일 목록 갱신
+
+```
+[ ] $5 + 10 CHF = $10
+[ ] $5 * 2 = $10              ✅ 완료
+[ ] amount를 private으로 만들기   ← 4장 후보
+[x] Dollar 부작용 제거           ✅ 완료
+[ ] Money 반올림?
+[ ] equals()                     ← 이번 장
+[ ] hashCode()                   ← 다음 장 후보
+```
+
+---
+
+## 2. RED — `equals` 테스트
+
+```java
+@Test
+void 같은_금액의_Dollar는_equals_true() {
+    assertEquals(new Dollar(5), new Dollar(5));
+}
+```
+
+→ 실패. 기본 `Object.equals` 는 참조 비교.
+
+---
+
+## 3. GREEN — 가장 빠른 통과
+
+```java
+public class Dollar {
+    int amount;
+    public Dollar(int amount) { this.amount = amount; }
+    public Dollar times(int multiplier) { return new Dollar(amount * multiplier); }
+
+    @Override
+    public boolean equals(Object o) {
+        Dollar d = (Dollar) o;   // 가장 단순 — 일단 통과
+        return amount == d.amount;
+    }
+}
+```
+
+테스트 통과.
+
+---
+
+## 4. REFACTOR — 안전화
+
+```java
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Dollar)) return false;
+    Dollar d = (Dollar) o;
+    return amount == d.amount;
+}
+```
+
+→ null·다른 타입 안전 처리. *Effective Java* Item 10 권고 (반사성·대칭성·이행성·일관성·null) 점진 충족.
+
+> **현재 빚 — `hashCode`**: `equals` 만 재정의하면 `HashMap`·`HashSet` 가 깨짐. Item 11 짝. 다음 장 후보로 목록에 남김.
+
+---
+
+## 핵심 교훈
+
+1. **값 객체 = 불변 + equals + hashCode** 의 3종 세트.
+2. 빨강 → 가장 빠른 초록 → 안전 정련의 사이클.
+3. `equals` 도입은 점진 — 처음엔 단순 캐스팅, 나중에 instanceof + null.
+4. `equals` 와 `hashCode` 는 항상 짝 (Item 11).
+
+---
+
+## 함정 / 주의
+
+- `equals` 만 재정의하면 컬렉션에서 사고 — `hashCode` 도 같이.
+- 자식 클래스에 `equals` 확장하면 대칭성 깨짐 위험 (Item 10).
+- 상속 대신 컴포지션 권장 — Item 18.
+
+---
+
+## 체크리스트
+
+- [ ] `equals` 가 null 안전한가
+- [ ] `equals` 가 다른 타입을 받았을 때 false 반환하는가
+- [ ] `hashCode` 도 같이 재정의했는가
+- [ ] record로 가능한가 (자동 equals/hashCode/toString)
+
+---
+
+## 퀴즈
+
+1. 자바 기본 `Object.equals` 의 의미는?
+2. `equals` 만 재정의하면 무엇이 깨지는가?
+3. 같은 일을 record 로 하면 어떤 코드가 사라지는가?
+4. *Effective Java* Item 10 의 5가지 규약은?
+5. TDD의 "빠른 초록" 이 안전성을 희생하지 않는 이유는?
+
+### 정답·해설
+
+1. **참조 비교** — 같은 객체 인스턴스인지. 값 비교 아님.
+2. **`hashCode`** — `HashMap`·`HashSet` 가 깨짐. 같은 객체가 두 슬롯에 들어가거나 못 찾음. Item 11.
+3. `equals`·`hashCode`·`toString`·생성자·getter 모두 자동. `public record Dollar(int amount) {}` 한 줄.
+4. **반사성·대칭성·이행성·일관성·null 비교** (`x.equals(null) == false`).
+5. **다음 단계 (REFACTOR)** 에서 안전 추가. 빠른 초록은 일시적 — 정련으로 안전 보장. 또 모든 단계가 테스트로 검증되므로 회귀 사고 없음.
+
+---
+
+## 다음 장 예고 — 4장: 프라이버시
+
+`amount` 필드를 `private` 으로 만들어 캡슐화. *Effective Java* Item 15 (접근 최소화) 와 직결. TDD 가 캡슐화를 자연스럽게 끌어내는 사례.

@@ -176,6 +176,7 @@ Effective Java 전반을 관통하는 또 하나의 원칙: **한 번 공개된 
 - [[src-effective-java-lecture]] — 강의 교재 11장 인덱스 (각 장 본문 링크)
 - [[entity-object]] — *오브젝트* (한국어 OO 설계 표준, 같은 주제 다른 관점)
 - [[entity-refactoring]] — *리팩터링 2판* (90 아이템이 매일 짤 때의 권고라면, 리팩터링은 이미 짠 코드의 카탈로그)
+- [[entity-clean-code]] — *Clean Code* (90 권고가 Java 메서드·필드 단위라면, Clean Code 는 줄·이름·함수 단위 가독성)
 - [[concept-oop]] — OOP 4원칙 (책의 2·4·12장 직접 연결)
 - [[concept-design-patterns]] — 디자인 패턴 (Factory·Builder·Strategy·Template)
 - [[concept-spring-core]] — Spring DI (Item 5의 실무 구현)

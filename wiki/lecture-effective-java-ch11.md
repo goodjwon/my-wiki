@@ -516,35 +516,25 @@ consumer.consume();
 
 ### 종합 퀴즈
 
-<details><summary>Q1. <code>volatile</code>이 <code>synchronized</code>를 대체할 수 없는 경우는?</summary>
+**Q1. `volatile`이 `synchronized`를 대체할 수 없는 경우는?**
 
-**복합 연산**(read-modify-write). `volatile int count; count++;` 는 가시성은 보장되지만 atomic이 아니라 race 발생. `synchronized` 또는 `AtomicInteger`로.
+**A.** **복합 연산**(read-modify-write). `volatile int count; count++;` 는 가시성은 보장되지만 atomic이 아니라 race 발생. `synchronized` 또는 `AtomicInteger`로.
 
-</details>
+**Q2. 락을 든 채 외부 콜백 호출이 위험한 이유 3가지?**
 
-<details><summary>Q2. 락을 든 채 외부 콜백 호출이 위험한 이유 3가지?</summary>
+**A.** (1) 콜백이 같은 락을 요구하면 재진입(또는 다른 자료 락 요구 시 데드락), (2) 콜백 안 예외가 락 보유 상태를 깨거나 무한 대기 유발, (3) 콜백이 블로킹 I/O면 락 보유 시간이 폭증해 시스템 전체가 멈춤.
 
-(1) 콜백이 같은 락을 요구하면 재진입(또는 다른 자료 락 요구 시 데드락), (2) 콜백 안 예외가 락 보유 상태를 깨거나 무한 대기 유발, (3) 콜백이 블로킹 I/O면 락 보유 시간이 폭증해 시스템 전체가 멈춤.
+**Q3. `Executors.newCachedThreadPool()`이 현업에서 위험한 이유는?**
 
-</details>
+**A.** 기본 큐가 `SynchronousQueue` + 최대 스레드 수가 `Integer.MAX_VALUE` — 부하가 몰리면 스레드를 무제한 생성해 **OOM/시스템 정지**. 명시적 `ThreadPoolExecutor`로 풀 크기·큐·거부 정책을 지정해야 안전.
 
-<details><summary>Q3. <code>Executors.newCachedThreadPool()</code>이 현업에서 위험한 이유는?</summary>
+**Q4. 정적 필드 지연 초기화의 정석 패턴은?**
 
-기본 큐가 `SynchronousQueue` + 최대 스레드 수가 `Integer.MAX_VALUE` — 부하가 몰리면 스레드를 무제한 생성해 **OOM/시스템 정지**. 명시적 `ThreadPoolExecutor`로 풀 크기·큐·거부 정책을 지정해야 안전.
+**A.** **Holder Idiom**: 정적 내부 클래스 안에 `static final` 필드를 두면, JVM 클래스 로딩 시점에 한 번만 초기화되며 동기화 비용이 없다. 가장 단순하고 안전한 패턴.
 
-</details>
+**Q5. 테스트에서 `Thread.sleep`이 안티패턴인 이유는?**
 
-<details><summary>Q4. 정적 필드 지연 초기화의 정석 패턴은?</summary>
-
-**Holder Idiom**: 정적 내부 클래스 안에 `static final` 필드를 두면, JVM 클래스 로딩 시점에 한 번만 초기화되며 동기화 비용이 없다. 가장 단순하고 안전한 패턴.
-
-</details>
-
-<details><summary>Q5. 테스트에서 <code>Thread.sleep</code>이 안티패턴인 이유는?</summary>
-
-타이밍 가정이 OS·JIT·부하에 따라 깨져 **간헐적 실패(flaky test)** 가 발생한다. `CountDownLatch`·`CompletableFuture.get(timeout)`·`Awaitility` 같은 명시적 동기화로 대체해야 한다.
-
-</details>
+**A.** 타이밍 가정이 OS·JIT·부하에 따라 깨져 **간헐적 실패(flaky test)** 가 발생한다. `CountDownLatch`·`CompletableFuture.get(timeout)`·`Awaitility` 같은 명시적 동기화로 대체해야 한다.
 
 ---
 

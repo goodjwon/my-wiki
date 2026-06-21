@@ -4,6 +4,43 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-20] ingest | 📚 테스트 주도 개발 (Kent Beck, 2002) 전체 ingest — 5권 도서 오각형 완성
+- 사용자 입력: `raw/tdd/toc.md` + 강의 교재 1·2장
+- 본 세션 작성: 3~32장 + 부록 A·B + 마치는 글 (Fowler) = **33편 신규** (raw)
+- wiki 신규 (37개):
+  - `lecture-tdd-ch1~32.md` (32편)
+  - `lecture-tdd-appendixA.md` / `appendixB.md` / `afterword.md` (3편)
+  - `entity-tdd.md` 책 카드
+  - `src-tdd-lecture.md` 인덱스
+- mkdocs.yml nav 35편 모두 등록 (📚 도서 > TDD 하위 1·2·3부)
+- 5권 도서 ingest 완료:
+  - 오브젝트 (entity 만)
+  - Effective Java (entity + 강의 11편)
+  - 리팩터링 (entity + 강의 12편)
+  - Clean Code (entity + 강의 17편)
+  - **TDD (entity + 강의 35편)** ← 마지막
+- 5권 오각형 비교표 (관점·단위·시점·언어) `entity-tdd` 안에 정리
+
+## [2026-06-20] expand | 📚 Clean Code 실전 강의 교재 17장 + Q/A 토글 일괄 정리
+- Clean Code 강의 교재:
+  - 사용자 입력: 1·2장 raw
+  - 본 세션 작성: 3~17장 (약 4,500줄). 1·2장 형식 그대로 (0.도입·절별 비유→Before/After→체크리스트·Q/A 분리 퀴즈)
+- wiki 신규 (18개): `lecture-clean-code-ch1~17.md` 17편 + `src-clean-code-lecture.md` 인덱스
+- mkdocs.yml nav 17장 모두 등록 (📚 도서 > Clean Code 하위)
+- **토글 → Q/A 분리 일괄 변환** (47편): `scripts/convert_quiz.py` 작성, EJ·리팩터링·Clean Code 강의 교재의 `<details><summary>` 패턴을 `**Q.**`+`**A.**` 형식으로 일괄 변환. raw 22편 + wiki 23편 + 신규 Clean Code raw 1편. 어떤 뷰어에서도 깨지지 않음.
+- 인덱스 (src-*-lecture) 형식 설명도 갱신 (`<details>` 펼침형 → Q/A 분리)
+- 4권 도서 사각형 완전 ingest (목차 + entity + 강의 교재 + wiki 본문 노출): *Effective Java*·*리팩터링*·*Clean Code* — 강의 교재까지. *오브젝트* — 책 카드만 (강의 교재 미입력)
+
+## [2026-06-20] ingest | 📚 Clean Code (Robert C. Martin, 2008) 책 entity
+- 원본: `raw/clean-code/toc.md` — 사용자 입력 목차 (책 본문 미보유)
+- 생성된 페이지 (1개):
+  - `entity-clean-code.md` — 책 카드 + 11개 핵심 메시지 + 3부 구조 + **17장 휴리스틱(C·E·F·G·J·N·T 7 카테고리, ⭐ 11개)** + 위키 매핑 + "사람이 읽기 위한 코드" 패턴 비교(7행) + **4권 도서 사각형 비교표** (오브젝트·EJ·리팩터링·Clean Code)
+- 기존 페이지 보강 (4개):
+  - `concept-oop.md` / `concept-design-patterns.md` — Clean Code 인용
+  - `entity-object.md` / `entity-effective-java.md` / `entity-refactoring.md` — 4권 양방향 링크
+- 신규 concept 후보 3개 (백로그): `concept-naming-conventions`, `concept-tdd-laws-and-first`, `concept-simple-design-rules`
+- 4권 도서 ingest 4/4 완료 (목차 기반 entity). 마지막 책 *테스트 주도 개발* 미입력
+
 ## [2026-06-20] expand | 강의 교재 본문 23편을 wiki로 노출 — 사이트에서 실습 본문 검색 가능
 - 문제: src-*-lecture.md 인덱스 페이지가 있어도 raw 파일 링크라 사이트(wons-wiki.web.app)에서 본문 접근 불가
 - 해결: raw 강의 교재 23편(EJ 11편 + 리팩터링 12편) 을 wiki/로 복사, mkdocs nav에 모두 등록

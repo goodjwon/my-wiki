@@ -1,0 +1,49 @@
+---
+title: "TDD 실전 강의 — 21장"
+type: source
+tags: [book, tdd, kent-beck, lecture]
+sources: [tdd/테스트 주도 개발 실전 강의 교재 21장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 테스트 주도 개발 실전 강의 교재
+
+## 21장 — 셈하기
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생
+
+---
+
+## 0. 학습 목표
+
+- **TestResult** 도입 — 실행 결과 집계.
+- "통과 N, 실패 M" 보고.
+
+---
+
+## 1. 변경
+
+```python
+class TestResult:
+    def __init__(self):
+        self.runCount = 0
+    def summary(self):
+        return f"{self.runCount} run, 0 failed"
+
+class TestCase:
+    def run(self, result):
+        result.runCount += 1
+        self.setUp()
+        try:
+            method = getattr(self, self.name)
+            method()
+        finally:
+            self.tearDown()
+```
+
+---
+
+## 다음 장 예고 — 22장: 실패 처리
+
+테스트 실패도 result에 집계.

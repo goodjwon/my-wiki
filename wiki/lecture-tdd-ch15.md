@@ -1,0 +1,219 @@
+---
+title: "TDD 실전 강의 — 15장"
+type: source
+tags: [book, tdd, kent-beck, lecture]
+sources: [tdd/테스트 주도 개발 실전 강의 교재 15장.md]
+created: 2026-06-20
+updated: 2026-06-21
+---
+
+# 테스트 주도 개발 실전 강의 교재
+
+## 15장 — 서로 다른 통화끼리 더하기
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → RED → GREEN → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- **1장 첫 할 일 `$5 + 10 CHF = $10`** 을 드디어 완성.
+- 12~14장의 누적 (Money·Bank·Pair·Sum·Expression) 이 협력해 동작.
+- 도메인 모델의 **전체 시야** 정리.
+- "**큰 목표는 작은 단계의 누적**" 이라는 TDD 의 본질을 회고.
+
+### 0.2 큰 그림 — 도메인 협력
+
+```
+호출자
+   |
+   v
+Money.dollar(5).plus(Money.franc(10))   ← plus 가 Sum 반환
+   |
+   v
+new Sum(dollar5, franc10)                 ← 표현 (Expression)
+   |
+   v
+bank.reduce(sum, "USD")                   ← 환산 진입점
+   |
+   v
+sum.reduce(bank, "USD")                   ← 다형성 dispatch
+   |
+   ├─ augend.reduce(bank, "USD") → Money(5, USD)         (같은 통화 → 자기 자신)
+   └─ addend.reduce(bank, "USD") → Money(5, USD)         (10 CHF / 2 = 5 USD)
+   |
+   v
+return new Money(10, USD)
+```
+
+> **비유 — "도시락 가게의 전체 흐름"**
+>
+> 손님 주문 (`plus`) → 주문서 (`Sum`) → 주방 (`Bank.reduce`) → 환산 정책 (`rate`) → 완성 도시락 (`Money`). 각 단계가 작은 책임 + 다른 단계와 협력.
+
+### 0.3 현업에서 왜 중요한가
+
+- "**큰 도메인 모델이 작은 단계의 누적으로** 만들어진다" 의 살아있는 사례.
+- 단일 PR 에 한 단계만, 모든 단계 테스트 안전망 — 거대 설계 한 번 X.
+- DDD 의 Aggregate·Value Object·Domain Service 가 자연 발견.
+
+---
+
+## 1. 할 일 목록 갱신
+
+```
+[x] $5 * 2 = $10
+[x] Dollar 부작용 제거
+[x] equals()
+[x] amount private
+[x] CHF * 2 = 10 CHF
+[x] Dollar 와 Franc 중복 제거
+[x] 통화가 다르면 equals false
+[x] Money.dollar() / Money.franc()
+[x] currency 필드
+[x] times 부모로
+[x] 자식 클래스 제거
+[x] $5 + $5 = $10
+[x] Sum reduce
+[x] Pair 클래스
+[X] $5 + 10 CHF = $10                  ← 이번 — 드디어!
+[ ] hashCode() (Money)
+[ ] times 도 Expression 으로?           ← 16장
+```
+
+---
+
+## 2. RED — 통합 테스트
+
+```java
+@Test
+void $5_더하기_10_CHF는_$10() {
+    Bank bank = new Bank();
+    bank.addRate("CHF", "USD", 2);   // 2 CHF = 1 USD
+
+    Expression result = Money.dollar(5).plus(Money.franc(10));
+    Money reduced = bank.reduce(result, "USD");
+
+    assertEquals(Money.dollar(10), reduced);
+}
+```
+
+→ 12~14장의 누적이면 통과해야 함.
+
+---
+
+## 3. GREEN — 검증
+
+각 단계 점검:
+
+| 단계 | 호출 | 결과 |
+|------|------|------|
+| 1 | `Money.dollar(5)` | `Money(5, "USD")` |
+| 2 | `Money.franc(10)` | `Money(10, "CHF")` |
+| 3 | `dollar5.plus(franc10)` | `new Sum(dollar5, franc10)` (Expression) |
+| 4 | `bank.reduce(sum, "USD")` | `sum.reduce(bank, "USD")` 다형성 |
+| 5 | `sum.reduce` 안: `augend.reduce(bank, "USD")` | `Money(5, "USD")` (같은 통화) |
+| 6 | `sum.reduce` 안: `addend.reduce(bank, "USD")` | `Money(5, "USD")` (10 / 2) |
+| 7 | `new Money(5 + 5, "USD")` | `Money(10, "USD")` |
+
+→ 통과. **1장 첫 할 일 완성**.
+
+---
+
+## 4. REFACTOR — 회고
+
+### 도메인 객체 정리
+
+| 객체 | 책임 |
+|------|------|
+| **Money** | 단일 금액 + 통화. 값 객체 (불변·equals). Expression 의 잎 |
+| **Sum** | 두 Expression 의 합. Expression 의 가지 |
+| **Expression** | 모든 표현의 공통 인터페이스. 컴포지트 |
+| **Bank** | 환율 정책. reduce 진입점 |
+| **Pair** | 환율 키 (from·to). HashMap 키 |
+
+### 5개 객체 + 1개 인터페이스 = 단순한 도메인. 처음부터 이렇게 설계할 수 있었을까?
+
+**아마 어려움**. 1·2장에서는 `Dollar` 하나만 있었음. 5장에서 Franc 추가, 8장에서 정적 팩터리, 12장에서 Expression 도입, 13~14장에서 Bank+Pair. **요구사항이 진화하면서 도메인이 발견됨**.
+
+> **TDD 의 본질 — 설계는 발견**: 처음부터 완벽한 도메인 모델을 의도하지 않음. 작은 RED → GREEN → REFACTOR 사이클이 모이면서 모델이 **창발 (emerge)**. → [[entity-clean-code]] 12장의 "단순한 설계 4규칙" 과 같은 메시지.
+
+---
+
+## 5. 통과한 시점에서의 인사이트
+
+### 1. 큰 목표는 작은 단계의 누적
+
+15장 통합 테스트가 통과한 건 1~14장 모든 작은 사이클의 결과. 어느 한 단계가 빠졌으면 통합도 안 됨.
+
+### 2. 안전망의 자유
+
+매 단계마다 모든 테스트가 초록 → 어떤 정련도 두렵지 않았음. 안전망 없이는 도중에 멈췄을 것.
+
+### 3. 도메인 발견
+
+Bank·Expression·Sum·Pair 는 처음에 없었음. **요구사항 + TDD 사이클이 자연 발견**. 처음부터 설계하려 했으면 잘못된 추상화 위험.
+
+### 4. 한 번에 하나
+
+매 사이클은 한 의도만 — 통화 추가, 슈퍼클래스 추출, 자식 제거, Expression 도입 등. **두 가지 동시 변경 X**.
+
+---
+
+## 6. 현업 예제 — DDD Aggregate 의 발견
+
+같은 패턴이 DDD 에서도:
+
+```
+Order (Aggregate Root)
+├── OrderItem (Entity)
+├── ShippingAddress (Value Object)
+├── DiscountPolicy (Domain Service)
+└── PricingCalculator (Domain Service)
+```
+
+처음부터 이렇게 설계할 수 없음. 요구사항 (주문 생성·결제·취소·반품) 이 누적되면서 책임이 분화 → Aggregate·Entity·VO·Service 가 발견.
+
+→ TDD 사이클이 DDD 의 모델링 도구.
+
+---
+
+## 7. 함정 / 주의
+
+- **15장만 보고 "TDD 는 만능"** 이라 결론 X. 1~14장의 작은 사이클 누적이 본질. 큰 통합 테스트만 쓰면 TDD 가 아님.
+- **통합 테스트 의존** = 단위 테스트 부족 신호. 단위 + 통합 둘 다.
+- 통합 테스트가 깨지면 어느 작은 단위가 원인인지 추적 어려움 — 작은 단위 테스트가 1차 안전망.
+
+---
+
+## 8. 체크리스트 (15장 완료 기준)
+
+- [ ] 통합 테스트 `$5 + 10 CHF = $10` 가 초록
+- [ ] 각 도메인 객체 (Money·Sum·Bank·Expression·Pair) 의 책임이 명확
+- [ ] 단위 테스트가 통합 테스트의 1차 안전망
+- [ ] 1장 첫 할 일이 목록에서 지워졌는가
+
+---
+
+## 9. 퀴즈
+
+1. 15장 통합 테스트가 통과한 직접 이유?
+2. Bank·Expression·Sum 이 1장에서 없었던 이유?
+3. "설계는 발견" 의 TDD 적 의미?
+4. 통합 테스트 의존이 단위 테스트 부족 신호인 이유?
+5. DDD Aggregate 의 발견 과정과 1~15장이 닮은 점?
+
+### 정답·해설
+
+1. **1~14장 모든 사이클이 통과 상태로 누적**. 어느 한 사이클이 빠지거나 깨졌으면 15장 통합도 실패. 큰 통합 = 작은 단위의 합.
+2. **요구사항이 그때까지 없었음**. 1·2장 = Dollar 곱셈만, 5장 = Franc 추가, 12장 = 더하기, 13장 = 환율. 요구사항이 등장할 때마다 새 도메인 객체 도입. **요구사항이 모델 발견을 안내**.
+3. **처음부터 완벽한 설계 X**. 작은 RED → GREEN → REFACTOR 사이클이 모이면서 도메인 모델이 자연 등장 (**창발**). 이게 *Clean Code* 12장 "단순한 설계 4규칙" 의 emerge 와 같은 메시지.
+4. 단위 테스트가 부족하면 통합 테스트만이 안전망 → **통합 깨지면 어느 작은 단위가 원인인지 추적 어려움**. 디버깅 비용 폭증. 단위 테스트가 1차, 통합 테스트가 결합 검증.
+5. **요구사항 누적 → 책임 분화 → 객체 발견**. DDD 도 처음부터 Aggregate·Entity·VO 를 설계 X. 사용 사례가 누적되면서 자연 발견. TDD 사이클이 DDD 의 모델링 도구.
+
+---
+
+## 다음 장 예고 — 16장: 드디어, 추상화
+
+`times` 도 Expression 인터페이스로 — Money·Sum 둘 다 times 지원하게. **컴포지트 패턴의 완성** — Money 잎 + Sum 가지 + 곱셈 표현 모두 같은 Expression.

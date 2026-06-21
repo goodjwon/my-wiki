@@ -531,29 +531,21 @@ try {
 
 ### 종합 퀴즈
 
-<details><summary>Q1. <code>@Transactional</code>이 기본적으로 checked 예외에 롤백하지 않는 역사적 이유는?</summary>
+**Q1. `@Transactional`이 기본적으로 checked 예외에 롤백하지 않는 역사적 이유는?**
 
-EJB 시대의 관행: 비즈니스 예외(체크드)는 호출자가 처리 가능하므로 트랜잭션을 굳이 롤백하지 않는다. Java 예외 철학(70번)과 맞물려, 명시적 `rollbackFor`로만 롤백 ([[concept-transactional-rollback-policy]] 상세).
+**A.** EJB 시대의 관행: 비즈니스 예외(체크드)는 호출자가 처리 가능하므로 트랜잭션을 굳이 롤백하지 않는다. Java 예외 철학(70번)과 맞물려, 명시적 `rollbackFor`로만 롤백 ([[concept-transactional-rollback-policy]] 상세).
 
-</details>
+**Q2. 추상화 수준에 맞는 예외 변환에서 `cause`를 보존해야 하는 이유는?**
 
-<details><summary>Q2. 추상화 수준에 맞는 예외 변환에서 <code>cause</code>를 보존해야 하는 이유는?</summary>
+**A.** 번역된 예외만 던지면 진짜 원인(SQL 오류 코드, IOException 메시지)이 사라져 사고 분석이 불가능해진다. `cause`로 묶어 두면 스택 트레이스에 "Caused by:" 사슬로 보존된다.
 
-번역된 예외만 던지면 진짜 원인(SQL 오류 코드, IOException 메시지)이 사라져 사고 분석이 불가능해진다. `cause`로 묶어 두면 스택 트레이스에 "Caused by:" 사슬로 보존된다.
+**Q3. 검사 예외를 의심하라는 71번의 현대적 대안 2가지는?**
 
-</details>
+**A.** (1) **Optional 반환**: "없을 수 있음"을 타입으로 표현. (2) **상태 검사 메서드 분리**: `isPresent`/`hasNext`/`canRetry` 같은 boolean 검사 후 액션.
 
-<details><summary>Q3. 검사 예외를 의심하라는 71번의 현대적 대안 2가지는?</summary>
+**Q4. 빈 catch 블록의 진짜 위험은?**
 
-(1) **Optional 반환**: "없을 수 있음"을 타입으로 표현. (2) **상태 검사 메서드 분리**: `isPresent`/`hasNext`/`canRetry` 같은 boolean 검사 후 액션.
-
-</details>
-
-<details><summary>Q4. 빈 catch 블록의 진짜 위험은?</summary>
-
-당장의 에러는 사라져 보이지만, **운영 중 진짜 사고가 발생해도 흔적이 안 남는다**. 추적·재현 모두 불가능. 무시해야 한다면 변수명 `ignored` + 주석으로 의도를 명시하고, 최소한 `log.warn`은 남겨야 한다.
-
-</details>
+**A.** 당장의 에러는 사라져 보이지만, **운영 중 진짜 사고가 발생해도 흔적이 안 남는다**. 추적·재현 모두 불가능. 무시해야 한다면 변수명 `ignored` + 주석으로 의도를 명시하고, 최소한 `log.warn`은 남겨야 한다.
 
 ---
 

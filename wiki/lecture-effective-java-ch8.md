@@ -650,29 +650,21 @@ public Money calculateDiscount(Order order, Coupon coupon) { ... }
 
 ### 종합 퀴즈
 
-<details><summary>Q1. 매개변수 검증의 가장 큰 이점은?</summary>
+**Q1. 매개변수 검증의 가장 큰 이점은?**
 
-**fail-fast** — 잘못된 입력이 메서드 깊숙이 흘러 들어가 추적 어려운 버그가 되는 대신, 호출 지점 가까이에서 명확한 예외로 터지게 한다.
+**A.** **fail-fast** — 잘못된 입력이 메서드 깊숙이 흘러 들어가 추적 어려운 버그가 되는 대신, 호출 지점 가까이에서 명확한 예외로 터지게 한다.
 
-</details>
+**Q2. 방어적 복사에서 "복사 후 검증" 순서가 중요한 이유는?**
 
-<details><summary>Q2. 방어적 복사에서 "복사 후 검증" 순서가 중요한 이유는?</summary>
+**A.** 검증 후 복사하면, 검증과 복사 사이에 다른 스레드가 원본을 바꿔 **TOCTOU**(Time-Of-Check / Time-Of-Use) 취약점이 생긴다. 복사한 사본을 검증해야 사본의 일관성이 보장된다.
 
-검증 후 복사하면, 검증과 복사 사이에 다른 스레드가 원본을 바꿔 **TOCTOU**(Time-Of-Check / Time-Of-Use) 취약점이 생긴다. 복사한 사본을 검증해야 사본의 일관성이 보장된다.
+**Q3. Optional을 필드·매개변수에 쓰지 말라는 이유 2가지?**
 
-</details>
+**A.** (1) **직렬화·메모리 비용**: Optional 자체가 객체라 필드로 두면 모든 인스턴스가 추가 객체를 가짐. (2) **API 불편**: 매개변수가 Optional이면 호출자가 매번 `Optional.of/empty`로 감싸야 하고, null로 들어올 수 있어 의미가 무너짐.
 
-<details><summary>Q3. Optional을 필드·매개변수에 쓰지 말라는 이유 2가지?</summary>
+**Q4. Spring의 `@Valid`가 8장 어떤 아이템의 자동화인가?**
 
-(1) **직렬화·메모리 비용**: Optional 자체가 객체라 필드로 두면 모든 인스턴스가 추가 객체를 가짐. (2) **API 불편**: 매개변수가 Optional이면 호출자가 매번 `Optional.of/empty`로 감싸야 하고, null로 들어올 수 있어 의미가 무너짐.
-
-</details>
-
-<details><summary>Q4. Spring의 <code>@Valid</code>가 8장 어떤 아이템의 자동화인가?</summary>
-
-아이템 49, **매개변수 검증**. 컨트롤러 진입점에서 Bean Validation 애너테이션을 보고 자동 검증 후 위반 시 `MethodArgumentNotValidException`을 던진다.
-
-</details>
+**A.** 아이템 49, **매개변수 검증**. 컨트롤러 진입점에서 Bean Validation 애너테이션을 보고 자동 검증 후 위반 시 `MethodArgumentNotValidException`을 던진다.
 
 ---
 

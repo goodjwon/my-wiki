@@ -140,6 +140,7 @@ updated: 2026-06-20
 - [[concept-design-patterns]] — 디자인 패턴 (책의 15장 + Strategy 사례)
 - [[entity-effective-java]] — *Effective Java* (90 아이템의 권고 = 메서드 단위 / *오브젝트*는 객체 단위)
 - [[entity-refactoring]] — Martin Fowler *리팩터링 2판* (책임 주도 설계가 도달점이라면, 리팩터링은 거기까지 가는 카탈로그)
+- [[entity-clean-code]] — Robert C. Martin *Clean Code* (객체 단위가 *오브젝트* 라면, 줄·이름 단위가 *Clean Code*. 6장 "객체와 자료 구조"·디미터 법칙 직접 다룸)
 - [[concept-spring-core]] — IoC·DI (책의 9장 의존성 주입)
 - [[src-kakaopay-ddd]] — DDD 실전 사례 (책의 부록 C 도메인 모델 + 본문 책임 주도 설계)
 - [[concept-db-connection-pool]] / [[concept-varchar-length-prefix]] / [[concept-api-backward-compatibility]] — "데이터 먼저 함정" 패턴 비교

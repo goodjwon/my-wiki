@@ -1,0 +1,292 @@
+---
+title: "Clean Code 실전 강의 — 6장"
+type: source
+tags: [book, clean-code, uncle-bob, lecture]
+sources: [clean-code/클린 코드 실전 강의 교재 6장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 클린 코드 실전 강의 교재
+
+## 6장 — 객체와 자료 구조
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → Before/After → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 3.x
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- **자료 추상화** 의 의미: 데이터를 노출하지 말고 **본질** 을 노출.
+- **자료/객체 비대칭** — 한쪽이 강한 곳에서 다른 쪽이 약함.
+- **디미터 법칙** — "친구의 친구와 말하지 마라".
+- **DTO (자료 전달 객체)** 의 정당한 자리와 그 한계.
+
+### 0.2 큰 그림 — "객체 vs 자료 구조"
+
+```
+[ 객체 ]                          [ 자료 구조 ]
+ 동작 노출, 자료 숨김               자료 노출, 동작 없음
+ 새 타입 추가에 강함                새 함수 추가에 강함
+ 새 함수 추가에 약함                새 타입 추가에 약함
+ OO 코드                           절차적 코드
+```
+
+> **비유 — 객체는 "사람", 자료 구조는 "서식"입니다.**
+>
+> - **사람(객체)**: "이 일 좀 해줘" 라고 부탁하면 알아서 처리. 내부 정보 안 줌.
+> - **서식(자료 구조)**: 빈칸을 채워서 다음 부서로 넘김. 처리 로직은 받는 쪽에.
+> 둘 중 어느 게 옳냐는 **상황 의존** — 한쪽이 강한 곳에서 다른 쪽이 약함.
+
+### 0.3 현업에서 왜 중요한가
+
+- DTO·Record·Entity·Domain Model — 매일 결정하는 자리.
+- 디미터 법칙 위배는 흔한 결합 사고.
+- *오브젝트* (책임 주도 설계) 와 직접 연결.
+
+---
+
+## 6.1 자료 추상화
+
+### 한 줄 정의
+
+**구현을 감추고 본질을 드러내라**. getter/setter 자동 생성은 추상화가 아니다.
+
+### Before / After
+
+```java
+// Before — 구현이 그대로 노출 (그냥 자료 구조)
+public class Point {
+    public double x;
+    public double y;
+}
+
+// After — 추상화: "좌표는 카르테시안일 수도, 극좌표일 수도"
+public interface Point {
+    double getX();
+    double getY();
+    void setCartesian(double x, double y);
+    double getR();
+    double getTheta();
+    void setPolar(double r, double theta);
+}
+```
+
+→ 호출자는 내부 표현을 모르고도 작업 가능. **나중에 구현을 polar/cartesian 어느 쪽으로 바꿔도 호출자 영향 없음**.
+
+### 추상화 != getter/setter 자동 생성
+
+```java
+// ❌ 추상화 X — 자료 구조에 옷만 입힘
+public class Account {
+    private double balance;
+    public double getBalance() { return balance; }
+    public void setBalance(double b) { this.balance = b; }
+}
+
+// ✅ 추상화 O — 동작을 통한 의도
+public class Account {
+    private Money balance;
+    public Money balance() { return balance; }   // 조회는 OK
+    public void deposit(Money amount) { ... }    // 동작
+    public void withdraw(Money amount) { ... }   // 동작 (잔액 검증 포함)
+}
+```
+
+---
+
+## 6.2 자료/객체 비대칭
+
+### 핵심 정리
+
+| | 새 함수 추가 | 새 타입 추가 |
+|---|---|---|
+| **객체 (OO)** | 모든 자식 클래스 수정 (어려움) | 새 클래스 1개 (쉬움) |
+| **자료 구조 (절차적)** | 새 함수 1개 (쉬움) | 모든 함수 수정 (어려움) |
+
+→ **양극단**. 어떤 코드는 OO가 정답, 어떤 코드는 절차적이 정답.
+
+### 사례 — 도형 면적
+
+```java
+// 절차적 (자료 구조 + 외부 함수)
+public class Square { public Point topLeft; public double side; }
+public class Circle { public Point center; public double radius; }
+
+public class Geometry {
+    public double area(Object shape) {
+        if (shape instanceof Square s) return s.side * s.side;
+        if (shape instanceof Circle c) return Math.PI * c.radius * c.radius;
+        throw new IllegalArgumentException();
+    }
+    // 새 함수 추가 (둘레 계산) — 쉬움
+    // 새 타입 추가 (Triangle) — Geometry의 모든 함수 수정
+}
+
+// OO (객체)
+public interface Shape {
+    double area();
+}
+public class Square implements Shape { public double area() { ... } }
+public class Circle implements Shape { public double area() { ... } }
+// 새 타입 추가 (Triangle implements Shape) — 쉬움
+// 새 함수 추가 (둘레 계산) — Shape + 모든 자식 수정
+```
+
+### Spring 현업 메모
+
+- **DTO·Entity = 자료 구조**. 단순 데이터 전달, 동작 없음.
+- **Service·Aggregate = 객체**. 비즈니스 로직, 데이터 숨김.
+
+→ **두 영역을 섞지 마라** — DTO에 비즈니스 로직 끼우면 둘 다 망가짐.
+
+---
+
+## 6.3 디미터 법칙
+
+### 한 줄 정의
+
+**모듈은 자신이 조작하는 객체의 속사정을 몰라야 한다**.
+
+객체의 메서드는 다음 객체의 메서드만 호출해야 한다:
+- (1) 자신
+- (2) 매개변수로 받은 객체
+- (3) 자신이 생성한 객체
+- (4) 자신의 인스턴스 변수
+
+### 6.3.1 기차 충돌 (Train Wreck)
+
+```java
+// ❌ 디미터 위반
+final String outputDir = ctxt.getOptions().getScratchDir().getAbsolutePath();
+```
+
+`ctxt.getOptions()` 까지는 OK, 그 다음 `.getScratchDir().getAbsolutePath()` 는 위반.
+
+### 해법
+
+```java
+final String outputDir = ctxt.getScratchDirAbsolutePath();
+```
+
+`ctxt` 가 우리가 원하는 결과를 직접 반환. 내부 구조 노출 X.
+
+### Tell, Don't Ask
+
+**"묻지 말고 시켜라"**. 데이터를 꺼내 와 호출자가 처리하는 대신, 객체에게 일을 시켜라.
+
+```java
+// ❌ Ask
+if (user.getRole().getPermissions().contains("ADMIN")) doAdminAction();
+
+// ✅ Tell
+if (user.canPerformAdminAction()) doAdminAction();
+```
+
+### 6.3.2 잡종 구조
+
+객체와 자료 구조가 혼합된 구조 — **최악**. 새 함수 추가도 어렵고 새 타입 추가도 어려움.
+
+→ **명확히 객체 또는 자료 구조 한쪽** 으로 결정.
+
+### 6.3.3 구조체 감추기
+
+기차 충돌이 진짜 필요하다면, 객체가 그 작업을 노출해야 함.
+
+```java
+// ❌
+BufferedOutputStream bos = new BufferedOutputStream(
+    new FileOutputStream(ctxt.getOptions().getScratchDir().getAbsolutePath() + "/file.txt"));
+
+// ✅
+BufferedOutputStream bos = ctxt.createScratchFileStream("file.txt");
+```
+
+---
+
+## 6.4 자료 전달 객체 (DTO)
+
+### 한 줄 정의
+
+**공개 필드만 있고 로직 없는** 가장 단순한 자료 구조. 데이터베이스·소켓·HTTP 통신의 경계에서 흔함.
+
+### Java 17 record 가 최적
+
+```java
+public record Address(String street, String city, String zip) {}
+```
+
+자동 생성: 생성자·equals·hashCode·toString·getter.
+
+### 활성 레코드 (Active Record)
+
+DTO의 변형 — public 필드 + 데이터베이스 접근 메서드 (`save()`/`find()`).
+
+> **함정** — 활성 레코드를 도메인 객체로 취급하지 마라. 데이터베이스 객체로만 두고, 그 위에 **별도의 도메인 객체** 를 두는 게 좋음.
+
+### Spring/JPA 현업
+
+- JPA `@Entity` = 활성 레코드 변형. **순수 데이터 컨테이너로 두기 어려움** (영속성·관계).
+- 컨트롤러 ↔ 서비스 사이는 **record DTO**, 도메인 모델은 별도 — 권장.
+
+---
+
+## 핵심 교훈
+
+1. **추상화는 구현을 감추는 것** — getter/setter 자동 생성 ≠ 추상화.
+2. **객체와 자료 구조는 양극단**. 한쪽이 강한 곳에서 다른 쪽이 약함.
+3. **새 함수 위주 변화 → 자료 구조 + 외부 함수**. **새 타입 위주 변화 → 객체 + 다형성**.
+4. **디미터 법칙**: 객체의 속사정을 몰라야 — "묻지 말고 시켜라".
+5. **DTO는 record로**. 도메인 모델과 섞지 마라.
+6. **잡종 구조는 최악** — 명확히 한쪽으로 결정.
+
+---
+
+## 함정 / 주의
+
+- 디미터 법칙을 도그마로 "한 점만 허용" 으로 해석하면 과함. **객체의 내부 구조 노출 여부** 가 본질.
+- record가 단순 DTO에 좋지만, 도메인 로직이 붙으면 한계 (불변).
+- JPA Entity = 자료 구조도 객체도 아닌 어중간 — 도메인 모델을 별도로 두는 게 깔끔.
+
+---
+
+## 체크리스트 (코드 리뷰용)
+
+- [ ] getter/setter 자동 생성으로 모든 필드 노출 = 추상화 무
+- [ ] 이 코드가 새 함수 위주인가 새 타입 위주인가 분별했는가
+- [ ] 메서드 체인 `a.getB().getC().getD()` 가 있는가
+- [ ] DTO에 비즈니스 로직이 섞이지 않았는가
+- [ ] 도메인 객체에 데이터베이스 접근이 끼어있지 않은가
+- [ ] "잡종 구조" (객체 + 자료 구조 혼합) 가 있는가
+
+---
+
+## 퀴즈
+
+**Q1. "자료 추상화"가 getter/setter 자동 생성과 다른 점은?**
+
+**A.** 추상화는 **구현을 감추고 본질을 드러냄**. getter/setter는 구현을 그대로 노출하면서 옷만 입힘 (변수 → 메서드). 본질을 드러내려면 동작(`deposit`, `withdraw`) 으로 표현.
+
+**Q2. 자료 구조와 객체가 "양극단" 이라는 의미는?**
+
+**A.** 자료 구조는 **새 함수 추가에 강하고 새 타입에 약함**. 객체는 그 반대. 한쪽이 모든 상황에 정답은 아님. 새 함수가 자주 추가되면 절차적, 새 타입이 자주 추가되면 OO.
+
+**Q3. 디미터 법칙의 "조작하는 객체의 속사정" 이 무엇인가?**
+
+**A.** 객체의 내부 구조 (어떤 필드를 가지고, 그 필드가 또 어떤 객체를 가지는지). `a.getB().getC()` 처럼 체인을 따라가면 호출자가 a의 내부 구조까지 알게 됨 → 결합도 폭증.
+
+**Q4. "Tell, Don't Ask" 의 실천적 의미?**
+
+**A.** 데이터를 꺼내 와 호출자가 처리하는 대신, **객체에게 일을 시켜라**. `user.getRole().getPermissions().contains("ADMIN")` → `user.canPerformAdminAction()`. 책임이 데이터를 가진 객체에 있음.
+
+**Q5. JPA Entity가 "잡종 구조" 가 되기 쉬운 이유?**
+
+**A.** 영속성·관계·setter 자동 생성 때문에 자료 구조처럼 보이지만, 도메인 비즈니스 로직을 같이 두기도 함. 결과: 새 함수도 새 타입도 어렵게 추가됨. 도메인 모델을 별도로 두고 Entity는 영속성 영역으로 분리하면 깔끔.
+
+---
+
+## 다음 장 예고 — 7장: 오류 처리
+
+**예외 vs 오류 코드**, `try/catch/finally` 부터 작성하기, **미확인 예외** 권장, `null` 반환·전달 금지. *Effective Java* 10장 (Item 69~77) 과 짝.

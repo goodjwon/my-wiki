@@ -1,0 +1,355 @@
+---
+title: "Clean Code 실전 강의 — 7장"
+type: source
+tags: [book, clean-code, uncle-bob, lecture]
+sources: [clean-code/클린 코드 실전 강의 교재 7장.md]
+created: 2026-06-20
+updated: 2026-06-20
+---
+
+# 클린 코드 실전 강의 교재
+
+## 7장 — 오류 처리
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → Before/After → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 3.x
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- **오류 코드 대신 예외** 를 던진다 (3장과 같은 메시지의 심화).
+- `try/catch/finally` **부터 작성** 하는 TDD 사이클.
+- **미확인(unchecked) 예외** 우선, checked는 한정적으로.
+- 예외에 **충분한 맥락** 을 담는다.
+- `null` 반환·전달을 멀리한다 (Optional·Null Object).
+
+### 0.2 큰 그림
+
+```
+[ 예외 사용 ]                  [ 예외 설계 ]                  [ null 처리 ]
+ 7.1 코드 대신 예외             7.4 의미 제공                   7.7 null 반환 금지
+ 7.2 try-catch 먼저             7.5 호출자 관점 정의             7.8 null 전달 금지
+ 7.3 unchecked 권장              7.6 정상 흐름 정의
+```
+
+> **비유 — 오류 처리는 "비상 대피로"입니다.**
+>
+> 평소엔 안 쓰지만, 사고 시 작동해야 함. 평소 흐름과 분리되어 있어야 (try-catch), 사용 시 명확한 정보 (메시지·계층) 가 있어야, 막다른 길 (null) 이 없어야.
+
+### 0.3 현업에서 왜 중요한가
+
+- *Effective Java* Item 69~77 과 거의 1:1 대응.
+- Spring `@Transactional` 롤백 정책 ([[concept-transactional-rollback-policy]]) 의 기반.
+- `@ControllerAdvice` + `@ExceptionHandler` 가 7장 원칙의 자동화 통로.
+
+---
+
+## 7.1 오류 코드보다 예외를 사용하라
+
+### 한 줄 정의
+
+`int code = doSomething(); if (code != 0) ...` 패턴은 호출자에게 즉시 처리 강요 → 깊은 중첩. **예외** 가 정상 흐름과 오류 흐름을 분리.
+
+### Before / After
+
+3장 3.8과 같은 처방. 깊은 if-else → try-catch.
+
+```java
+// Before
+if (deletePage(page) == E_OK) {
+    if (registry.deleteReference(page.name) == E_OK) {
+        if (configKeys.deleteKey(page.name.makeKey()) == E_OK) {
+            logger.log("page deleted");
+        } else logger.log("deleteKey failed");
+    } else logger.log("deleteReference failed");
+} else logger.log("delete failed");
+
+// After
+try {
+    deletePage(page);
+    registry.deleteReference(page.name);
+    configKeys.deleteKey(page.name.makeKey());
+} catch (Exception e) {
+    logger.log(e.getMessage());
+}
+```
+
+---
+
+## 7.2 Try-Catch-Finally 문부터 작성하라
+
+### 한 줄 정의
+
+TDD처럼 **예외 던지는 테스트** 부터 작성. try-catch가 트랜잭션 같은 범위 — 본문이 안에서 무엇을 해도 catch가 일관된 후처리 보장.
+
+### 사이클
+
+```
+1. 예외를 던지는 테스트 작성
+2. 통과시킬 try-catch 작성
+3. try 안에 진짜 로직 채우기
+```
+
+### 예시
+
+```java
+@Test
+void 파일이_없으면_StorageException() {
+    assertThatThrownBy(() -> storage.retrieveSection("invalid"))
+        .isInstanceOf(StorageException.class);
+}
+
+// 통과시키는 구현
+public List<RecordedGrip> retrieveSection(String sectionName) {
+    try {
+        FileInputStream stream = new FileInputStream(sectionName);
+        // ... 본문은 비워둠
+    } catch (FileNotFoundException e) {
+        throw new StorageException("retrieval error", e);
+    }
+    return new ArrayList<>();
+}
+```
+
+---
+
+## 7.3 미확인(unchecked) 예외를 사용하라
+
+### 한 줄 정의
+
+**Checked 예외의 가치는 적고 비용은 큼**. 현대 Java(특히 Spring) 는 unchecked 우선.
+
+### Checked의 비용
+
+- **OCP 위배** — 하위 메서드가 새 checked 던지면 호출 체인 전체가 throws 절 변경
+- **사용 강제** — 사실상 의미 없는 try-catch 또는 throws 폭증
+
+### 정당한 checked 예외
+
+- **호출자가 실제로 복구 가능** — 매우 드문 경우만
+- 새 코드에는 **거의 안 씀** — Spring 의 `DataAccessException` 처럼 unchecked로 변환
+
+### *Effective Java* 연결
+
+Item 70 (checked vs unchecked), Item 71 (checked 남용 회피).
+
+### Spring 현업
+
+```java
+// JdbcTemplate가 SQLException(checked) → DataAccessException(unchecked) 자동 변환
+// → 호출자 try-catch 부담 0
+```
+
+`@Transactional` 도 **unchecked만 자동 롤백** — checked는 명시 `rollbackFor` 필요.
+
+---
+
+## 7.4 예외에 의미를 제공하라
+
+### 한 줄 정의
+
+예외 메시지에 **실패 관련 모든 정보**: 매개변수, 상태, 작업 의도.
+
+```java
+// ❌
+throw new IllegalArgumentException("invalid");
+
+// ✅
+throw new IllegalArgumentException(
+    String.format("amount must be in [%d, %d] but was %d", min, max, value));
+```
+
+### 로깅 + 예외 chaining
+
+```java
+catch (FileNotFoundException e) {
+    throw new StorageException("retrieval error for section: " + sectionName, e);
+                                                                                ^^ cause 보존
+}
+```
+
+스택 트레이스에 "Caused by:" 사슬로 진짜 원인 보존 — *리팩터링* 11.12·*Effective Java* Item 75 와 같은 결.
+
+---
+
+## 7.5 호출자를 고려해 예외 클래스를 정의하라
+
+### 한 줄 정의
+
+오류 분류는 **사용자가 어떻게 처리하느냐** 기준. 같은 처리 → 같은 예외 클래스.
+
+### 안티패턴 — API별로 다른 예외
+
+```java
+// ❌
+try {
+    port.open();
+} catch (DeviceResponseException e) { ... }
+  catch (ATM1212UnlockedException e) { ... }
+  catch (GMXError e) { ... }
+// 세 예외 모두 동일 후처리 — 분리 불필요
+```
+
+### 권장 — Wrapper로 통일
+
+```java
+public class LocalPort {
+    private ACMEPort innerPort;
+    public void open() {
+        try { innerPort.open(); }
+        catch (DeviceResponseException | ATM1212UnlockedException | GMXError e) {
+            throw new PortDeviceFailure(e);
+        }
+    }
+}
+
+// 호출자
+try {
+    localPort.open();
+} catch (PortDeviceFailure e) { ... }   // 한 곳에서 처리
+```
+
+→ 외부 API 의존성도 줄어듦. [[entity-effective-java]] Item 73 (추상화 수준에 맞는 예외 변환).
+
+---
+
+## 7.6 정상 흐름을 정의하라
+
+### 한 줄 정의
+
+비즈니스 로직과 오류 처리가 **분리** 되도록. 가능하면 **특이 케이스 패턴**.
+
+### Before / After
+
+```java
+// Before — 모든 호출자가 예외 처리
+try {
+    MealExpenses expenses = expenseReportDAO.getMeals(employeeId);
+    total += expenses.getTotal();
+} catch (MealExpensesNotFound e) {
+    total += getMealPerDiem();   // 식대 청구 안 했을 때 기본값
+}
+
+// After — 특이 케이스 객체
+public class PerDiemMealExpenses implements MealExpenses {
+    public int getTotal() { return defaultPerDiem; }
+}
+
+// DAO가 없으면 PerDiemMealExpenses 반환
+MealExpenses expenses = expenseReportDAO.getMeals(employeeId);
+total += expenses.getTotal();   // try-catch 없음
+```
+
+→ [[entity-refactoring]] 10.5 특이 케이스 추가 (Null Object).
+
+---
+
+## 7.7 null을 반환하지 마라
+
+### 한 줄 정의
+
+호출자에게 `null` 체크 부담을 떠넘기지 마라. 빈 컬렉션·Optional·특이 케이스 객체 사용.
+
+### Before / After
+
+```java
+// Before — 호출자가 null 체크 강요
+List<Employee> employees = getEmployees();
+if (employees != null) {
+    for (Employee e : employees) ...   // 잊으면 NPE
+}
+
+// After — 빈 컬렉션 반환
+public List<Employee> getEmployees() {
+    if (none) return Collections.emptyList();
+    return ...;
+}
+
+for (Employee e : getEmployees()) ...   // 군더더기 없음
+```
+
+### *Effective Java* 연결
+
+- Item 54 (빈 컬렉션 반환), Item 55 (Optional 반환 — 단건만)
+
+---
+
+## 7.8 null을 전달하지 마라
+
+### 한 줄 정의
+
+매개변수로 null 전달도 금지. 받는 쪽이 매번 검증해야 함.
+
+### 권장
+
+- 매개변수 검증 (3장·*Effective Java* Item 49)
+- `@NonNull` / JSpecify 같은 정적 분석
+- Optional 매개변수 회피 — record 또는 오버로딩
+
+### 함정
+
+받는 메서드에서 `assert` 또는 `Objects.requireNonNull` 로 빨리 깨는 게 최선 — 깊숙이 흐르다 NPE 터지는 것보다.
+
+---
+
+## 핵심 교훈
+
+1. **예외 > 오류 코드** — 정상 흐름과 분리.
+2. **try-catch부터 작성** — TDD 사이클의 한 형태.
+3. **Unchecked 우선** — Spring 생태계 표준.
+4. **예외에 충분한 맥락** — 메시지·매개변수·cause.
+5. **호출자 관점에서 예외 분류** — 같은 처리 = 같은 클래스.
+6. **null 반환·전달 금지** — 빈 컬렉션·Optional·특이 케이스.
+
+---
+
+## 함정 / 주의
+
+- 빈 catch (`catch (Exception e) {}`) 는 **화재경보기 끄기** — 무시해야 한다면 변수명 `ignored` + 주석.
+- checked 예외 무분별 변환은 정보 손실 — cause 보존 필수.
+- Optional 남용 (필드·매개변수) 도 안티패턴 (Item 55).
+
+---
+
+## 체크리스트 (코드 리뷰용)
+
+- [ ] try/catch가 정상 흐름 제어로 쓰이지 않는가
+- [ ] 새 checked 예외를 만들기 전 Optional·unchecked 대안 검토했는가
+- [ ] 예외 메시지에 매개변수·상태가 들어있는가
+- [ ] 외부 라이브러리 예외를 wrapper로 통일했는가
+- [ ] 컬렉션 반환이 null이 아니라 빈 컬렉션인가
+- [ ] 단건 nullable 반환은 Optional인가
+- [ ] 빈 catch 블록이 없는가
+- [ ] `@Transactional` 안의 변경에 unchecked 예외가 던져지는가 (자동 롤백)
+
+---
+
+## 퀴즈
+
+**Q1. "try-catch부터 작성하라" 의 TDD 정신은?**
+
+**A.** **예외 던지는 테스트** 를 먼저 작성하고, 통과시킬 try-catch 골조부터 만든 뒤 본문 채우기. 이렇게 하면 try-catch가 "트랜잭션 범위" 처럼 작용해 본문 어떤 변경에도 catch 후처리가 일관 보장됨.
+
+**Q2. Uncle Bob이 unchecked 예외를 권장하는 핵심 이유?**
+
+**A.** **OCP 위배** — 하위 메서드가 새 checked 예외 던지면 throws 절이 호출 체인 전체로 번짐. checked의 안전성 가치 < 호출자 강제 비용. 현대 Spring 생태계가 unchecked 표준.
+
+**Q3. "정상 흐름을 정의하라" 의 의미는?**
+
+**A.** 비즈니스 로직이 오류 처리(try-catch) 와 섞이지 않도록, **특이 케이스를 객체로** 표현해 정상 흐름에 흡수. Null Object 패턴 ([[entity-refactoring]] 10.5).
+
+**Q4. null 반환이 호출자에게 강요하는 부담은?**
+
+**A.** **매번 null 체크**. 호출자가 한 번 잊으면 NPE — 추적 어려운 사고. 빈 컬렉션·Optional·특이 케이스 객체로 null 자체를 API에서 제거.
+
+**Q5. 외부 라이브러리 예외를 wrapper로 통일하는 이유 2가지?**
+
+**A.** (1) **호출자 단순화** — 한 종류 예외만 처리하면 됨. (2) **외부 의존 격리** — 라이브러리 교체 시 호출자 코드 변경 없음. [[entity-effective-java]] Item 73 추상화 수준에 맞는 예외 변환.
+
+---
+
+## 다음 장 예고 — 8장: 경계
+
+**외부 코드·미완성 코드·테스트 학습** 등 "경계 너머" 와 우리 코드의 만남. log4j·Map 같은 외부 라이브러리를 어떻게 격리할지.

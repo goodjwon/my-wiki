@@ -213,6 +213,7 @@ assert r.area() == 50;  // 실패! Square 때문에 100
 - [[entity-object]] — 조영호 *오브젝트* (한국어 OO 설계 표준 해설서)
 - [[entity-effective-java]] — Joshua Bloch *Effective Java* (Item 17 불변·18 컴포지션·20 인터페이스 우선이 OOP 4원칙의 실전 적용)
 - [[entity-refactoring]] — Martin Fowler *리팩터링 2판* (OOP 4원칙 위배 = 24가지 코드 악취 → 리팩터링 트리거)
+- [[entity-clean-code]] — Robert C. Martin *Clean Code* (이름·함수·클래스 단위 가독성. 10장 SRP·17장 휴리스틱)
 - [[concept-design-patterns]] — OOP 원칙을 구조화한 23패턴
 - [[concept-spring-core]] — Spring에서 OOP가 실현되는 구조
 - [[src-kakaopay-ddd]] — DDD = OOP를 도메인에 적용한 설계법

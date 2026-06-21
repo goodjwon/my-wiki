@@ -419,35 +419,25 @@ public final class Period implements Serializable {
 
 ### 종합 퀴즈
 
-<details><summary>Q1. 자바 직렬화의 가장 큰 위험 하나를 들면?</summary>
+**Q1. 자바 직렬화의 가장 큰 위험 하나를 들면?**
 
-**역직렬화 RCE(원격 코드 실행)**. 신뢰할 수 없는 바이트 스트림을 역직렬화하면, 그 안의 임의 클래스 `readObject`가 실행되어 공격자가 서버 명령을 실행할 수 있다. Apache Commons Collections gadget chain이 대표 사례.
+**A.** **역직렬화 RCE(원격 코드 실행)**. 신뢰할 수 없는 바이트 스트림을 역직렬화하면, 그 안의 임의 클래스 `readObject`가 실행되어 공격자가 서버 명령을 실행할 수 있다. Apache Commons Collections gadget chain이 대표 사례.
 
-</details>
+**Q2. `serialVersionUID`를 자동 생성에 맡기면 안 되는 이유는?**
 
-<details><summary>Q2. <code>serialVersionUID</code>를 자동 생성에 맡기면 안 되는 이유는?</summary>
+**A.** JVM은 클래스 구조(필드·메서드 시그니처)를 해시해 UID를 만든다. 클래스를 조금만 바꿔도 UID가 자동으로 변경되어 **기존 직렬 데이터와 호환 불가**. 명시적으로 `serialVersionUID = 1L`을 두면 호환성 결정을 개발자가 관리한다.
 
-JVM은 클래스 구조(필드·메서드 시그니처)를 해시해 UID를 만든다. 클래스를 조금만 바꿔도 UID가 자동으로 변경되어 **기존 직렬 데이터와 호환 불가**. 명시적으로 `serialVersionUID = 1L`을 두면 호환성 결정을 개발자가 관리한다.
+**Q3. `readObject`를 "public 생성자와 같다"고 보는 이유는?**
 
-</details>
+**A.** `readObject`는 정상 생성자를 우회해 객체를 생성하기 때문. 잘못된 직렬 데이터가 들어와도 객체 불변식이 깨지지 않게, 생성자와 동일한 수준의 방어적 복사·검증이 필요하다.
 
-<details><summary>Q3. <code>readObject</code>를 "public 생성자와 같다"고 보는 이유는?</summary>
+**Q4. 직렬화 프록시 패턴이 가장 안전한 이유 3가지?**
 
-`readObject`는 정상 생성자를 우회해 객체를 생성하기 때문. 잘못된 직렬 데이터가 들어와도 객체 불변식이 깨지지 않게, 생성자와 동일한 수준의 방어적 복사·검증이 필요하다.
+**A.** (1) 역직렬화도 **정상 생성자를 거침** → 검증·복사 자동, (2) 잘못된 바이트 스트림은 생성자에서 거부되어 불변식 보장, (3) `final` 필드 복원 등 일반 직렬화 제약이 사라짐.
 
-</details>
+**Q5. 싱글턴 직렬화를 `enum`으로 하는 게 `readResolve`보다 안전한 이유는?**
 
-<details><summary>Q4. 직렬화 프록시 패턴이 가장 안전한 이유 3가지?</summary>
-
-(1) 역직렬화도 **정상 생성자를 거침** → 검증·복사 자동, (2) 잘못된 바이트 스트림은 생성자에서 거부되어 불변식 보장, (3) `final` 필드 복원 등 일반 직렬화 제약이 사라짐.
-
-</details>
-
-<details><summary>Q5. 싱글턴 직렬화를 <code>enum</code>으로 하는 게 <code>readResolve</code>보다 안전한 이유는?</summary>
-
-JVM이 enum의 단일 인스턴스를 보장(직렬화·리플렉션 모두). `readResolve` 패턴은 모든 필드를 `transient`로 두지 않으면 공격으로 두 번째 인스턴스가 만들어지는 함정이 있다 (Item 89 + Item 34와 결합).
-
-</details>
+**A.** JVM이 enum의 단일 인스턴스를 보장(직렬화·리플렉션 모두). `readResolve` 패턴은 모든 필드를 `transient`로 두지 않으면 공격으로 두 번째 인스턴스가 만들어지는 함정이 있다 (Item 89 + Item 34와 결합).
 
 ---
 

@@ -1,0 +1,228 @@
+---
+title: "TDD 실전 강의 — 14장"
+type: source
+tags: [book, tdd, kent-beck, lecture]
+sources: [tdd/테스트 주도 개발 실전 강의 교재 14장.md]
+created: 2026-06-20
+updated: 2026-06-21
+---
+
+# 테스트 주도 개발 실전 강의 교재
+
+## 14장 — 바꾸기
+
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → RED → GREEN → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
+
+---
+
+## 0. 이 장을 시작하기 전에
+
+### 0.1 학습 목표
+
+- Bank 의 환율 저장 `Map<Pair, Integer>` 의 **Pair 클래스** 정의.
+- `Pair` 가 **HashMap 키로 작동** 하려면 equals + hashCode 필수.
+- *Effective Java* **Item 10·11** (equals 와 hashCode 는 짝) 의 살아있는 사례.
+- record 가 이 모든 작업을 한 줄로 해결.
+
+### 0.2 큰 그림 — "컬렉션 키 = equals + hashCode"
+
+```
+[ Pair 가 키 ]
+ HashMap.put(new Pair("USD", "KRW"), 1300)
+ HashMap.get(new Pair("USD", "KRW")) → 1300?
+
+ → 두 Pair 가 "같다" 고 인식하려면:
+    1. equals 가 true
+    2. hashCode 가 같음
+
+ → 둘 중 하나라도 빠지면 HashMap 깨짐
+```
+
+> **비유 — "도서관 색인 카드"**
+>
+> 사서가 책을 찾을 때 (1) 카드 색인 (`hashCode`) 으로 서랍을 골라, (2) 그 서랍에서 정확한 카드 (`equals`) 를 매칭. 색인이 다르면 다른 서랍 → 못 찾음. 같은 사람인데 (`equals` true) 색인 다르면 (`hashCode` 다름) 영영 못 찾음.
+
+### 0.3 현업에서 왜 중요한가
+
+- 모든 컬렉션 키 (`HashMap`·`HashSet`·`ConcurrentHashMap`·`LinkedHashMap`) 가 동일 규약.
+- `equals` 만 재정의 + `hashCode` 빠짐 = 가장 흔한 사고 — Spring·JPA 에서도 단골.
+- record 가 자동 처리 — 단순 키는 record 가 정답.
+
+---
+
+## 1. 할 일 목록 갱신
+
+```
+[x] Sum reduce
+[ ] Pair 클래스 (Bank 의 환율 키)        ← 이번
+[ ] hashCode() (Money)
+[ ] $5 + 10 CHF = $10 (12·13·14·15장 누적)
+```
+
+---
+
+## 2. RED — Pair 키 동작 테스트
+
+```java
+@Test
+void Pair_같은_값은_HashMap_에서_매칭() {
+    Map<Pair, Integer> map = new HashMap<>();
+    map.put(new Pair("USD", "KRW"), 1300);
+    assertEquals(1300, map.get(new Pair("USD", "KRW")));
+}
+```
+
+→ Pair 가 equals + hashCode 없으면 다른 객체로 인식 — null 반환. **빨강**.
+
+---
+
+## 3. GREEN — Pair 클래스
+
+### 단계 1: 클래스 골조
+
+```java
+public class Pair {
+    private final String from;
+    private final String to;
+
+    public Pair(String from, String to) {
+        this.from = from;
+        this.to = to;
+    }
+}
+```
+
+→ 테스트 실패 (Object 기본 equals = 참조 비교).
+
+### 단계 2: equals 추가
+
+```java
+@Override
+public boolean equals(Object o) {
+    if (!(o instanceof Pair p)) return false;
+    return from.equals(p.from) && to.equals(p.to);
+}
+```
+
+→ 여전히 실패. `HashMap` 은 먼저 `hashCode` 로 버킷 찾고 → equals.
+
+### 단계 3: hashCode 추가
+
+```java
+@Override
+public int hashCode() {
+    return Objects.hash(from, to);
+}
+```
+
+→ 통과.
+
+---
+
+## 4. REFACTOR — record 로 한 줄
+
+```java
+public record Pair(String from, String to) {}
+```
+
+자동 생성: 생성자·accessor·equals·hashCode·toString. 단계 1·2·3 의 모든 작업이 한 줄로.
+
+> **TDD 책이 record 없을 때 (2002)** 쓰였기에 14장에서 손으로 만듦. 학습 가치 있음. record 시대에는 record 가 정답.
+
+---
+
+## 5. 통과한 시점에서 — Bank 가 안정적으로 작동
+
+```java
+public class Bank {
+    private final Map<Pair, Integer> rates = new HashMap<>();
+
+    public void addRate(String from, String to, int rate) {
+        rates.put(new Pair(from, to), rate);
+    }
+
+    public int rate(String from, String to) {
+        if (from.equals(to)) return 1;
+        return rates.get(new Pair(from, to));   // ← 같은 Pair 인식
+    }
+}
+```
+
+→ Pair 의 equals + hashCode 덕에 `addRate` 와 `rate` 의 키가 매칭.
+
+---
+
+## 6. 현업 예제 — equals/hashCode 짝의 함정
+
+### 사례: JPA Entity 의 사고
+
+```java
+@Entity
+public class User {
+    @Id private Long id;
+    private String email;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof User u)) return false;
+        return Objects.equals(email, u.email);   // email 기준 비교
+    }
+    // ❌ hashCode 빠짐 — 기본 Object.hashCode (참조 기반)
+}
+
+// 사고
+Set<User> set = new HashSet<>();
+set.add(new User("a@b.com"));
+set.add(new User("a@b.com"));
+System.out.println(set.size());   // 2 — equals true 인데 중복 저장
+```
+
+`equals` 만 재정의 + `hashCode` 빠짐 → HashSet 의 중복 제거 실패. *Effective Java* Item 11 의 가장 유명한 함정.
+
+### 권장
+
+- **equals 재정의하면 hashCode 도 반드시**.
+- `Objects.hash(필드들)` 가 표준.
+- record 사용 시 자동.
+- IDE 자동 생성 (`equals and hashCode` 메뉴) 도 안전.
+
+---
+
+## 7. 함정 / 주의
+
+- **equals 만 X, hashCode 만 X** — 둘 다 반드시 짝으로.
+- `mutable` 필드를 hashCode 에 포함 + 컬렉션에 넣은 후 변경 = 영영 못 찾음. **불변 키** 권장.
+- IDE 자동 생성 시 모든 필드 vs 비즈니스 키 선택 신중 — JPA Entity 는 비즈니스 키만.
+
+---
+
+## 8. 체크리스트 (14장 완료 기준)
+
+- [ ] Pair 가 equals + hashCode 둘 다 재정의 (또는 record)
+- [ ] HashMap 키로 정상 동작 테스트가 초록
+- [ ] Bank 의 addRate / rate 가 같은 Pair 인식
+- [ ] 컬렉션에 넣은 후 키 객체의 필드 변경 위험 없는가 (불변)
+
+---
+
+## 9. 퀴즈
+
+1. equals 만 재정의하면 HashSet/HashMap 에서 어떤 일이 일어나는가?
+2. hashCode 의 규약을 한 문장으로?
+3. record 가 14장의 작업을 어떻게 단순화?
+4. JPA Entity 의 equals/hashCode 가 어렵다는 이유?
+5. 가변 필드를 hashCode 에 포함하면 위험한 이유?
+
+### 정답·해설
+
+1. **중복 제거 실패** — equals true 여도 hashCode 가 다르면 HashSet 이 다른 버킷에 저장 → 중복으로 인식 안 됨. HashMap.get 도 못 찾음 (다른 버킷 검색). *EJ* Item 11 의 핵심.
+2. **equals true 인 두 객체는 hashCode 도 같아야** (역은 X — 다른 객체끼리 같은 hashCode 허용, 충돌 처리됨).
+3. record 가 자동으로 모든 필드 기반 equals + hashCode + toString + accessor + canonical 생성자 제공. 14장의 단계 1·2·3 모두가 `record Pair(String from, String to) {}` 한 줄.
+4. (1) **ID 만 비교** = 영속화 전 null 사고, (2) **모든 필드 비교** = 변경 가능 필드 포함 시 컬렉션 사고, (3) **비즈니스 키** = 매번 결정 필요. 정답이 없고 매번 도메인 분석 필요.
+5. 객체를 컬렉션에 넣은 후 그 필드 변경 → hashCode 바뀜 → 다른 버킷이 됨 → **HashMap.get 으로 영영 못 찾음**. 컬렉션 키는 반드시 불변 (`final` 필드) 권장.
+
+---
+
+## 다음 장 예고 — 15장: 서로 다른 통화끼리 더하기
+
+12·13·14장의 누적이 드디어 통합. **`$5 + 10 CHF = $10`** (환율 2:1) 가 실제로 통과. 1장 첫 할 일 항목 완성. 도메인 모델 (Money·Bank·Pair·Sum·Expression) 의 협력 전체 시야.
