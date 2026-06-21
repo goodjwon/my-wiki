@@ -4,7 +4,7 @@ type: source
 tags: [book, java, effective-java, lecture, curriculum]
 sources: [effective_java/]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-06-21
 ---
 
 # Effective Java 실전 강의 교재 — 11장 인덱스
@@ -22,6 +22,18 @@ updated: 2026-06-20
 - 장 끝: **결정 가이드 표** + **종합 체크리스트** + **펼침형 퀴즈**
 
 → 책 카드는 [[entity-effective-java]], 한 페이지 요약은 [[src-effective-java-summary]].
+
+## 실습 환경과 장별 루틴
+
+먼저 [[guide-java-book-study-lab]]의 Java 17 + JUnit 5 기본 환경을 준비한다. Effective Java 강의는 각 Item을 “작은 API 선택”으로 보고, 호출부가 어떻게 읽히고 깨지는지 확인한다.
+
+각 Item은 같은 순서로 따라간다.
+
+1. 문제 코드 또는 안티패턴을 먼저 타이핑한다.
+2. 테스트나 호출부에서 불편함을 확인한다.
+3. 권장 코드로 바꾼다.
+4. 호출부가 더 읽기 쉬워졌는지, 예외·null·상속·가변성 위험이 줄었는지 체크한다.
+5. 장 끝의 결정 가이드에서 “내 코드에 바로 적용할 Item 1개”를 고른다.
 
 ## 11장 인덱스 + 아이템 — 각 장 본문으로 바로 진입
 
@@ -142,3 +154,4 @@ updated: 2026-06-20
 - [[src-effective-java-summary]] — 블로그 12장 한 페이지 요약
 - [[entity-object]] — *오브젝트* (같은 OO 주제, 다른 관점)
 - [[concept-oop]] / [[concept-design-patterns]] / [[concept-spring-core]] / [[concept-transactional-rollback-policy]] / [[concept-db-connection-pool]] — 강의 교재에서 인용되는 위키 페이지들
+- [[guide-java-book-study-lab]] — 5권 공통 실습 환경

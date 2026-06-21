@@ -4,7 +4,7 @@ type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 16장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-06-21
 ---
 
 # 클린 코드 실전 강의 교재
@@ -134,4 +134,4 @@ updated: 2026-06-20
 
 ## 다음 장 예고 — 17장: 냄새와 휴리스틱
 
-이 책의 **결론 카탈로그**. 약 80개 휴리스틱 (C·E·F·G·J·N·T 7 카테고리). 코드 리뷰 어휘·정련 사전.
+이 책의 **결론 카탈로그**. 66개 휴리스틱 (C·E·F·G·J·N·T 7 카테고리). 코드 리뷰 어휘·정련 사전.

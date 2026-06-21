@@ -4,6 +4,22 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-21] enrich | Java 도서 5권 강의 교재 — 초보자 실습 흐름·환경 가이드 보강
+- 대상: `raw/object/`, `raw/effective_java/`, `raw/refactoring/`, `raw/clean-code/`, `raw/tdd/` 기반 5권 강의 교재 전체
+- 신규 가이드:
+  - `guide-java-book-study-lab.md` — Java 17 + JUnit 5 + Maven, Python 3, Node.js 기반 공통 실습 환경과 장별 루틴
+  - `guide-code-authoring-and-review.md` — 5권 도서 원칙을 코드 작성·점검 체크리스트로 종합한 페이지를 nav/index에 연결
+- 인덱스 보강:
+  - `src-object-lecture.md` / `src-effective-java-lecture.md` / `src-refactoring-lecture.md` / `src-clean-code-lecture.md` / `src-tdd-lecture.md` 에 공통 실습 루틴 추가
+  - 각 장을 "문제 확인 → 작은 변경 → 실행/테스트 → 인사이트 기록" 흐름으로 읽도록 안내
+- 내용 보강:
+  - `lecture-tdd-ch21.md` — TestResult 도입을 RED/GREEN/REFACTOR 흐름으로 확장
+  - `lecture-tdd-ch24.md` — xUnit 2부 회고에 최종 코드 구조·복습 순서·체크리스트 추가
+  - `lecture-tdd-ch29.md` — Assertion/Fixture/예외 테스트/JUnit 5 예제로 따라하기 보강
+- 정정:
+  - Clean Code 17장 휴리스틱 수를 80여 개 → 66개로 수정
+  - `src-refactoring-lecture.md` frontmatter source 경로를 `refactoring/`으로 수정
+
 ## [2026-06-21] lint | 전체 점검 — 5권 entity 비교표 통일 후 일관성 검증
 - 영역 1 인덱스 일관성: ✅ 165 페이지 모두 등록 (lecture-* 93편은 src-*-lecture 인덱스 hub 역할). 깨진 링크 0건.
 - 영역 2 고아 페이지: ✅ entity·concept·src·guide 모두 인바운드 1+

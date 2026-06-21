@@ -141,6 +141,8 @@ nav:
       - Spring Boot: entity-spring-boot.md
       - Spring Initializr: entity-spring-initializr.md
     - "📚 도서":
+      - "5권 실습 환경 가이드": guide-java-book-study-lab.md
+      - "5권 코드 작성·점검 가이드": guide-code-authoring-and-review.md
       - "오브젝트 (조영호, 2019)":
         - 책 카드: entity-object.md
         - "실전 강의 교재 — 인덱스": src-object-lecture.md

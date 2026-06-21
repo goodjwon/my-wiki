@@ -195,7 +195,7 @@ Martin Fowler가 정리한 **이름 있는 작은 단계의 카탈로그**. "외
 - [[src-refactoring-lecture]] — 실전 강의 교재 12장 통합 인덱스 (각 장 raw 링크)
 - [[entity-object]] — *오브젝트* (책임 주도 설계 = 리팩터링의 목적지)
 - [[entity-effective-java]] — *Effective Java* (매일의 권고 = 리팩터링 트리거 사전)
-- [[entity-clean-code]] — *Clean Code* (17장 휴리스틱 80여 항목은 리팩터링 24 악취와 짝. 같은 Uncle Bob 진영)
+- [[entity-clean-code]] — *Clean Code* (17장 휴리스틱 66개는 리팩터링 24 악취와 짝. 같은 Uncle Bob 진영)
 - [[concept-oop]] — 4원칙 위배 = 악취
 - [[concept-design-patterns]] — 패턴 = 리팩터링의 도달점
 - [[src-spring-testing-ref]] — 4장 테스트 구축의 실무

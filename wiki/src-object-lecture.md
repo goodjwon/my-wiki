@@ -15,6 +15,18 @@ updated: 2026-06-21
 
 → 책 카드는 [[entity-object]].
 
+## 실습 환경과 장별 루틴
+
+먼저 [[guide-java-book-study-lab]]의 Java 17 + JUnit 5 기본 환경을 준비한다. 오브젝트 강의는 “테스트 통과”보다 **책임이 어느 객체로 이동했는지**를 확인하는 실습이 핵심이다.
+
+각 장은 같은 순서로 읽는다.
+
+1. 문제 코드에서 “누가 남의 내부를 알고 있는가”를 표시한다.
+2. 객체에게 보낼 메시지를 먼저 이름 붙인다.
+3. 책임을 옮긴 After 코드를 작성한다.
+4. getter/setter 호출이 줄었는지, 변경 파급이 줄었는지 체크한다.
+5. 마지막 체크리스트와 퀴즈로 “왜 이 설계가 나아졌는지”를 한 문장으로 남긴다.
+
 ## 18편 인덱스
 
 | 장 | 주제 | 본문 | 핵심 |
@@ -104,3 +116,4 @@ updated: 2026-06-21
 - [[entity-object]] — 책 카드 (상위)
 - [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-tdd]] — 5권 오각형
 - [[concept-oop]] / [[concept-design-patterns]] / [[concept-spring-core]]
+- [[guide-java-book-study-lab]] — 5권 공통 실습 환경

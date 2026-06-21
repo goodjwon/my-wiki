@@ -4,7 +4,7 @@ type: source
 tags: [book, tdd, kent-beck, lecture, curriculum]
 sources: [tdd/]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-06-21
 ---
 
 # TDD 실전 강의 교재 — 35편 인덱스 (32장 + 부록 2 + 마치는 글)
@@ -14,6 +14,24 @@ updated: 2026-06-20
 Kent Beck *Test-Driven Development: By Example* (2002) 의 **3부 32장 + 부록 A·B + 마치는 글** 을 Java/Spring 백엔드 입문~중급 수강생용 강의 교재로 풀어 쓴 자료.
 
 → 책 카드는 [[entity-tdd]].
+
+## 실습 환경과 장별 루틴
+
+먼저 [[guide-java-book-study-lab]]의 Java 17 + JUnit 5 환경을 준비한다. 2부 xUnit 예제는 책 흐름을 살리기 위해 Python 3으로 따라 해도 좋다.
+
+각 장은 같은 순서로 진행한다.
+
+1. 할 일 목록에서 가장 작은 항목을 고른다.
+2. 실패 테스트 또는 실패하는 실행 결과를 먼저 만든다.
+3. 가장 빠른 초록을 만든다.
+4. 중복·이름·책임을 정리한다.
+5. 실패 메시지와 최종 인사이트를 한 줄로 기록한다.
+
+2부 xUnit은 `testcase.py` 한 파일에서 시작해도 된다.
+
+```bash
+python3 testcase.py
+```
 
 ## 35편 인덱스
 
@@ -98,3 +116,4 @@ Kent Beck *Test-Driven Development: By Example* (2002) 의 **3부 32장 + 부록
 - [[entity-tdd]] — 책 카드 (상위)
 - [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-object]] — 5권 오각형 (entity 마다 동일 표)
 - [[src-spring-testing-ref]] — JUnit 5 실무
+- [[guide-java-book-study-lab]] — 5권 공통 실습 환경

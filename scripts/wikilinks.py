@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert Obsidian [[wikilink]] to standard markdown links.
+r"""Convert Obsidian [[wikilink]] to standard markdown links.
 
 - 코드블록 (```...```) 과 인라인 코드 (`...`) 안의 [[...]] 는 보호
 - [[name]]       → [name](name.md)
