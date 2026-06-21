@@ -105,6 +105,12 @@ updated: 2026-06-21
   - [ ] `concept-functional-interfaces` — Item 44 표준 함수형 인터페이스 6개 + Spring 활용
   - [ ] `concept-generics-pecs` — Item 31 한정적 와일드카드 (Producer Extends Consumer Super)
   - [ ] `concept-java-serialization-risk` — Item 85·88·90 + Apache Commons Collections gadget chain 사례
+- [ ] **5권 코드 가이드 — 다른 언어 분기 페이지** — 필요 시 신설 (현재 Java/Spring 가정, 다른 언어 학습자 등장 시)
+  - 우선순위 순: Kotlin (Java 친화 99%) → TypeScript (리팩터링 책이 JS) → Python (OO·TDD·리팩터링 적용) → Go·Rust (OO 패러다임 다름)
+  - 각 언어 매핑: record → data class/dataclass/struct, Optional → null safety, Stream → 언어별 함수형, try-with-resources → use/with/defer
+  - EJ 동시성·직렬화 (11·12장) 만 언어별 다름. 나머지 원칙은 거의 모두 통용
+  - 옵션: `guide-code-authoring-kotlin.md`·`guide-code-authoring-python.md` 등 분기 페이지. 단, 위키 비대화 위험 — 필요 증명 후 진행
+  - 또는 현 `guide-code-authoring-and-review.md` 에 "언어별 매핑" 섹션 추가도 가능 (가성비 우위)
 - [ ] **2분코딩 추가 영상** — 사용자가 새 영상 요약 보내면 같은 패턴으로 ingest
 - [ ] **본인 프로젝트 GCP 배포 학습** — 하네스 5모듈 후 단계
   - playground (api/ + web/) → Cloud Run 또는 Cloud Functions
