@@ -157,7 +157,6 @@ nav:
       - "부록 C — 동적인 협력, 정적인 코드": lecture-object-appendixC.md
     - Effective Java:
       - 책 카드: entity-effective-java.md
-      - 12장 한 페이지 요약 (블로그): src-effective-java-summary.md
       - "강의 인덱스": src-effective-java-lecture.md
       - "2장 객체 생성과 파괴": lecture-effective-java-ch2.md
       - "3장 공통 메서드": lecture-effective-java-ch3.md
