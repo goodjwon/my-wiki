@@ -328,7 +328,7 @@ EJ Item 49 — public 메서드 첫 줄에 매개변수 검증 추가
 
 ---
 
-## 6.5 다른 프로젝트로 가져가기 (Portable)
+## 7. 다른 프로젝트로 가져가기 (Portable)
 
 이 가이드와 슬래시 명령을 **다른 프로젝트** (회사·사이드) · **다른 AI** (ChatGPT·Cursor) 에서도 그대로 쓰는 법.
 
@@ -382,7 +382,7 @@ curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/comma
 
 ---
 
-## 7. 관련 페이지
+## 8. 관련 페이지
 
 - **[[guide-java-book-study-lab]] — 5권 실습 환경 가이드 (Java 17·JUnit 5·Python·Node)** ← 이 가이드의 환경 전제
 - 5권 entity: [[entity-object]] / [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-tdd]]

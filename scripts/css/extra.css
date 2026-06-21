@@ -14,3 +14,8 @@
   max-width: 100%;
   height: auto;
 }
+
+/* 우측 목차(TOC) 숨김 — 본문 가독성 우선 */
+.md-sidebar--secondary {
+  display: none !important;
+}

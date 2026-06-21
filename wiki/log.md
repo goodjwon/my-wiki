@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-21] cleanup | Effective Java 외부 블로그 요약 raw 삭제 반영
+- 사용자가 `raw/effective_java/개발서적 이펙티브 자바...핵심 요약.md` 를 제거한 상태 확인
+- raw 원본이 사라진 `src-effective-java-summary.md` 를 위키에서 제거하고, 관련 참조를 `src-effective-java-lecture.md` 중심으로 정리
+- 목적: raw 출처 추적 규칙 유지 + nav 미등록 페이지 경고 제거
+
 ## [2026-06-21] enrich | Java 도서 5권 강의 교재 — 초보자 실습 흐름·환경 가이드 보강
 - 대상: `raw/object/`, `raw/effective_java/`, `raw/refactoring/`, `raw/clean-code/`, `raw/tdd/` 기반 5권 강의 교재 전체
 - 신규 가이드:

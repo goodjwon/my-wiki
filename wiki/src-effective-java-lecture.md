@@ -21,7 +21,7 @@ updated: 2026-06-21
 - **체크리스트** (코드 리뷰용)
 - 장 끝: **결정 가이드 표** + **종합 체크리스트** + **펼침형 퀴즈**
 
-→ 책 카드는 [[entity-effective-java]], 한 페이지 요약은 [[src-effective-java-summary]].
+→ 책 카드는 [[entity-effective-java]].
 
 ## 실습 환경과 장별 루틴
 
@@ -151,7 +151,6 @@ updated: 2026-06-21
 ## 관련 페이지
 
 - [[entity-effective-java]] — 책 카드 (상위)
-- [[src-effective-java-summary]] — 블로그 12장 한 페이지 요약
 - [[entity-object]] — *오브젝트* (같은 OO 주제, 다른 관점)
 - [[concept-oop]] / [[concept-design-patterns]] / [[concept-spring-core]] / [[concept-transactional-rollback-policy]] / [[concept-db-connection-pool]] — 강의 교재에서 인용되는 위키 페이지들
 - [[guide-java-book-study-lab]] — 5권 공통 실습 환경
