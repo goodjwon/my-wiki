@@ -1,43 +1,33 @@
 ---
-title: 코드 작성·점검 가이드 (5권 도서 종합)
+title: 코드 작성·점검 가이드
 type: synthesis
-tags: [guide, code-quality, code-review, 5-books, prompt]
+tags: [guide, code-quality, code-review, prompt]
 sources: [object/, effective_java/, refactoring/, clean-code/, tdd/]
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-06-23
 ---
 
-# 코드 작성·점검 가이드 — 5권 도서 종합
+# 코드 작성·점검 가이드
 
 ## 무엇인가
 
-OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entity-refactoring]] · [[entity-clean-code]] · [[entity-tdd]]) 의 핵심 원칙을 **코드 작성 + 코드 점검** 두 워크플로로 압축한 단일 가이드.
+**코드 작성 + 코드 점검** 두 워크플로를 한 페이지로 압축한 가이드. 함수·객체·의존성·예외·테스트·동시성의 실무 체크리스트와 PR 리뷰 어휘를 담았다.
 
 활용:
 1. **AI 프롬프트** — Claude·ChatGPT 에 이 페이지 본문을 컨텍스트로 주고 "이 원칙으로 코드 짜줘" / "리뷰해줘".
 2. **슬래시 명령** — `/code-guide` (작성 가이드)·`/code-check` (현재 diff 점검) — 이 페이지를 베이스로.
 3. **PR 리뷰 어휘** — "G19", "Item 18", "리팩터링 6.1" 같은 표준 어휘로 합의 빠름.
-4. **신입 교육** — 한 페이지로 5권 책의 핵심 점검 어휘 습득.
+4. **신입 교육** — 한 페이지로 핵심 점검 어휘 습득.
 
 > **실습 환경 먼저** — Java 17 + JUnit 5 + Python + Node 셋업은 [[guide-java-book-study-lab]] 참조. 이 가이드는 환경이 준비된 후의 **작성·점검 워크플로**.
 
-→ 위키 누적의 진짜 가치 = **여러 책의 결론을 한 워크플로** 로.
+> 💡 이 가이드는 OO 설계 도서 5권의 결론을 한 워크플로로 압축한 것. 각 항목의 근거 도서·장은 본문 캡션과 표에 표시했고, 책별 요약은 맨 아래 **8. 참고** 섹션 참조.
 
 ---
 
-## 1. 5권 원칙 한 페이지 종합
+## 1. 6가지 핵심 설계 원칙
 
-### 1.1 5권 오각형 — 각 책의 자리
-
-| 책 | 단위 | 시점 | 한 줄 메시지 |
-|----|------|------|------|
-| [[entity-object]] *오브젝트* | 객체·협력 | 처음부터 잘 설계 | "메시지가 객체를 결정한다" |
-| [[entity-effective-java]] *Effective Java* | 메서드·필드 | 매번 짤 때 | "Java 90 권고를 매번 적용" |
-| [[entity-refactoring]] *리팩터링* | 1단계 변환 | 이미 짠 코드 | "24 악취 → 66 카탈로그" |
-| [[entity-clean-code]] *Clean Code* | 줄·이름·함수 | 매 라인 | "다음 사람이 읽기 쉬워야" |
-| [[entity-tdd]] *TDD* | 사이클 | 코드 짜기 전 | "빨강 → 초록 → 리팩터" |
-
-### 1.2 6원칙 — 5권을 관통하는 공통 골격
+코드 작성·점검 전체를 관통하는 골격.
 
 | # | 원칙 | 근거 |
 |---|------|------|
@@ -54,7 +44,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 
 새 코드 짤 때·PR 올리기 전 자기 점검.
 
-### 2.1 함수 (`Clean Code` 3장 + EJ 49~56 + 리팩터링 6장)
+### 2.1 함수
+*근거: Clean Code 3장 · EJ 49~56 · 리팩터링 6장*
+
 
 - [ ] 함수가 **한 화면 (15줄) 이내** 인가
 - [ ] 들여쓰기 **2단계 이하** 인가
@@ -65,7 +57,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 - [ ] **부수효과** 없는가 (이름이 약속한 일만)
 - [ ] **명령-쿼리 분리 (CQS)** — 반환 + 상태 변경 동시 X
 
-### 2.2 객체·클래스 (`오브젝트` 4·5·10·11장 + EJ 17·18·20·25)
+### 2.2 객체·클래스
+*근거: 오브젝트 4·5·10·11장 · EJ 17·18·20·25*
+
 
 - [ ] **데이터 먼저 X — 행동·책임 먼저** 결정했나
 - [ ] **getter/setter 자동 생성** 으로 모든 필드 노출 X
@@ -76,7 +70,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 - [ ] **응집도 높음** — 일부 메서드가 일부 필드만 쓰면 분리 신호
 - [ ] 인터페이스 의존인가 — 구체 클래스 직접 의존 X
 
-### 2.3 의존성 (`오브젝트` 8·9장 + EJ 5·64 + Spring DI)
+### 2.3 의존성
+*근거: 오브젝트 8·9장 · EJ 5·64 · Spring DI*
+
 
 - [ ] **생성자 주입** 인가 — 세터·정적·싱글턴 X
 - [ ] `new Repository()` 같이 **직접 생성** 안 하고 받는가
@@ -84,7 +80,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 - [ ] 도메인 객체가 **Spring 없이 만들어지는가** (POJO)
 - [ ] 단일 구현 인터페이스 — 추측성 일반화 의심 ([[entity-refactoring]] 3.15)
 
-### 2.4 예외·null (`Clean Code` 7장 + EJ 69~77)
+### 2.4 예외·null
+*근거: Clean Code 7장 · EJ 69~77*
+
 
 - [ ] **unchecked 예외** 우선 — checked 신중
 - [ ] 예외 메시지에 **인자 값·상태** 포함
@@ -93,7 +91,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 - [ ] **빈 catch 블록** 없는가 — 무시는 명시 + 로그
 - [ ] 외부 라이브러리 예외를 도메인 wrapper 로 변환했는가
 
-### 2.5 도메인 모델 (`오브젝트` + DDD 정신)
+### 2.5 도메인 모델
+*근거: 오브젝트 · DDD 정신*
+
 
 - [ ] **빈혈 도메인 모델** 아닌가 (객체가 자기 결정)
 - [ ] **Tell, Don't Ask** — 데이터 꺼내 외부 처리 X
@@ -101,7 +101,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 - [ ] **타입 코드 + switch** 대신 다형성
 - [ ] **기본형 집착** X — `UserId` record, `Money` 값 객체
 
-### 2.6 테스트 (`TDD` + Clean Code 9장)
+### 2.6 테스트
+*근거: TDD · Clean Code 9장*
+
 
 - [ ] **테스트가 코드보다 먼저** (TDD) 또는 동시
 - [ ] **F.I.R.S.T.** — Fast·Independent·Repeatable·Self-validating·Timely
@@ -110,7 +112,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 - [ ] `Thread.sleep` 의존 X — 명시적 동기화
 - [ ] **flaky 테스트** 방치 X
 
-### 2.7 동시성 (EJ 78~84 + Clean Code 13장)
+### 2.7 동시성
+*근거: EJ 78~84 · Clean Code 13장*
+
 
 - [ ] Spring 빈 필드가 **가변 + 공유** X
 - [ ] `synchronized` 영역에 **I/O·콜백** X
@@ -124,7 +128,9 @@ OO 설계 5권 도서 ([[entity-object]] · [[entity-effective-java]] · [[entit
 
 PR 리뷰 어휘 — 5권 표준 코드로 합의 빠르게.
 
-### 3.1 24 코드 악취 ([[entity-refactoring]] 3장)
+### 3.1 코드 악취 (24가지)
+*근거: [[entity-refactoring]] 3장*
+
 
 | 코드 | 악취 | 처방 |
 |------|------|------|
@@ -144,7 +150,9 @@ PR 리뷰 어휘 — 5권 표준 코드로 합의 빠르게.
 | 3.22 | 데이터 클래스 (빈혈) | 8.1 행동 끌어오기 |
 | 3.23 | 상속 포기 | 12.10 위임으로 |
 
-### 3.2 Clean Code 17장 ⭐ 휴리스틱 (자주 인용)
+### 3.2 휴리스틱 — 자주 인용 ⭐
+*근거: Clean Code 17장*
+
 
 | 코드 | 한 줄 | PR 코멘트 예 |
 |------|------|---------|
@@ -159,7 +167,9 @@ PR 리뷰 어휘 — 5권 표준 코드로 합의 빠르게.
 | N7 | 이름으로 부수효과 설명 | "N7 — 이 함수가 이메일도 보내는데 이름은 검증만" |
 | T5 | 경계 조건 테스트 | "T5 — 빈 컬렉션·null 테스트 추가" |
 
-### 3.3 Effective Java ⭐ 핵심 20 (메서드·필드 단위)
+### 3.3 핵심 항목 20 — 메서드·필드 단위 ⭐
+*근거: Effective Java*
+
 
 | Item | 적용 시점 |
 |------|----------|
@@ -184,7 +194,9 @@ PR 리뷰 어휘 — 5권 표준 코드로 합의 빠르게.
 | 79 | 과도한 동기화 회피 (락 안 콜백 X) |
 | 85 | 자바 직렬화 대안 우선 |
 
-### 3.4 GRASP — 책임 할당 ([[lecture-object-ch5]])
+### 3.4 GRASP — 책임 할당
+*근거: [[lecture-object-ch5]]*
+
 
 | 패턴 | 질문 |
 |------|------|
@@ -328,61 +340,271 @@ EJ Item 49 — public 메서드 첫 줄에 매개변수 검증 추가
 
 ---
 
-## 7. 다른 프로젝트로 가져가기 (Portable)
+## 7. 다른 프로젝트에서 `/code-guide`·`/code-check` 쓰기
 
-이 가이드와 슬래시 명령을 **다른 프로젝트** (회사·사이드) · **다른 AI** (ChatGPT·Cursor) 에서도 그대로 쓰는 법.
+이 두 슬래시 명령을 **다른 Claude Code 프로젝트**(회사·사이드)나 **다른 AI**(ChatGPT·Cursor)에서도 쓰는 법. 가장 확실한 순서로.
 
-### 방법 1 — 위키 페이지 본문을 컨텍스트로 (가장 빠름)
+> **명령의 작동 원리** — 두 명령은 이 가이드 본문을 베이스로 동작한다. my-wiki 프로젝트 안에선 `wiki/` 파일을 직접 읽고, **다른 프로젝트에선 `wiki/` 가 없으므로 자동으로 `https://wons-wiki.web.app/...` 를 WebFetch** 한다(그때만 인터넷 필요). 그래서 명령 파일만 있으면 어디서든 동작한다.
 
-별도 설치 0:
+### 방법 A — 명령 파일 전체를 복붙 (가장 확실·오프라인 OK) ⭐
+
+아래 두 코드블록을 **그대로 복사**해 새 프로젝트에 저장하면 끝. my-wiki 로컬 클론도, 별도 설치도 필요 없다.
+
+**① `.claude/commands/code-guide.md` 만들고 ↓ 전체 붙여넣기**
+
+````markdown
+---
+description: 5권 도서 원칙으로 코드 작성 가이드 — 새 코드 짤 때 체크리스트
+argument-hint: <대상 영역> (예: function, class, exception, test, all)
+---
+
+# /code-guide — 코드 작성 가이드
+
+대상: `$ARGUMENTS`
+
+위키의 [[guide-code-authoring-and-review]] 를 베이스로 5권 도서 (오브젝트·Effective Java·리팩터링·Clean Code·TDD) 원칙으로 코드 작성을 안내한다.
+
+## 절차
+
+### 1. 가이드 본문 로드
+
+먼저 가이드 본문을 로드:
+- **로컬 my-wiki 프로젝트**: `wiki/guide-code-authoring-and-review.md` 직접 읽기
+- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wons-wiki.web.app/guide-code-authoring-and-review/` fetch
+
+우선 활용 섹션:
+- **2. 코드 작성 체크리스트** (Writing)
+- **1. 6가지 핵심 설계 원칙** — 객체 협력·추상 의존·합성>상속·불변·단순 설계·테스트
+
+### 2. 대상 영역 분기
+
+`$ARGUMENTS` 가 비어있으면 **전체 작성 체크리스트** 7 카테고리 적용.
+
+영역별:
+- `function` — 2.1 함수 (Clean Code 3장 + EJ 49~56 + 리팩터링 6장)
+- `class` — 2.2 객체·클래스 (오브젝트 4·5·10·11장 + EJ 17·18·20)
+- `dependency` — 2.3 의존성 (오브젝트 8·9장 + EJ 5·64)
+- `exception` — 2.4 예외·null (Clean Code 7장 + EJ 69~77)
+- `domain` — 2.5 도메인 모델 (오브젝트 + DDD)
+- `test` — 2.6 테스트 (TDD + Clean Code 9장)
+- `concurrency` — 2.7 동시성 (EJ 78~84 + Clean Code 13장)
+- `all` 또는 생략 — 전체
+
+### 3. 사용자 요구사항 청취
+
+"어떤 코드를 작성할 것인가" 사용자 입력 받기:
+- 도메인 (주문·결제·인증 등)
+- 기술 스택 (Spring Boot 3·JPA·WebFlux 등)
+- 제약 사항 (성능·테스트 가능성 등)
+
+### 4. 코드 작성 + 원칙 인용
+
+작성하면서 어떤 원칙을 적용했는지 **인라인 주석 또는 별도 보고**:
+
+```java
+// EJ Item 5 — 생성자 주입
+public OrderService(OrderRepository repo, PaymentGateway gateway) {
+    this.repo = repo;
+    this.gateway = gateway;
+}
+
+// Clean Code G19 — 서술적 변수
+public Money totalFee(Order order) {
+    Money baseAmount = order.items().stream().map(OrderItem::amount).reduce(Money.ZERO, Money::plus);
+    Money discount = discountPolicy.apply(order);
+    return baseAmount.minus(discount);
+}
+```
+
+### 5. 자기 점검 + 보고
+
+작성 완료 후 체크리스트 자기 점검 결과 표로 보고:
+
+| 카테고리 | 항목 | 결과 |
+|---------|------|------|
+| 함수 | 한 화면 이내 | ✅ |
+| 함수 | 한 가지 일 | ✅ |
+| ... | ... | ... |
+
+위반 항목이 있으면 트레이드오프 명시.
+
+## 참조 페이지
+
+**my-wiki 프로젝트에서**: 위키 링크로 직접 읽기
+- [[guide-code-authoring-and-review]] — 본 가이드 (전체 체크리스트)
+- [[guide-java-book-study-lab]] — 실습 환경 (Java 17·JUnit 5)
+- 5권 entity: [[entity-object]]·[[entity-effective-java]]·[[entity-refactoring]]·[[entity-clean-code]]·[[entity-tdd]]
+
+**다른 프로젝트에서**: WebFetch URL
+- https://wons-wiki.web.app/guide-code-authoring-and-review/ — 본 가이드
+- https://wons-wiki.web.app/guide-java-book-study-lab/ — 실습 환경
+- https://wons-wiki.web.app/entity-object/ ·  /entity-effective-java/ · /entity-refactoring/ · /entity-clean-code/ · /entity-tdd/
+
+## 사용 예
 
 ```
-1. https://wons-wiki.web.app/guide-code-authoring-and-review/ 열기
-2. 본문 전체 복사
-3. AI 채팅 첫 메시지로:
-   "다음은 내가 따를 코드 작성·점검 원칙이다. 이 컨텍스트로 작업해줘.
-   [본문 붙여넣기]"
-4. 이후 "이 원칙으로 OrderService 짜줘" / "이 코드 점검해줘"
+/code-guide                # 전체 체크리스트로 작성 안내
+/code-guide function       # 함수 작성에만 집중
+/code-guide test           # TDD + F.I.R.S.T. 로 테스트 작성
+/code-guide class          # 클래스 설계
+```
+````
+
+**② `.claude/commands/code-check.md` 만들고 ↓ 전체 붙여넣기**
+
+````markdown
+---
+description: 5권 도서 원칙으로 코드 점검 — 현재 diff 또는 지정 파일을 24 악취·EJ 20·Clean Code 휴리스틱으로
+argument-hint: <대상> (예: 파일 경로, "diff", "staged", 생략 시 git diff HEAD)
+---
+
+# /code-check — 코드 점검
+
+대상: `$ARGUMENTS`
+
+위키의 [[guide-code-authoring-and-review]] 를 베이스로 5권 도서 원칙 (24 악취·EJ 20 핵심·Clean Code 17장 휴리스틱·GRASP·오브젝트 책임 주도) 으로 코드를 점검한다.
+
+## 절차
+
+### 1. 대상 코드 수집
+
+`$ARGUMENTS` 분기:
+- 비어있으면 → `git diff HEAD` (워킹 트리 변경)
+- `diff` → `git diff HEAD`
+- `staged` → `git diff --cached`
+- 파일 경로 → 그 파일 통째
+- `main` / `<branch>` → `git diff <branch>...HEAD`
+
+### 2. 가이드 본문 로드
+
+먼저 가이드 본문 로드:
+- **로컬 my-wiki 프로젝트**: `wiki/guide-code-authoring-and-review.md` 직접 읽기
+- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wons-wiki.web.app/guide-code-authoring-and-review/`
+
+다음 섹션의 **3. 코드 점검 체크리스트** 활용:
+- 3.1 리팩터링 24 악취
+- 3.2 Clean Code 17장 ⭐ 휴리스틱 (G19·G23·G25·G30·G34·N1·T5 등)
+- 3.3 EJ ⭐ 20 (Item 5·17·18·49·64·77·78·79·85)
+- 3.4 GRASP 책임 할당
+
+### 3. 점검 + 표 보고
+
+각 발견을 표준 형식으로:
+
+| 위치 | 코드 | 점검 | 처방 | 우선순위 |
+|------|------|------|------|---------|
+| `OrderService.java:42` | `public boolean process(Order o, boolean async, boolean retry)` | 리팩터링 3.4 (긴 매개변수) + EJ Item 51 (boolean 플래그) | `process(Order, ProcessOption)` 매개변수 객체화 | 🔴 High |
+| `User.java:18` | `public List<Order> getOrders() { return orders; }` | EJ Item 50 (방어적 복사) | `return List.copyOf(orders)` | 🟡 Medium |
+| `PriceCalculator.java:55` | `if (type == 1) ... else if (type == 2) ...` | 리팩터링 3.12 + Clean Code G23 | 다형성 (Strategy) 또는 enum + switch | 🟡 Medium |
+| `OrderService.java:88` | `} catch (Exception e) {}` | Clean Code Item 77 | 최소 로그 + 의도 주석 또는 처리 | 🔴 High |
+
+### 4. 우선순위 분류
+
+| 우선순위 | 기준 | 예 |
+|---------|------|-----|
+| 🔴 **High** | 운영 사고 직결·보안·LSP 위배 | 빈 catch·SQL injection·전역 가변·LSP 위배 |
+| 🟡 **Medium** | 가독성·유지보수·결합도 폭증 | 긴 함수·boolean 플래그·기본형 집착·중복 |
+| 🟢 **Low** | 스타일·미시 정련 | 이름·서술적 변수·가짜 메서드 인라인 |
+
+### 5. 종합 요약
+
+점검 후:
+- **발견 N건** (High X·Medium Y·Low Z)
+- **반복 패턴** — 같은 악취가 여러 곳이면 묶어 보고
+- **다음 단계 제안** — 즉시 수정 / PR 코멘트 / 별도 리팩터링 작업
+
+### 6. 자동 수정 옵션 (선택)
+
+사용자가 "수정해" 요청하면:
+- High 우선순위만 자동 수정 후 보고
+- Medium 은 제안만 (수정 트레이드오프 큼)
+- Low 는 스킵
+- 수정 후 빌드·테스트 통과 확인
+
+## 참조 페이지
+
+**my-wiki 프로젝트에서**: 위키 링크로 직접
+- [[guide-code-authoring-and-review]] — 본 점검 체크리스트
+- 24 악취: [[lecture-refactoring-ch3]]
+- 17장 휴리스틱: [[lecture-clean-code-ch17]]
+- EJ ⭐ 20: [[entity-effective-java]]
+- GRASP: [[lecture-object-ch5]]
+
+**다른 프로젝트에서**: WebFetch URL
+- https://wons-wiki.web.app/guide-code-authoring-and-review/
+- https://wons-wiki.web.app/lecture-refactoring-ch3/ — 24 악취
+- https://wons-wiki.web.app/lecture-clean-code-ch17/ — 17장 휴리스틱
+- https://wons-wiki.web.app/entity-effective-java/ — EJ ⭐ 20
+- https://wons-wiki.web.app/lecture-object-ch5/ — GRASP
+
+## 사용 예
+
+```
+/code-check                       # 현재 diff
+/code-check staged                # staged 변경만
+/code-check src/main/...Service.java  # 특정 파일
+/code-check main                  # main 대비 현재 브랜치 diff
 ```
 
-Claude·ChatGPT·Gemini·Cursor 어디서나 작동.
+## 안전 규칙
 
-### 방법 2 — 슬래시 명령을 다른 Claude Code 프로젝트로 복사
+- **점검 결과 보고만** — 사용자가 명시 요청해야 자동 수정.
+- **위반 ≠ 무조건 잘못** — 트레이드오프 명시. 도그마 X.
+- **운영 사고 직결 (High)** 만 강하게 권고. Medium·Low 는 검토 후보.
+- *Effective Java* Item·*리팩터링* 카탈로그 번호 등 **출처 명시** — "왜 그렇게 해야 하는지" 추적 가능.
+````
 
-각 프로젝트에서 `/code-guide`·`/code-check` 가 필요하면 `.claude/commands/` 에 수동 복사:
+저장 후 Claude Code 를 다시 열면 `/code-guide`·`/code-check` 사용 가능.
+
+> ⚠️ 위 두 블록은 **스냅샷**이다. 원본은 GitHub(방법 B). 명령을 고쳤다면 이 블록도 함께 갱신해야 어긋나지 않는다.
+
+### 방법 B — `curl` 로 최신본 내려받기 (GitHub, 인터넷 필요)
 
 ```bash
-# 새 프로젝트 디렉터리에서
 mkdir -p .claude/commands
-
-# 로컬에서 복사
-cp /Users/jungwonpark/Documents/my-wiki/.claude/commands/code-guide.md .claude/commands/
-cp /Users/jungwonpark/Documents/my-wiki/.claude/commands/code-check.md .claude/commands/
-
-# 또는 GitHub 에서 직접
 curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/commands/code-guide.md \
   -o .claude/commands/code-guide.md
 curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/commands/code-check.md \
   -o .claude/commands/code-check.md
 ```
 
-⚠️ **함정**: 슬래시 명령 내부의 `[[guide-code-authoring-and-review]]` 위키 링크는 다른 프로젝트에 없음. AI 가 자동으로 `https://wons-wiki.web.app/guide-code-authoring-and-review/` 를 WebFetch — **인터넷 연결 필요**.
+항상 최신 — 이쪽이 **원본**(방법 A 블록보다 우선). 단 GitHub 접근 필요.
 
-### 방법 3 — AI 프롬프트 템플릿만 (Cursor·다른 AI)
+### 방법 C — 슬래시 명령이 없는 도구 (Cursor·ChatGPT·Gemini)
 
-위 4.1 절의 프롬프트 템플릿 2개를 그대로 복붙. 가이드 다른 부분 안 가져와도 됨. Cursor 시스템 프롬프트로도 활용 가능.
+슬래시 명령을 못 쓰는 AI 에선 이 페이지 본문을 첫 메시지 컨텍스트로 주거나, 4.1 절 프롬프트 템플릿 2개를 복붙:
+
+```
+1. https://wons-wiki.web.app/guide-code-authoring-and-review/ 열기 → 본문 전체 복사
+2. AI 채팅 첫 메시지: "다음은 내가 따를 코드 작성·점검 원칙이다. 이 컨텍스트로 작업해줘. [본문 붙여넣기]"
+3. 이후 "이 원칙으로 OrderService 짜줘" / "이 코드 점검해줘"
+```
 
 ### 비교 — 어느 방법?
 
-| 방법 | 설치 | 다른 AI | 오프라인 | 자동 갱신 |
-|------|------|---------|----------|----------|
-| 1 (본문 복붙) | 0 | ✅ 모두 | 가이드 저장 시 ✅ | ❌ 매번 새로 복사 |
-| 2 (슬래시 명령 복사) | `.claude/commands/` 2 파일 | Claude Code 만 | ❌ WebFetch 필요 | ⚠️ URL fetch (위키 갱신 자동 반영) |
-| 3 (프롬프트만) | 0 (메모에 보관) | ✅ 모두 | ✅ | ❌ 위키 갱신 시 수동 |
+| 방법 | 적용 도구 | 설치 | 오프라인 | 최신성 |
+|------|----------|------|----------|--------|
+| **A** 전체 복붙 | Claude Code | 0 (복붙) | ✅ | ⚠️ 스냅샷 (수동 갱신) |
+| **B** curl | Claude Code | 2 파일 다운 | ❌ GitHub 필요 | ✅ 항상 최신 |
+| **C** 프롬프트·본문 | ChatGPT·Cursor·Gemini 등 모두 | 0 | 본문 저장 시 ✅ | ❌ 수동 |
 
 ---
 
-## 8. 관련 페이지
+## 8. 참고 — 근거가 된 도서
+
+이 가이드는 OO 설계 도서 5권의 결론을 한 워크플로로 압축한 것. 각 책의 자리:
+
+| 책 | 단위 | 시점 | 한 줄 메시지 |
+|----|------|------|------|
+| [[entity-object]] *오브젝트* | 객체·협력 | 처음부터 잘 설계 | "메시지가 객체를 결정한다" |
+| [[entity-effective-java]] *Effective Java* | 메서드·필드 | 매번 짤 때 | "Java 90 권고를 매번 적용" |
+| [[entity-refactoring]] *리팩터링* | 1단계 변환 | 이미 짠 코드 | "24 악취 → 66 카탈로그" |
+| [[entity-clean-code]] *Clean Code* | 줄·이름·함수 | 매 라인 | "다음 사람이 읽기 쉬워야" |
+| [[entity-tdd]] *TDD* | 사이클 | 코드 짜기 전 | "빨강 → 초록 → 리팩터" |
+
+---
+
+## 9. 관련 페이지
 
 - **[[guide-java-book-study-lab]] — 5권 실습 환경 가이드 (Java 17·JUnit 5·Python·Node)** ← 이 가이드의 환경 전제
 - 5권 entity: [[entity-object]] / [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-tdd]]

@@ -3,7 +3,7 @@ description: 5권 도서 원칙으로 코드 작성 가이드 — 새 코드 짤
 argument-hint: <대상 영역> (예: function, class, exception, test, all)
 ---
 
-# /code-guide — 5권 도서 기반 코드 작성 가이드
+# /code-guide — 코드 작성 가이드
 
 대상: `$ARGUMENTS`
 
@@ -19,7 +19,7 @@ argument-hint: <대상 영역> (예: function, class, exception, test, all)
 
 우선 활용 섹션:
 - **2. 코드 작성 체크리스트** (Writing)
-- **1.2 6원칙** — 객체 협력·추상 의존·합성>상속·불변·단순 설계·테스트
+- **1. 6가지 핵심 설계 원칙** — 객체 협력·추상 의존·합성>상속·불변·단순 설계·테스트
 
 ### 2. 대상 영역 분기
 
@@ -87,16 +87,18 @@ public Money totalFee(Order order) {
 
 ## 다른 프로젝트로 가져가기
 
+이 파일을 새 프로젝트의 `.claude/commands/code-guide.md` 로 두면 끝. 두 방법:
+
 ```bash
-# 새 프로젝트에 이 명령 추가
 mkdir -p .claude/commands
-cp /Users/jungwonpark/Documents/my-wiki/.claude/commands/code-guide.md .claude/commands/
-# 또는
+# (a) GitHub 최신본 내려받기
 curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/commands/code-guide.md \
   -o .claude/commands/code-guide.md
+# (b) 또는 이 파일 내용을 그대로 복사해 위 경로에 저장 (오프라인)
 ```
 
-→ 다른 프로젝트에서도 `/code-guide` 사용. WebFetch 로 위키 본문 자동 fetch (인터넷 필요).
+→ 다른 프로젝트엔 `wiki/` 가 없으므로 WebFetch 로 위키 본문 자동 fetch (인터넷 필요).
+전체 안내: https://wons-wiki.web.app/guide-code-authoring-and-review/ 7절.
 
 ## 사용 예
 

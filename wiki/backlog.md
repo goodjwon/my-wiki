@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-06-21
+updated: 2026-06-23
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-06-21
 
 ## 📅 마지막 업데이트
 
-2026-06-21
+2026-06-23
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -146,6 +146,11 @@ updated: 2026-06-21
 - **다이어그램 표준 (2026-06-06)**: subgraph + 외부 연결은 무조건 HTML+flexbox. mermaid 사용 X.
 - **commit 메시지 (2026-05-31)**: 학생용 가이드 안의 git commit 예시는 한글. 위키 자체 commit 메시지는 한글+영어 prefix 자유.
 - **raw 구조 (2026-05-30)**: 모든 원본은 `raw/<주제>/`. 단일 파일도 디렉터리화. PDF/DOCX는 같은 폴더에 `.md` 변환본 동봉.
+- **wiki 구조 = flat 유지 (2026-06-23)**: wiki/는 raw처럼 디렉터리로 쪼개지 **않는다**. 모든 페이지는 `wiki/` 바로 아래 평평하게 둔다.
+  - **이유**: raw는 분류 수단이 물리 디렉터리뿐(PDF·DOCX라 prefix·태그·검색 불가)이라 디렉터리화가 불가피. wiki는 전부 `.md`라 ① 파일명 prefix(`concept-`/`lecture-`...) ② frontmatter `type:`·`tags:` ③ mkdocs `nav` ④ `[[wikilink]]` 그래프 — **4개 분류 수단**을 이미 가짐. 디렉터리는 더 약한 분류(폴더 한 겹)이면서 링크만 깨뜨림.
+  - **기술적 제약**: `scripts/wikilinks.py`가 `[[name]]`을 **같은 폴더** 상대링크(`name.md`)로 변환 → 디렉터리로 쪼개면 디렉터리 넘는 교차참조 전부 깨짐.
+  - **이미지·첨부**: wiki/ 안에 두지 않고 `raw/assets/` 한 곳에 모은다(빌드가 raw/assets/만 docs로 복사, Obsidian 첨부 경로도 동일). 페이지 .md는 균질 `.md`로 유지.
+  - **번복 조건**: 정말 디렉터리화가 필요하면 `wikilinks.py`를 파일명(stem) 전역 해석으로 개조(작업 ~30분)하면 가능. 단 실익(폴더 한 겹) < 무경로 링크 손실 → 현재는 안 함.
 
 ## 🛠️ 운영 환경
 

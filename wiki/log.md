@@ -4,6 +4,20 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-23] refactor | 코드 가이드 — "5권 강조" 톤다운 + 슬래시 명령 전체 코드 게재
+- **배경**: 사용자 피드백 — `guide-code-authoring-and-review` 가 "책 5권을 분석했다"를 제목에서 과하게 강조. 1.2 "6원칙 — 5권을 관통하는 공통 골격" 같은 제목이 부적절.
+- **제목 톤다운**:
+  - title/H1 "코드 작성·점검 가이드 (5권 도서 종합)" → "코드 작성·점검 가이드"
+  - 1장 "5권 원칙 한 페이지 종합" → "1. 6가지 핵심 설계 원칙" (기존 1.2 승격, "5권 관통" 제거)
+  - 2.1~2.7·3.1~3.4 섹션 제목의 괄호 책 출처를 제거 → 제목 아래 `*근거: ...*` 이탤릭 캡션으로 격하 (근거 표시는 유지)
+  - 1.1 "5권 오각형" 표를 페이지 상단 → 하단 "8. 참고 — 근거가 된 도서" 로 이동
+- **슬래시 명령 portable 재작성 (7장)**: 사용자 요청 — "복붙 좋게 스킬 전체 코드를 표시"
+  - 방법 A: `code-guide.md`·`code-check.md` **전체 코드를 4백틱 펜스로 게재** (복붙 한 번으로 다른 프로젝트 설치, 오프라인 OK)
+  - 방법 B: GitHub raw `curl` (원본·최신), 방법 C: 프롬프트/본문 (Cursor·ChatGPT)
+  - 깨진 경로 수정: `.claude/commands/{code-guide,code-check}.md` 의 `cp /Users/jungwonpark/...` (다른 PC 절대경로) 제거 → curl + 복붙 안내로 교체
+  - 명령 내부 참조 `1.2 6원칙` → `1. 6가지 핵심 설계 원칙` 동기화
+- **검증**: wikilink 변환 103파일 정상, 4백틱 펜스 2/2 짝. `mkdocs build` 는 이 PC mkdocs 미설치로 미실행 (콘텐츠 무관).
+
 ## [2026-06-21] cleanup | Effective Java 외부 블로그 요약 raw 삭제 반영
 - 사용자가 `raw/effective_java/개발서적 이펙티브 자바...핵심 요약.md` 를 제거한 상태 확인
 - raw 원본이 사라진 `src-effective-java-summary.md` 를 위키에서 제거하고, 관련 참조를 `src-effective-java-lecture.md` 중심으로 정리
