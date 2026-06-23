@@ -21,7 +21,7 @@ updated: 2026-06-23
 
 > **실습 환경 먼저** — Java 17 + JUnit 5 + Python + Node 셋업은 [[guide-java-book-study-lab]] 참조. 이 가이드는 환경이 준비된 후의 **작성·점검 워크플로**.
 
-> 💡 이 가이드는 OO 설계 도서 5권의 결론을 한 워크플로로 압축한 것. 각 항목의 근거 도서·장은 본문 캡션과 표에 표시했고, 책별 요약은 맨 아래 **8. 참고** 섹션 참조.
+> 💡 이 가이드는 OO 설계 도서 5권의 결론을 한 워크플로로 압축한 것. 각 항목의 근거 도서·장은 본문 캡션과 표에 표시했고, 책별 요약은 맨 아래 **7. 참고** 섹션 참조.
 
 ---
 
@@ -225,146 +225,30 @@ PR 리뷰 어휘 — 5권 표준 코드로 합의 빠르게.
 
 ---
 
-## 4. 워크플로별 사용 방법
+## 4. 사용 방법
 
-### 4.1 AI 프롬프트로 (Claude·ChatGPT)
-
-**프롬프트 템플릿 (작성)**:
-
-```
-나는 Java/Spring 백엔드 개발자다. 다음 5권 도서의 원칙을 기준으로 코드를 작성해주세요:
-- 오브젝트 (책임 주도 설계, 협력 우선)
-- Effective Java (90 권고, 메서드 단위)
-- 리팩터링 (24 악취 회피)
-- Clean Code (작은 함수, 의도 드러나는 이름)
-- TDD (테스트가 안전망)
-
-특히 다음 원칙 준수:
-1. 함수는 작게·한 가지·CQS
-2. 추상 의존·생성자 주입
-3. 매개변수 0~3개·boolean 플래그 회피
-4. 불변 우선 (record)
-5. 도메인 객체에 행동 (빈혈 X)
-6. 테스트 함께 작성
-
-[요구사항]: <여기에 작성할 코드 요구사항>
-```
-
-**프롬프트 템플릿 (점검)**:
-
-```
-다음 코드를 5권 도서 원칙으로 점검해주세요. 발견 사항을 다음 형식으로 보고:
-
-| 위치 | 코드 | 점검 | 처방 |
-|------|------|------|------|
-| 라인 N | <코드> | <악취 코드 G5·EJ Item 18·리팩터링 3.11 등> | <구체 처방> |
-
-점검 기준:
-- 리팩터링 24 악취 (3.1~3.24)
-- Clean Code 17장 휴리스틱 (특히 G19·G23·G25·G30·G34·N1·T5)
-- Effective Java ⭐ 20 (Item 5·17·18·49·64·77 등)
-- 오브젝트 책임 주도 + Tell, Don't Ask
-- TDD F.I.R.S.T.
-
-[코드]:
-```
-
-### 4.2 슬래시 명령 (Claude Code)
-
-- **`/code-guide`** — 코드 작성 가이드 보기 (이 페이지 컨텍스트)
-- **`/code-check`** — 현재 git diff 를 5권 원칙으로 점검
-
-### 4.3 PR 리뷰 어휘
-
-리뷰 코멘트에 표준 코드 인용:
-
-```
-이 부분 G23 적용 검토 — switch 가 3 곳 반복, Strategy 패턴으로
-```
-
-```
-EJ Item 49 — public 메서드 첫 줄에 매개변수 검증 추가
-```
-
-```
-리팩터링 3.4 (긴 매개변수 목록) → 6.8 매개변수 객체로
-```
-
-→ **합의가 빠름** — 코드 한 줄이 책 한 권 인용.
-
-### 4.4 신입 교육
-
-한 페이지로 5권 책의 점검 어휘 습득. 인턴·신입에게:
-- "PR 올리기 전 이 페이지의 작성 체크리스트 확인"
-- "리뷰 시 17장 휴리스틱 코드로 코멘트"
-- "한 달 후 자기 PR 돌아보며 어떤 항목 위반했는지 확인"
-
----
-
-## 5. 분야별 빠른 인덱스
-
-### 함수 작성
-- [[lecture-clean-code-ch3]] (함수)
-- [[lecture-refactoring-ch6]] (기본 리팩터링)
-- [[lecture-effective-java-ch8]] (메서드)
-
-### 클래스 설계
-- [[lecture-object-ch4]] (설계 품질·트레이드오프)
-- [[lecture-object-ch5]] (책임 할당·GRASP)
-- [[lecture-clean-code-ch10]] (클래스)
-- [[lecture-effective-java-ch4]] (클래스·인터페이스)
-
-### 의존성·DI
-- [[lecture-object-ch8]] (의존성 관리)
-- [[lecture-object-ch9]] (유연한 설계·OCP·DIP)
-- [[concept-spring-core]] (Spring DI)
-
-### 예외 처리
-- [[lecture-clean-code-ch7]] (오류 처리)
-- [[lecture-effective-java-ch10]] (예외)
-- [[concept-transactional-rollback-policy]] (Spring 롤백)
-
-### 테스트
-- [[lecture-clean-code-ch9]] (단위 테스트·F.I.R.S.T.)
-- [[lecture-tdd-ch1]] ~ [[lecture-tdd-ch17]] (1부 화폐 진화)
-- [[src-spring-testing-ref]] (JUnit 5·MockMvc)
-
-### 동시성
-- [[lecture-clean-code-ch13]] (동시성 방어 원칙)
-- [[lecture-effective-java-ch11]] (Item 78~84)
-
-### 리팩터링 카탈로그
-- [[lecture-refactoring-ch3]] (24 악취)
-- [[lecture-refactoring-ch6]] ~ [[lecture-refactoring-ch12]] (66 기법)
-
----
-
-## 6. 같은 인사이트 패턴 — "이름 있는 메커니즘이 즉흥보다 안전"
-
-5권 모두에 누적된 공통 원리. 이 가이드 자체도 이 패턴의 적용:
-
-| 영역 | 즉흥적 | 이름 있는 메커니즘 | 참조 |
-|------|--------|---------------------|------|
-| **코드 변경** | "그냥 고친다" | 리팩터링 66 카탈로그 + 테스트 | (이 가이드) |
-| **PR 리뷰** | "왠지 별로다" | "G19·EJ Item 18·리팩터링 3.11" | (이 가이드) |
-| **AI 에이전트** | "잘 해줘" 부탁 | CLAUDE.md·hooks·skills | [[concept-harness-engineering]] |
-| **AI 루프** | 즉흥 프롬프트 | 루프 자체 코드 | [[concept-loop-engineering]] |
-| **자기검증** | 사람이 테스트 | back-pressure hook | [[concept-claude-hooks]] |
-| **트랜잭션** | "알아서 처리하겠지" | `@Transactional` + `rollbackFor` 명시 | [[concept-transactional-rollback-policy]] |
-
-→ **공통 원리**: 안전한 시스템은 **이름·전제·절차가 명시된 메커니즘** 의 누적. "잘 알아서 한다" 는 가정은 어디서나 위험.
-
----
-
-## 7. 다른 프로젝트에서 `/code-guide`·`/code-check` 쓰기
-
-이 두 슬래시 명령을 **다른 Claude Code 프로젝트**(회사·사이드)나 **다른 AI**(ChatGPT·Cursor)에서도 쓰는 법. 가장 확실한 순서로.
+이 가이드와 두 슬래시 명령(`/code-guide`·`/code-check`)을 **① 이 프로젝트 · ② 다른 Claude Code 프로젝트 · ③ 다른 AI** 환경별로 쓰는 법.
 
 > **명령의 작동 원리** — 두 명령은 이 가이드 본문을 베이스로 동작한다. my-wiki 프로젝트 안에선 `wiki/` 파일을 직접 읽고, **다른 프로젝트에선 `wiki/` 가 없으므로 자동으로 `https://wons-wiki.web.app/...` 를 WebFetch** 한다(그때만 인터넷 필요). 그래서 명령 파일만 있으면 어디서든 동작한다.
 
-### 방법 A — 명령 파일 전체를 복붙 (가장 확실·오프라인 OK) ⭐
+### 4.1 이 프로젝트(my-wiki)에서 — 슬래시 명령
 
-아래 두 코드블록을 **그대로 복사**해 새 프로젝트에 저장하면 끝. my-wiki 로컬 클론도, 별도 설치도 필요 없다.
+- **`/code-guide`** — 코드 작성 가이드 (이 페이지 컨텍스트)
+- **`/code-check`** — 현재 git diff 를 5권 원칙으로 점검
+
+```
+/code-guide function      # 함수 작성에 집중
+/code-check staged        # staged 변경만 점검
+/code-check main          # main 대비 현재 브랜치 diff
+```
+
+### 4.2 다른 Claude Code 프로젝트로 — 명령 이식
+
+다른 프로젝트(회사·사이드)에서도 두 명령을 쓰려면 명령 파일만 옮기면 된다.
+
+**방법 A — 명령 파일 전체를 복붙 (가장 확실·오프라인 OK) ⭐**
+
+아래 두 코드블록을 그대로 복사해 새 프로젝트에 저장하면 끝. my-wiki 클론도 별도 설치도 불필요.
 
 **① `.claude/commands/code-guide.md` 만들고 ↓ 전체 붙여넣기**
 
@@ -570,11 +454,11 @@ argument-hint: <대상> (예: 파일 경로, "diff", "staged", 생략 시 git di
 - *Effective Java* Item·*리팩터링* 카탈로그 번호 등 **출처 명시** — "왜 그렇게 해야 하는지" 추적 가능.
 ````
 
-저장 후 Claude Code 를 다시 열면 `/code-guide`·`/code-check` 사용 가능.
+저장 후 Claude Code 를 다시 열면 사용 가능.
 
 > ⚠️ 위 두 블록은 **스냅샷**이다. 원본은 GitHub(방법 B). 명령을 고쳤다면 이 블록도 함께 갱신해야 어긋나지 않는다.
 
-### 방법 B — `curl` 로 최신본 내려받기 (GitHub, 인터넷 필요)
+**방법 B — `curl` 로 최신본 내려받기 (GitHub, 인터넷 필요)**
 
 ```bash
 mkdir -p .claude/commands
@@ -586,27 +470,152 @@ curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/comma
 
 항상 최신 — 이쪽이 **원본**(방법 A 블록보다 우선). 단 GitHub 접근 필요.
 
-### 방법 C — 슬래시 명령이 없는 도구 (Cursor·ChatGPT·Gemini)
+### 4.3 다른 AI(ChatGPT·Cursor·Gemini)에서 — 프롬프트·본문
 
-슬래시 명령을 못 쓰는 AI 에선 이 페이지 본문을 첫 메시지 컨텍스트로 주거나, 4.1 절 프롬프트 템플릿 2개를 복붙:
+슬래시 명령이 없는 도구에선 (a) 이 페이지 본문을 첫 메시지 컨텍스트로 주거나 (b) 아래 프롬프트 템플릿을 복붙.
+
+**(a) 본문 컨텍스트**
 
 ```
 1. https://wons-wiki.web.app/guide-code-authoring-and-review/ 열기 → 본문 전체 복사
-2. AI 채팅 첫 메시지: "다음은 내가 따를 코드 작성·점검 원칙이다. 이 컨텍스트로 작업해줘. [본문 붙여넣기]"
+2. AI 첫 메시지: "다음은 내가 따를 코드 작성·점검 원칙이다. 이 컨텍스트로 작업해줘. [본문 붙여넣기]"
 3. 이후 "이 원칙으로 OrderService 짜줘" / "이 코드 점검해줘"
 ```
 
-### 비교 — 어느 방법?
+**(b) 프롬프트 템플릿 — 작성**
+
+```
+나는 Java/Spring 백엔드 개발자다. 다음 5권 도서의 원칙을 기준으로 코드를 작성해주세요:
+- 오브젝트 (책임 주도 설계, 협력 우선)
+- Effective Java (90 권고, 메서드 단위)
+- 리팩터링 (24 악취 회피)
+- Clean Code (작은 함수, 의도 드러나는 이름)
+- TDD (테스트가 안전망)
+
+특히 다음 원칙 준수:
+1. 함수는 작게·한 가지·CQS
+2. 추상 의존·생성자 주입
+3. 매개변수 0~3개·boolean 플래그 회피
+4. 불변 우선 (record)
+5. 도메인 객체에 행동 (빈혈 X)
+6. 테스트 함께 작성
+
+[요구사항]: <여기에 작성할 코드 요구사항>
+```
+
+**(b) 프롬프트 템플릿 — 점검**
+
+```
+다음 코드를 5권 도서 원칙으로 점검해주세요. 발견 사항을 다음 형식으로 보고:
+
+| 위치 | 코드 | 점검 | 처방 |
+|------|------|------|------|
+| 라인 N | <코드> | <악취 코드 G5·EJ Item 18·리팩터링 3.11 등> | <구체 처방> |
+
+점검 기준:
+- 리팩터링 24 악취 (3.1~3.24)
+- Clean Code 17장 휴리스틱 (특히 G19·G23·G25·G30·G34·N1·T5)
+- Effective Java ⭐ 20 (Item 5·17·18·49·64·77 등)
+- 오브젝트 책임 주도 + Tell, Don't Ask
+- TDD F.I.R.S.T.
+
+[코드]:
+```
+
+### 4.4 환경별 비교
 
 | 방법 | 적용 도구 | 설치 | 오프라인 | 최신성 |
 |------|----------|------|----------|--------|
-| **A** 전체 복붙 | Claude Code | 0 (복붙) | ✅ | ⚠️ 스냅샷 (수동 갱신) |
-| **B** curl | Claude Code | 2 파일 다운 | ❌ GitHub 필요 | ✅ 항상 최신 |
-| **C** 프롬프트·본문 | ChatGPT·Cursor·Gemini 등 모두 | 0 | 본문 저장 시 ✅ | ❌ 수동 |
+| **4.1** 슬래시 (이 프로젝트) | Claude Code (my-wiki) | 0 | ✅ | ✅ |
+| **4.2-A** 전체 복붙 | 다른 Claude Code | 0 (복붙) | ✅ | ⚠️ 스냅샷 (수동 갱신) |
+| **4.2-B** curl | 다른 Claude Code | 2 파일 다운 | ❌ GitHub 필요 | ✅ 항상 최신 |
+| **4.3** 프롬프트·본문 | ChatGPT·Cursor·Gemini 등 모두 | 0 | 본문 저장 시 ✅ | ❌ 수동 |
+
+### 4.5 PR 리뷰 어휘
+
+리뷰 코멘트에 표준 코드 인용:
+
+```
+이 부분 G23 적용 검토 — switch 가 3 곳 반복, Strategy 패턴으로
+```
+
+```
+EJ Item 49 — public 메서드 첫 줄에 매개변수 검증 추가
+```
+
+```
+리팩터링 3.4 (긴 매개변수 목록) → 6.8 매개변수 객체로
+```
+
+→ **합의가 빠름** — 코드 한 줄이 책 한 권 인용.
+
+### 4.6 신입 교육
+
+한 페이지로 핵심 점검 어휘 습득. 인턴·신입에게:
+- "PR 올리기 전 이 페이지의 작성 체크리스트 확인"
+- "리뷰 시 17장 휴리스틱 코드로 코멘트"
+- "한 달 후 자기 PR 돌아보며 어떤 항목 위반했는지 확인"
 
 ---
 
-## 8. 참고 — 근거가 된 도서
+## 5. 분야별 빠른 인덱스
+
+### 함수 작성
+- [[lecture-clean-code-ch3]] (함수)
+- [[lecture-refactoring-ch6]] (기본 리팩터링)
+- [[lecture-effective-java-ch8]] (메서드)
+
+### 클래스 설계
+- [[lecture-object-ch4]] (설계 품질·트레이드오프)
+- [[lecture-object-ch5]] (책임 할당·GRASP)
+- [[lecture-clean-code-ch10]] (클래스)
+- [[lecture-effective-java-ch4]] (클래스·인터페이스)
+
+### 의존성·DI
+- [[lecture-object-ch8]] (의존성 관리)
+- [[lecture-object-ch9]] (유연한 설계·OCP·DIP)
+- [[concept-spring-core]] (Spring DI)
+
+### 예외 처리
+- [[lecture-clean-code-ch7]] (오류 처리)
+- [[lecture-effective-java-ch10]] (예외)
+- [[concept-transactional-rollback-policy]] (Spring 롤백)
+
+### 테스트
+- [[lecture-clean-code-ch9]] (단위 테스트·F.I.R.S.T.)
+- [[lecture-tdd-ch1]] ~ [[lecture-tdd-ch17]] (1부 화폐 진화)
+- [[src-spring-testing-ref]] (JUnit 5·MockMvc)
+
+### 동시성
+- [[lecture-clean-code-ch13]] (동시성 방어 원칙)
+- [[lecture-effective-java-ch11]] (Item 78~84)
+
+### 리팩터링 카탈로그
+- [[lecture-refactoring-ch3]] (24 악취)
+- [[lecture-refactoring-ch6]] ~ [[lecture-refactoring-ch12]] (66 기법)
+
+---
+
+## 6. 같은 인사이트 패턴 — "이름 있는 메커니즘이 즉흥보다 안전"
+
+5권 모두에 누적된 공통 원리. 이 가이드 자체도 이 패턴의 적용:
+
+| 영역 | 즉흥적 | 이름 있는 메커니즘 | 참조 |
+|------|--------|---------------------|------|
+| **코드 변경** | "그냥 고친다" | 리팩터링 66 카탈로그 + 테스트 | (이 가이드) |
+| **PR 리뷰** | "왠지 별로다" | "G19·EJ Item 18·리팩터링 3.11" | (이 가이드) |
+| **AI 에이전트** | "잘 해줘" 부탁 | CLAUDE.md·hooks·skills | [[concept-harness-engineering]] |
+| **AI 루프** | 즉흥 프롬프트 | 루프 자체 코드 | [[concept-loop-engineering]] |
+| **자기검증** | 사람이 테스트 | back-pressure hook | [[concept-claude-hooks]] |
+| **트랜잭션** | "알아서 처리하겠지" | `@Transactional` + `rollbackFor` 명시 | [[concept-transactional-rollback-policy]] |
+
+→ **공통 원리**: 안전한 시스템은 **이름·전제·절차가 명시된 메커니즘** 의 누적. "잘 알아서 한다" 는 가정은 어디서나 위험.
+
+---
+
+---
+
+## 7. 참고 — 근거가 된 도서
 
 이 가이드는 OO 설계 도서 5권의 결론을 한 워크플로로 압축한 것. 각 책의 자리:
 
@@ -620,7 +629,7 @@ curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/comma
 
 ---
 
-## 9. 관련 페이지
+## 8. 관련 페이지
 
 - **[[guide-java-book-study-lab]] — 5권 실습 환경 가이드 (Java 17·JUnit 5·Python·Node)** ← 이 가이드의 환경 전제
 - 5권 entity: [[entity-object]] / [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-tdd]]
