@@ -17,6 +17,7 @@ title: Wons Wiki 로그
   - 깨진 경로 수정: `.claude/commands/{code-guide,code-check}.md` 의 `cp /Users/jungwonpark/...` (다른 PC 절대경로) 제거 → curl + 복붙 안내로 교체
   - 명령 내부 참조 `1.2 6원칙` → `1. 6가지 핵심 설계 원칙` 동기화
 - **검증**: wikilink 변환 103파일 정상, 4백틱 펜스 2/2 짝. `mkdocs build` 는 이 PC mkdocs 미설치로 미실행 (콘텐츠 무관).
+- **후속 보강**: 3.1 코드 악취 표가 15행(9개 누락)·처방 번호만(`6.1·6.11`) 부실 → **24행 완전판**으로 교체. 묶음 열 추가, 영문 악취명 병기, 처방을 정식 기법명(번호)으로 통일. 출처 [[lecture-refactoring-ch3]] 대조. mkdocs(.venv) 신설 후 빌드 워닝 0건 확인 + Firebase 재배포.
 
 ## [2026-06-21] cleanup | Effective Java 외부 블로그 요약 raw 삭제 반영
 - 사용자가 `raw/effective_java/개발서적 이펙티브 자바...핵심 요약.md` 를 제거한 상태 확인
