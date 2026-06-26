@@ -88,7 +88,7 @@ _아직 종합 분석이 없습니다._
 - [[guide-harness-module1]] — 하네스 Module 01 실습: Failure Audit + 베이스라인 측정 (Node step-by-step)
 - [[guide-harness-module2]] — 하네스 Module 02 실습: CLAUDE.md 작성 + STOP 트리거 + Before/After (Node step-by-step)
 - [[guide-harness-module3]] — 하네스 Module 03 실습: guard.sh/lint-fix.sh + 자기검증 루프 (Node step-by-step)
-- [[guide-harness-module4]] — 하네스 Module 04 실습: AGENTS.md + Planner/Coder/Critic 사이클 (Node step-by-step)
+- [[guide-harness-module4]] — 하네스 Module 04 실습: AGENTS.md + Planner/Coder/Critic + 컨텍스트 관리 (Node step-by-step)
 - [[guide-harness-module5]] — 하네스 Module 05 실습: 저장소 구조화 + 주간 리뷰 + Rippable + M1↔M5 비교 (Node step-by-step)
 
 ## Comparisons
