@@ -161,6 +161,7 @@ git commit -m "chore: harness-playground 모노레포 초기화"
 ### Step A-2: api/ — Express 백엔드 (3분)
 
 ```bash
+cd ~/harness-playground
 mkdir -p api/src && cd api
 
 cat > package.json << 'EOF'
@@ -378,29 +379,37 @@ git commit -m "feat(web): React 사용자 목록 + 추가 폼"
 
 ### Step A-4: 동작 확인 (2분)
 
+> ⚠️ **API와 프론트는 두 터미널에서 동시에 떠 있어야 한다.** `npm run dev:web` 은 포그라운드 장기 실행 서버라, 같은 블록에 두고 붙여넣으면 거기서 멈춰 뒷줄(서버 정리 등)이 실행되지 않는다. 아래처럼 **블록 1(API 검증) → 블록 2(프론트, 다른 터미널) → 블록 3(정리)** 순서로.
+
+**블록 1 — 의존성 설치 + API 검증** (터미널 ①)
+
 ```bash
-# 1. 의존성 모두 설치
-npm install
+cd ~/harness-playground
+npm install                          # 워크스페이스(api·web) 전체 설치
 
-# 2. API 띄우기 (백그라운드)
-npm run dev:api &
-sleep 1
-curl http://localhost:3000/health
-# → {"status":"ok",...}
+npm run dev:api &                    # API 백그라운드로 띄우기
+sleep 2                              # 부팅 대기 (느리면 3~5로)
+curl http://localhost:3000/health    # → {"status":"ok",...}
+curl http://localhost:3000/users     # → [{"id":1,...}, {"id":2,...}]
 
-curl http://localhost:3000/users
-# → [{"id":1,...}, {"id":2,...}]
+cd api && npm test && cd ..          # 백 테스트 3개 통과해야 정상
+```
 
-# 3. 백 테스트
-cd api && npm test && cd ..
-# → 3개 통과해야 정상
+→ API는 백그라운드로 **계속 떠 있게 둔다** (프론트가 호출해야 하므로).
 
-# 4. 프론트 띄우기 (다른 터미널에서)
+**블록 2 — 프론트 띄우기** (터미널 ② — 새 탭/창)
+
+```bash
+cd ~/harness-playground
 npm run dev:web
-# → 브라우저로 http://localhost:5173 접속, 사용자 목록 보이면 OK
+# → 브라우저로 http://localhost:5173 접속, 사용자 목록 보이면 OK.
+#   확인 끝나면 이 터미널에서 Ctrl+C 로 종료.
+```
 
-# 5. 띄운 서버 정리
-kill %1 2>/dev/null
+**블록 3 — API 정리** (터미널 ① 로 돌아와)
+
+```bash
+kill %1 2>/dev/null                   # 백그라운드 API 종료
 ```
 
 ### Step A-5: Claude Code 한 번 실행 (1분)
@@ -420,10 +429,10 @@ claude
 
 ```bash
 git log --oneline
-# → 4개의 커밋이 보여야 정상:
-#   feat(web): add react user list + create form
-#   feat(api): add express user CRUD with zod validation + tests
-#   chore: init harness-playground monorepo
+# → 3개의 커밋이 보여야 정상 (최신순):
+#   feat(web): React 사용자 목록 + 추가 폼
+#   feat(api): Express User CRUD + Zod 검증 + 테스트
+#   chore: harness-playground 모노레포 초기화
 ```
 
 여기까지 통과하면:
