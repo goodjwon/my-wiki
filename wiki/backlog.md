@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-06-23
+updated: 2026-06-26
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-06-23
 
 ## 📅 마지막 업데이트
 
-2026-06-23
+2026-06-26
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -37,6 +37,13 @@ updated: 2026-06-23
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
 ## ✅ 최근 완료 작업 (2026-06 누적)
+
+### 2026-06-26
+- ✅ **Loop 엔지니어링 실습 신설** — [[guide-loop-engineering-demo]] (Node mock 메아리방 vs 거부 신호 루프 + `claude -p` 헤드리스 + 외부 1차 출처). 진행 상태: 메모리 `loop-engineering-demo-progress`.
+- ✅ **harness 가이드 전체 복붙 안정성 점검** — prerequisites(A-3 분리·A-4 3블록·A-5 git log 정정), module3(eslint --init 분리)·module5(`$WEEK` 전개 2건), demo(경로 견고화).
+- ✅ **코드 가이드 대정비** — `guide-code-authoring-and-review` 5권 강조 톤다운 + 표 3.1~3.4 완전화 + 4·7장 통합 + lecture-object-ch5 GRASP 9패턴 동기화.
+- ✅ **index.md 점검** — 카테고리 구조(Synthesis 중복→Guides)·src-*-lecture 중복 제거.
+- ⏭️ **후속 (Loop 실습)**: ① `~/loop-demo` 실제 실행 검증([[verify]]) ② 외부 1차 출처 raw 저장 검토(2026 X 발화 재확인) ③ 토큰 비용·심화편.
 
 ### 2026-06-21
 - ✅ **📚 5권 도서 강의 교재 모두 완성** — 오브젝트 18편 + EJ 11편 + 리팩터링 12편 + Clean Code 17편 + TDD 35편 = **93편**
