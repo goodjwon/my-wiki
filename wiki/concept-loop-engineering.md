@@ -4,7 +4,7 @@ type: concept
 tags: [loop-engineering, harness, ai-agent, react-pattern, claude-code]
 sources: [loop-engineering/loop-engineering-notes.md]
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-06-26
 ---
 
 # Loop 엔지니어링 (Loop Engineering)
@@ -50,6 +50,8 @@ updated: 2026-06-13
 ```
 
 종료 조건(작업 완료·중단 트리거)이 충족될 때까지 사이클이 돈다.
+
+> 🧪 **직접 해보기**: [[guide-loop-engineering-demo]] — 거부 신호 없는 루프(메아리방)와 있는 루프를 Node mock + `claude -p` 로 짜서 8분 만에 체험.
 
 ## 좋은 Loop가 답해야 할 4가지 설계 질문
 
@@ -142,6 +144,7 @@ Addy Osmani: 토큰 비용에 **절대적으로 주의**. 토큰이 넉넉한지
 
 ## 관련 페이지
 
+- [[guide-loop-engineering-demo]] — 🧪 직접 체험하는 실습 (메아리방 vs 거부 신호 루프, ReAct·Reflexion·Self-Refine 출처 포함)
 - [[src-loop-engineering]] — 출처·인용 정리
 - [[concept-harness-engineering]] — 직전 단계 (환경 설계)
 - [[concept-claude-md]] — 선언 층 / STOP 트리거

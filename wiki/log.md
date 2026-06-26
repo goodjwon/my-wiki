@@ -4,6 +4,15 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-26] feat | Loop 엔지니어링 실습 신설 (외부 자료 조사 반영)
+- **요청**: harness 실습과 비슷한 컨셉으로 Loop 엔지니어링 **실습** + 외부 자료 조사.
+- **외부 조사 (에이전트 3병렬, WebSearch/WebFetch)**:
+  - 이론: ReAct([arXiv 2210.03629]) · Reflexion(2303.11366) · Self-Refine(2303.17651) · Sonar "검증 없는 루프 = 단순 자동화"("A failing build is a fact").
+  - 2026 발화: Cherny(6/2 Acquired "write loops") → Steinberger(6/7) → Osmani(6/7 블로그, 토큰 신중론) — X 링크는 직접 검증 불가(402)라 venue 표기.
+  - 구현: `claude -p` 헤드리스(1회 실행 후 종료=루프 적합), `cat test.log | claude -p` stdin 피드백 공식 패턴.
+- **신설** [[guide-loop-engineering-demo]] (synthesis, ~270줄): Node mock 에이전트로 **메아리방(거부 신호 없는 루프) vs 검증 루프(거부 신호 있는 루프)** 8분 체험 → 실제 `claude -p` 연결(stdin 피드백) → 4 설계 질문 체크리스트 → 이론·1차 출처. **복붙 안정성 원칙 적용**(절대경로 `cd ~/loop-demo`, 따옴표 heredoc으로 JS `${}` 보존, 장기실행 없음).
+- **교차참조**: mkdocs nav 실습 섹션, index Guides, [[concept-loop-engineering]] 양방향(본문 🧪 실습 박스 + 관련 페이지).
+
 ## [2026-06-26] fix | index.md 점검 — 카테고리 구조·중복 정리
 - **깨진 링크 0**, lecture-* 93개 미등재는 교재 인덱스(src-*-lecture)로 대표하는 의도된 설계 → 유지.
 - **수정**: ① `## Synthesis` 중복(빈 placeholder + guide 목록) → guide 목록을 `## Guides`로, 빈 것 제거 ② `src-clean-code-lecture`·`src-tdd-lecture`·`src-object-lecture`가 Sources·Entities **양쪽 중복 등재** → Entities에서 제거(src는 Source 분류) ③ harness module4 설명에 "컨텍스트 관리" 보강 ④ `guide-code-authoring-and-review` 설명 "5권" 강조 톤다운 ⑤ frontmatter updated 갱신.

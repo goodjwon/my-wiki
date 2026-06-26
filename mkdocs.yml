@@ -125,6 +125,7 @@ nav:
       - Module 3 — Hooks: guide-harness-module3.md
       - Module 4 — Multi-Agent: guide-harness-module4.md
       - Module 5 — 리뷰·Rippable: guide-harness-module5.md
+      - "🆕 Loop 엔지니어링 실습 (메아리방 vs 거부 신호)": guide-loop-engineering-demo.md
   - 개발방법론:
     - 가이드:
       - 실습 환경 (5권 공통): guide-java-book-study-lab.md

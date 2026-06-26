@@ -84,6 +84,7 @@ updated: 2026-06-26
 - [[guide-harness-module3]] — 하네스 Module 03 실습: guard.sh/lint-fix.sh + 자기검증 루프 (Node step-by-step)
 - [[guide-harness-module4]] — 하네스 Module 04 실습: AGENTS.md + Planner/Coder/Critic + 컨텍스트 관리 (Node step-by-step)
 - [[guide-harness-module5]] — 하네스 Module 05 실습: 저장소 구조화 + 주간 리뷰 + Rippable + M1↔M5 비교 (Node step-by-step)
+- [[guide-loop-engineering-demo]] — Loop 엔지니어링 실습: 메아리방 vs 거부 신호 루프 직접 체험 (Node mock + claude -p 헤드리스, ReAct·Reflexion 출처)
 
 ## Comparisons
 _아직 비교 분석이 없습니다._
