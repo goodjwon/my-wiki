@@ -178,6 +178,11 @@ chmod +x .claude/hooks/lint-fix.sh
 > 본인 프로젝트에 ESLint·Prettier가 없으면 먼저 설치:
 > ```bash
 > npm install --save-dev eslint prettier
+> ```
+>
+> 그다음 ESLint 설정 마법사를 **따로** 실행한다 (모듈 종류·프레임워크 등 질문에 직접 답해야 하는 대화형):
+>
+> ```bash
 > npx eslint --init
 > ```
 
