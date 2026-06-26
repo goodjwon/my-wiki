@@ -1,6 +1,6 @@
 ---
 title: Wons Wiki 인덱스
-updated: 2026-06-21
+updated: 2026-06-26
 
 ---
 
@@ -45,9 +45,6 @@ updated: 2026-06-21
 - [[entity-refactoring]] — 📚 *리팩터링 2판* (Martin Fowler, 2018) — 24 코드 악취 + 66+ 리팩터링 카탈로그
 - [[entity-clean-code]] — 📚 *Clean Code* (Robert C. Martin, 2008) — 이름·함수·클래스 가독성 + 17장 휴리스틱 66개
 - [[entity-tdd]] — 📚 *테스트 주도 개발* (Kent Beck, 2002) — 빨강→초록→리팩터 + 화폐 예제 + xUnit + 패턴 카탈로그
-- [[src-clean-code-lecture]] — 📚 *Clean Code* 실전 강의 교재 17장 인덱스 (약 5,500줄)
-- [[src-tdd-lecture]] — 📚 *TDD* (Kent Beck) 실전 강의 교재 35편 인덱스 (1·2·3부 + 부록)
-- [[src-object-lecture]] — 📚 *오브젝트* (조영호) 실전 강의 교재 18편 인덱스 (15장 + 부록 A·B·C)
 
 ## Concepts
 - [[concept-compounding-knowledge]] — 새 정보가 기존 지식과 결합하며 복리적으로 가치 증가
@@ -73,16 +70,13 @@ updated: 2026-06-21
 - [[concept-cronjob-concurrency-trap]] — 크론잡 중복 실행과 Forbid 함정: concurrencyPolicy + activeDeadlineSeconds 조합
 - [[concept-http-hol-blocking]] — HTTP 진화와 HOL 블로킹: 1.1 Keep-Alive → 2 멀티플렉싱 → 3 QUIC over UDP
 
-## Synthesis
-_아직 종합 분석이 없습니다._
-
-## Synthesis
+## Guides
 - [[guide-deploy-mkdocs-firebase]] — 위키 외부 배포 가이드 (MkDocs Material + Firebase Hosting, 무료)
 - [[guide-wiki-authoring-standards]] — 위키 작성 표준 (다이어그램·분량·마킹·셀프 체크리스트)
 - [[backlog]] — 위키 백로그·진행 상태 (새 세션 시작 시 먼저 읽기)
 - [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 가이드 (CLAUDE.md 템플릿, ADR, API, 트러블슈팅)
 - [[guide-java-book-study-lab]] — Java 도서 5권 실습 환경 가이드 (Java 17, JUnit 5, Python, Node)
-- [[guide-code-authoring-and-review]] — Java 도서 5권 코드 작성·점검 가이드 (작성 체크리스트·PR 리뷰 어휘)
+- [[guide-code-authoring-and-review]] — 코드 작성·점검 가이드 — 작성 체크리스트·PR 리뷰 어휘 (5권 도서 기반)
 - [[guide-harness-00-prerequisites]] — 하네스 실습 사전 안내 (Node + GCP 학습자용 환경/용어/FAQ)
 - [[guide-harness-demo]] — 하네스 5분 데모: 있을 때 vs 없을 때 직접 체험 (.env 커밋 차단 시연)
 - [[guide-harness-module1]] — 하네스 Module 01 실습: Failure Audit + 베이스라인 측정 (Node step-by-step)

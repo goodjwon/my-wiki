@@ -4,6 +4,10 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-26] fix | index.md 점검 — 카테고리 구조·중복 정리
+- **깨진 링크 0**, lecture-* 93개 미등재는 교재 인덱스(src-*-lecture)로 대표하는 의도된 설계 → 유지.
+- **수정**: ① `## Synthesis` 중복(빈 placeholder + guide 목록) → guide 목록을 `## Guides`로, 빈 것 제거 ② `src-clean-code-lecture`·`src-tdd-lecture`·`src-object-lecture`가 Sources·Entities **양쪽 중복 등재** → Entities에서 제거(src는 Source 분류) ③ harness module4 설명에 "컨텍스트 관리" 보강 ④ `guide-code-authoring-and-review` 설명 "5권" 강조 톤다운 ⑤ frontmatter updated 갱신.
+
 ## [2026-06-26] fix | harness 사전준비 Step A-3 — 복붙 실패(대화형 npm create) 분리
 - **증상**: 사용자 보고 — `guide-harness-00-prerequisites` Step A-3(React 프론트)를 한 번에 붙여넣으면 실행 실패.
 - **원인**: `npm create vite@latest`(대화형 프롬프트: 패키지 설치 확인·Vite 버전 선택)와 `cat ... << EOF` heredoc·`npm install` 이 **한 코드블록**에 묶여, 프롬프트 대기 중 뒷줄이 응답으로 먹혀 스캐폴딩이 깨짐.
