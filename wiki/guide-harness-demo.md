@@ -94,6 +94,7 @@ git checkout HEAD -- .gitignore 2>/dev/null
 `guard.sh` 한 개만 후딱 설치. 5모듈을 다 보고 만들 정식 hook이 아니라 **데모용 미니 버전**.
 
 ```bash
+cd ~/harness-demo
 mkdir -p .claude/hooks
 
 cat > .claude/hooks/guard.sh << 'EOF'

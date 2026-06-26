@@ -18,6 +18,7 @@ title: Wons Wiki 로그
   - **module5 Step 3-3**: 커밋 메시지가 이전 블록 변수 `$WEEK`에 의존 → 블록 첫 줄에 `WEEK=$(date …)` 재선언(단독 붙여넣기 안전).
   - **module3 Step 3 노트**: `npx eslint --init`(대화형 마법사)을 `npm install`과 같은 블록에서 분리 + "질문에 직접 답" 안내.
   - module1·2·4: 복붙 깨짐 없음. 디렉터리 의존은 "본인 프로젝트 루트" 전제라 절대경로 불가 → 보류.
+- **demo 페이지 점검**: 복붙 깨짐 없음(`claude` 단독 실행 2곳 모두 독립 블록, heredoc 전부 `<< 'EOF'` 안전). demo는 `~/harness-demo` 고정 경로가 있어 Step 3(Hook 설치)에 `cd ~/harness-demo` 추가로 견고화. "5분 요약"은 prerequisites 내 산문 섹션(bash 없음)이라 점검 대상 없음. → harness 가이드 전체(prerequisites·module1~5·demo) 복붙 점검 완료.
 
 ## [2026-06-23] refactor | 코드 가이드 — "5권 강조" 톤다운 + 슬래시 명령 전체 코드 게재
 - **배경**: 사용자 피드백 — `guide-code-authoring-and-review` 가 "책 5권을 분석했다"를 제목에서 과하게 강조. 1.2 "6원칙 — 5권을 관통하는 공통 골격" 같은 제목이 부적절.
