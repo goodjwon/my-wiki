@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-26] fix | harness 사전준비 Step A-3 — 복붙 실패(대화형 npm create) 분리
+- **증상**: 사용자 보고 — `guide-harness-00-prerequisites` Step A-3(React 프론트)를 한 번에 붙여넣으면 실행 실패.
+- **원인**: `npm create vite@latest`(대화형 프롬프트: 패키지 설치 확인·Vite 버전 선택)와 `cat ... << EOF` heredoc·`npm install` 이 **한 코드블록**에 묶여, 프롬프트 대기 중 뒷줄이 응답으로 먹혀 스캐폴딩이 깨짐.
+- **수정**: Step A-3을 **두 블록으로 분리** — ① 스캐폴딩+설치(대화형, 먼저 실행) ② App.jsx 작성+커밋. 각 블록을 절대경로(`cd ~/harness-playground[/web]`)로 시작해 직전 Step 상태와 무관하게 견고. 상단에 ⚠️ 경고 박스 추가.
+
 ## [2026-06-23] refactor | 코드 가이드 — "5권 강조" 톤다운 + 슬래시 명령 전체 코드 게재
 - **배경**: 사용자 피드백 — `guide-code-authoring-and-review` 가 "책 5권을 분석했다"를 제목에서 과하게 강조. 1.2 "6원칙 — 5권을 관통하는 공통 골격" 같은 제목이 부적절.
 - **제목 톤다운**:
