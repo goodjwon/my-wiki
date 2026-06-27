@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-06-26
+updated: 2026-06-27
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-06-26
 
 ## 📅 마지막 업데이트
 
-2026-06-26
+2026-06-27
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -86,6 +86,18 @@ updated: 2026-06-26
 - ✅ Spring/Java 페이지들 첫 보강 (4월 작업 기반)
 
 ## 🔄 진행 중·다음 단계 후보
+
+### 다음 세션 최우선 (Pending)
+
+- [ ] **위키 본문 글쓰기 스타일 일괄 점검·개선** — 비유에 괄호 매핑 박은 단편 명사구 ("회의 (메시지) 가 본질, …캐스팅" 류) 를 자연어 완결 문장 + 매핑 분리 문단으로 재작성. **규칙은 메모리 `feedback-wiki-writing-style` 참조** (괄호 매핑·명사구 종결 금지, 책 풍 "관람객은 스스로 표를 사고…" 처럼).
+  - **시연 완료**: `wiki/lecture-object-ch6.md:41` ("회의 vs 사람" 비유) 1건 모범 답안 반영. 같은 톤으로 일괄 진행.
+  - **1차 대상 14개 페이지** (괄호 매핑 `(메시지)·(객체)·(역할)` 등이 grep 으로 식별됨):
+    - lecture-object: ch4·ch5·ch6 (완료)·ch7·ch9·ch12·ch13·ch15·appendixA·appendixC
+    - lecture-clean-code: ch4·ch6
+    - lecture-tdd: ch4·ch11
+  - **2차 확장 후보**: 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring-and-review 의 도입·비유 산문 부분.
+  - **진행 방식 미정**: Agent fleet 으로 페이지별 병렬 처리 (~19 agent) vs 사용자 직접 우선순위 지정. 다음 세션 시작 시 결정.
+  - **유지 영역** (수정 X): 표·코드·체크리스트·`---` 절 헤더 옆 한 줄. 간결성이 본질인 곳은 그대로.
 
 ### 즉시 가능 (입력 대기 중)
 

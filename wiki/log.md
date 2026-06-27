@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-27] style | 글쓰기 스타일 피드백 메모리화 + ch6 시연 1건
+- 사용자 지적: `lecture-object-ch6.md:41` "회의 (메시지) 가 본질, 회의에 참여하는 사람 (객체) 은 그 자리에 맞으면 누구든 OK. 자리 (역할) 가 먼저 정해지고 사람 (객체) 이 캐스팅." — 괄호 매핑·단편 명사구로 읽기 불편
+- 메모리 저장: `feedback-wiki-writing-style` (괄호 매핑·명사구 종결 금지, 비유 한 문단 + 매핑 한 문단 분리)
+- 시연: `lecture-object-ch6.md` "회의 vs 사람" 비유를 책 풍 자연어 완결 문장으로 재작성 (1건)
+- 백로그: 1차 대상 14개 페이지 식별 (lecture-object 9 + lecture-clean-code 2 + lecture-tdd 2 + ch6 완료) — 다음 세션에 일괄 진행
+- UI: `scripts/css/extra.css` 에 `.md-sidebar--secondary { display: none }` — 우측 TOC 숨김
+
 ## [2026-06-26] feat | Loop 엔지니어링 실습 신설 (외부 자료 조사 반영)
 - **요청**: harness 실습과 비슷한 컨셉으로 Loop 엔지니어링 **실습** + 외부 자료 조사.
 - **외부 조사 (에이전트 3병렬, WebSearch/WebFetch)**:
