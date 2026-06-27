@@ -267,7 +267,7 @@ bash scripts/build-site.sh
 
 # 3. Firebase 배포
 firebase deploy --only hosting
-# → https://wons-wiki.web.app
+# → https://wiki.wonslab.dev
 ```
 
 **중요**: `mkdocs serve`는 `docs/`만 watch. `wiki/` 수정 후엔 **반드시 build-site.sh** 재실행.

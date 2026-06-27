@@ -4,6 +4,15 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-27] style | 글쓰기 스타일 일괄 점검 13편 + 도메인·카피라이트 갱신
+- **글쓰기 스타일 일괄 (에이전트 13병렬)**: 백로그 1차 대상 13편의 비유 산문에서 괄호 개념 매핑 + 마침표 없는 명사구 단편을 "장면 묘사 한 문단 + 개념 매핑 한 문단" 분리 구조의 능동 완결 문장으로 재작성 (메모리 `feedback-wiki-writing-style` 규칙, ch6 "회의 vs 사람" 모범 톤).
+  - lecture-object: ch4(도구 vs 사람)·ch5(공연 무대)·ch7(공장 라인 vs 자율 작업장)·ch9(콘센트 표준)·ch12(전화 한 통)·ch13(혈연 vs 자격증)·ch15(조리법→요리책→식당)·appendixA(매매 계약)·appendixC(건축)
+  - lecture-clean-code: ch4(사과문, 명사구 1건)·ch6(객체 vs 자료 구조)
+  - lecture-tdd: ch4(주방)·ch11(주방 통합)
+  - 각 편 1건씩, 표·코드·체크리스트·퀴즈·용어 풀이 괄호는 규칙대로 보존. frontmatter `updated` 2026-06-27 갱신.
+- **도메인 최신화**: 커스텀 도메인 `wiki.wonslab.dev` 연결됨(Firebase 콘솔 확인) → `mkdocs.yml` `site_url` 을 정식 도메인으로 변경, `guide-code-authoring-and-review` 참조 URL 12곳·`guide-wiki-authoring-standards` 배포 주석 1곳 `wons-wiki.web.app` → `wiki.wonslab.dev` 치환, backlog 운영환경 표 갱신(기본 도메인 web.app·firebaseapp.com 병기).
+- **카피라이트 통일**: `wonslab-hub.web.app` 푸터와 동일하게 `mkdocs.yml` copyright 를 `© 2026 wonslab · blog · wiki · club`(링크 포함)으로 변경.
+
 ## [2026-06-27] style | 글쓰기 스타일 피드백 메모리화 + ch6 시연 1건
 - 사용자 지적: `lecture-object-ch6.md:41` "회의 (메시지) 가 본질, 회의에 참여하는 사람 (객체) 은 그 자리에 맞으면 누구든 OK. 자리 (역할) 가 먼저 정해지고 사람 (객체) 이 캐스팅." — 괄호 매핑·단편 명사구로 읽기 불편
 - 메모리 저장: `feedback-wiki-writing-style` (괄호 매핑·명사구 종결 금지, 비유 한 문단 + 매핑 한 문단 분리)

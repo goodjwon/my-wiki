@@ -222,7 +222,7 @@ PR 리뷰 어휘 — 표준 코드로 합의 빠르게.
 
 이 가이드와 두 슬래시 명령(`/code-guide`·`/code-check`)을 **① 이 프로젝트 · ② 다른 Claude Code 프로젝트 · ③ 다른 AI** 환경별로 쓰는 법.
 
-> **명령의 작동 원리** — 두 명령은 이 가이드 본문을 베이스로 동작한다. my-wiki 프로젝트 안에선 `wiki/` 파일을 직접 읽고, **다른 프로젝트에선 `wiki/` 가 없으므로 자동으로 `https://wons-wiki.web.app/...` 를 WebFetch** 한다(그때만 인터넷 필요). 그래서 명령 파일만 있으면 어디서든 동작한다.
+> **명령의 작동 원리** — 두 명령은 이 가이드 본문을 베이스로 동작한다. my-wiki 프로젝트 안에선 `wiki/` 파일을 직접 읽고, **다른 프로젝트에선 `wiki/` 가 없으므로 자동으로 `https://wiki.wonslab.dev/...` 를 WebFetch** 한다(그때만 인터넷 필요). 그래서 명령 파일만 있으면 어디서든 동작한다.
 
 ### 4.1 이 프로젝트(my-wiki)에서 — 슬래시 명령
 
@@ -263,7 +263,7 @@ argument-hint: <대상 영역> (예: function, class, exception, test, all)
 
 먼저 가이드 본문을 로드:
 - **로컬 my-wiki 프로젝트**: `wiki/guide-code-authoring-and-review.md` 직접 읽기
-- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wons-wiki.web.app/guide-code-authoring-and-review/` fetch
+- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wiki.wonslab.dev/guide-code-authoring-and-review/` fetch
 
 우선 활용 섹션:
 - **2. 코드 작성 체크리스트** (Writing)
@@ -329,9 +329,9 @@ public Money totalFee(Order order) {
 - 5권 entity: [[entity-object]]·[[entity-effective-java]]·[[entity-refactoring]]·[[entity-clean-code]]·[[entity-tdd]]
 
 **다른 프로젝트에서**: WebFetch URL
-- https://wons-wiki.web.app/guide-code-authoring-and-review/ — 본 가이드
-- https://wons-wiki.web.app/guide-java-book-study-lab/ — 실습 환경
-- https://wons-wiki.web.app/entity-object/ ·  /entity-effective-java/ · /entity-refactoring/ · /entity-clean-code/ · /entity-tdd/
+- https://wiki.wonslab.dev/guide-code-authoring-and-review/ — 본 가이드
+- https://wiki.wonslab.dev/guide-java-book-study-lab/ — 실습 환경
+- https://wiki.wonslab.dev/entity-object/ ·  /entity-effective-java/ · /entity-refactoring/ · /entity-clean-code/ · /entity-tdd/
 
 ## 사용 예
 
@@ -372,7 +372,7 @@ argument-hint: <대상> (예: 파일 경로, "diff", "staged", 생략 시 git di
 
 먼저 가이드 본문 로드:
 - **로컬 my-wiki 프로젝트**: `wiki/guide-code-authoring-and-review.md` 직접 읽기
-- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wons-wiki.web.app/guide-code-authoring-and-review/`
+- **다른 프로젝트** (`wiki/` 디렉터리 없음): WebFetch 로 `https://wiki.wonslab.dev/guide-code-authoring-and-review/`
 
 다음 섹션의 **3. 코드 점검 체크리스트** 활용:
 - 3.1 리팩터링 24 악취
@@ -424,11 +424,11 @@ argument-hint: <대상> (예: 파일 경로, "diff", "staged", 생략 시 git di
 - GRASP: [[lecture-object-ch5]]
 
 **다른 프로젝트에서**: WebFetch URL
-- https://wons-wiki.web.app/guide-code-authoring-and-review/
-- https://wons-wiki.web.app/lecture-refactoring-ch3/ — 24 악취
-- https://wons-wiki.web.app/lecture-clean-code-ch17/ — 17장 휴리스틱
-- https://wons-wiki.web.app/entity-effective-java/ — EJ ⭐ 20
-- https://wons-wiki.web.app/lecture-object-ch5/ — GRASP
+- https://wiki.wonslab.dev/guide-code-authoring-and-review/
+- https://wiki.wonslab.dev/lecture-refactoring-ch3/ — 24 악취
+- https://wiki.wonslab.dev/lecture-clean-code-ch17/ — 17장 휴리스틱
+- https://wiki.wonslab.dev/entity-effective-java/ — EJ ⭐ 20
+- https://wiki.wonslab.dev/lecture-object-ch5/ — GRASP
 
 ## 사용 예
 
@@ -470,7 +470,7 @@ curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/comma
 **(a) 본문 컨텍스트**
 
 ```
-1. https://wons-wiki.web.app/guide-code-authoring-and-review/ 열기 → 본문 전체 복사
+1. https://wiki.wonslab.dev/guide-code-authoring-and-review/ 열기 → 본문 전체 복사
 2. AI 첫 메시지: "다음은 내가 따를 코드 작성·점검 원칙이다. 이 컨텍스트로 작업해줘. [본문 붙여넣기]"
 3. 이후 "이 원칙으로 OrderService 짜줘" / "이 코드 점검해줘"
 ```

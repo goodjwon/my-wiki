@@ -38,6 +38,11 @@ updated: 2026-06-27
 
 ## ✅ 최근 완료 작업 (2026-06 누적)
 
+### 2026-06-27
+- ✅ **글쓰기 스타일 1차 일괄 13편** — 비유 괄호 매핑·명사구 단편 → 장면+매핑 2문단 완결 문장(에이전트 13병렬). 규칙: 메모리 `feedback-wiki-writing-style`, 모범: ch6 "회의 vs 사람".
+- ✅ **커스텀 도메인 `wiki.wonslab.dev` 반영** — `site_url`·guide 참조 URL·backlog 운영표 갱신(기본 도메인 web.app 병기).
+- ✅ **카피라이트 `wonslab-hub` 와 통일** — `© 2026 wonslab · blog · wiki · club`(링크 포함).
+
 ### 2026-06-26
 - ✅ **Loop 엔지니어링 실습 신설** — [[guide-loop-engineering-demo]] (Node mock 메아리방 vs 거부 신호 루프 + `claude -p` 헤드리스 + 외부 1차 출처). 진행 상태: 메모리 `loop-engineering-demo-progress`.
 - ✅ **harness 가이드 전체 복붙 안정성 점검** — prerequisites(A-3 분리·A-4 3블록·A-5 git log 정정), module3(eslint --init 분리)·module5(`$WEEK` 전개 2건), demo(경로 견고화).
@@ -89,14 +94,9 @@ updated: 2026-06-27
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **위키 본문 글쓰기 스타일 일괄 점검·개선** — 비유에 괄호 매핑 박은 단편 명사구 ("회의 (메시지) 가 본질, …캐스팅" 류) 를 자연어 완결 문장 + 매핑 분리 문단으로 재작성. **규칙은 메모리 `feedback-wiki-writing-style` 참조** (괄호 매핑·명사구 종결 금지, 책 풍 "관람객은 스스로 표를 사고…" 처럼).
-  - **시연 완료**: `wiki/lecture-object-ch6.md:41` ("회의 vs 사람" 비유) 1건 모범 답안 반영. 같은 톤으로 일괄 진행.
-  - **1차 대상 14개 페이지** (괄호 매핑 `(메시지)·(객체)·(역할)` 등이 grep 으로 식별됨):
-    - lecture-object: ch4·ch5·ch6 (완료)·ch7·ch9·ch12·ch13·ch15·appendixA·appendixC
-    - lecture-clean-code: ch4·ch6
-    - lecture-tdd: ch4·ch11
-  - **2차 확장 후보**: 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring-and-review 의 도입·비유 산문 부분.
-  - **진행 방식 미정**: Agent fleet 으로 페이지별 병렬 처리 (~19 agent) vs 사용자 직접 우선순위 지정. 다음 세션 시작 시 결정.
+- [x] ~~**위키 본문 글쓰기 스타일 1차 일괄 점검·개선**~~ (2026-06-27 완료) — 비유 괄호 매핑·명사구 단편을 자연어 완결 문장 + 매핑 분리 문단으로 재작성. 규칙: 메모리 `feedback-wiki-writing-style`.
+  - **1차 13편 완료** (에이전트 13병렬, ch6은 직전 세션 시연 완료): lecture-object ch4·ch5·ch7·ch9·ch12·ch13·ch15·appendixA·appendixC + lecture-clean-code ch4·ch6 + lecture-tdd ch4·ch11. 각 1건씩.
+  - **2차 확장 후보 (남음)**: 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring-and-review 의 도입·비유 산문 부분. 다음 세션에 같은 방식(에이전트 병렬)으로 진행 가능.
   - **유지 영역** (수정 X): 표·코드·체크리스트·`---` 절 헤더 옆 한 줄. 간결성이 본질인 곳은 그대로.
 
 ### 즉시 가능 (입력 대기 중)
@@ -175,7 +175,7 @@ updated: 2026-06-27
 
 | 항목 | 현재 상태 |
 |------|----------|
-| 호스팅 | Firebase Hosting → `wons-wiki.web.app` |
+| 호스팅 | Firebase Hosting → 커스텀 도메인 `wiki.wonslab.dev` (연결됨, 정식) / 기본 도메인 `wons-wiki.web.app`·`wons-wiki.firebaseapp.com` |
 | 빌드 | `bash scripts/build-site.sh` (wiki/→docs/→site/) |
 | 로컬 프리뷰 | `.venv/bin/mkdocs serve` (docs/만 watch) |
 | 배포 | `firebase deploy --only hosting` |

@@ -1,0 +1,14 @@
+/* 표가 본문 가로 폭에 100% 꽉 차도록 설정 */
+.markdown-rendered table {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: table !important;
+    table-layout: auto !important; /* 내용에 맞춰 칸 너비 자동 조절 */
+}
+
+/* 글자가 임의로 중간에서 끊겨 줄바꿈되는 것을 방지 */
+.markdown-rendered th, 
+.markdown-rendered td {
+    white-space: normal !important; /* 자동 줄바꿈은 허용하되 */
+    word-break: keep-all !important;  /* 단어 단위로만 예쁘게 줄바꿈 */
+}

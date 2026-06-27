@@ -1,7 +1,7 @@
 site_name: Wons Wiki
 site_description: 박정원의 개인 지식 위키 (Second Brain)
 site_author: JungWon Park
-site_url: https://wons-wiki.web.app
+site_url: https://wiki.wonslab.dev
 
 docs_dir: docs
 site_dir: site
@@ -278,4 +278,4 @@ extra:
 extra_css:
   - stylesheets/extra.css
 
-copyright: © 2026 JungWon Park
+copyright: '© 2026 wonslab · <a href="https://blog.wonslab.dev">blog</a> · <a href="https://wiki.wonslab.dev">wiki</a> · <a href="https://electrowave.kr">club</a>'
