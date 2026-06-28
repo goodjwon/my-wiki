@@ -6,7 +6,7 @@ sources:
   - harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
   - harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-28
 ---
 
 # 하네스 실습 사전 안내 (Module 00 — Prerequisites)
@@ -156,8 +156,6 @@ git add .
 git commit -m "chore: harness-playground 모노레포 초기화"
 ```
 
-→ git commit: `chore: harness-playground 모노레포 초기화`
-
 ### Step A-2: api/ — Express 백엔드 (3분)
 
 ```bash
@@ -278,8 +276,6 @@ git add api
 git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
 ```
 
-→ git commit: `feat(api): Express User CRUD + Zod 검증 + 테스트`
-
 ### Step A-3: web/ — React 프론트 (3분)
 
 > ⚠️ **한 번에 붙여넣지 말 것.** 첫 줄 `npm create vite` 는 대화형 프롬프트(패키지 설치 확인 `Ok to proceed? (y)`, Vite 버전·롤다운 선택 등)가 뜰 수 있다. 아래 `cat ... << EOF` heredoc·`npm install` 과 한꺼번에 붙여넣으면 **프롬프트 대기 중 뒷줄이 응답으로 먹혀** 스캐폴딩이 깨진다. **블록 1을 먼저 끝내고(프롬프트엔 Enter / y), 그다음 블록 2를 붙여넣을 것.**
@@ -374,8 +370,6 @@ cd ..
 git add web
 git commit -m "feat(web): React 사용자 목록 + 추가 폼"
 ```
-
-→ git commit: `feat(web): React 사용자 목록 + 추가 폼`
 
 ### Step A-4: 동작 확인 (2분)
 

@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
   - harness-engineering/harness-kit/module2/02_before_after_prompt.md
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-28
 ---
 
 # 하네스 Module 02 — CLAUDE.md 작성
@@ -208,13 +208,15 @@ git commit -m "docs(M2): baseline 시스템 문제를 STOP 트리거로 이전"
 
 ## Step 5 — Before/After 비교 — 30분
 
-Module 01에서 했던 태스크 A·B·C를 **CLAUDE.md가 있는 상태에서 다시** 실행한다.
+Step 4까지 만든 CLAUDE.md가 실제로 에이전트 행동을 바꿨는지 검증할 차례다. 가장 확실한 방법은 **Module 01에서 했던 태스크 A·B·C를 CLAUDE.md가 있는 상태에서 다시** 실행해, Module 01의 Before 측정치와 나란히 비교하는 것이다.
 
 ### Step 5-1: Claude Code 새 세션 시작
 
 기존 세션을 종료하고 다시 `claude` 실행. CLAUDE.md를 새로 읽도록.
 
 ### Step 5-2: CLAUDE.md가 실제 로드됐는지 확인
+
+새 세션이 떴으면, 본 태스크를 던지기 전에 CLAUDE.md가 실제로 로드됐는지부터 확인한다:
 
 ```
 CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
@@ -223,6 +225,8 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 3개를 정확히 인용해주면 통과. 못 하면 CLAUDE.md 위치(프로젝트 루트인지) 다시 확인.
 
 ### Step 5-3: 태스크 A 재실행 (Module 1과 같은 표현)
+
+로드를 확인했으면, 이제 Module 01의 태스크 A를 **표현 하나 바꾸지 않고** 그대로 다시 던진다:
 
 ```
 User 모델에 'phone' 필드를 추가해줘.
@@ -248,6 +252,8 @@ User 모델에 'phone' 필드를 추가해줘.
 ```
 
 ### Step 5-4: 비교 표 작성
+
+Step 5-3에서 측정한 After 값과 Module 01의 Before 값을 한 표에 모은다. 아래 블록을 그대로 실행한 뒤, `__` 칸에 **본인이 측정한 Before/After 숫자를 직접 채운다**:
 
 ```bash
 cat >> .claude/baseline.md << 'EOF'

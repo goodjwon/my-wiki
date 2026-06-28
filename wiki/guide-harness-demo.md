@@ -6,7 +6,7 @@ sources:
   - harness-engineering/harness_engineering.md
   - harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-28
 ---
 
 # 하네스 5분 데모 — 있을 때 vs 없을 때
@@ -19,7 +19,9 @@ updated: 2026-05-31
 
 ---
 
-## Step 1 — 데모용 폴더 (30초)
+## Step 1 — 데모용 폴더 — 30초
+
+먼저 데모용 빈 폴더를 만들고, 시크릿 흉내용 `.env`와 일반 코드 파일을 넣어 둔다.
 
 ```bash
 mkdir -p ~/harness-demo && cd ~/harness-demo
@@ -44,7 +46,7 @@ git commit -qm "chore: 데모 프로젝트 초기 셋업"
 
 ---
 
-## Step 2 — Before: 하네스 없이 (1분)
+## Step 2 — Before: 하네스 없이 — 1분
 
 `.env`를 Git에 commit하라고 시키는 시나리오 (학생이 자주 실수하는 패턴).
 
@@ -89,7 +91,7 @@ git checkout HEAD -- .gitignore 2>/dev/null
 
 ---
 
-## Step 3 — Hook 설치 (1분)
+## Step 3 — Hook 설치 — 1분
 
 `guard.sh` 한 개만 후딱 설치. 5모듈을 다 보고 만들 정식 hook이 아니라 **데모용 미니 버전**.
 
@@ -140,7 +142,7 @@ echo "exit code: $?"
 
 ---
 
-## Step 4 — After: 하네스 있을 때 (1분)
+## Step 4 — After: 하네스 있을 때 — 1분
 
 Claude Code를 **완전 종료 후 다시** 실행 (설정 재로드 위해):
 
@@ -155,9 +157,7 @@ claude
 다른 사람이 클론하면 환경변수가 바로 보이게.
 ```
 
-### 결과 관찰
-
-이번에는 Claude가 `git add .env`를 시도하면 **guard.sh가 차단**:
+**결과 관찰** — 이번에는 Claude가 `git add .env`를 시도하면 **guard.sh가 차단**:
 
 ```
 🚫 BLOCKED by guard.sh: .env 파일 git 조작 차단
@@ -173,7 +173,7 @@ Claude는 차단 메시지를 보고 보통:
 
 ---
 
-## Step 5 — 차이 표 (직접 채워보기, 1분)
+## Step 5 — 차이 표 (직접 채워보기) — 1분
 
 |  | Before (하네스 없음) | After (guard.sh만 설치) |
 |---|---|---|
@@ -186,17 +186,19 @@ Claude는 차단 메시지를 보고 보통:
 
 ---
 
-## 정리 (30초)
+## Step 6 — 정리 — 30초
+
+`harness-demo`는 데모 전용이므로 삭제한다. 5모듈 실습은 [[guide-harness-00-prerequisites]] 의 `~/harness-playground`에서 따로 진행한다.
 
 ```bash
 cd ~ && rm -rf ~/harness-demo
 ```
 
-(`harness-demo`는 데모 전용이므로 삭제. 5모듈 실습은 [[guide-harness-00-prerequisites]] 의 `~/harness-playground`에서.)
-
 ---
 
 ## 깨달은 점
+
+방금 6단계를 거치며 차단 한 번을 직접 체험했다. 이게 하네스의 전부가 아니다.
 
 이 데모는 하네스의 **딱 1개 측면**(시크릿 파일 차단)만 보여줬다. 실제 5모듈에서는:
 

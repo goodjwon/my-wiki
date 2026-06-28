@@ -8,7 +8,7 @@ sources:
   - harness-engineering/harness-kit/module4/claude-progress.txt
   - harness-engineering/harness-kit/module4/01_threettier_workflow_prompt.md
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-28
 ---
 
 # 하네스 Module 04 — 멀티 에이전트 + 컨텍스트
@@ -244,6 +244,8 @@ chmod +x .claude/hooks/update-progress.sh
 
 ### Step 4-1: 새 세션에서 Planner 호출
 
+새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣는다.
+
 ```
 너는 지금부터 Planner Agent로만 동작해.
 AGENTS.md의 Planner 역할 정의를 먼저 읽고 따라줘.
@@ -280,7 +282,7 @@ DDD 레이어 순서 대신 Node 흐름 (route → controller → service → re
 - ❌ verify 없음
 - ❌ "그리고 ~도 같이" 같은 끼워넣기
 
-받은 task-list를 `task-list.md`에 저장:
+위 Step 4-1에서 Planner가 출력한 task-list 형식 결과를 그대로 `task-list.md`에 저장:
 
 ```bash
 # Planner 출력을 그대로 task-list.md에 붙여넣기
@@ -292,7 +294,11 @@ git commit -m "plan(M4): 인증 기능 태스크 분해"
 
 ## Step 5 — Coder Agent 시연 (TASK-001만) — 30분
 
+Step 4에서 만든 `task-list.md`의 첫 태스크(TASK-001)를 Coder에게 입력으로 넘긴다.
+
 ### Step 5-1: 새 세션에서 Coder 호출
+
+새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣는다.
 
 ```
 너는 지금부터 Coder Agent로만 동작해.
@@ -333,9 +339,11 @@ git commit -m "feat(M4): TASK-001 User 스키마 + 리포지토리"
 
 ## Step 6 — Critic Agent 시연 — 30분
 
+Step 5에서 Coder가 구현한 TASK-001 결과(코드 + 커밋)를 Critic이 독립적으로 검증한다.
+
 ### Step 6-1: 새 세션에서 Critic 호출
 
-세션을 새로 시작하는 이유: Coder의 컨텍스트(시도·실패·중간 출력)에서 격리하기 위해.
+세션을 새로 시작하는 이유: Coder의 컨텍스트(시도·실패·중간 출력)에서 격리하기 위해. 새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣는다.
 
 ```
 너는 지금부터 Critic Agent로만 동작해.

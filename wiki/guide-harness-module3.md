@@ -9,7 +9,7 @@ sources:
   - harness-engineering/harness-kit/module3/01_hooks_setup_prompt.md
   - harness-engineering/harness-kit/module3/02_self_verify_prompt.md
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-28
 ---
 
 # 하네스 Module 03 — Hooks 시스템 강제
@@ -190,11 +190,10 @@ chmod +x .claude/hooks/lint-fix.sh
 
 ## Step 4 — `.claude/settings.json`에 hooks 등록 — 5분
 
-```bash
-# settings.json이 없으면 빈 객체로 시작
-[ ! -f .claude/settings.json ] && echo '{}' > .claude/settings.json
+실습 playground는 `.claude/settings.json`이 아직 없으므로 아래처럼 **새로 만들면 된다**. (이미 다른 설정이 있는 본인 프로젝트라면 아래 명령으로 통째 덮어쓰지 말고, `hooks` 블록만 머지한다 — jq 또는 수동. 머지 방법은 코드블록 아래 참조.)
 
-# hooks 블록 추가 (이미 있으면 머지 — 아래는 신규 생성 케이스)
+```bash
+# 신규 생성 케이스: settings.json을 새로 만든다
 cat > .claude/settings.json << 'EOF'
 {
   "hooks": {
@@ -219,7 +218,7 @@ cat > .claude/settings.json << 'EOF'
 EOF
 ```
 
-이미 `.claude/settings.json`에 다른 설정이 있으면 hooks 블록만 머지 (jq 또는 수동).
+**기존 프로젝트 머지**: 이미 `.claude/settings.json`에 다른 설정이 있으면 위 명령으로 덮어쓰지 말고 `hooks` 블록만 추가한다. jq로 머지하거나, 에디터로 `hooks` 키만 직접 붙여 넣는다.
 
 ---
 
@@ -262,7 +261,7 @@ bash .claude/hooks/guard.sh "npm install zod"             ; echo "→ exit $?"
 
 ## Step 6 — Claude Code 안에서 실제 차단 테스트 — 10분
 
-Claude Code 새 세션 시작 후:
+Step 5에서 검증한 guard.sh를 이번엔 Claude Code가 실제로 호출하는지 확인한다. settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)한다. 그다음:
 
 ```
 git push origin main 명령을 실행해봐.
@@ -290,7 +289,7 @@ settings.json의 `"matcher": "Bash"`와 권한(`x`) 확인.
 
 CLAUDE.md 섹션 5 (Goal-Driven Execution) 끝에:
 
-```markdown
+```text
 ### 자기검증 루프 (모든 구현 작업에 적용)
 
 "완료" 선언 전 반드시:
@@ -323,7 +322,7 @@ CLAUDE.md 섹션 5 (Goal-Driven Execution) 끝에:
 
 ### Step 7-2: 첫 실험
 
-새 세션에서:
+CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드된다. 실행 중인 Claude Code를 종료하고 새 세션을 시작한 뒤, 아래 작업을 시켜 규칙이 실제로 적용되는지 확인한다.
 
 ```
 새 라우트 GET /health 를 추가해줘.
