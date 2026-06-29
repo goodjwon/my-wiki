@@ -10,6 +10,19 @@ updated: 2026-06-29
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 5장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
 # 5. Spring과프로젝트실행
+
+## 🎯 이 장에서 배우는 것
+
+- IoC·DI·Bean·MVC로 객체 조립을 컨테이너에 위임
+- 실습 환경·Maven·프로파일 구성
+- 스프링 부트 프로젝트를 직접 띄우기
+
+**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch06-데이터접근과SQL]]
+
+> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 환경 세팅을 그대로 따라 하고, 빈 주입을 직접 코드로 확인한다. 깊이: [[concept-spring-core]].
+
+---
+
 원본: Notion 데이터베이스 "[2024-2025]java 스터디 자료"
 
 ---

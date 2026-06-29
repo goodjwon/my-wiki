@@ -10,6 +10,19 @@ updated: 2026-06-29
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 8장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
 # 8. 테스트와품질
+
+## 🎯 이 장에서 배우는 것
+
+- 테스트 피라미드(단위→통합→E2E)
+- Spring Boot 테스트 전략과 계산기 테스트 실습
+- curl로 API 수동 검증
+
+**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch09-JVM과성능]]
+
+> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 8.2 계산기 테스트를 직접 작성하고, 8.3에서 curl로 API를 찔러본다. 방법론: [[entity-tdd]].
+
+---
+
 원본: Notion 데이터베이스 "[2024-2025]java 스터디 자료"
 
 ---

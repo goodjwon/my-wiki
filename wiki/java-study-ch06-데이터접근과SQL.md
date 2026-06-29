@@ -10,6 +10,19 @@ updated: 2026-06-29
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 6장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
 # 6. 데이터접근과SQL
+
+## 🎯 이 장에서 배우는 것
+
+- DB 설계·정규화·인덱스의 판단 기준
+- SQL 기본기(DDL·DML·JOIN·집계)와 쿼리 최적화
+- Querydsl로 타입 안전 동적 쿼리
+
+**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch07-서버와인증]]
+
+> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. SQL을 직접 쳐보고, 6.12 연습문제와 Querydsl 예제를 따라 만든다. 깊이: [[entity-querydsl]]·[[concept-db-connection-pool]].
+
+---
+
 원본: Notion 데이터베이스 "[2024-2025]java 스터디 자료"
 
 ---

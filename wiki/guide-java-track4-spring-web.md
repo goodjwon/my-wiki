@@ -13,7 +13,9 @@ updated: 2026-06-29
 >
 > **선수 트랙**: [[guide-java-track3-io-network]]. **다음 트랙**: [[guide-java-track5-deep-dive]].
 
-이 트랙은 [[src-java-study-2024-2025]] 5·6·7·8장 재구성. 원문: `raw/java-study/java-study-ch05~08*.md`.
+이 트랙은 [[src-java-study-2024-2025]] 5·6·7·8장 재구성. **실제 학습·실습은 챕터 레슨에서 따라 한다** → [[java-study-ch05-Spring과프로젝트실행]] · [[java-study-ch06-데이터접근과SQL]] · [[java-study-ch07-서버와인증]] · [[java-study-ch08-테스트와품질]].
+
+> 이 페이지는 **코스 안내**다(흐름·핵심·미니프로젝트·이론 팁). 코드와 상세 설명은 위 챕터 레슨을 펴고 따라 하면 된다.
 
 ---
 
@@ -97,7 +99,7 @@ updated: 2026-06-29
 5) Spring Security로 회원 인증 붙이기
 6) curl로 API 수동 검증 (8.3)
 ```
-원문 시나리오: `raw/java-study/java-study-ch11-부록.md`(11.22·11.20).
+실습 본문·시나리오 → [[java-study-ch11-부록]](11.22·11.20).
 
 ---
 
