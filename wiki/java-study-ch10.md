@@ -1043,7 +1043,7 @@ while (rs.next()) {
 현재 Spring 프로젝트는 이런 저수준 흐름을 직접 쓰지 않지만, 내부적으로는 같은 JDBC 생명주기 위에서 동작한다.
 ```
 
-주의할 점도 있습니다. 예제 저장소의 JDBC 샘플은 학습용이라 자격 증명이 코드에 직접 들어 있고 `finally`로 자원을 닫습니다. 출판 기준에서는 실제 프로젝트 코드로 권장하기보다, **왜 ****`try-with-resources`****와 외부 설정 분리가 필요한지 보여주는 예제**로 읽는 편이 정확합니다.
+주의할 점도 있습니다. 예제 저장소의 JDBC 샘플은 학습용이라 자격 증명이 코드에 직접 들어 있고 `finally`로 자원을 닫습니다. 출판 기준에서는 실제 프로젝트 코드로 권장하기보다, **왜 `try-with-resources`와 외부 설정 분리가 필요한지 보여주는 예제**로 읽는 편이 정확합니다.
 
 #### 왜 JDBC를 먼저 알아야 하는가
 
@@ -1271,7 +1271,7 @@ JDBC로 연결해 SELECT 결과를 출력해 보라.
 
 텍스트, CSV, JSON처럼 자주 쓰는 형식부터 먼저 따라 하고, XML·YAML·ZIP은 비교 실습으로 보는 편이 좋습니다.
 
-#### **Person 객체에 대한 파일 정보 처리하기 예제**
+#### Person 객체에 대한 파일 정보 처리하기 예제
 
 > 아래 파일은 유틸리티 클래스를 만들어 여러 형태로 처리 하는 연습을 해 봅니다. 한번에 다하지 말고 메소드 하나 하고 결과 보고 하는 식으로 진행 바랍니다.
 
@@ -1909,7 +1909,7 @@ Process finished with exit code 0
 
 ---
 
-#### **문제 설명**
+#### 문제 설명
 주어진 CSV 파일(`sample_data.csv`)에는 5000개의 데이터 행이 있으며, 각 행은 다음 형식으로 구성됨:
 `ID,이름,나이,점수`
 예제 데이터 (일부):
@@ -2354,7 +2354,7 @@ grades.xlsx
 monthly_sales.xlsx
   - **데이터:** 월별 매출 데이터
   - **요구사항:** 매출 데이터를 바 차트로 시각화
-1. **문제 이름: ****`빈 셀 채우기`**** (숙제)**
+1. **문제 이름: `빈 셀 채우기` (숙제)**
   - **파일 이름:** `survey_data.xlsx`
 survey_data.xlsx
   - **데이터:** 설문 데이터, 일부 셀이 비어 있음
@@ -2364,7 +2364,7 @@ survey_data.xlsx
 multi_sheet.xlsx
   - **데이터:** 여러 시트에 부서별 데이터 포함
   - **요구사항:** 모든 시트 데이터를 하나로 병합해 새로운 시트 생성
-1. **문제 이름: ****`엑셀 데이터 통계 분석`**** (숙제)**
+1. **문제 이름: `엑셀 데이터 통계 분석` (숙제)**
   - **파일 이름:** `test_scores.xlsx`
 test_scores.xlsx
   - **데이터:** 과목별 학생 점수
@@ -2472,7 +2472,7 @@ CSV 문제의 핵심은 포맷이 단순하다는 이유로 검증을 빼먹지 
 
 ---
 
-##### 1. **엑셀 데이터 합산**
+##### 1. 엑셀 데이터 합산
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2511,7 +2511,7 @@ class SalesDataReader {
 
 ---
 
-##### 2. **특정 열의 데이터 필터링**
+##### 2. 특정 열의 데이터 필터링
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2556,7 +2556,7 @@ class EmployeeDataReader {
 
 ---
 
-##### 3. **엑셀 데이터 정렬**
+##### 3. 엑셀 데이터 정렬
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2625,7 +2625,7 @@ class StudentScoreReader {
 
 ---
 
-##### 4. **특정 셀 값 변경**
+##### 4. 특정 셀 값 변경
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2675,7 +2675,7 @@ class InventoryDataModifier {
 
 ---
 
-##### 5. **엑셀 데이터 통합**
+##### 5. 엑셀 데이터 통합
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2746,7 +2746,7 @@ class ExcelMerger {
 
 ---
 
-##### 6. **조건에 맞는 셀 색상 변경**
+##### 6. 조건에 맞는 셀 색상 변경
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2795,7 +2795,7 @@ class GradeCellModifier {
 
 ---
 
-##### 7. **엑셀 데이터 시각화**
+##### 7. 엑셀 데이터 시각화
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2854,7 +2854,7 @@ class SalesChartGenerator {
 
 ---
 
-##### 8. **빈 셀 채우기**
+##### 8. 빈 셀 채우기
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -2951,7 +2951,7 @@ class SurveyReplacer {
 
 ---
 
-##### 9. **다중 시트 데이터 처리**
+##### 9. 다중 시트 데이터 처리
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -3019,7 +3019,7 @@ class MultiSheetProcessor {
 
 ---
 
-##### 10. **엑셀 데이터 통계 분석**
+##### 10. 엑셀 데이터 통계 분석
 
 ```java
 import org.apache.poi.ss.usermodel.*;
@@ -3075,7 +3075,7 @@ class TestScoreProcessor {
 
 ---
 
-##### 1. **JSON 데이터 키 검색**
+##### 1. JSON 데이터 키 검색
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3128,7 +3128,7 @@ class Product {
 
 ---
 
-##### 2. **특정 값 추출**
+##### 2. 특정 값 추출
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3182,7 +3182,7 @@ class User {
 
 ---
 
-##### 3. **JSON 데이터 합산**
+##### 3. JSON 데이터 합산
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3239,7 +3239,7 @@ class MonthlySale {
 
 ---
 
-##### 4. **중첩 JSON 데이터 탐색**
+##### 4. 중첩 JSON 데이터 탐색
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3308,7 +3308,7 @@ class Employee {
 
 ---
 
-##### 5. **JSON 데이터 수정**
+##### 5. JSON 데이터 수정
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3364,7 +3364,7 @@ class Product {
 
 ---
 
-##### 6. **JSON 데이터 병합**
+##### 6. JSON 데이터 병합
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3409,7 +3409,7 @@ class JsonDataMerger {
 
 ---
 
-##### 7. **JSON 데이터 정렬**
+##### 7. JSON 데이터 정렬
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3469,7 +3469,7 @@ class Movie {
 
 ---
 
-##### 8. **JSON 데이터 시각화**
+##### 8. JSON 데이터 시각화
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3538,7 +3538,7 @@ class Country {
 
 ---
 
-##### 9. **특정 조건의 데이터 삭제**
+##### 9. 특정 조건의 데이터 삭제
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3597,7 +3597,7 @@ class Customer {
 
 ---
 
-##### 10. **JSON 데이터에서 중복 제거**
+##### 10. JSON 데이터에서 중복 제거
 
 ```java
 import com.fasterxml.jackson.core.type.TypeReference;

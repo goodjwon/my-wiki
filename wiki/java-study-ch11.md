@@ -1361,9 +1361,9 @@ JSP 예제의 핵심은 최신 기술을 익히는 것보다, Java 웹 개발의
 
 현재 책 본문에서는 직접 다루지 않지만, `JSP 기본 개념 예제`와 `블로그 작성하기 미니프로젝트`를 더 구체적인 코드 수준에서 연결해 보고 싶을 때 참고 자료로 사용할 수 있습니다.
 
-### **Java/JSP(Model 1) 기반 블로그 개발 실습 가이드**
+### Java/JSP(Model 1) 기반 블로그 개발 실습 가이드
 
-#### **1. 실습 프로세스 개요**
+#### 1. 실습 프로세스 개요
 
 1. **환경 설정**
 1. **프로젝트 생성**
@@ -1372,7 +1372,7 @@ JSP 예제의 핵심은 최신 기술을 익히는 것보다, Java 웹 개발의
 1. **뷰(View) 및 로직 처리 구현 (JSP)**
 1. **테스트 및 디버깅**
 1. **배포 (선택 사항)**
-#### **2. 프로젝트 구조 예시 (Maven 기준)**
+#### 2. 프로젝트 구조 예시 (Maven 기준)
 
 ```text
 my-blog/
@@ -1436,7 +1436,7 @@ my-blog/
 
 ```
 
-#### **3. 핵심 기술 및 개념**
+#### 3. 핵심 기술 및 개념
 
 - **JSP:** HTML 내 Java 코드 삽입 (스크립틀릿, 표현식, 선언부)
 - **JDBC:** Java DB 연결 API
@@ -1445,7 +1445,7 @@ my-blog/
 - **쿠키:** 자동 로그인 기능 (Remember Me)
 - **JSP 액션 태그:** `<jsp:useBean>`, `<jsp:setProperty>`, `<jsp:getProperty>`
 - **JSTL & EL:** 코드 가독성 향상 (권장)
-#### **4. 데이터베이스 스키마 예시 (MySQL)**
+#### 4. 데이터베이스 스키마 예시 (MySQL)
 
 ```sql
 create database mini_blog;
@@ -1522,9 +1522,9 @@ VALUES ('admin@blog.com', '$2a$10$...', '관리자', 'admin', 'ADMIN');
 
 ```
 
-#### **5. 핵심 Java 클래스 구현**
+#### 5. 핵심 Java 클래스 구현
 
-##### **User DTO (****`dto/User.java`****)**
+##### User DTO (`dto/User.java`)
 
 ```java
 package com.myblog.dto;
@@ -1591,7 +1591,7 @@ public class User {
 
 ```
 
-##### **UserSession DTO (****`dto/UserSession.java`****)**
+##### UserSession DTO (`dto/UserSession.java`)
 
 ```java
 package com.myblog.dto;
@@ -1648,7 +1648,7 @@ public class UserSession {
 
 ```
 
-##### **PasswordUtil (****`util/PasswordUtil.java`****)**
+##### PasswordUtil (`util/PasswordUtil.java`)
 
 ```java
 package com.myblog.util;
@@ -1715,7 +1715,7 @@ public class PasswordUtil {
 
 ```
 
-##### **SessionUtil (****`util/SessionUtil.java`****)**
+##### SessionUtil (`util/SessionUtil.java`)
 
 ```java
 package com.myblog.util;
@@ -1813,7 +1813,7 @@ public class SessionUtil {
 
 ```
 
-##### **UserDAO 확장 (****`dao/UserDAO.java`****)**
+##### UserDAO 확장 (`dao/UserDAO.java`)
 
 ```java
 package com.myblog.dao;
@@ -1928,9 +1928,9 @@ public class UserDAO {
 
 ```
 
-#### **6. JSP 구현 예시**
+#### 6. JSP 구현 예시
 
-##### **로그인 폼 (****`user/login_form.jsp`****)**
+##### 로그인 폼 (`user/login_form.jsp`)
 
 ```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -1992,7 +1992,7 @@ public class UserDAO {
 
 ```
 
-##### **로그인 처리 (****`user/login_action.jsp`****)**
+##### 로그인 처리 (`user/login_action.jsp`)
 
 ```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2062,7 +2062,7 @@ public class UserDAO {
 
 ```
 
-##### **로그아웃 처리 (****`user/logout_action.jsp`****)**
+##### 로그아웃 처리 (`user/logout_action.jsp`)
 
 ```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2074,7 +2074,7 @@ public class UserDAO {
     response.sendRedirect("login_form.jsp?logout=success");
 %>
 
-### **공통 헤더 (로그인 상태 표시) (`common/header.jsp`)**
+### 공통 헤더 (로그인 상태 표시) (`common/header.jsp`)
 
 ```
 
@@ -2097,7 +2097,7 @@ public class UserDAO {
 </header>
 
 ```javascript
-### **인증 체크 공통 로직 (****`common/auth_check.jsp`****)**
+### 인증 체크 공통 로직 (`common/auth_check.jsp`)
 ```
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2113,7 +2113,7 @@ public class UserDAO {
 %>
 
 ```javascript
-### **관리자 권한 체크 (****`common/admin_check.jsp`****)**
+### 관리자 권한 체크 (`common/admin_check.jsp`)
 ```
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2128,7 +2128,7 @@ public class UserDAO {
 
 %>
 
-##### **회원가입 처리 (****`user/signup_action.jsp`****)**
+##### 회원가입 처리 (`user/signup_action.jsp`)
 
 ```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2207,7 +2207,7 @@ public class UserDAO {
 
 ```
 
-##### **프로필 페이지 (****`user/profile.jsp`****)**
+##### 프로필 페이지 (`user/profile.jsp`)
 
 ```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2296,7 +2296,7 @@ public class UserDAO {
 
 ```
 
-##### **게시글 작성 폼 (로그인 필요) (****`post/form.jsp`****)**
+##### 게시글 작성 폼 (로그인 필요) (`post/form.jsp`)
 
 ```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2369,7 +2369,7 @@ public class UserDAO {
 
 ```
 
-##### **게시글 상세보기 (수정/삭제 권한 체크) (****`post/view.jsp`****)**
+##### 게시글 상세보기 (수정/삭제 권한 체크) (`post/view.jsp`)
 
 ```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -2536,9 +2536,9 @@ public class UserDAO {
 
 ```
 
-#### **7. 세션 관리 고급 기능**
+#### 7. 세션 관리 고급 기능
 
-##### **SessionDAO (****`dao/SessionDAO.java`****)**
+##### SessionDAO (`dao/SessionDAO.java`)
 
 ```java
 package com.myblog.dao;
@@ -2640,7 +2640,7 @@ public class SessionDAO {
 
 ```
 
-#### **8. build.gradle (JSP Model 1 용)**
+#### 8. build.gradle (JSP Model 1 용)
 
 ```text
 plugins {
@@ -2687,7 +2687,7 @@ test {
 
 ```
 
-#### **9. web.xml (JSP Model 1 용)**
+#### 9. web.xml (JSP Model 1 용)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -2746,30 +2746,30 @@ test {
 
 ```
 
-#### **10. 필요 산출물 정리 (JSP Model 1 + 인증)**
+#### 10. 필요 산출물 정리 (JSP Model 1 + 인증)
 
-##### **Java 소스 코드:**
+##### Java 소스 코드:
 
 - **DTO:** `User.java`, `Post.java`, `Category.java`, `Comment.java`, `UserSession.java`
 - **DAO:** `UserDAO.java`, `PostDAO.java`, `CategoryDAO.java`, `CommentDAO.java`, `SessionDAO.java`
 - **Util:** `PasswordUtil.java`, `SessionUtil.java`, `DBConnection.java`
-##### **JSP 파일:**
+##### JSP 파일:
 
 - **공통:** `header.jsp`, `footer.jsp`, `auth_check.jsp`, `admin_check.jsp`
 - **사용자:** `login_form.jsp`, `login_action.jsp`, `logout_action.jsp`, `signup_form.jsp`, `signup_action.jsp`, `profile.jsp`, `profile_action.jsp`
 - **게시글:** `list.jsp`, `view.jsp`, `form.jsp`, `post_action.jsp`, `delete_action.jsp`
 - **댓글:** `comment_action.jsp`
 - **관리자:** `userList.jsp`, `category.jsp`, `category_action.jsp`
-##### **정적 파일:**
+##### 정적 파일:
 
 - **CSS:** `style.css`
 - **JavaScript:** `main.js` (선택사항)
 - **이미지:** 업로드된 이미지 파일들
-##### **설정 파일:**
+##### 설정 파일:
 
 - `build.gradle` 또는 `pom.xml`
 - `web.xml`
-##### **DB 스크립트:**
+##### DB 스크립트:
 
 - 테이블 생성 SQL
 
