@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-29] verify | Loop 실습 후속 3종 종결 (실행검증·1차출처·토큰심화)
+- **① 실행 검증** (Node v26, scratchpad에서 가이드와 동일 파일로 실측): 후보 (A)·(B) 실패·(C)만 통과(결정적 확인), Step 2 메아리방 20회 중 13회(≈2/3) 깨진 채 "완료" 종료, Step 4 검증 루프 통과 시 정상 종료, "드물게 약 4%"=이론 (2/3)⁸=3.9% 정확. → [[guide-loop-engineering-demo]] 상단에 "✅ 실행 검증됨(2026-06-29, Node v26)" 노트 추가. Step 6(claude -p)은 토큰 소요로 미실행, 구문은 공식 헤드리스 docs 기준.
+- **② 1차 출처 검증·보존** (리서치 에이전트 WebSearch/WebFetch): `raw/loop-engineering/primary-sources.md` 신설(원본 2차 정리본은 보존). 교정 — Steinberger "650만 조회·06-08"은 **2차 매체 주장(X 원본 402 미검증)**, 소속 **OpenAI**(Anthropic 아님), Cherny 자구("write loops"/"write the loop")·날짜(게시 06-02/에피소드 미확정) 매체별 편차, **Osmani(✅직접확인)·Sonar(✅) verbatim 확보**, arXiv 3편 제목·저자·연도 일치. → [[src-loop-engineering]] 발화표(출처 검증 열 추가)·신중론(검증 인용)·외부 1차 출처 표 반영, frontmatter sources/external 갱신.
+- **③ 토큰 비용 심화**: demo에 "Step 6.5 토큰 비용 심화" 신설 — 봉투뒷면 비용모델(컨텍스트·사이클·서브에이전트), "무료 결정적 게이트를 모델 앞에 두기"(거부 신호=토큰 절약 장치) 코드 패턴, 종료조건 3종(goal·resource·**budget**). Osmani "Verification is still on you"·Sonar "fails quietly" 검증 인용.
+- 메모리 `loop-engineering-demo-progress` 후속 종결로 갱신. 빌드 통과.
+
 ## [2026-06-29] fix | Module 4 AGENTS.md 개념 정정 + harness 경미건 일괄
 - **Module 4 사실성 (3순위)**: "AGENTS.md를 (Claude Code가) 공통 자동 로드 / 충돌 시 우선순위"가 엔진 동작인 듯한 서술 → 공식 사양("Claude Code는 CLAUDE.md만 자동 로드, AGENTS.md는 아님")에 맞춰 정정. Step 1 도입에 ⚠️ 박스 추가(자동 로드 안 됨 → 프롬프트 명시 읽기로 동작 / `@AGENTS.md` import·심링크·`/init` 워크어라운드 3종), heredoc 자기소개 문구도 "자동 로드 안 함" 명시로 수정. FAQ에 `/clear` 경량 초기화 + 네이티브 서브에이전트(`.claude/agents/`+`/agents`) 대안 항목 신설.
 - **경미건 일괄**:

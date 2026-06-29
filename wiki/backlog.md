@@ -46,7 +46,11 @@ updated: 2026-06-27
   - **경미**: M2/4/5 시작 `cd ~/harness-playground` 추가, M5 README 중첩 펜스 4-backtick, M1 산출물 표 커밋명 실제화.
 - ✅ **sitemap.xml 자동화 확인 + robots.txt 신설** — sitemap은 MkDocs가 빌드마다 자동 생성(166 URL, `wiki.wonslab.dev` 자동 교정) → firebase `site/` 자동 배포. `wiki/robots.txt` 추가로 크롤러에 sitemap 위치 명시.
 - ✅ **CLAUDE.md 규칙 #1 갱신**(사용자) — "raw 불변" → "단 내용에 **오류가 있을 경우 수정 가능**" (위 Module 3 raw 교정의 근거).
-- ✅ **커밋·배포 완료** — `ea49634` (11 files), Firebase `wiki.wonslab.dev` 라이브.
+- ✅ **Loop 실습 후속 3종 종결** ([[guide-loop-engineering-demo]]):
+  - ① **실행 검증**(Node v26 실측) — 후보 (A)(B)실패·(C)통과, 메아리방 13/20≈⅔, 검증 루프 정상 종료, "약4%"=이론 (2/3)⁸=3.9% 정확. demo에 "✅실행 검증됨" 노트.
+  - ② **1차 출처 검증·보존** — `raw/loop-engineering/primary-sources.md` 신설. Osmani(✅)·Sonar(✅)·arXiv 3편 verbatim, Steinberger "650만 조회"는 2차 주장·OpenAI 소속 교정. src 페이지 반영.
+  - ③ **토큰 비용 심화** — demo "Step 6.5" 신설(비용모델·무료 게이트 우선·종료조건 3종 goal/resource/budget).
+- ✅ **커밋·배포 완료** — `ea49634`·`b98b6cc` (Firebase `wiki.wonslab.dev` 라이브). *(Loop 후속분은 별도 커밋 예정)*
 
 ### 2026-06-27
 - ✅ **글쓰기 스타일 1차 일괄 13편** — 비유 괄호 매핑·명사구 단편 → 장면+매핑 2문단 완결 문장(에이전트 13병렬). 규칙: 메모리 `feedback-wiki-writing-style`, 모범: ch6 "회의 vs 사람".
@@ -58,7 +62,7 @@ updated: 2026-06-27
 - ✅ **harness 가이드 전체 복붙 안정성 점검** — prerequisites(A-3 분리·A-4 3블록·A-5 git log 정정), module3(eslint --init 분리)·module5(`$WEEK` 전개 2건), demo(경로 견고화).
 - ✅ **코드 가이드 대정비** — `guide-code-authoring-and-review` 5권 강조 톤다운 + 표 3.1~3.4 완전화 + 4·7장 통합 + lecture-object-ch5 GRASP 9패턴 동기화.
 - ✅ **index.md 점검** — 카테고리 구조(Synthesis 중복→Guides)·src-*-lecture 중복 제거.
-- ⏭️ **후속 (Loop 실습)**: ① `~/loop-demo` 실제 실행 검증([[verify]]) ② 외부 1차 출처 raw 저장 검토(2026 X 발화 재확인) ③ 토큰 비용·심화편.
+- ✅ **후속 (Loop 실습) — 2026-06-29 종결**: ① 실행 검증 완료 ② 1차 출처 raw 저장(`primary-sources.md`) 완료 ③ 토큰 비용 심화(Step 6.5) 완료.
 
 ### 2026-06-21
 - ✅ **📚 5권 도서 강의 교재 모두 완성** — 오브젝트 18편 + EJ 11편 + 리팩터링 12편 + Clean Code 17편 + TDD 35편 = **93편**

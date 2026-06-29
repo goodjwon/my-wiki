@@ -2,14 +2,18 @@
 title: Loop 엔지니어링 실습 — 메아리방 vs 거부 신호 루프 (Node + claude -p)
 type: synthesis
 tags: [loop-engineering, harness, demo, react-pattern, claude-code, hands-on, node]
-sources: [loop-engineering/loop-engineering-notes.md]
+sources:
+  - loop-engineering/loop-engineering-notes.md
+  - loop-engineering/primary-sources.md
 external:
+  - https://addyosmani.com/blog/loop-engineering/
+  - https://www.sonarsource.com/blog/loop-engineering-without-verification-is-just-automation/
   - https://arxiv.org/abs/2210.03629
   - https://arxiv.org/abs/2303.11366
   - https://arxiv.org/abs/2303.17651
   - https://code.claude.com/docs/en/headless
 created: 2026-06-26
-updated: 2026-06-26
+updated: 2026-06-29
 ---
 
 # Loop 엔지니어링 실습 — 메아리방 vs 거부 신호 루프
@@ -21,6 +25,8 @@ updated: 2026-06-26
 **언제 보면 좋은가**: [[concept-loop-engineering]] 를 읽은 직후. [[guide-harness-demo]](하네스 5분 데모)의 다음 단계 — 하네스가 "환경"을 설계했다면, 루프는 "메커니즘 자체"를 설계한다.
 
 **전제**: Node 18+ 설치. (Step 6의 실제 Claude 연결만 Claude Code 로그인 필요 — 나머지는 토큰 0으로 누구나 재현 가능)
+
+> ✅ **실행 검증됨 (2026-06-29, Node v26)**: Step 1·2·4를 실제로 돌려 본문 수치를 확인했다 — 후보 (A)·(B)는 실패하고 (C)만 통과(결정적), Step 2 메아리방은 20회 중 13회(≈2/3)가 깨진 채 "완료" 종료, Step 4 검증 루프는 통과 시 정상 종료. "드물게 약 4%"는 이론값 (2/3)⁸=3.9%로 정확. (Step 6은 토큰이 들어 본 검증에서 제외 — 명령 구문은 [공식 헤드리스 docs](https://code.claude.com/docs/en/headless) 기준)
 
 ---
 
@@ -186,6 +192,42 @@ done
 
 ---
 
+## Step 6.5 — 토큰 비용 심화 (무인 루프의 진짜 리스크)
+
+검증 루프의 장점("사람 없이 통과까지 돈다")은 그대로 비용 리스크다 — **약한 게이트 + 높은 상한이 만나면 루프가 헛돌며 토큰을 태운다.** Osmani의 검증된 경고:
+
+> *"Verification is still on you. A loop running unattended is also a loop making mistakes unattended."*
+> *"you absolutely have to be careful about token costs (usage patterns can vary wildly if you are token rich or poor)."*
+
+### 봉투 뒷면 비용 모델
+
+무인 루프 1회 비용 ≈ **(사이클 수) × (사이클당 토큰)**. 사이클당 토큰을 키우는 3대 요인:
+
+| 요인 | 폭증 형태 | 줄이는 법 |
+|------|----------|----------|
+| **컨텍스트 크기** | 매 사이클 전체 저장소·전체 로그를 다시 첨부 | 실패 **diff·로그 꼬리**만 전달 (이 실습의 `cat test.log`처럼) |
+| **사이클 수** | 게이트가 약해 통과 판정이 안 나 무한 근접 | 하드 상한(`max N`) + 토큰 예산, K회 실패 시 사람 에스컬레이션 |
+| **서브에이전트** | 사이클마다 추가 모델 호출 | *"두 번째 의견이 값어치 할 때만"* (Osmani) |
+
+### 핵심 완화책 — 게이트를 모델 앞에 두기
+
+이 실습 Step 6의 형태가 이미 정답을 담고 있다: **결정적 검증(`node test.js`)을 먼저 돌리고, 실패할 때만 모델을 호출**한다. 로컬 테스트·타입체크·린트는 **토큰 0**이다.
+
+```bash
+# 비용 최적 패턴: 무료 게이트 통과면 모델을 아예 안 부른다
+if node test.js > test.log 2>&1; then
+  echo "✅ 이미 통과 — 모델 호출 0회, 토큰 0"
+else
+  cat test.log | claude -p "…수정…" --allowedTools "Read,Edit,Bash(node *)"
+fi
+```
+
+→ "모델을 매 사이클 부른다"가 아니라 **"무료 검증이 거부했을 때만 부른다"**. 거부 신호는 루프 품질만이 아니라 **토큰 절약 장치**이기도 하다.
+
+> 종료 조건은 ① 검증 통과(goal) ② 반복 상한(resource) ③ **토큰 예산(budget)** 세 가지여야 한다. 셋 중 하나라도 빠지면 무인 루프는 조용히 비용을 흘린다 — Sonar: *"a loop doesn't fail loudly, it fails quietly."*
+
+---
+
 ## 정리 (30초)
 
 ```bash
@@ -224,8 +266,8 @@ cd ~ && rm -rf ~/loop-demo
 
 ## 원본·외부 출처
 
-**개념·발화 (2026-06)**: [[concept-loop-engineering]] / [[src-loop-engineering]]
-- Boris Cherny (2026-06-02 Acquired 인터뷰) "My job is to write loops" · Peter Steinberger (2026-06-07) · Addy Osmani [Loop Engineering](https://addyosmani.com/blog/loop-engineering/) (2026-06-07)
+**개념·발화 (2026-06)**: [[concept-loop-engineering]] / [[src-loop-engineering]] · 1차 출처 검증본 `raw/loop-engineering/primary-sources.md` (2026-06-29)
+- Addy Osmani [Loop Engineering](https://addyosmani.com/blog/loop-engineering/) (2026-06-07, ✅용어 명명 1차 글) · Boris Cherny [Acquired](https://www.youtube.com/watch?v=RkQQ7WEor7w) "write loops" (⚠️자구·날짜 매체별 편차) · Peter Steinberger [X](https://x.com/steipete/status/2063697162748260627) (⚠️402, "650만 조회"는 2차 주장)
 
 **이론 (1차 출처)**:
 - ReAct — Yao et al. 2022, [arXiv 2210.03629](https://arxiv.org/abs/2210.03629)
