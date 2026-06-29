@@ -17,7 +17,7 @@ updated: 2026-06-29
 - Spring Boot 테스트 전략과 계산기 테스트 실습
 - curl로 API 수동 검증
 
-**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch09-JVM과성능]]
+**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch09]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 8.2 계산기 테스트를 직접 작성하고, 8.3에서 curl로 API를 찔러본다. 방법론: [[entity-tdd]].
 
@@ -149,7 +149,7 @@ class LoanRepositoryTest {
 }
 ```
 
-```plain text
+```text
 예상 결과
 서비스 테스트는 빠르게 유스케이스 오케스트레이션을 검증한다.
 컨트롤러 테스트는 보안 필터를 끈 상태에서 HTTP 계약을 검증한다.
@@ -330,7 +330,7 @@ class LoanServiceImplTest {
     @InjectMocks private LoanServiceImpl loanService;
 }
 ```
-```plain text
+```text
 예상 결과
 도메인 테스트는 엔티티 규칙과 상태 제약을 빠르게 검증한다.
 서비스 테스트는 저장소와 협력 객체를 목으로 두고 유스케이스 흐름과 예외 처리를 검증한다.
@@ -427,7 +427,7 @@ curl -i http://localhost:8080/api/client/loans \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-```plain text
+```text
 예상 결과
 유효한 사용자 또는 관리자 토큰이면 현재 로그인 사용자의 대출 목록이 반환된다.
 이 프로젝트에서는 `@AuthenticationPrincipal CustomUserDetails`를 통해 토큰에서 복원된 `memberId`를 사용한다.
@@ -467,7 +467,7 @@ curl -i -X DELETE http://localhost:8080/api/books/1
 
 현재 저장소 기준으로는 아래 순서가 특히 자연스럽습니다.
 
-```plain text
+```text
 GET /api/books/{id}
   → POST /api/auth/login
   → GET /api/client/loans
@@ -492,7 +492,7 @@ curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" \
   -H "Authorization: Bearer USER_ACCESS_TOKEN"
 ```
 
-```plain text
+```text
 예상 결과
 관리자 권한이 없는 사용자 토큰이면 `403 Forbidden`으로 차단된다.
 현재 보안 설정의 `requestMatchers("/api/admin/**").hasRole("ADMIN")` 규칙이 실제로 동작하는지 확인하는 가장 짧은 검증이다.
@@ -523,7 +523,7 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
   }'
 ```
 
-```plain text
+```text
 예상 결과
 인증 실패 시 토큰은 발급되지 않는다.
 현재 저장소는 `GlobalExceptionHandler`에서 `AuthenticationException`을 받아 `401 Unauthorized`와 `AUTHENTICATION_FAILED` 형태의 응답으로 정리한다.
@@ -539,7 +539,7 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 - 기대 결과 요약
 예를 들면 아래처럼 적는 편이 좋습니다.
 
-```plain text
+```text
 목적: 없는 리소스 조회 시 404 확인
 사전 조건: ID 9999는 존재하지 않음
 요청: GET /api/books/9999

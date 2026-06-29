@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 전략·템플릿·팩토리·싱글톤·옵저버·프록시·어댑터·파사드
 - if-else를 전략 패턴으로 리팩터링
 
-**트랙**: [[guide-java-track2-design]] · **다음 장**: [[java-study-ch05-Spring과프로젝트실행]]
+**트랙**: [[guide-java-track2-design]] · **다음 장**: [[java-study-ch05]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 패턴마다 Before/After 코드를 비교하고, 4.9 실전문제로 OCP를 코드로 확인한다. 깊이: [[concept-design-patterns]].
 
@@ -300,7 +300,7 @@ Client client = new Client();
 client.send(new EmailNotifierFactory(), "주문이 완료되었습니다.");
 client.send(new SmsNotifierFactory(), "인증번호는 1234입니다.");
 ```
-```plain text
+```text
 예상 결과
 이메일로 주문이 완료되었습니다. 메시지를 전송합니다.
 SMS로 인증번호는 1234입니다. 메시지를 전송합니다.
@@ -390,7 +390,7 @@ class SpringSingletonTest {
     }
 }
 ```
-```plain text
+```text
 예상 결과
 SpringAppConfig Bean 초기화 완료
 테스트에서 config1과 config2는 같은 인스턴스로 확인됩니다.
@@ -503,7 +503,7 @@ public class ShippingService {
     }
 }
 ```
-```plain text
+```text
 예상 결과
 --- 주문 처리를 시작합니다 ---
 주문이 성공적으로 완료되었습니다.
@@ -608,7 +608,7 @@ public class EventService {
     }
 }
 ```
-```plain text
+```text
 예상 결과
 이벤트 처리 시작: order-created
 이벤트 처리 완료.
@@ -713,7 +713,7 @@ public class DataService {
 DataService service = new DataService();
 service.process(new JsonAdapter(new NewJsonLibrary(), "{\"name\":\"Kim\"}"));
 ```
-```plain text
+```text
 예상 결과
 [어댑터 작동] 표준 processData() 호출을 -> newJsonLibrary.parseAndRunJson()으로 변환합니다.
 새로운 라이브러리로 JSON 데이터를 처리합니다: {"name":"Kim"}
@@ -801,7 +801,7 @@ public class OrderClient {
     }
 }
 ```
-```plain text
+```text
 예상 결과
 재고 확인: 노트북
 결제 처리: 홍길동
@@ -863,7 +863,7 @@ public class OrderClient {
 - 푸시, SMS, 이메일 발송 방식을 분리하는 문제
 
 ### 문제 1. 배송 서비스의 전략 찾기
-```plain text
+```text
 온라인 쇼핑몰에서 일반 배송, 당일 배송, 새벽 배송 중 하나를 선택할 수 있다.
 배송 서비스는 선택된 방식에 따라 같은 요청을 서로 다른 방식으로 처리한다.
 ```

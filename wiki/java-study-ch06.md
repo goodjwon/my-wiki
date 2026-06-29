@@ -17,7 +17,7 @@ updated: 2026-06-29
 - SQL 기본기(DDL·DML·JOIN·집계)와 쿼리 최적화
 - Querydsl로 타입 안전 동적 쿼리
 
-**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch07-서버와인증]]
+**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch07]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. SQL을 직접 쳐보고, 6.12 연습문제와 Querydsl 예제를 따라 만든다. 깊이: [[entity-querydsl]]·[[concept-db-connection-pool]].
 
@@ -71,7 +71,7 @@ updated: 2026-06-29
 - `order_items`: 주문과 도서의 연결, 수량과 주문 시점 가격
 이 기준이 잡히면 자연스럽게 관계도 정리됩니다.
 
-```plain text
+```text
 members 1 --- N orders
 orders  1 --- N order_items
 books   1 --- N order_items
@@ -1029,7 +1029,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long>, JpaSpecificat
 }
 ```
 
-```plain text
+```text
 예상 결과
 특정 회원의 미반납 대출 목록이 대출일 역순으로 반환된다.
 현재 저장소에서는 이런 조회 구조를 Querydsl 체인이 아니라 Spring Data JPA + JPQL 문자열로 표현하고 있다.
@@ -1205,7 +1205,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 }
 ```
 
-```plain text
+```text
 예상 결과
 주문 엔티티 목록이 아니라 취소 상태를 제외한 총 매출 합계 한 값이 반환된다.
 현재 저장소는 이런 스칼라 조회를 Spring Data JPA + JPQL로 처리하고 있다.
@@ -1373,7 +1373,7 @@ Querydsl 프로젝션은 **필요한 데이터만 안전하게 조회해 DTO로 
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 }
 ```
-```plain text
+```text
 예상 결과
 제목, 저자, 가격, 대출 가능 여부처럼 선택적으로 들어오는 조건이 많아지면 Specification 또는 별도 조회 리포지토리로 확장할 수 있다.
 현재 저장소는 Querydsl 조건 메서드 조합까지는 가지 않았고, 동적 조회의 1차 선택지는 Spring Data JPA Specification이다.
@@ -1607,7 +1607,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 
 패키지 이름은 프로젝트마다 다를 수 있지만, 책임 분리는 비슷하게 가져가는 편이 좋습니다.
 
-```plain text
+```text
 repository/
   MemberRepository.java
   MemberQueryRepository.java
@@ -1671,7 +1671,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 }
 ```
 
-```plain text
+```text
 예상 결과
 회원 유형과 이름 조건을 조합한 조회가 Spring Data JPA 리포지토리 한 곳에서 처리된다.
 현재 저장소는 조회 전용 리포지토리를 따로 나누기 전 단계이며, 이 문서는 조회 복잡도가 더 커졌을 때의 다음 구조를 설명한다.
@@ -1888,7 +1888,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 }
 ```
 
-```plain text
+```text
 예상 결과
 주문 상태별 목록이 페이지 단위로 조회된다.
 현재 저장소는 이 페이징을 Querydsl이 아니라 Spring Data JPA 메서드 쿼리로 처리하고 있다.
@@ -1902,7 +1902,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long>, JpaSpecificat
 }
 ```
 
-```plain text
+```text
 예상 결과
 대출 목록을 읽을 때 회원과 도서 정보를 한 번에 함께 가져와 N+1을 줄일 수 있다.
 다만 이런 fetch join 방식은 목록 페이징의 기본값으로 쓰기보다 상세 조회나 제한된 목록 최적화로 보는 편이 안전하다.

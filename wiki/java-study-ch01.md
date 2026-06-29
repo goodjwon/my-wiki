@@ -17,7 +17,7 @@ updated: 2026-06-29
 - "한 번 작성, 어디서나 실행"이 가능한 이유
 - 첫 프로그램을 직접 실행
 
-**트랙**: [[guide-java-track1-basics]] · **다음 장**: [[java-study-ch02-Java문법과객체]]
+**트랙**: [[guide-java-track1-basics]] · **다음 장**: [[java-study-ch02]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 설치부터 그대로 따라 하며 Hello World를 띄운다.
 
@@ -307,7 +307,7 @@ int main() {
 ```
 
 #### C++ 코드 예시
-```c++
+```cpp
 #include <iostream>
 
 int main() {

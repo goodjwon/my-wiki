@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 람다·스트림으로 명령형→선언형 사고 전환
 - 알고리즘 기초(시간복잡도·탐색·정렬)
 
-**트랙**: [[guide-java-track1-basics]] · **다음 장**: [[java-study-ch04-객체지향설계와패턴]]
+**트랙**: [[guide-java-track1-basics]] · **다음 장**: [[java-study-ch04]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 컬렉션 예제를 직접 돌려보고, 3.8 알고리즘 실전문제로 마무리한다.
 
@@ -48,7 +48,7 @@ List<String> result = names.stream()
 
 System.out.println(result);
 ```
-```plain text
+```text
 예상 결과
 [KIM]
 ```
@@ -223,7 +223,7 @@ intBox.setValue(1234);
 System.out.println(intBox.getValue());
 ```
 
-```plain text
+```text
 예상 결과
 Hello, Generics!
 1234
@@ -325,7 +325,7 @@ System.out.println("ArrayList: " + list);
 System.out.println(list.get(1));
 ```
 
-```plain text
+```text
 예상 결과
 ArrayList: [사과, 바나나, 체리]
 바나나
@@ -447,7 +447,7 @@ System.out.println(deque.pollFirst());
 System.out.println(deque.pollFirst());
 ```
 
-```plain text
+```text
 예상 결과
 Message 1
 Message 2
@@ -535,7 +535,7 @@ System.out.println(waitingQueue.pollFirst());
 System.out.println(waitingQueue.pollFirst());
 ```
 
-```plain text
+```text
 예상 결과
 응급환자
 홍길동
@@ -557,7 +557,7 @@ System.out.println(history.pop());
 System.out.println(history.peek());
 ```
 
-```plain text
+```text
 예상 결과
 /orders
 /books
@@ -616,7 +616,7 @@ System.out.println(orders.poll().name());
 System.out.println(orders.poll().name());
 ```
 
-```plain text
+```text
 예상 결과
 VIP 주문
 일반 주문
@@ -707,7 +707,7 @@ runnable.run();
 runnable.run();
 ```
 
-```plain text
+```text
 예상 결과
 Hello, Lambda!
 Hello, Lambda!
@@ -733,7 +733,7 @@ Function<String, Integer> lengthFunction = s -> s.length();
 System.out.println(lengthFunction.apply("Hello"));
 ```
 
-```plain text
+```text
 예상 결과
 5
 ```
@@ -859,7 +859,7 @@ for (int i = 0; i < data.length; i++) {
 System.out.println("결과 인덱스: " + index);
 ```
 
-```plain text
+```text
 예상 결과
 인덱스 0에서 검사: 값 5
 인덱스 1에서 검사: 값 3
@@ -896,7 +896,7 @@ while (left <= right) {
 System.out.println("결과 인덱스: " + result);
 ```
 
-```plain text
+```text
 예상 결과
 중간 인덱스: 3, 값: 7
 중간 인덱스: 5, 값: 13
@@ -1008,7 +1008,7 @@ int fib(int n) {
 System.out.println(fib(10));
 ```
 
-```plain text
+```text
 예상 결과
 55
 ```
@@ -1410,7 +1410,7 @@ Runnable task = new Runnable() {
 
 기대 출력:
 
-```plain text
+```text
 Hello, Consumer!
 ```
 
@@ -1424,13 +1424,13 @@ Hello, Consumer!
 
 입력 예시:
 
-```plain text
+```text
 Hello
 ```
 
 기대 출력:
 
-```plain text
+```text
 5
 ```
 
@@ -1446,7 +1446,7 @@ Hello
 
 입력 예시:
 
-```plain text
+```text
 Hello, Function!
 ```
 
@@ -1456,7 +1456,7 @@ Hello, Function!
 
 입력 예시:
 
-```plain text
+```text
 Alice
 Bob
 Charlie
@@ -1464,7 +1464,7 @@ Charlie
 
 기대 출력 예시:
 
-```plain text
+```text
 Name: Alice
 Length: 5
 Name: Bob
@@ -1522,7 +1522,7 @@ List<List<String>> list = Arrays.asList(
 
 기대 결과:
 
-```plain text
+```text
 [a, b, c, d]
 ```
 
@@ -1538,7 +1538,7 @@ List<Integer> numbers = Arrays.asList(1, 2, 3, 4);
 
 기대 출력:
 
-```plain text
+```text
 10
 ```
 
