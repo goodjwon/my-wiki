@@ -29,6 +29,8 @@ updated: 2026-06-29
 
 ## 3.0 컬렉션과 함수형 개요
 
+**🎯 목표**: 컬렉션과 함수형 파트에서 무엇을 배우는지 큰 그림을 잡는다.
+
 #### 개요
 
 이 문서는 책의 `컬렉션과 함수형` 챕터를 안내하는 문서입니다. Java를 어느 정도 읽을 수 있게 된 시점부터는 문법 암기보다, **데이터를 어떤 구조에 담고 어떤 방식으로 흘려보낼지**를 이해하는 것이 더 중요해집니다.
@@ -76,6 +78,8 @@ System.out.println(result);
 ---
 
 ## 3.1 컬렉션 프레임워크와 제네릭
+
+**🎯 목표**: List·Set·Map과 제네릭을 용도에 맞게 선택해 쓴다.
 
 #### 개요
 
@@ -266,6 +270,11 @@ public static void printNumbers(List<? extends Number> numbers) {
 - [Java Collections Framework](https://docs.oracle.com/en/java/javase/21/core/java-collections-framework.html)
 - [The Collection Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html)
 - [dev.java](http://dev.java/)[ Generics](https://dev.java/learn/generics/)
+
+### ✏️ 직접 해보기
+
+같은 데이터를 List·Set·Map에 각각 담아 중복 처리와 조회 방식의 차이를 출력으로 확인하라.
+
 #### 정리
 
 컬렉션 프레임워크는 데이터를 어떤 구조로 다룰지에 대한 기준이고, 제네릭은 그 구조를 타입 안전하게 유지하는 장치입니다. 이 둘을 함께 이해해야 Java 코드가 비로소 구조적으로 보이기 시작합니다.
@@ -278,6 +287,8 @@ public static void printNumbers(List<? extends Number> numbers) {
 ---
 
 ## 3.2 컬렉션 자료구조 활용 사례
+
+**🎯 목표**: 대표 자료구조의 활용 사례를 코드로 익힌다.
 
 #### 개요
 
@@ -452,6 +463,11 @@ Message 2
 
 실무에서는 자료구조를 아주 많이 바꾸기보다, 처음 선택을 너무 무겁게 하지 않는 것이 중요합니다. 대부분의 경우 `ArrayList`, `HashMap`, `ArrayDeque`만 잘 이해해도 기본적인 선택은 충분히 할 수 있습니다.
 
+
+### ✏️ 직접 해보기
+
+Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
+
 #### 정리
 
 자료구조 학습의 핵심은 이름을 외우는 것이 아니라, 데이터가 어떻게 들어오고 나가는지를 상상하는 것입니다. 그 흐름을 기준으로 보면 어떤 구조를 써야 할지가 훨씬 자연스럽게 보입니다.
@@ -464,6 +480,8 @@ Message 2
 ---
 
 ## 3.3 컬렉션 선택 시나리오
+
+**🎯 목표**: 상황별로 어떤 컬렉션을 골라야 하는지 판단 기준을 세운다.
 
 #### 개요
 
@@ -642,6 +660,11 @@ class FileNode {
 - 우선순위 처리: `PriorityQueue`
 - 동시성 키-값 저장소: `ConcurrentHashMap`
 - 계층 구조 표현: `List`를 포함한 사용자 정의 노드 구조
+
+### ✏️ 직접 해보기
+
+"순서 유지"·"중복 제거"·"빠른 key 조회" 세 요구에 각각 맞는 컬렉션을 고르고 이유를 적어 보라.
+
 #### 정리
 
 컬렉션 선택의 핵심은 구현체 이름을 많이 아는 것이 아니라, **데이터가 들어오고 나가고 경쟁하는 방식**을 먼저 보는 것입니다. 시나리오를 기준으로 반복해서 선택해 보면, 자료구조가 외워야 할 목록이 아니라 설계 도구로 보이기 시작합니다.
@@ -654,6 +677,8 @@ class FileNode {
 ---
 
 ## 3.4 람다와 스트림
+
+**🎯 목표**: 람다·스트림으로 명령형 반복을 선언형으로 바꾼다.
 
 #### 개요
 
@@ -759,6 +784,11 @@ List<String> result = names.stream()
 - [Lambda Expressions](https://dev.java/learn/lambdas/)
 - [Stream Package Summary](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html)
 - [Stream Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html)
+
+### ✏️ 직접 해보기
+
+정수 리스트에서 짝수만 골라 제곱한 합을 구하는 코드를 for문과 스트림 두 방식으로 짜 보라.
+
 #### 정리
 
 람다와 스트림은 Java를 다른 언어처럼 바꾸는 기능이 아닙니다. 기존 객체지향 코드를 보완해, 반복되는 데이터 처리 로직을 더 선언적으로 표현하게 해주는 도구입니다.
@@ -771,6 +801,8 @@ List<String> result = names.stream()
 ---
 
 ## 3.7 알고리즘 기초: 시간복잡도와 탐색/정렬
+
+**🎯 목표**: 시간복잡도와 기본 탐색·정렬을 이해한다.
 
 ### 알고리즘 기초: 시간복잡도와 탐색/정렬
 
@@ -1002,6 +1034,11 @@ while (!queue.isEmpty()) {
 - 결과 순서가 중요한가: 정렬 필요
 - 최단 거리나 레벨 탐색인가: BFS
 - 모든 경로를 깊게 내려가야 하는가: DFS
+
+### ✏️ 직접 해보기
+
+선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라.
+
 #### 정리
 
 알고리즘 입문의 핵심은 복잡한 문제를 많이 푸는 것이 아니라, **데이터 상태와 요구사항을 보고 자료구조와 탐색/정렬/재귀 전략을 고르는 것**입니다. 시간복잡도는 그 판단을 돕는 기준이고, 트리와 그래프는 그 전략이 더 복잡한 구조로 확장된 모습입니다.
@@ -1014,6 +1051,8 @@ while (!queue.isEmpty()) {
 ---
 
 ## 3.8 알고리즘 기초 실전문제
+
+**🎯 목표**: 알고리즘 기초를 실전 문제로 적용한다.
 
 #### 개요
 
@@ -1127,6 +1166,8 @@ int[][] recommendations = {
 ---
 
 ## 3.8-1 알고리즘 기초 실전문제 풀이
+
+**🎯 목표**: 실전문제의 풀이 접근을 단계별로 확인한다.
 
 #### 개요
 
@@ -1323,6 +1364,8 @@ public static void sortRecommendations(int[][] recommendations) {
 ---
 
 ## 3.9 함수형 인터페이스와 스트림 연습 문제
+
+**🎯 목표**: 함수형 인터페이스와 스트림을 연습 문제로 손에 익힌다.
 
 ### 개요
 
