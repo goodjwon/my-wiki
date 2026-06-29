@@ -251,6 +251,19 @@ nav:
       - "T3. 입출력과 네트워크": guide-java-track3-io-network.md
       - "T4. Spring 웹 애플리케이션": guide-java-track4-spring-web.md
       - "T5. 심화·워크북·종합": guide-java-track5-deep-dive.md
+    - "Java 스터디 — 챕터 본문":
+      - "0. 안내": java-study-ch00-안내.md
+      - "1. 환경과 실행": java-study-ch01-환경과실행.md
+      - "2. Java 문법과 객체": java-study-ch02-Java문법과객체.md
+      - "3. 컬렉션과 함수형": java-study-ch03-컬렉션과함수형.md
+      - "4. 객체지향 설계와 패턴": java-study-ch04-객체지향설계와패턴.md
+      - "5. Spring과 프로젝트 실행": java-study-ch05-Spring과프로젝트실행.md
+      - "6. 데이터 접근과 SQL": java-study-ch06-데이터접근과SQL.md
+      - "7. 서버와 인증": java-study-ch07-서버와인증.md
+      - "8. 테스트와 품질": java-study-ch08-테스트와품질.md
+      - "9. JVM과 성능": java-study-ch09-JVM과성능.md
+      - "10. 입출력과 네트워크": java-study-ch10-입출력과네트워크.md
+      - "11. 부록": java-study-ch11-부록.md
     - 개념:
       - Spring Core: concept-spring-core.md
       - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md

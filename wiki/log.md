@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-29] feat | Java 스터디 챕터 본문 12개 위키 게시
+- 그동안 raw에만 있던 챕터 본문(12개, ~13k줄)을 위키 페이지로 게시 — frontmatter(type:source, sources:java-study/<file>) + 원본/학습경로 백링크 prepend. 파일명은 raw와 동일(`java-study-chNN-*.md`).
+- mkdocs nav `Java·Spring → Java 스터디 — 챕터 본문` 12항목 추가. src-java-study에 챕터 본문 직접 링크([[java-study-ch00~11]]) 안내 추가.
+- 빌드 통과(12개 챕터 HTML, 3.8초). 이제 구독자가 트랙 가이드(흐름)→챕터 본문(전문) 양쪽 열람 가능.
+
 ## [2026-06-29] feat | Java 학습 경로 T2~T5 + 전체 지도 허브 완성
 - T1 톤 확정 후 동일 템플릿으로 나머지 트랙 일괄 작성(구독자 흐름: 개요→학습순서→핵심개념→💡이론·방법론 팁+상세링크→🛠미니프로젝트→정리):
   - **T2 객체지향 설계로 응용**(ch4 패턴8종+ch9 JVM, 🛠전략패턴 리팩터링) — [[guide-java-track2-design]]
