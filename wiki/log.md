@@ -4,6 +4,15 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-29] feat | Java 학습 경로 T2~T5 + 전체 지도 허브 완성
+- T1 톤 확정 후 동일 템플릿으로 나머지 트랙 일괄 작성(구독자 흐름: 개요→학습순서→핵심개념→💡이론·방법론 팁+상세링크→🛠미니프로젝트→정리):
+  - **T2 객체지향 설계로 응용**(ch4 패턴8종+ch9 JVM, 🛠전략패턴 리팩터링) — [[guide-java-track2-design]]
+  - **T3 입출력과 네트워크**(ch10 예외/파일/네트워크, 🛠파일처리 시스템) — [[guide-java-track3-io-network]]
+  - **T4 Spring 웹 애플리케이션**(ch5~8, 🛠도서 주문·대여 시스템) — [[guide-java-track4-spring-web]]
+  - **T5 심화·워크북·종합**(ch11 부록+9 워크북, 🛠종합 토이프로젝트) — [[guide-java-track5-deep-dive]]
+  - **전체 지도 허브** — [[guide-java-learning-path]] (5트랙 표·흐름도·특징)
+- 각 트랙 💡팁이 5권 강의(오브젝트·EJ·리팩터링·CleanCode·TDD)·concept 페이지로 "자세히 →" 연결, 미니프로젝트 풀이는 raw 경로 명시. mkdocs nav "학습 경로" 6항목, index.md Guides 등재. 빌드 통과(트랙 간 링크 전부 해결).
+
 ## [2026-06-29] feat | Java 스터디 재구성 0단계(raw 최신화) + T1 트랙 시범 + 브랜드 통일
 - **Notion DB 직접 수집**: `[2024-2025] java 스터디 자료`(`goodjwon.notion.site`)를 published-site API(loadPageChunk+queryCollection, curl)로 접근 — MCP 없이 97개 문서 추출. (기존 본문 12챕터는 4월 ingest로 이미 raw 보유, 위키 src 1장으로 등록돼 있었음.)
 - **0단계 raw 최신화**: 4월 이후 추가된 **신규 10개**(전략패턴 실전문제·메모앱 토이프로젝트·JVM 워크북·도서주문/대여 시나리오·레거시 실습 등)를 Notion→md 렌더러(코드펜스·헤더·링크 보존)로 변환해 해당 챕터 raw에 반영. 신규 산출물: `java-study-notion-db-catalog.md`(97행 목차), `java-study-refresh-checklist.md`(보유87/수집10/갱신후보 6.1·8.0). 위키 `src-java-study-2024-2025` 91→**97** 갱신.

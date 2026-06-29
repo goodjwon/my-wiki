@@ -76,6 +76,8 @@ updated: 2026-06-26
 - [[backlog]] — 위키 백로그·진행 상태 (새 세션 시작 시 먼저 읽기)
 - [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 가이드 (CLAUDE.md 템플릿, ADR, API, 트러블슈팅)
 - [[guide-java-book-study-lab]] — Java 도서 5권 실습 환경 가이드 (Java 17, JUnit 5, Python, Node)
+- [[guide-java-learning-path]] — 📘 Java 학습 경로 전체 지도 (5개 트랙: 기초→설계→입출력→Spring→실전)
+  - [[guide-java-track1-basics]] · [[guide-java-track2-design]] · [[guide-java-track3-io-network]] · [[guide-java-track4-spring-web]] · [[guide-java-track5-deep-dive]]
 - [[guide-code-authoring-and-review]] — 코드 작성·점검 가이드 — 작성 체크리스트·PR 리뷰 어휘 (5권 도서 기반)
 - [[guide-harness-00-prerequisites]] — 하네스 실습 사전 안내 (Node + GCP 학습자용 환경/용어/FAQ)
 - [[guide-harness-demo]] — 하네스 5분 데모: 있을 때 vs 없을 때 직접 체험 (.env 커밋 차단 시연)
