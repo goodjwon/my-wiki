@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module5/01_repo_and_rippable_prompt.md
   - harness-engineering/harness-kit/module5/02_weekly_review_prompt.md
 created: 2026-05-31
-updated: 2026-06-28
+updated: 2026-06-29
 ---
 
 # 하네스 Module 05 — 진화·주간 리뷰·Rippable
@@ -33,6 +33,8 @@ updated: 2026-06-28
 지금까지 만든 파일을 한 번에 점검:
 
 ```bash
+cd ~/harness-playground
+
 # 현재 상태
 find . -maxdepth 2 -name "CLAUDE.md" -o -name "AGENTS.md" \
   -o -name "task-list.md" -o -name "claude-progress.txt" \
@@ -83,7 +85,7 @@ EOF
 
 ## Step 2 — README.md에 온보딩 섹션 추가 — 10분
 
-```bash
+````bash
 cat >> README.md << 'EOF'
 
 ## 🛡️ Claude Code 하네스 (신규 팀원용)
@@ -115,7 +117,7 @@ EOF
 
 git add README.md .gitignore
 git commit -m "docs(M5): Claude Code 하네스 온보딩 섹션 추가"
-```
+````
 
 ---
 
@@ -290,16 +292,17 @@ git commit -m "harness(M5): 미사용 규칙 정리 (Rippable cleanup)
 
 ### Step 5-1: Module 01의 베이스라인 태스크 재실행
 
-`.claude/baseline.md`의 태스크 A·B·C를 **현재 상태(CLAUDE.md + hooks + AGENTS.md 모두 적용)** 로 재실행.
+`.claude/baseline.md`의 태스크 A를 **현재 상태(CLAUDE.md + hooks + AGENTS.md 모두 적용)** 로 재실행 (B·C도 반복하면 더 좋지만 시간이 빠듯하면 A 하나로 누적 효과 확인 가능).
 
-새 세션에서 (Module 1과 동일한 표현으로):
+새 세션에서 **Module 1 태스크 A 본문을 표현 그대로** 다시 던진다 (api/+web/ 모노레포 — Before와 같은 작업·표현이어야 비교 유효):
 
 ```
-User 모델에 'phone' 필드를 추가해줘.
+이 모노레포에 User에 'phone' 필드를 추가해줘.
+- api/: POST /users 와 GET /users 응답에 phone 포함
 - 형식 검증 (010-XXXX-XXXX 또는 +82-...)
 - 필수 항목 (없으면 400)
-- POST /users 와 GET /users 응답에 반영
-- 가능하면 테스트도
+- web/: 추가 폼에 phone 입력, 목록에 phone 표시
+- 가능하면 api 테스트도
 ```
 
 자기검증 루프가 자동 작동. 검증 완료 보고까지 확인.
@@ -316,11 +319,12 @@ cat >> .claude/baseline.md << 'EOF'
 ### 태스크 A 비교
 | 항목 | M1 Before | M2 After | M5 After (5모듈) | 누적 개선 |
 |------|----------|---------|----------------|----------|
-| DB 모델 노출 | __ | __ | __ | __ |
-| 마이그레이션 처리 | __ | __ | __ | __ |
-| 테스트 작성 | __ | __ | __ | __ |
+| 내부 모델(in-memory) 노출 | __ | __ | __ | __ |
+| Zod 스키마 검증 | __ | __ | __ | __ |
+| api 테스트 작성 | __ | __ | __ | __ |
 | 불필요한 코드 (줄) | __ | __ | __ | __ |
 | 메시지 횟수 | __ | __ | __ | __ |
+| 화면 작동 확인 | __ | __ | __ | __ |
 | guard.sh 차단 횟수 | 0 | 0 | __ | __ |
 | Critic CONDITIONAL REJECT 횟수 | — | — | __ | __ |
 

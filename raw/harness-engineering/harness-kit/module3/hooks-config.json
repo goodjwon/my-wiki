@@ -1,7 +1,7 @@
 {
   "_comment": "Claude Code Hooks 설정 파일",
   "_location": ".claude/settings.json 또는 프로젝트 루트 claude.json",
-  "_docs": "https://docs.anthropic.com/claude-code/hooks",
+  "_docs": "https://code.claude.com/docs/en/hooks",
 
   "hooks": {
     "PreToolUse": [

@@ -1,14 +1,19 @@
 #!/bin/bash
-# guard.sh — Claude Code Pre-Tool Hook
+# guard.sh — Claude Code PreToolUse Hook
 # 위험한 명령을 실행 전에 차단합니다
 # 위치: .claude/hooks/guard.sh
 # 권한: chmod +x .claude/hooks/guard.sh
+# 의존: jq (brew install jq / apt install jq)
+#
+# Claude Code는 hook 입력을 stdin으로 JSON 전달한다:
+#   {"tool_name":"Bash","tool_input":{"command":"..."}}
+# 명령을 차단하려면 exit 2 로 종료한다 (stderr 메시지가 Claude에게 전달돼 자동 처리됨).
+# exit 0 = 통과, exit 1 = 비차단 오류(실행 계속). 차단은 반드시 exit 2.
 
-# Claude Code가 실행하려는 명령어는 stdin으로 전달됨
-COMMAND="$1"
-if [ -z "$COMMAND" ]; then
-  read -r COMMAND
-fi
+INPUT=$(cat)
+COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+# jq가 없거나 평문으로 직접 테스트할 때는 입력 전체를 명령으로 간주
+[ -z "$COMMAND" ] && COMMAND="$INPUT"
 
 # ─── 차단 규칙 ─────────────────────────────────────────
 
@@ -16,7 +21,7 @@ block() {
   echo "🚫 BLOCKED by guard.sh: $1" >&2
   echo "REASON: $2" >&2
   echo "ACTION: $3" >&2
-  exit 1
+  exit 2
 }
 
 warn() {

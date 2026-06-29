@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module1/02_baseline_prompt.md
   - harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-06-28
+updated: 2026-06-29
 ---
 
 # 하네스 Module 01 — 베이스라인 측정 + 실패 패턴 감사
@@ -376,7 +376,7 @@ git log --oneline --since="1 month ago" | head -30
 |------|------|--------------|
 | `.claude/baseline.md` | Before 측정 + Failure Audit + 시스템 문제 우선순위 표 | Module 5에서 After 비교 |
 | `.claude/failure-audit.md` | 발견된 모든 실패 패턴 | Module 2 STOP 트리거 입력 |
-| git commit (`harness: add module1 baseline`) | 추적 시작점 | Module 5에서 diff 가능 |
+| git commit (`harness(M1): 베이스라인 측정 결과 저장` + `baseline(M1-A/B/C)`) | 추적 시작점 | Module 5에서 diff 가능 |
 
 ---
 

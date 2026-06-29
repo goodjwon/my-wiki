@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
   - harness-engineering/harness-kit/module2/02_before_after_prompt.md
 created: 2026-05-31
-updated: 2026-06-28
+updated: 2026-06-29
 ---
 
 # 하네스 Module 02 — CLAUDE.md 작성
@@ -27,9 +27,11 @@ updated: 2026-06-28
 
 ## Step 1 — CLAUDE.md 기본 골격 만들기 — 10분
 
-본인 프로젝트 루트에서:
+실습 프로젝트(`~/harness-playground`) 루트에서 (5모듈 종료 후 본인 프로젝트로 이식):
 
 ```bash
+cd ~/harness-playground
+
 # 기본 구조 자동 생성
 cat > CLAUDE.md << 'EOF'
 # CLAUDE.md — Agent Harness Constitution
@@ -226,29 +228,31 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 
 ### Step 5-3: 태스크 A 재실행 (Module 1과 같은 표현)
 
-로드를 확인했으면, 이제 Module 01의 태스크 A를 **표현 하나 바꾸지 않고** 그대로 다시 던진다:
+로드를 확인했으면, 이제 Module 01의 태스크 A 본문을 **표현 하나 바꾸지 않고** 그대로 다시 던진다. 유일한 차이는 끝의 CLAUDE.md 확인 지시 — Before(M1)와 동일한 작업·표현이어야 비교가 유효하다:
 
 ```
-User 모델에 'phone' 필드를 추가해줘.
+이 모노레포에 User에 'phone' 필드를 추가해줘.
+- api/: POST /users 와 GET /users 응답에 phone 포함
 - 형식 검증 (010-XXXX-XXXX 또는 +82-...)
 - 필수 항목 (없으면 400)
-- POST /users 와 GET /users 응답에 반영
-- 가능하면 테스트도
+- web/: 추가 폼에 phone 입력, 목록에 phone 표시
+- 가능하면 api 테스트도
 
 시작 전 CLAUDE.md의 섹션 8 작업 전 체크리스트와
 섹션 7 STOP 트리거를 먼저 확인하고, 단계별 계획을 제시해줘.
 ```
 
-완료 후 측정 (Module 1과 같은 항목):
+완료 후 측정 (Module 1 태스크 A와 **같은 7개 항목**):
 
 ```
 [태스크 A — After]
-□ DB/내부 모델 노출: __
-□ 마이그레이션 처리: __
-□ 테스트 작성: __
-□ 불필요한 코드 줄 수: __
+□ 내부 모델(in-memory users) 노출: __
+□ Zod 스키마로 검증: __
+□ api 테스트 작성: __
+□ 요청 안 한 코드 줄 수: __
 □ 메시지 횟수: __
 □ 가정 명시 여부: __
+□ 화면 실제 작동 확인: __
 ```
 
 ### Step 5-4: 비교 표 작성
@@ -265,11 +269,13 @@ cat >> .claude/baseline.md << 'EOF'
 ### 태스크 A 비교
 | 항목 | Before (M1) | After (M2) | 개선 |
 |------|------------|-----------|------|
-| DB 모델 노출 | __ | __ | __ |
-| 마이그레이션 처리 | __ | __ | __ |
-| 테스트 작성 | __ | __ | __ |
+| 내부 모델(in-memory) 노출 | __ | __ | __ |
+| Zod 스키마 검증 | __ | __ | __ |
+| api 테스트 작성 | __ | __ | __ |
 | 불필요한 코드 (줄) | __ | __ | __ |
 | 메시지 횟수 | __ | __ | __ |
+| 가정 명시 | __ | __ | __ |
+| 화면 작동 확인 | __ | __ | __ |
 
 ### 작동한 CLAUDE.md 규칙
 - (예: "STOP: ORM 모델 직접 반환" → Zod 스키마 변환 자동 수행)

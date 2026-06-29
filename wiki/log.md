@@ -4,6 +4,48 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-29] fix | Module 4 AGENTS.md 개념 정정 + harness 경미건 일괄
+- **Module 4 사실성 (3순위)**: "AGENTS.md를 (Claude Code가) 공통 자동 로드 / 충돌 시 우선순위"가 엔진 동작인 듯한 서술 → 공식 사양("Claude Code는 CLAUDE.md만 자동 로드, AGENTS.md는 아님")에 맞춰 정정. Step 1 도입에 ⚠️ 박스 추가(자동 로드 안 됨 → 프롬프트 명시 읽기로 동작 / `@AGENTS.md` import·심링크·`/init` 워크어라운드 3종), heredoc 자기소개 문구도 "자동 로드 안 함" 명시로 수정. FAQ에 `/clear` 경량 초기화 + 네이티브 서브에이전트(`.claude/agents/`+`/agents`) 대안 항목 신설.
+- **경미건 일괄**:
+  - **시작 경로 `cd ~/harness-playground`**: M2 Step 1(+"본인 프로젝트 루트"→"실습 프로젝트(`~/harness-playground`)" 명확화)·M4 Step 1·M5 Step 1 bash 블록 첫 줄에 추가 — 새 터미널서 엉뚱한 위치 파일 생성 방지.
+  - **M5 Step 2 README 중첩 펜스**: 바깥 ` ```bash `를 4-backtick(` ````bash `)으로 바꿔 heredoc 본문의 ` ``` `(온보딩 코드블록)가 마크다운 펜스를 조기 종료하던 문제 해소(펜스 88/120 균형 확인).
+  - **M1 산출물 표 커밋명**: 영문 가상 `harness: add module1 baseline` → 실제 `harness(M1): 베이스라인 측정 결과 저장` + `baseline(M1-A/B/C)`.
+- **검증**: 빌드 통과, 4-backtick 1쌍, M2/4/5 cd 각 1건. frontmatter `updated` 2026-06-29(M1·M4 포함).
+- **harness 검증 후속 종결**: 🔴/🟡 전부 반영 완료(Module 3 hooks·M1↔M5 비교·M4 AGENTS.md·경미건). 남은 건 없음.
+
+## [2026-06-29] fix | M1↔M5 Before/After 비교 정합 (Module 2·5 태스크 A)
+- **배경**: 검증에서 M2·M5의 태스크 A 재실행 프롬프트가 M1 원문과 달라("표현 그대로"라 단언하나 web/ 누락, api만) Before/After가 apples-to-apples가 아니었음. 측정표엔 in-memory playground에 없는 "마이그레이션 처리" 행이 유입되고 M1의 "화면 작동 확인"·Zod 항목은 누락.
+- **수정**:
+  - **M2 Step 5-3 / M5 Step 5-1 프롬프트**: M1 태스크 A 본문(`이 모노레포에 User에…` api/+web/ 모노레포)을 **표현 그대로** 복원. 유일한 의도적 차이는 M2의 CLAUDE.md 섹션 확인 지시 한 줄.
+  - **측정 항목·비교표(M2·M5)**: M1 태스크 A의 7개 항목과 일치 — `내부 모델(in-memory) 노출`·`Zod 스키마 검증`·`api 테스트`·`불필요한 코드`·`메시지 횟수`·`가정 명시`·`화면 작동 확인`. 존재하지 않는 `마이그레이션 처리` 행 제거, `DB 모델 노출`→`내부 모델(in-memory)`.
+  - **M5 Step 5-1 문구**: "태스크 A·B·C 재실행"이나 실제 A만 제공 → "A 하나로 확인 가능(B·C 선택)"으로 정정.
+- **검증**: M1/M2/M5 3곳 프롬프트 grep 일치, 잔재(옛 프롬프트·마이그레이션 행) 0, 빌드 통과. frontmatter `updated` 2026-06-29.
+- **남은 후속**: Module 4 AGENTS.md 자동로드 개념 정정(🟡), 복붙 경미건(M2·4·5 `cd` 추가·M5 중첩 펜스·M1 커밋명).
+
+## [2026-06-29] fix | Module 3 hooks 사양 3건 교정 (wiki + raw 동시)
+- **배경**: 직전 검증에서 guard.sh/lint-fix.sh가 현재 Claude Code hooks 사양과 어긋나 실습이 실제로 안 돈다고 확인. CLAUDE.md 규칙 #1 "raw 불변"이 "오류 시 수정 가능"으로 갱신돼 raw도 함께 교정.
+- **3대 교정 (wiki Node판 + raw Java/Gradle판 동일 적용)**:
+  - ① **차단 exit code**: `block()`/checkstyle·eslint 실패 `exit 1` → **`exit 2`** (exit 2만 Claude Code가 도구 차단; exit 1은 비차단이라 명령 그대로 실행됨).
+  - ② **입력 전달**: `COMMAND="$1"`/`read` (argv 가정) → **stdin JSON을 `jq -r '.tool_input.command'`** 로 파싱. jq 없거나 평문 테스트 시 입력 전체를 명령으로 보는 fallback 추가.
+  - ③ **PostToolUse 파일경로**: 존재하지 않는 `CLAUDE_TOOL_OUTPUT_FILE` 환경변수 → **`jq -r '.tool_input.file_path'`** (기존엔 항상 빈 값이라 prettier/eslint 전부 미실행이었음).
+- **부수 갱신**: Step 1에 `jq` 설치 안내 추가, Step 5 차단 검증을 stdin JSON 방식(`echo '{"tool_input":...}' | bash guard.sh`)·기대 exit 2로 교체 + 검증표 갱신, FAQ 2건(eslint 멈춤·파일경로) 갱신, raw `hooks-config.json` `_docs` URL을 `code.claude.com/docs/en/hooks`로.
+- **검증**: wiki 추출본·raw 양쪽 `bash -n` 통과, 차단 6건 exit 2 / 허용 3건 exit 0 / lint-fix 빈·없는 파일 exit 0 실측 확인.
+- **남은 후속**(미진행): M1↔M5 비교 정합(M2·M5 태스크 A web/ 복원·마이그레이션 행 제거), Module 4 AGENTS.md 개념 설명 정정, 복붙 경미건.
+
+## [2026-06-29] infra | sitemap.xml 자동화 확인 + robots.txt 추가
+- **요청**: 콘텐츠가 늘면 빌드→Firebase 배포 시 sitemap.xml이 자동 생성되어야 함.
+- **확인**: MkDocs가 빌드마다 `site/sitemap.xml`(+`.gz`)을 **이미 자동 생성** → firebase.json `public: site` 라 자동 배포. 별도 작업 불필요. 단 직전 빌드본이 옛 도메인 `wons-wiki.web.app`이었는데, `site_url`이 `wiki.wonslab.dev`로 갱신돼 있어 재빌드 시 자동 교정 확인(166 URL, `lastmod` 파일날짜 자동).
+- **추가**: `wiki/robots.txt` 신설 — `Sitemap: https://wiki.wonslab.dev/sitemap.xml` 명시(크롤러 발견용). build-site.sh rsync가 wiki/→docs/→site/ 복사하므로 빌드마다 자동 배포됨. 재빌드로 `site/robots.txt` 생성 확인.
+
+## [2026-06-29] verify | harness-module 1~5 정밀 검증 (에이전트 5병렬)
+- **요청**: `wiki/guide-harness-module*` 내용 검증.
+- **🔴 Module 3 hooks 사양 3건 오류(실습 미작동, raw 원본도 동일)**: ① guard.sh 차단 `exit 1`→`exit 2` ② 입력 `$1`/`read`→stdin JSON `jq -r '.tool_input.command'` ③ lint-fix.sh `CLAUDE_TOOL_OUTPUT_FILE`(없는 변수)→`jq -r '.tool_input.file_path'`. jq 설치 전제·Step5 테스트 명령도 stdin 방식으로 수정 필요.
+- **🔴/🟡 M1↔M5 비교 무효화(M2·M5)**: 태스크 A 재실행 프롬프트가 M1 원문(api+web 모노레포)과 달리 web/ 누락("표현 그대로"라 단언하나 불일치). in-memory playground에 없는 "마이그레이션 처리" 측정행 유입, M1 "화면 작동 확인" 행 누락. M5는 "A·B·C 재실행"이라며 A만 제공.
+- **🟡 Module 4 사실성**: AGENTS.md 자동 로드·CLAUDE.md 우선순위 주장 거짓(공식: CLAUDE.md만 자동 로드). 단 워크플로는 "AGENTS.md 읽어줘" 명시라 실동작 OK — 개념 설명만 수정 대상. `@AGENTS.md` import/심링크/`/init` 워크어라운드. 네이티브 서브에이전트(`.claude/agents/`)·`/clear` 미언급.
+- **🟡 복붙/렌더**: M5 Step2 README heredoc 내 중첩 ` ``` ` 펜스로 조기 종료(4-backtick 필요), M2·4·5 시작 `cd ~/harness-playground` 누락, M1 산출물 표 커밋명 불일치.
+- **✅ 견고**: 과거 $WEEK·heredoc 함정 수정 확인, 모든 wikilink·앵커·sources·nav·index 실존.
+- **결론**: 수정은 미진행(검증만). 1순위 Module 3 hooks 3건(wiki+raw 동시), 2순위 M1↔M5 비교 정합.
+
 ## [2026-06-27] style | 글쓰기 스타일 일괄 점검 13편 + 도메인·카피라이트 갱신
 - **글쓰기 스타일 일괄 (에이전트 13병렬)**: 백로그 1차 대상 13편의 비유 산문에서 괄호 개념 매핑 + 마침표 없는 명사구 단편을 "장면 묘사 한 문단 + 개념 매핑 한 문단" 분리 구조의 능동 완결 문장으로 재작성 (메모리 `feedback-wiki-writing-style` 규칙, ch6 "회의 vs 사람" 모범 톤).
   - lecture-object: ch4(도구 vs 사람)·ch5(공연 무대)·ch7(공장 라인 vs 자율 작업장)·ch9(콘센트 표준)·ch12(전화 한 통)·ch13(혈연 vs 자격증)·ch15(조리법→요리책→식당)·appendixA(매매 계약)·appendixC(건축)

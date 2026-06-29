@@ -1,11 +1,19 @@
 #!/bin/bash
-# lint-fix.sh — Claude Code Post-Tool Hook
+# lint-fix.sh — Claude Code PostToolUse Hook
 # 파일 수정 후 자동으로 포맷과 린트를 적용합니다
 # 위치: .claude/hooks/lint-fix.sh
 # 권한: chmod +x .claude/hooks/lint-fix.sh
+# 의존: jq (brew install jq / apt install jq)
+#
+# Claude Code는 hook 입력을 stdin으로 JSON 전달한다:
+#   {"tool_name":"Edit","tool_input":{"file_path":"..."}}
+# 린트 실패를 Claude에게 되돌려 자동 수정시키려면 exit 2 로 종료한다.
 
-# 수정된 파일 경로 (Claude Code가 env로 전달)
-MODIFIED_FILE="${CLAUDE_TOOL_OUTPUT_FILE:-}"
+# 수정된 파일 경로 (stdin JSON에서 추출)
+INPUT=$(cat)
+MODIFIED_FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+[ -z "$MODIFIED_FILE" ] && exit 0
+[ ! -f "$MODIFIED_FILE" ] && exit 0
 
 # ─── Java 파일 처리 ───────────────────────────────────────
 if echo "$MODIFIED_FILE" | grep -q "\.java$"; then
@@ -23,10 +31,10 @@ if echo "$MODIFIED_FILE" | grep -q "\.java$"; then
     # 변경된 파일이 src/main에 있을 때만 checkstyle
     if echo "$MODIFIED_FILE" | grep -q "src/main"; then
       ./gradlew checkstyleMain -q 2>&1 | tail -5
-      if [ $? -ne 0 ]; then
-        echo "  ❌ Checkstyle 실패 — 규칙 위반이 있습니다"
-        echo "  📄 자세한 내용: build/reports/checkstyle/main.html"
-        exit 1
+      if [ ${PIPESTATUS[0]} -ne 0 ]; then
+        echo "  ❌ Checkstyle 실패 — 규칙 위반이 있습니다" >&2
+        echo "  📄 자세한 내용: build/reports/checkstyle/main.html" >&2
+        exit 2
       fi
       echo "  ✅ Checkstyle 통과"
     fi

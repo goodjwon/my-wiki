@@ -9,7 +9,7 @@ sources:
   - harness-engineering/harness-kit/module3/01_hooks_setup_prompt.md
   - harness-engineering/harness-kit/module3/02_self_verify_prompt.md
 created: 2026-05-31
-updated: 2026-06-28
+updated: 2026-06-29
 ---
 
 # 하네스 Module 03 — Hooks 시스템 강제
@@ -29,9 +29,17 @@ updated: 2026-06-28
 
 ---
 
-## Step 1 — `.claude/hooks/` 폴더 만들기 — 5분
+## Step 1 — `.claude/hooks/` 폴더 + jq 준비 — 5분
+
+guard.sh / lint-fix.sh는 Claude Code가 stdin으로 보내는 **JSON 입력을 `jq`로 파싱**한다. jq부터 설치한다:
 
 ```bash
+# jq 설치 (Claude Code hook 입력 JSON 파싱용)
+brew install jq          # macOS
+# sudo apt install jq    # Ubuntu/Debian
+
+jq --version             # 설치 확인
+
 mkdir -p .claude/hooks
 ```
 
@@ -45,16 +53,22 @@ mkdir -p .claude/hooks
 cat > .claude/hooks/guard.sh << 'EOF'
 #!/bin/bash
 # guard.sh — Claude Code PreToolUse Hook (Bash 실행 직전 검사)
-# exit 1로 종료하면 Claude Code가 해당 명령을 차단
+# Claude Code는 hook 입력을 stdin으로 JSON 전달한다:
+#   {"tool_name":"Bash","tool_input":{"command":"..."}}
+# 명령을 차단하려면 exit 2 로 종료한다 (stderr가 Claude에게 전달돼 자동 처리됨).
+# exit 0 = 통과, exit 1 = 비차단 오류(실행 계속). 차단은 반드시 exit 2.
+# 의존: jq (brew install jq)
 
-COMMAND="$1"
-[ -z "$COMMAND" ] && read -r COMMAND
+INPUT=$(cat)
+COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+# jq가 없거나 평문으로 직접 테스트할 때는 입력 전체를 명령으로 간주
+[ -z "$COMMAND" ] && COMMAND="$INPUT"
 
 block() {
   echo "🚫 BLOCKED by guard.sh: $1" >&2
   echo "REASON: $2" >&2
   echo "ACTION: $3" >&2
-  exit 1
+  exit 2
 }
 
 warn() {
@@ -136,8 +150,11 @@ cat > .claude/hooks/lint-fix.sh << 'EOF'
 #!/bin/bash
 # lint-fix.sh — Claude Code PostToolUse Hook (파일 수정 직후)
 # Write/Edit/MultiEdit 후 자동 포맷·린트
+# Claude Code는 hook 입력을 stdin으로 JSON 전달: {"tool_input":{"file_path":"..."}}
+# 린트 실패를 Claude에게 되돌려 자동 수정시키려면 exit 2. 의존: jq (brew install jq)
 
-MODIFIED_FILE="${CLAUDE_TOOL_OUTPUT_FILE:-}"
+INPUT=$(cat)
+MODIFIED_FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 [ -z "$MODIFIED_FILE" ] && exit 0
 [ ! -f "$MODIFIED_FILE" ] && exit 0
 
@@ -154,8 +171,8 @@ if echo "$MODIFIED_FILE" | grep -qE "\.(js|jsx|ts|tsx|mjs|cjs)$"; then
   if [ -f "package.json" ] && grep -q "\"eslint\"" package.json; then
     npx eslint --fix "$MODIFIED_FILE" 2>&1 | tail -5
     if [ ${PIPESTATUS[0]} -ne 0 ]; then
-      echo "  ❌ ESLint 잔여 오류 — 수동 수정 필요" >&2
-      exit 1
+      echo "  ❌ ESLint 잔여 오류 — Claude가 수정해야 함" >&2
+      exit 2
     fi
     echo "  ✅ ESLint"
   fi
@@ -224,38 +241,38 @@ EOF
 
 ## Step 5 — 차단 검증 — 15분
 
-본인이 직접 명령을 실행해서 차단되는지 확인. **Claude Code 안에서가 아니라 일반 터미널에서**:
+본인이 직접 명령을 실행해서 차단되는지 확인. **Claude Code 안에서가 아니라 일반 터미널에서**. Claude Code가 실제로 보내는 것과 동일하게 **stdin JSON**으로 넣어 테스트한다 (argv가 아니라 stdin이 진짜 hook 경로):
 
 ```bash
-# 차단되어야 하는 명령 (exit 1)
-bash .claude/hooks/guard.sh "git add .env"                ; echo "→ exit $?"
-bash .claude/hooks/guard.sh "git push origin main"        ; echo "→ exit $?"
-bash .claude/hooks/guard.sh "git push -f origin feature"  ; echo "→ exit $?"
-bash .claude/hooks/guard.sh "DROP TABLE users"            ; echo "→ exit $?"
-bash .claude/hooks/guard.sh "echo \$DB_PASSWORD"          ; echo "→ exit $?"
-bash .claude/hooks/guard.sh "rm migrations/20230101_init.sql" ; echo "→ exit $?"
+# 차단되어야 하는 명령 (exit 2)
+echo '{"tool_input":{"command":"git add .env"}}'                | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"git push origin main"}}'        | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"git push -f origin feature"}}'  | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"DROP TABLE users"}}'            | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"echo $DB_PASSWORD"}}'           | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"rm migrations/20230101_init.sql"}}' | bash .claude/hooks/guard.sh ; echo "→ exit $?"
 
 # 허용되어야 하는 명령 (exit 0)
-bash .claude/hooks/guard.sh "npm test"                    ; echo "→ exit $?"
-bash .claude/hooks/guard.sh "git checkout -b feature/x"   ; echo "→ exit $?"
-bash .claude/hooks/guard.sh "npm install zod"             ; echo "→ exit $?"
+echo '{"tool_input":{"command":"npm test"}}'                    | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"git checkout -b feature/x"}}'   | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"npm install zod"}}'             | bash .claude/hooks/guard.sh ; echo "→ exit $?"
 ```
 
 검증 표:
 
 | 명령 | 기대 | 실제 |
 |------|------|------|
-| `git add .env` | exit 1 (BLOCKED) | __ |
-| `git push origin main` | exit 1 | __ |
-| `git push -f origin feature` | exit 1 | __ |
-| `DROP TABLE users` | exit 1 | __ |
-| `echo $DB_PASSWORD` | exit 1 | __ |
-| `rm migrations/20230101_init.sql` | exit 1 | __ |
+| `git add .env` | exit 2 (BLOCKED) | __ |
+| `git push origin main` | exit 2 | __ |
+| `git push -f origin feature` | exit 2 | __ |
+| `DROP TABLE users` | exit 2 | __ |
+| `echo $DB_PASSWORD` | exit 2 | __ |
+| `rm migrations/20230101_init.sql` | exit 2 | __ |
 | `npm test` | exit 0 (OK) | __ |
 | `git checkout -b feature/x` | exit 0 | __ |
 | `npm install zod` | exit 0 | __ |
 
-전부 일치하면 통과.
+전부 일치하면 통과. (`exit 2`가 Claude Code에서 명령 차단을 의미. `exit 1`은 차단이 아니라 "비차단 오류"라 명령이 그대로 실행됨 — 그래서 차단 hook은 반드시 2로 끝내야 한다.)
 
 ---
 
@@ -361,10 +378,13 @@ git commit -m "harness(M3): guard.sh + lint-fix.sh + 자기검증 루프 설치"
 4. `claude --debug` 로 hook 호출 로그 확인
 
 ### Q. lint-fix.sh가 ESLint 오류로 자꾸 멈춰요
-처음에는 의도된 동작. ESLint 규칙이 너무 엄격하면 `.eslintrc`에서 일부 규칙을 warning으로 낮추거나, lint-fix.sh의 `exit 1`을 `exit 0`(경고만)으로 바꿈.
+처음에는 의도된 동작 — `exit 2`라 Claude에게 오류가 전달돼 스스로 고치게 한다. ESLint 규칙이 너무 엄격하면 `.eslintrc`에서 일부 규칙을 warning으로 낮추거나, lint-fix.sh의 `exit 2`를 `exit 0`(경고만, 차단 안 함)으로 바꿈.
 
-### Q. `CLAUDE_TOOL_OUTPUT_FILE` 환경변수가 안 들어와요
-Claude Code 버전에 따라 변수 이름이 다를 수 있음. `claude --debug`로 PostToolUse 호출 시 환경변수 목록 확인 후 lint-fix.sh의 변수명 조정.
+### Q. lint-fix.sh가 파일 경로를 못 잡아요 (린트가 안 돔)
+파일 경로는 **stdin JSON의 `.tool_input.file_path`**에서 온다 (예전 `CLAUDE_TOOL_OUTPUT_FILE` 환경변수가 아님). jq가 설치돼 있는지(`jq --version`), `claude --debug`로 PostToolUse가 받는 JSON에 `tool_input.file_path`가 있는지 확인. 직접 테스트:
+```bash
+echo '{"tool_input":{"file_path":"src/app.js"}}' | bash .claude/hooks/lint-fix.sh
+```
 
 ### Q. 자기검증 루프가 무한 반복돼요
 3단계까지 실패하면 멈추도록 CLAUDE.md에 명시. "각 단계 3회 시도 후 사용자에게 보고" 같은 한계 규칙 추가.
