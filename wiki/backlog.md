@@ -21,7 +21,7 @@ updated: 2026-06-27
 
 ## 📅 마지막 업데이트
 
-2026-06-27
+2026-06-29
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -37,6 +37,16 @@ updated: 2026-06-27
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
 ## ✅ 최근 완료 작업 (2026-06 누적)
+
+### 2026-06-29
+- ✅ **harness module 1~5 정밀 검증 + 후속 전부 종결** (에이전트 5병렬 검증 → 수정):
+  - **Module 3 hooks 사양 3건 교정 (wiki+raw 동시)** — 실습이 실제로 안 돌던 결함: ① 차단 `exit 1`→`exit 2` ② 입력 argv→**stdin JSON `jq -r '.tool_input.command'`** ③ PostToolUse 파일경로 `CLAUDE_TOOL_OUTPUT_FILE`(없는 변수)→`jq -r '.tool_input.file_path'`. jq 설치 안내·Step5 검증을 stdin 방식으로. 실측 검증 완료.
+  - **M1↔M5 Before/After 비교 정합** — M2·M5 태스크 A 재실행 프롬프트가 M1 원문과 달라(web/ 누락) 비교 무효였던 것 → api/+web/ 모노레포 원문 복원, 측정 7항목 일치, in-memory에 없는 "마이그레이션 처리" 행 제거.
+  - **Module 4 AGENTS.md 개념 정정** — "Claude Code가 AGENTS.md 자동 로드/우선순위"는 거짓(공식: CLAUDE.md만 자동) → 정정 + `@AGENTS.md` import·심링크·`/init` 워크어라운드 + `/clear`·네이티브 서브에이전트(`.claude/agents/`) FAQ.
+  - **경미**: M2/4/5 시작 `cd ~/harness-playground` 추가, M5 README 중첩 펜스 4-backtick, M1 산출물 표 커밋명 실제화.
+- ✅ **sitemap.xml 자동화 확인 + robots.txt 신설** — sitemap은 MkDocs가 빌드마다 자동 생성(166 URL, `wiki.wonslab.dev` 자동 교정) → firebase `site/` 자동 배포. `wiki/robots.txt` 추가로 크롤러에 sitemap 위치 명시.
+- ✅ **CLAUDE.md 규칙 #1 갱신**(사용자) — "raw 불변" → "단 내용에 **오류가 있을 경우 수정 가능**" (위 Module 3 raw 교정의 근거).
+- ✅ **커밋·배포 완료** — `ea49634` (11 files), Firebase `wiki.wonslab.dev` 라이브.
 
 ### 2026-06-27
 - ✅ **글쓰기 스타일 1차 일괄 13편** — 비유 괄호 매핑·명사구 단편 → 장면+매핑 2문단 완결 문장(에이전트 13병렬). 규칙: 메모리 `feedback-wiki-writing-style`, 모범: ch6 "회의 vs 사람".
