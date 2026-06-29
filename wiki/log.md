@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-06-29] feat | Java 스터디 재구성 0단계(raw 최신화) + T1 트랙 시범 + 브랜드 통일
+- **Notion DB 직접 수집**: `[2024-2025] java 스터디 자료`(`goodjwon.notion.site`)를 published-site API(loadPageChunk+queryCollection, curl)로 접근 — MCP 없이 97개 문서 추출. (기존 본문 12챕터는 4월 ingest로 이미 raw 보유, 위키 src 1장으로 등록돼 있었음.)
+- **0단계 raw 최신화**: 4월 이후 추가된 **신규 10개**(전략패턴 실전문제·메모앱 토이프로젝트·JVM 워크북·도서주문/대여 시나리오·레거시 실습 등)를 Notion→md 렌더러(코드펜스·헤더·링크 보존)로 변환해 해당 챕터 raw에 반영. 신규 산출물: `java-study-notion-db-catalog.md`(97행 목차), `java-study-refresh-checklist.md`(보유87/수집10/갱신후보 6.1·8.0). 위키 `src-java-study-2024-2025` 91→**97** 갱신.
+- **T1 트랙 시범**(B안): `guide-java-track1-basics.md` 신설 — 구독자 학습 흐름(개요→학습순서→핵심개념→💡이론·방법론 팁+상세링크→🛠미니프로젝트→정리). 5권 강의/concept 페이지 재활용 연결. mkdocs nav "학습 경로" 섹션 신설. T2~T5는 톤 합의 후 동일 템플릿 확장 예정.
+- **브랜드 통일**: 사이트 실명 노출 제거 — `mkdocs.yml` site_author/description `JungWon Park`·`박정원`→**`wonslab`**, wiki 4편(src/concept-loop·deploy 가이드 예시·clean-code 예시주석)도 일반표현/placeholder로. raw 원본은 출처보존상 유지(미게시).
+
 ## [2026-06-29] verify | Loop 실습 후속 3종 종결 (실행검증·1차출처·토큰심화)
 - **① 실행 검증** (Node v26, scratchpad에서 가이드와 동일 파일로 실측): 후보 (A)·(B) 실패·(C)만 통과(결정적 확인), Step 2 메아리방 20회 중 13회(≈2/3) 깨진 채 "완료" 종료, Step 4 검증 루프 통과 시 정상 종료, "드물게 약 4%"=이론 (2/3)⁸=3.9% 정확. → [[guide-loop-engineering-demo]] 상단에 "✅ 실행 검증됨(2026-06-29, Node v26)" 노트 추가. Step 6(claude -p)은 토큰 소요로 미실행, 구문은 공식 헤드리스 docs 기준.
 - **② 1차 출처 검증·보존** (리서치 에이전트 WebSearch/WebFetch): `raw/loop-engineering/primary-sources.md` 신설(원본 2차 정리본은 보존). 교정 — Steinberger "650만 조회·06-08"은 **2차 매체 주장(X 원본 402 미검증)**, 소속 **OpenAI**(Anthropic 아님), Cherny 자구("write loops"/"write the loop")·날짜(게시 06-02/에피소드 미확정) 매체별 편차, **Osmani(✅직접확인)·Sonar(✅) verbatim 확보**, arXiv 3편 제목·저자·연도 일치. → [[src-loop-engineering]] 발화표(출처 검증 열 추가)·신중론(검증 인용)·외부 1차 출처 표 반영, frontmatter sources/external 갱신.

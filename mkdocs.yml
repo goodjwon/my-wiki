@@ -1,6 +1,6 @@
 site_name: Wons Wiki
-site_description: 박정원의 개인 지식 위키 (Second Brain)
-site_author: JungWon Park
+site_description: wonslab의 개인 지식 위키 (Second Brain)
+site_author: wonslab
 site_url: https://wiki.wonslab.dev
 
 docs_dir: docs
@@ -244,6 +244,8 @@ nav:
       - "11장 API 리팩터링": lecture-refactoring-ch11.md
       - "12장 상속 다루기": lecture-refactoring-ch12.md
   - Java·Spring:
+    - 학습 경로:
+      - "T1. Java 기초 다지기": guide-java-track1-basics.md
     - 개념:
       - Spring Core: concept-spring-core.md
       - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md

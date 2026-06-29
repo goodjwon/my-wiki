@@ -169,8 +169,8 @@ chmod +x scripts/build-site.sh
 
 ```yaml
 site_name: Wons Wiki
-site_description: 박정원의 개인 지식 위키
-site_author: JungWon Park
+site_description: wonslab의 개인 지식 위키
+site_author: wonslab
 site_url: https://wiki.example.com   # 커스텀 도메인 또는 firebase URL
 
 # 빌드 스크립트가 docs/ 를 만든다는 가정
@@ -273,7 +273,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/<your-handle>
 
-copyright: © 2026 JungWon Park
+copyright: © 2026 wonslab
 ```
 
 > **Tip**: `nav:` 를 생략하면 파일 시스템 기준으로 자동 생성. 위키가 커지면 명시하는 게 깔끔.

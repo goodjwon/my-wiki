@@ -4,14 +4,16 @@ type: source
 tags: [java, spring, study, notion]
 sources: [java-study/]
 created: 2026-04-18
-updated: 2026-04-18
+updated: 2026-06-29
 ---
 
 # [2024-2025] Java 스터디 자료
 
 ## 개요
 
-Notion 데이터베이스 기반의 Java 학습 교재로, 초중급 개발자를 대상으로 Java 기초부터 Spring Boot 실무까지 체계적으로 구성되어 있다. 총 91개 문서(12개 챕터)로 이루어져 있으며, 이론·가이드·실습·문제·풀이가 균형 있게 배치되어 있다.
+Notion 데이터베이스 기반의 Java 학습 교재로, 초중급 개발자를 대상으로 Java 기초부터 Spring Boot 실무까지 체계적으로 구성되어 있다. 총 **97개 문서(12개 챕터)**로 이루어져 있으며, 이론·가이드·실습·문제·풀이가 균형 있게 배치되어 있다.
+
+> **2026-06-29 갱신**: 원본 Notion DB를 재대조해 4월 ingest 이후 추가된 10개 문서(전략 패턴 실전문제·메모 앱 토이프로젝트·JVM 워크북 등)를 raw에 보강했다. 목차·메타데이터는 `raw/java-study/java-study-notion-db-catalog.md`(97행), 최신화 상태는 `raw/java-study/java-study-refresh-checklist.md` 참조. 이 자료는 곧 **구독자 학습 흐름(기초→응용→🛠미니프로젝트→정리)에 맞춘 트랙 가이드 5개**로 재구성될 예정이다.
 
 ## 챕터 구성
 

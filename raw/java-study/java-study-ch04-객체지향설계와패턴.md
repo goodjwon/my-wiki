@@ -276,3 +276,122 @@ Spring MVC의 `HandlerAdapter`, 외부 API 클라이언트를 감싸는 래퍼, 
 파사드 패턴은 **복잡한 내부 구조를 감추고, 바깥에는 단순한 사용 지점을 제공하는 구조**입니다.
 
 ---
+
+
+## 4.9 전략 패턴 실전문제
+
+<!-- 2026-06-29 라이브 Notion에서 수집 (4월 ingest 이후 추가분) -->
+
+### 개요
+이 문서는 `전략 패턴` 본문을 읽은 뒤 바로 이어서 푸는 실전문제 모음입니다. 개념을 설명으로 끝내지 않고, 실제 설계 판단 문제로 연결하는 데 목적이 있습니다. 전략 패턴의 핵심은 바뀌는 행위를 별도의 객체로 분리하고, 컨텍스트는 그 구현이 아니라 공통 인터페이스에 의존하도록 만드는 데 있습니다.
+
+### 어떻게 활용하면 좋은가
+- 먼저 각 시나리오에서 무엇이 전략인지 스스로 찾아봅니다.
+- `if-else` 구조를 전략 패턴으로 어떻게 바꿀지 설명해봅니다.
+- Spring DI와 연결했을 때 어떤 형태로 확장되는지도 함께 생각해봅니다.
+
+### 문제 구성
+
+#### 1. 배송 서비스
+- 배송 방식이 여러 개일 때 전략과 컨텍스트를 구분하는 문제
+
+#### 2. 소셜 로그인
+- 로그인 수단별 인증 로직을 전략으로 분리하는 문제
+
+#### 3. 파일 압축
+- 압축 방식 교체와 예외 처리 기준을 생각하는 문제
+
+#### 4. 알림 서비스
+- 푸시, SMS, 이메일 발송 방식을 분리하는 문제
+
+### 문제 1. 배송 서비스의 전략 찾기
+```plain text
+온라인 쇼핑몰에서 일반 배송, 당일 배송, 새벽 배송 중 하나를 선택할 수 있다.
+배송 서비스는 선택된 방식에 따라 같은 요청을 서로 다른 방식으로 처리한다.
+```
+다음 항목을 구분해보세요.
+- 전략(Strategy): 무엇이 바뀌는가
+- 컨텍스트(Context): 어떤 객체가 전략을 사용해 작업을 수행하는가
+- 클라이언트(Client): 누가 전략을 선택하는가
+
+### 문제 2. 코드 빈칸 완성
+```java
+public interface DeliveryStrategy {
+    void deliver(String address);
+}
+
+public class DeliveryService {
+    private DeliveryStrategy strategy;
+
+    public void setStrategy(DeliveryStrategy strategy) {
+        this.strategy = _______;
+    }
+
+    public void execute(String address) {
+        if (_______ == null) {
+            throw new IllegalStateException("배송 방식이 선택되지 않았습니다.");
+        }
+        strategy.deliver(address);
+    }
+}
+```
+- 빈칸 두 곳을 채우세요.
+- 컨텍스트가 구체 구현을 직접 알지 않아도 되는 이유를 설명하세요.
+
+### 문제 3. 소셜 로그인 리팩터링
+```java
+public void login(String provider, String token) {
+    if ("google".equals(provider)) {
+        // 구글 로그인
+    } else if ("kakao".equals(provider)) {
+        // 카카오 로그인
+    } else if ("naver".equals(provider)) {
+        // 네이버 로그인
+    }
+}
+```
+위 코드의 문제점을 두 가지 적어보세요.
+- 새로운 로그인 수단이 추가될 때 어떤 문제가 생기는가
+- 이 메서드가 너무 많은 책임을 갖는 이유는 무엇인가
+
+### 문제 4. Spring에서의 전략 선택
+```java
+@Service
+public class NotificationService {
+    private final Map<String, NotificationStrategy> strategies;
+
+    public NotificationService(Map<String, NotificationStrategy> strategies) {
+        this.strategies = strategies;
+    }
+}
+```
+다음 질문에 답해보세요.
+- `List<NotificationStrategy>` 대신 `Map<String, NotificationStrategy>`를 쓸 때의 장점은 무엇인가
+- 런타임에 전략을 선택해야 할 때 어떤 구조가 더 자연스러운가
+
+### 문제 5. 설계 판단
+다음 중 전략 패턴을 적용할 가치가 높은 상황을 고르세요.
+- 결제 수단별 처리 방식이 자주 추가되는 결제 서비스
+- 한 번만 쓰이는 단순한 `if` 분기 하나
+- 외부 API 공급자별 호출 방식이 다른 연동 서비스
+- 할인 정책이 계속 추가되는 주문 서비스
+그리고 왜 그런지 한 문장으로 설명해보세요.
+
+### 풀이 전 체크 포인트
+- 전략과 컨텍스트를 정확히 분리했는가
+- 새로운 전략 추가가 기존 코드 수정 없이 가능한가
+- 인터페이스가 실제로 공통 계약 역할을 하는가
+- Spring DI와 연결했을 때도 구조가 유지되는가
+
+### 예상 답안 방향
+이 문서는 문제집이지만, 독자가 전혀 감 없이 멈추지 않도록 최소한의 판단 방향은 잡아 두는 편이 좋습니다.
+- 배송 서비스 문제: 바뀌는 것은 배송 방식이고, 배송 서비스 본체는 컨텍스트입니다.
+- 소셜 로그인 문제: `provider` 분기가 늘어날수록 로그인 메서드가 인증 수단 선택 책임까지 떠안게 됩니다.
+- Spring 전략 선택 문제: 런타임에 이름이나 키로 전략을 고를 때는 `Map<String, Strategy>`가 더 자연스럽습니다.
+- 설계 판단 문제: 자주 늘어나는 정책, 공급자, 결제/알림/압축 방식은 전략 패턴 후보입니다.
+
+### 정리
+전략 패턴 문제는 정답 클래스 이름을 맞히는 것이 목표가 아닙니다. 어떤 코드가 바뀌는 부분인지, 그 바뀌는 부분을 어떻게 객체로 분리할 수 있는지 판단하는 훈련이 핵심입니다.
+
+### 한 줄 정리
+전략 패턴 연습 문제의 핵심은 분기문을 줄이는 것이 아니라, 바뀌는 행위를 독립된 객체로 분리하는 판단력을 기르는 데 있습니다.

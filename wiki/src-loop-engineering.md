@@ -16,7 +16,7 @@ updated: 2026-06-29
 
 ## 출처
 
-최초 입력은 외부 AI 어시스턴트가 박정원에게 전달한 **2차 정리본**(2026-06-13): `raw/loop-engineering/loop-engineering-notes.md`. 이후 2026-06-29에 **1차 출처를 직접 검증**해 `raw/loop-engineering/primary-sources.md`에 보존했다(아래 표의 출처·교정 반영).
+최초 입력은 외부 AI 어시스턴트가 전달한 **2차 정리본**(2026-06-13): `raw/loop-engineering/loop-engineering-notes.md`. 이후 2026-06-29에 **1차 출처를 직접 검증**해 `raw/loop-engineering/primary-sources.md`에 보존했다(아래 표의 출처·교정 반영).
 
 ## 무엇이 일어났는가
 
