@@ -21,7 +21,7 @@ updated: 2026-06-27
 
 ## 📅 마지막 업데이트
 
-2026-06-30
+2026-07-01
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -36,7 +36,13 @@ updated: 2026-06-27
 - **"복리 지식"** (Karpathy/Hashimoto) — 위키가 누적될수록 페이지 간 교차참조 가치 ↑
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
-## ✅ 최근 완료 작업 (2026-06 누적)
+## ✅ 최근 완료 작업 (2026-06~07 누적)
+
+### 2026-07-01
+- ✅ **Java 스터디 변환 아티팩트·URL·번호 대정비** — Notion published-site API(loadPageChunk/queryCollection)로 본문 직접 수집한 자료의 후처리: ` ```plain text ` 깨진 펜스 134건→`text`, notion.so 내부 깨진 링크 65건→`(→ N.N)`, 헤딩 `**`·본문 `****` 굵게 아티팩트, 챕터 파일명 **URL 영문화**(`java-study-chNN.md`).
+- ✅ **챕터 내부 문서번호 학습순 통일 (wiki+raw)** — 다른 PC의 챕터 회전(입출력 ch10→05) 후 파일번호↔내부 문서번호 불일치를, **Notion 원번호 폐기**하고 학습순으로. 회전 매핑(cycle) 동시치환, `#####` 지역 소제목·코드펜스·ch00 예시 제외. 고아참조 0.
+- ✅ **코드·표 표시 통일** — "글머리에서 빼낸다(top-level)" 규칙 [[guide-wiki-authoring-standards]] §2-5 명문화(리스트엔 굵은 리드인). 위키 전체 99.8% 이미 top-level, 어긋난 6개 정규화. bash 블록 160개 전부 top-level 확인.
+- ✅ **bash 명령 정확성·복붙 안정성 전수 점검 (에이전트 5병렬)** — 🔴 module5 Step3-2 펜스 4-backtick + 🟡 7건: ch10 `-Xlog:'gc*'`(zsh nomatch), deploy 하드코딩 경로→플레이스홀더·firebase 대화형 분리, project-docs REPL 블록 `text` 재라벨, prerequisites A-3 분리, module3/4 `cd` 추가, module5 maxdepth 3.
 
 ### 2026-06-30
 - ✅ **Java 스터디 3단계 로드맵 재편** — 외부 AI 지적(nav 비유기성) 검증 후 "언어→프레임워크→고급" 3단계로. nav 그룹화 + 챕터 11편 절대번호 제거·"다음 장" 체인 학습순 재배선 + [[guide-java-learning-path]] 3단계 재작성. (에이전트 3병렬)
