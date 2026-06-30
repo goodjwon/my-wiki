@@ -40,6 +40,7 @@ brew install jq          # macOS
 
 jq --version             # 설치 확인
 
+cd ~/harness-playground
 mkdir -p .claude/hooks
 ```
 

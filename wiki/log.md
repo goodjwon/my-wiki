@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-01] fix | bash 명령 정확성·복붙 안정성 점검 (에이전트 5병렬) + 수정
+- 복붙 실행용 가이드 11편 + java-study 6챕터 전수 검증(대화형 혼합/포그라운드 장기실행/heredoc 따옴표/변수·cwd 의존/명령 정확성). heredoc 따옴표·exit code 등은 /tmp 실측까지.
+- **🔴 module5 Step3-2 펜스 깨짐**: 바깥 ` ```bash `가 heredoc 본문 중첩 ` ``` `를 못 감싸 렌더·복사버튼 truncation → 4-backtick(Step2와 동일)으로 수정.
+- **🟡 수정 7건**: ① ch10 `-Xlog:gc*`→`-Xlog:'gc*'`(zsh `no matches` 실패, 3곳) ② deploy 가이드 하드코딩 경로 `/Users/jungwonpark/...`→플레이스홀더(2곳) ③ deploy Step7 `firebase login`/`init` 대화형 3블록 분리 ④ project-docs-setup `claude` REPL 블록 ` ```bash `→` ```text `(>가 리다이렉션 오해) ⑤ prerequisites A-3 `npm create vite`를 `npm install`과 분리(1a/1b) ⑥ module3 Step1·module4 Step2/3 `cd ~/harness-playground` 추가 ⑦ module5 `find -maxdepth 2`→3(hooks 깊이3 누락).
+- 검증: 편집 7파일 펜스 짝맞음, 빌드 통과. (loop-demo·module1~2·java-book-lab은 이상 없음 — heredoc 리터럴·유한 루프·cwd 견고 확인.)
+
 ## [2026-07-01] style | 코드·표 표시 통일 — "글머리에서 빼낸다(top-level)" 명문화
 - 전수 스캔: 위키 코드펜스 3166개 중 **글머리 종속(들여쓴) 6개뿐**(concept-spring-core 4·guide-harness-module5 2), 표·bash 블록은 들여쓴 것 0. 이미 99.8% top-level.
 - 사용자 결정 "전부 top-level". 규칙 [[guide-wiki-authoring-standards]] §2-5 명문화: 코드·표는 항상 좌측정렬, 리스트 항목에 코드 딸리면 **`**1) …**` 굵은 리드인으로 바꿔** 빼냄(번호 안 깨짐)·표는 예외 없음.

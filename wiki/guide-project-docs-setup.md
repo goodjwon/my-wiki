@@ -117,11 +117,10 @@ updated: YYYY-MM-DD
 
 ## Step 2: 초기 문서 생성
 
-프로젝트에 Claude Code를 실행하고 아래 명령을 수행한다.
+프로젝트 루트에서 `claude`를 실행한 뒤, REPL 안에서 아래 프롬프트를 차례로 입력한다 (`>`는 Claude Code 프롬프트 표시, 직접 타이핑하지 않는다).
 
-```bash
+```text
 # 1. docs 구조 생성
-claude
 > docs/ 구조를 초기화해줘
 
 # 2. 기존 코드에서 문서 추출

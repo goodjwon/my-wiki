@@ -280,20 +280,24 @@ git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
 
 > ⚠️ **한 번에 붙여넣지 말 것.** 첫 줄 `npm create vite` 는 대화형 프롬프트(패키지 설치 확인 `Ok to proceed? (y)`, Vite 버전·롤다운 선택 등)가 뜰 수 있다. 아래 `cat ... << EOF` heredoc·`npm install` 과 한꺼번에 붙여넣으면 **프롬프트 대기 중 뒷줄이 응답으로 먹혀** 스캐폴딩이 깨진다. **블록 1을 먼저 끝내고(프롬프트엔 Enter / y), 그다음 블록 2를 붙여넣을 것.**
 
-**블록 1 — React 스캐폴딩 + 설치** (프롬프트가 뜨면 Enter / y 로 진행)
+**블록 1a — React 스캐폴딩** (이 한 줄만 먼저. 프롬프트 `Ok to proceed? (y)` 가 뜨면 `y` / Enter)
 
 ```bash
 cd ~/harness-playground
 
 # Vite React 템플릿 — 프로젝트명(web)·템플릿을 인자로 줘 질문을 최소화
 npm create vite@latest web -- --template react
+```
 
-cd web
+**블록 1b — 의존성 설치** (1a 프롬프트가 완전히 끝난 뒤 붙여넣기)
+
+```bash
+cd ~/harness-playground/web
 npm install
 cd ..
 ```
 
-**블록 2 — 화면 코드 작성 + 커밋** (블록 1이 완전히 끝난 뒤 붙여넣기)
+**블록 2 — 화면 코드 작성 + 커밋** (블록 1b가 끝난 뒤 붙여넣기)
 
 ```bash
 cd ~/harness-playground/web

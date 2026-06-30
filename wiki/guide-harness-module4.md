@@ -120,6 +120,7 @@ git commit -m "harness(M4): AGENTS.md 추가 (Planner/Coder/Critic)"
 ## Step 2 — `task-list.md` 템플릿 — 5분
 
 ```bash
+cd ~/harness-playground
 cat > task-list.md << 'EOF'
 # task-list.md
 > Planner Agent가 관리. 상태: 🔲 대기 / 🔄 진행중 / ✅ 완료 / ❌ 블로킹
@@ -162,6 +163,7 @@ EOF
 ### Step 3-1: 초기 progress 파일
 
 ```bash
+cd ~/harness-playground
 cat > claude-progress.txt << 'EOF'
 # Claude Progress — 새 세션이 가장 먼저 읽는 파일
 

@@ -97,7 +97,7 @@ updated: 2026-05-31
 Python 3.9+ 필요. 프로젝트 격리를 위해 venv 권장.
 
 ```bash
-cd /Users/jungwonpark/Documents/my-wiki
+cd <프로젝트_루트>          # 본인 위키 저장소 경로로 교체
 
 python3 -m venv .venv
 source .venv/bin/activate
@@ -316,15 +316,21 @@ mkdocs serve --dirtyreload
 
 ## Step 7 — Firebase CLI 설치 및 초기화
 
+> ⚠️ 아래는 대화형 명령(`firebase login`은 브라우저, `firebase init`은 프롬프트)이라 **한 번에 붙여넣지 말고 블록 단위로** 실행한다.
+
 ```bash
-# CLI 설치 (글로벌 1회)
+# ① CLI 설치 (글로벌 1회)
 npm install -g firebase-tools
+```
 
-# 로그인 (브라우저 열림)
+```bash
+# ② 로그인 (브라우저 열림 — 응답 끝낸 뒤 다음 블록)
 firebase login
+```
 
-# 프로젝트 디렉터리에서 초기화
-cd /Users/jungwonpark/Documents/my-wiki
+```bash
+# ③ 프로젝트 디렉터리에서 초기화 (대화형 프롬프트)
+cd <프로젝트_루트>          # 본인 위키 저장소 경로로 교체
 firebase init hosting
 ```
 
