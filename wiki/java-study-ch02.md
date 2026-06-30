@@ -7,7 +7,7 @@ created: 2026-04-18
 updated: 2026-06-30
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재의 2장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
+> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
 # Java 문법과 객체
 

@@ -2,7 +2,7 @@
 title: JVM (Java Virtual Machine)
 type: entity
 tags: [java, jvm, gc, jit, memory, performance]
-sources: [java-study/java-study-ch09-JVM과성능.md]
+sources: [java-study/java-study-ch10-JVM과성능.md]
 external:
   - https://docs.oracle.com/en/java/javase/21/vm/java-virtual-machine-technology-overview.html
   - https://docs.oracle.com/en/java/javase/21/gctuning/
@@ -194,7 +194,7 @@ management:
 
 ## 원본 출처
 
-- raw: `raw/java-study/java-study-ch09-JVM과성능.md`
+- raw: `raw/java-study/java-study-ch10-JVM과성능.md`
 - 공식: [Oracle — Java Virtual Machine Technology Overview](https://docs.oracle.com/en/java/javase/21/vm/java-virtual-machine-technology-overview.html)
 - 공식: [HotSpot Garbage Collection Tuning Guide](https://docs.oracle.com/en/java/javase/21/gctuning/)
 

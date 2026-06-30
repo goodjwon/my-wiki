@@ -13,7 +13,7 @@ updated: 2026-06-29
 >
 > **선수 트랙**: [[guide-java-track3-io-network]]. **다음 트랙**: [[guide-java-track5-deep-dive]].
 
-이 트랙은 [[src-java-study-2024-2025]] 5·6·7·8장 재구성. **실제 학습·실습은 챕터 레슨에서 따라 한다** → [[java-study-ch05]] · [[java-study-ch06]] · [[java-study-ch07]] · [[java-study-ch08]].
+이 트랙은 [[src-java-study-2024-2025]] 5·6·7·8장 재구성. **실제 학습·실습은 챕터 레슨에서 따라 한다** → [[java-study-ch06]] · [[java-study-ch07]] · [[java-study-ch08]] · [[java-study-ch09]].
 
 > 이 페이지는 **코스 안내**다(흐름·핵심·미니프로젝트·이론 팁). 코드와 상세 설명은 위 챕터 레슨을 펴고 따라 하면 된다.
 

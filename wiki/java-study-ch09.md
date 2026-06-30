@@ -1,25 +1,25 @@
 ---
-title: "Java 스터디 — JVM과 성능"
+title: "Java 스터디 — 테스트와 품질"
 type: source
 tags: [java, study, notion, ch09]
-sources: [java-study/java-study-ch09-JVM과성능.md]
+sources: [java-study/java-study-ch09-테스트와품질.md]
 created: 2026-04-18
 updated: 2026-06-30
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재의 9장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
+> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# JVM과 성능
+# 테스트와 품질
 
 ## 🎯 이 장에서 배우는 것
 
-- JVM 구성 원리(클래스 로딩·실행 엔진·GC)
-- 힙·스택·메서드 영역과 객체가 사는 곳
-- GC 로그를 읽고 메모리 튜닝
+- 테스트 피라미드(단위→통합→E2E)
+- Spring Boot 테스트 전략과 계산기 테스트 실습
+- curl로 API 수동 검증
 
-**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch08]] · **다음 장**: [[java-study-ch11]]
+**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch08]] · **다음 장**: [[java-study-ch10]]
 
-> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 9.0→9.1→9.2 순으로 읽고, 11.90 JVM 워크북 문제로 굳힌다. 깊이: [[entity-jvm]].
+> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 8.2 계산기 테스트를 직접 작성하고, 8.3에서 curl로 API를 찔러본다. 방법론: [[entity-tdd]].
 
 ---
 
@@ -27,634 +27,540 @@ updated: 2026-06-30
 
 ---
 
-## 9.0 JVM 기초 가이드 1: 개념과 구성 원리
+## 8.0 테스트와 품질
 
-**🎯 목표**: JVM의 구성 원리(클래스 로딩·실행 엔진·런타임 영역)를 이해한다.
+**🎯 목표**: 테스트 피라미드와 품질 전략의 큰 그림을 잡는다.
+
+<!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
+
+### 개요
+이 문서는 책의 `테스트와 품질` 챕터를 안내하는 문서입니다. 테스트는 기능이 다 만들어진 뒤 붙이는 보너스 작업이 아니라, **변경을 두려워하지 않게 만드는 구조적 장치**입니다.
+
+### 왜 중요한가
+Java와 Spring 실무에서는 기능 구현보다 유지보수가 더 오래 지속됩니다. 이때 테스트가 없으면 리팩터링, 버그 수정, 의존성 교체가 모두 위험한 작업이 됩니다.
+현재 `day_by_spring` 저장소도 이미 테스트를 여러 층으로 나눠 사용하고 있습니다. 도메인 모델 테스트, 서비스 단위 테스트, `@WebMvcTest` 기반 컨트롤러 테스트, `@DataJpaTest` 기반 리포지토리 테스트, `@SpringBootTest` 통합 테스트가 함께 존재합니다. 이 장은 그 구조를 읽는 법을 익히는 데 목적이 있습니다.
+
+### 이 챕터에서 다루는 범위
+- Spring Boot 테스트 도구 구성
+- 테스트 피라미드와 레이어별 테스트 선택
+- 단위 테스트와 슬라이스 테스트의 역할
+- 작은 예제를 통해 보는 테스트 가능한 구조
+- `curl`을 활용한 API 수동 검증과 자동화 테스트의 경계
+
+### 읽는 순서
+1. `Spring Boot 테스트 전략`
+1. `계산기 테스트 기초`
+1. `API 수동 검증: curl 활용`
+
+### 이 챕터를 읽을 때 체크할 것
+- 모든 테스트를 `@SpringBootTest`로 해결하려 하지 않는가
+- 테스트 대상이 서비스인지, 웹 계층인지, 저장소인지 먼저 구분하는가
+- 수동 확인과 자동화 테스트를 서로 대체재가 아니라 보완재로 보는가
+
+### 정리
+좋은 테스트 전략은 테스트가 많아 보이는 구조가 아니라, **어떤 문제를 어떤 레벨에서 검증할지 분명한 구조**입니다.
+
+### 한 줄 정리
+`테스트와 품질` 챕터의 핵심은 **변경 비용을 줄이는 검증 구조를 만드는 것**입니다.
+
+## 8.1 Spring Boot 테스트 전략
+
+**🎯 목표**: Spring Boot 테스트 전략(단위·슬라이스·통합)을 적용한다.
 
 #### 개요
 
-이 문서는 JVM을 처음 구조적으로 이해하려는 독자를 위한 첫 번째 가이드입니다. JVM은 단순히 "자바를 실행하는 프로그램"이 아니라, **자바 코드를 바이트코드로 실행하고 메모리와 클래스 로딩, 실행 최적화를 관리하는 런타임 환경**입니다.
+이 문서는 Spring Boot 프로젝트에서 테스트를 어떤 레벨로 나누고, 어떤 도구를 선택해야 하는지 정리한 가이드입니다. 핵심은 테스트를 많이 쓰는 것이 아니라, **가장 적절한 범위로 검증하는 것**입니다.
 
-Spring Boot 애플리케이션을 다룰 때도 결국 JVM 위에서 프로그램이 실행됩니다. 그래서 클래스가 언제 로딩되는지, 객체가 어느 영역에 놓이는지, 왜 가비지 컬렉션이 필요한지 이해해야 메모리 문제와 성능 문제를 제대로 읽을 수 있습니다.
+#### 왜 중요한가
 
-#### 현재 저장소 기준으로 먼저 연결할 것
+Spring Boot는 웹, 데이터, 보안, 설정이 함께 묶인 프레임워크라서 테스트도 한 가지 방식으로 해결되지 않습니다. 모든 테스트를 무겁게 만들면 느리고, 모든 테스트를 가볍게 만들면 실제 동작을 놓치게 됩니다.
 
-현재 `day_by_spring` 저장소는 Java 21을 사용하고 있고, 실행 이미지는 `eclipse-temurin:21-jre-alpine` 위에서 동작합니다. 즉 이 장은 추상적인 JVM 소개이면서 동시에 **현재 프로젝트가 실제로 올라가는 런타임을 읽는 기초**이기도 합니다.
+#### 1. 기본 출발점
 
-```dockerfile
-FROM eclipse-temurin:21-jre-alpine
-ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+Spring Boot는 `spring-boot-starter-test`를 통해 테스트에 필요한 기본 구성을 제공합니다. 초중급 단계에서는 먼저 이 스타터가 어떤 테스트 도구를 묶어 주는지 이해하는 것이 좋습니다.
+
+#### 2. 테스트를 나누는 기본 기준
+
+##### 단위 테스트
+
+Spring 컨테이너 없이, 클래스 하나나 협력 객체 몇 개만 검증합니다. 가장 빠르고, 실패 원인을 좁히기 쉽습니다.
+
+##### 슬라이스 테스트
+
+웹 계층이나 JPA 계층처럼 특정 레이어만 잘라서 검증합니다. 단위 테스트보다 실제 프레임워크와 더 가깝고, 전체 통합 테스트보다 가볍습니다.
+
+##### 통합 테스트
+
+여러 레이어를 함께 붙여 실제 동작을 확인합니다. 설정, 트랜잭션, 직렬화, 보안 필터 같은 경계 지점을 검증할 때 필요합니다.
+
+#### 3. Spring Boot에서 자주 쓰는 테스트 애노테이션
+
+##### `@WebMvcTest`
+
+컨트롤러, JSON 직렬화, 요청/응답 매핑 같은 웹 계층 검증에 적합합니다. 서비스와 리포지토리까지 전부 띄우는 대신, 웹 레이어에 집중합니다.
+
+##### `@DataJpaTest`
+
+리포지토리와 JPA 매핑, 쿼리 동작을 검증할 때 적합합니다. 영속성 계층만 빠르게 확인하고 싶을 때 유용합니다.
+
+##### `@SpringBootTest`
+
+애플리케이션 전체를 실제와 가깝게 띄웁니다. 가장 강력하지만 가장 무겁기 때문에, 꼭 필요한 경계 검증에 집중해서 써야 합니다.
+
+#### 4. 실무에서 추천하는 기본 조합
+
+- 도메인 로직과 서비스 규칙: 단위 테스트
+- 컨트롤러 요청/응답 검증: `@WebMvcTest`
+- JPA 매핑과 조회 검증: `@DataJpaTest`
+- 설정, 보안, 전체 흐름 검증: `@SpringBootTest`
+이 조합이 중요한 이유는, 테스트 실패 원인을 빨리 좁히면서도 실제 동작 검증을 놓치지 않기 때문입니다.
+
+#### 현재 저장소에서 실제로 쓰는 조합
+
+현재 `day_by_spring` 저장소는 추상적인 권장 조합이 아니라 아래 패턴을 실제로 사용합니다.
+
+- 서비스 단위 테스트: `@ExtendWith(MockitoExtension.class)` + 목 객체 (`AuthServiceImplTest`, `LoanServiceImplTest`)
+- 컨트롤러 슬라이스 테스트: `@WebMvcTest` + `@MockitoBean` + `MockMvc` (`LoanControllerTest`, `BookControllerTest`)
+- JPA 슬라이스 테스트: `@DataJpaTest` + `TestEntityManager` (`LoanRepositoryTest`, `BookRepositoryTest`)
+- 통합 테스트: `@SpringBootTest` (`OrderServiceIntegrationTest`, `AopLoggingIntegrationTest`)
+```java
+@ExtendWith(MockitoExtension.class)
+class AuthServiceImplTest {
+    @Mock private AuthenticationManager authenticationManager;
+    @Mock private JwtTokenProvider jwtTokenProvider;
+    @InjectMocks private AuthServiceImpl authService;
+}
+```
+
+```java
+@WebMvcTest(LoanController.class)
+@AutoConfigureMockMvc(addFilters = false)
+class LoanControllerTest {
+    @MockitoBean private LoanService loanService;
+    @Autowired private MockMvc mockMvc;
+}
+```
+
+```java
+@DataJpaTest
+class LoanRepositoryTest {
+    @Autowired private TestEntityManager entityManager;
+    @Autowired private LoanRepository loanRepository;
+}
 ```
 
 ```text
 예상 결과
-현재 프로젝트는 JVM 위에서 JAR를 실행하고,
-컨테이너 메모리 한계를 의식하는 옵션과 함께 기동된다.
-즉 JVM 문서는 책 밖의 이론이 아니라 현재 프로젝트 운영 방식과 바로 연결된다.
+서비스 테스트는 빠르게 유스케이스 오케스트레이션을 검증한다.
+컨트롤러 테스트는 보안 필터를 끈 상태에서 HTTP 계약을 검증한다.
+리포지토리 테스트는 실제 JPA 매핑과 쿼리 동작을 확인한다.
 ```
 
-#### 왜 JVM을 먼저 알아야 하는가
+#### 5. 수동 검증은 왜 여전히 필요한가
 
-Java는 운영체제 위에서 바로 실행되지 않습니다. `javac`가 소스 코드를 `.class` 바이트코드로 컴파일하고, `java` 명령이 JVM을 시작해서 그 바이트코드를 읽고 실행합니다.
+자동화 테스트가 있더라도 `curl`, Swagger, Postman 같은 수동 검증은 여전히 의미가 있습니다. 특히 인증 헤더, 실제 JSON 바디, 운영과 유사한 요청 흐름은 수동 점검이 빠를 때가 많습니다. 다만 수동 검증은 회귀 방지를 대신하지 못하므로, 자동화 테스트와 역할을 분리해야 합니다.
 
-이 구조 덕분에 Java는 운영체제 차이를 어느 정도 감추면서 같은 프로그램을 여러 환경에서 실행할 수 있습니다. 다만 그 대가로 실행 과정이 한 번 더 추상화되기 때문에, 문제가 생겼을 때 JVM의 구조를 모르면 원인을 잘못 짚기 쉽습니다.
+#### 6. 자주 하는 실수
 
-#### 1. 소스 코드에서 실행까지의 흐름
+- 모든 테스트를 `@SpringBootTest`로만 작성하는 것
+- 컨트롤러 테스트에서 서비스 내부 로직까지 다 검증하려는 것
+- 테스트 데이터 준비가 너무 복잡해져 본론이 흐려지는 것
+- 성공 케이스만 작성하고 실패 케이스를 빼는 것
+#### 공식 문서 참고
 
-Java 프로그램의 기본 흐름은 아래처럼 이해하면 됩니다.
-
-```text
-.java 소스 코드 작성
-    ↓
-javac 컴파일
-    ↓
-.class 바이트코드 생성
-    ↓
-java 명령으로 JVM 시작
-    ↓
-클래스 로딩
-    ↓
-바이트코드 실행
-```
-
-여기서 중요한 점은 `.class` 파일이 기계어가 아니라 **JVM이 이해하는 명령 집합인 바이트코드**라는 것입니다. 운영체제가 직접 실행하는 파일이 아니라, JVM이 읽고 실행해야 하는 중간 산출물입니다.
-
-#### 2. 스펙과 구현을 구분해서 봐야 한다
-
-JVM을 공부할 때 가장 먼저 잡아야 하는 기준은 **명세와 구현을 구분하는 습관**입니다.
-
-- JVM Specification: JVM이 어떤 런타임 데이터 영역과 동작 규칙을 가져야 하는지 정의합니다.
-- HotSpot 같은 구현체: 그 명세를 실제 제품으로 구현한 JVM입니다.
-예를 들어 문서에서는 `Method Area`를 JVM의 런타임 데이터 영역으로 설명하지만, HotSpot에서는 이를 메타스페이스 같은 구현 형태로 관리합니다. 즉, 책과 블로그에서 나오는 용어가 모두 틀린 것은 아니지만, 같은 층위의 설명은 아닙니다.
-
-#### 3. JVM 런타임 데이터 영역
-
-JVM 스펙은 런타임 데이터 영역을 크게 스레드별 영역과 공유 영역으로 나눠 설명합니다.
-
-##### 3.1 스레드마다 따로 가지는 영역
-
-PC Register
-
-현재 실행 중인 JVM 명령의 위치를 가리키는 정보입니다. 스레드가 여러 개일 때 각 스레드가 어디까지 실행했는지 구분해야 하므로 스레드마다 따로 가집니다.
-
-Java Virtual Machine Stack
-
-메서드 호출이 쌓이는 영역입니다. 메서드가 호출될 때 프레임이 생기고, 메서드가 끝나면 프레임이 사라집니다. 지역 변수, 매개변수, 중간 계산 값이 여기에 놓입니다.
-
-```java
-public int add(int left, int right) {
-    int result = left + right;
-    return result;
-}
-```
-
-이 예제에서 `left`, `right`, `result` 같은 값은 메서드 실행 프레임과 함께 다뤄집니다.
-
-Native Method Stack
-
-JVM 바깥의 네이티브 코드를 호출할 때 사용하는 영역입니다. 일반적인 입문 단계에서는 깊게 다루지 않아도 되지만, JVM이 Java 코드만 완전히 고립된 채로 실행되는 것은 아니라는 점을 보여줍니다.
-
-##### 3.2 여러 스레드가 함께 보는 영역
-
-Heap
-
-객체와 배열이 생성되는 대표적인 영역입니다. `new`로 만든 객체는 보통 힙에 놓입니다.
-
-```java
-String name = new String("spring");
-int[] numbers = new int[3];
-```
-
-위 코드에서 실제 객체와 배열은 힙에 생성됩니다. 반면 메서드 안에서 그 객체를 가리키는 참조값은 스택 프레임에서 다뤄집니다.
-
-Method Area
-
-클래스 메타데이터, 필드와 메서드 정보, 런타임 상수 풀 같은 구조를 저장하는 공유 영역입니다. 초보 단계에서는 "클래스 수준 정보가 올라가는 곳" 정도로 이해하면 충분합니다.
-
-단, 여기서 다시 한 번 강조할 점은 `Method Area`는 스펙 용어이고, HotSpot의 `Metaspace`는 구현 용어라는 점입니다.
-
-#### 4. 클래스 로딩은 한 번에 끝나는 작업이 아니다
-
-JVM은 프로그램 시작 시 모든 클래스를 통째로 올리는 것이 아니라, **필요한 시점에 클래스를 로딩하고 연결하고 초기화**합니다.
-
-핵심 단계는 세 가지입니다.
-
-##### 4.1 Loading
-
-클래스의 바이트코드를 찾아 메모리에 읽어들입니다.
-
-##### 4.2 Linking
-
-읽어 온 클래스가 유효한지 검증하고, 필요한 메모리 구조를 준비하고, 심볼 참조를 해석합니다.
-
-##### 4.3 Initialization
-
-`static` 필드의 실제 초기값을 반영하고, `static` 초기화 블록을 실행합니다.
-
-```java
-public class Config {
-    static int maxSize = 100;
-
-    static {
-        System.out.println("Config initialized");
-    }
-}
-```
-
-이 단계 구분을 이해하면 `static` 초기화 시점, 클래스 간 순환 참조, 애플리케이션 시작 속도 문제를 더 정확하게 볼 수 있습니다.
-
-#### 5. 실행 엔진은 바이트코드를 실제 실행으로 바꾼다
-
-JVM은 바이트코드를 그대로 들고 있는 것만으로는 아무 일도 하지 못합니다. 실제 실행은 실행 엔진이 담당합니다.
-
-##### 5.1 인터프리터
-
-바이트코드를 읽으면서 순차적으로 실행합니다. 초기 실행이 빠르게 시작된다는 장점이 있습니다.
-
-##### 5.2 JIT 컴파일러
-
-반복적으로 실행되는 코드를 감지해 기계어 수준으로 최적화합니다. 그래서 Java는 "무조건 느리다"고 단정할 수 없습니다. 처음에는 해석하면서 실행하다가, 자주 호출되는 경로는 더 빠르게 돌릴 수 있도록 바뀝니다.
-
-이 구조 때문에 Java 성능을 볼 때는 단순히 코드 한 줄만 보는 것이 아니라, **실행 빈도와 워밍업 이후의 상태**를 함께 봐야 합니다.
-
-#### 6. 가비지 컬렉션은 힙 메모리 관리의 일부다
-
-가비지 컬렉션은 "메모리를 다 알아서 해준다"는 마법이 아닙니다. 더 이상 참조되지 않는 객체를 식별하고 회수하는 메커니즘입니다.
-
-여기서 먼저 구분해야 할 것은 아래 둘입니다.
-
-- `StackOverflowError`: 메서드 호출이 너무 깊어져 스택이 넘친 경우
-- `OutOfMemoryError`: 힙이나 메타스페이스 등 필요한 메모리를 확보하지 못한 경우
-즉, 메모리 문제라고 해서 모두 같은 문제가 아닙니다. 어떤 런타임 영역에서 발생했는지 먼저 봐야 합니다.
-
-GC 자체의 종류와 튜닝은 다음 장에서 더 자세히 다룹니다.
-
-#### 7. Spring 개발자에게 JVM이 중요한 이유
-
-Spring Boot 프로젝트를 실행하면 아래 현상이 모두 JVM과 연결됩니다.
-
-- 애플리케이션 시작 시 수많은 클래스가 로딩됩니다.
-- 빈 생성 과정에서 객체가 많이 만들어집니다.
-- JSON 직렬화, 로그 처리, 컬렉션 변환 중에 임시 객체가 계속 생깁니다.
-- 테스트 실행과 운영 실행에서 메모리 사용 패턴이 달라집니다.
-따라서 Spring을 쓴다고 해서 JVM을 몰라도 되는 것이 아니라, 오히려 **프레임워크가 많은 일을 대신해 주기 때문에 JVM 관점의 관찰력이 더 중요**해집니다.
-
-#### 자주 헷갈리는 지점
-
-- JVM은 Java 언어 자체가 아니라 Java 프로그램의 실행 환경입니다.
-- `.class` 파일은 운영체제가 직접 실행하는 파일이 아니라 JVM이 읽는 바이트코드입니다.
-- 지역 변수와 객체가 모두 같은 메모리 위치에 있는 것은 아닙니다.
-- `Method Area`와 `Metaspace`는 같은 층위의 용어가 아닙니다.
-- 가비지 컬렉션이 있다고 해서 메모리 문제가 자동으로 사라지는 것은 아닙니다.
-#### 공식 문서 기준으로 더 보면 좋은 자료
-
-- [The javac Command](https://docs.oracle.com/en/java/javase/21/docs/specs/man/javac.html)
-- [The java Command](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html)
-- [JVM Spec Chapter 2: Run-Time Data Areas](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html)
-- [JVM Spec Chapter 5: Loading, Linking, and Initializing](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html)
+- [Spring Boot Testing Reference](https://docs.spring.io/spring-boot/reference/testing/index.html)
+- [Spring Framework Testing](https://docs.spring.io/spring-framework/reference/testing.html)
+- [Spring Boot Test Auto-configuration Annotations](https://docs.spring.io/spring-boot/reference/test-auto-configuration/index.html)
 
 ### ✏️ 직접 해보기
 
-간단한 프로그램의 실행 과정을 클래스 로딩→실행 순으로 설명해 보라.
+`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라.
 
 #### 정리
 
-JVM은 자바 코드를 실행하는 중간 계층이 아니라, **클래스 로딩, 메모리 배치, 바이트코드 실행, 실행 최적화까지 책임지는 핵심 런타임 시스템**입니다. 이 구조를 알아야 이후의 GC, 튜닝, 장애 분석 문서를 제대로 읽을 수 있습니다.
+테스트 전략은 기술 선택 문제가 아니라 경계 설정 문제입니다. 무엇을 어디까지 검증할지 먼저 정하면, 애노테이션과 도구 선택은 그 다음에 자연스럽게 따라옵니다.
 
 #### 한 줄 정리
 
-JVM 입문의 핵심은 `자바 코드가 어떻게 실행되는가`를 소스 코드가 아니라 **런타임 구조의 관점**에서 보기 시작하는 것입니다.
+Spring Boot 테스트의 핵심은 **가장 작은 비용으로 가장 큰 회귀 위험을 줄이는 검증 레벨을 고르는 것**입니다.
 
 
 ---
 
-## 9.1 JVM 기초 가이드 2: 메모리 관리
+## 8.2 계산기 테스트 기초
 
-**🎯 목표**: 힙·스택·메서드 영역 등 JVM 메모리 구조를 이해한다.
+**🎯 목표**: 계산기 예제로 단위 테스트 기초를 익힌다.
 
-#### 개요
+<!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
 
-이 문서는 `JVM 기초 가이드 1`에서 본 런타임 구조를 바탕으로, 실제 메모리 사용과 가비지 컬렉션을 어떻게 이해해야 하는지 정리한 두 번째 가이드입니다. JVM 메모리를 공부하는 목적은 단순히 `힙`, `스택` 이름을 외우는 것이 아니라, **객체가 왜 남아 있는지, 어떤 종류의 메모리 문제가 발생하는지, 무엇을 먼저 관찰해야 하는지 판단하는 것**에 있습니다.
+### 개요
+이 문서는 작은 계산기 예제를 통해 **테스트 가능한 코드가 어떤 구조를 요구하는지** 설명하는 실습 문서입니다. 핵심은 계산기를 만드는 것이 아니라, 테스트가 가능하도록 책임을 분리하는 과정을 이해하는 데 있습니다.
 
-Spring Boot 애플리케이션에서는 요청 처리, 직렬화, 캐시, 로그, 리플렉션 때문에 짧게 사는 객체와 오래 남는 객체가 계속 섞여 만들어집니다. 그래서 메모리 구조를 모르고서는 GC 로그도, 힙 덤프도, `OutOfMemoryError`도 제대로 읽기 어렵습니다.
+### 왜 중요한가
+테스트는 완성된 코드에 붙이는 마지막 장식이 아닙니다. 테스트를 쓰려는 순간, 입력 파싱과 계산 규칙, 예외 처리, 출력 책임을 분리해야 한다는 사실이 드러납니다. 그래서 작은 예제일수록 구조 개선 연습에 적합합니다.
 
-#### 1. JVM 메모리는 힙만이 아니다
+### 실습 목표
+- 연산 규칙을 순수한 계산 로직으로 분리하기
+- 입력 파싱과 계산 책임을 나누기
+- 성공 케이스와 실패 케이스를 JUnit 5로 검증하기
 
-초보 단계에서는 메모리 문제를 전부 힙 문제로 생각하기 쉽습니다. 하지만 실제 JVM 메모리는 더 넓게 봐야 합니다.
+### 1. 처음 코드가 왜 테스트하기 어려운가
+아래와 같은 코드는 콘솔 입력, 문자열 파싱, 계산, 출력이 모두 `main` 메서드에 붙어 있어 테스트가 어렵습니다.
+- 입력을 직접 넣기 어렵습니다.
+- 계산 규칙만 따로 검증하기 어렵습니다.
+- 예외 상황을 세밀하게 확인하기 어렵습니다.
+즉, 문제는 계산기가 아니라 **책임 분리 실패**입니다.
 
-- Heap: 객체와 배열이 주로 생성되는 영역
-- Java Thread Stack: 스레드별 메서드 프레임과 지역 변수
-- Metaspace: 클래스 메타데이터를 담는 구현 영역
-- Native Memory: JVM 자체, JNI, Direct Buffer 등 힙 바깥 메모리
-즉, 메모리가 부족하다는 말은 항상 같은 뜻이 아닙니다. `Java heap space`, `Metaspace`, `Direct buffer memory`, `unable to create native thread`는 서로 다른 종류의 문제일 수 있습니다.
+### 2. 첫 단계는 계산 규칙을 메서드로 분리하는 것이다
+```java
+public class Calculator {
+    public int calculate(int left, String operator, int right) {
+        return switch (operator) {
+            case "+" -> left + right;
+            case "-" -> left - right;
+            case "*" -> left * right;
+            case "/" -> {
+                if (right == 0) {
+                    throw new IllegalArgumentException("0으로 나눌 수 없습니다.");
+                }
+                yield left / right;
+            }
+            default -> throw new IllegalArgumentException("지원하지 않는 연산자입니다.");
+        };
+    }
+}
+```
+이 단계만 해도 테스트는 훨씬 쉬워집니다. 입력과 출력이 아니라, 계산 규칙 자체를 검증할 수 있기 때문입니다.
 
-#### 2. 객체는 생성만 되는 것이 아니라 생애를 가진다
+### 3. 입력 파싱은 별도 책임으로 분리한다
+```java
+public record Expression(int left, String operator, int right) {
+}
 
-메모리 관점에서 객체를 볼 때는 생성 순간보다 **얼마나 오래 살아남는가**가 더 중요합니다.
+public class ExpressionParser {
+    public Expression parse(String input) {
+        String sanitized = input.replace("(", "")
+            .replace(")", "")
+            .trim();
+        String[] tokens = sanitized.split(" ");
+        if (tokens.length != 3) {
+            throw new IllegalArgumentException("수식 형식이 올바르지 않습니다.");
+        }
+        return new Expression(
+            Integer.parseInt(tokens[0]),
+            tokens[1],
+            Integer.parseInt(tokens[2])
+        );
+    }
+}
+```
+이제 파싱 실패와 계산 실패를 분리해서 테스트할 수 있습니다. 이 분리가 실제 서비스 코드에서도 매우 중요합니다.
 
-대표적인 흐름은 아래처럼 이해하면 됩니다.
+### 4. JUnit 5 테스트 예제
+```java
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class CalculatorTest {
+
+    private final Calculator calculator = new Calculator();
+
+    @Test
+    @DisplayName("덧셈을 계산한다")
+    void addsNumbers() {
+        assertEquals(8, calculator.calculate(5, "+", 3));
+    }
+
+    @Test
+    @DisplayName("0으로 나누면 예외가 발생한다")
+    void rejectsDivisionByZero() {
+        assertThrows(IllegalArgumentException.class,
+            () -> calculator.calculate(5, "/", 0));
+    }
+
+    @Test
+    @DisplayName("지원하지 않는 연산자는 예외가 발생한다")
+    void rejectsUnsupportedOperator() {
+        assertThrows(IllegalArgumentException.class,
+            () -> calculator.calculate(5, "^", 2));
+    }
+}
+```
+이 테스트에서 중요한 점은 세 가지입니다.
+- 정상 흐름을 먼저 검증합니다.
+- 실패 케이스를 명시적으로 검증합니다.
+- 콘솔 출력이 아니라 핵심 규칙을 직접 검증합니다.
+
+### 5. 어디까지 테스트해야 하는가
+초중급 단계에서는 아래 순서로 보는 것이 좋습니다.
+1. 계산 규칙 테스트
+1. 파싱 규칙 테스트
+1. 두 객체를 엮는 작은 애플리케이션 서비스 테스트
+콘솔 `main` 메서드까지 무리하게 테스트하려 하기보다, 핵심 규칙을 먼저 보호하는 편이 훨씬 효과적입니다.
+
+### 6. 이 예제가 Spring Boot 테스트와 이어지는 이유
+이 계산기 예제는 아주 작지만, 실제 Spring Boot 구조와 동일한 감각을 요구합니다.
+- Controller는 입력을 받고
+- Service는 규칙을 처리하고
+- Parser나 Mapper는 변환을 담당합니다.
+테스트 전략도 같습니다. 규칙은 단위 테스트로, 웹 요청/응답은 슬라이스 테스트로, 전체 흐름은 통합 테스트로 검증합니다.
+현재 `day_by_spring` 저장소에서도 같은 감각이 보입니다.
+```java
+@DisplayName("Loan 엔티티 테스트")
+class LoanTest {
+
+    @Test
+    @DisplayName("회원 정보가 null이면 검증 실패")
+    void memberShouldNotBeNull() {
+        // Bean Validation 기반 도메인 규칙 검증
+    }
+}
+```
+```java
+@ExtendWith(MockitoExtension.class)
+@DisplayName("LoanService 테스트")
+class LoanServiceImplTest {
+
+    @Mock private LoanRepository loanRepository;
+    @Mock private BookRepository bookRepository;
+    @Mock private MemberRepository memberRepository;
+    @InjectMocks private LoanServiceImpl loanService;
+}
+```
 ```text
-객체 생성
-    ↓
-짧게 사용되고 사라짐
-    또는
-오래 참조되어 계속 남음
-    ↓
-더 이상 도달할 수 없으면 GC 대상
+예상 결과
+도메인 테스트는 엔티티 규칙과 상태 제약을 빠르게 검증한다.
+서비스 테스트는 저장소와 협력 객체를 목으로 두고 유스케이스 흐름과 예외 처리를 검증한다.
+계산기 예제에서 본 책임 분리가 실제 프로젝트에서도 거의 같은 방식으로 확장된다.
 ```
 
-실무 애플리케이션에서는 대부분의 객체가 매우 짧게 살다가 사라집니다. 요청 하나를 처리하면서 만드는 DTO, 로그 메시지, 컬렉션 변환 결과가 여기에 가깝습니다. 반면 캐시, 싱글톤 빈이 오래 들고 있는 데이터, 정적 컬렉션은 훨씬 오래 남습니다.
+### 자주 하는 실수
+- 출력 결과만 눈으로 보고 테스트 코드를 생략하는 것
+- 성공 케이스만 테스트하고 실패 케이스를 빼는 것
+- 테스트하려고 하기보다, 테스트가 어려운 구조를 그대로 유지하는 것
 
-이 차이를 알아야 "객체가 많다"와 "메모리 누수가 있다"를 구분할 수 있습니다.
+### 공식 문서 참고
+- [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
+- [Spring Boot Testing Reference](https://docs.spring.io/spring-boot/reference/testing/index.html)
 
-#### 3. 힙과 스택은 같이 봐야 한다
+### 정리
+좋은 테스트 예제는 화려한 프레임워크보다, 책임이 잘 나뉜 작은 코드에서 시작합니다. 계산기 같은 작은 문제를 테스트 가능하게 바꾸는 과정은 이후의 서비스, 컨트롤러, 리포지토리 테스트로 그대로 이어집니다.
 
-아래 코드를 보면 객체와 참조가 같은 곳에 있는 것이 아니라는 점이 분명해집니다.
+### 한 줄 정리
+테스트 가능한 코드의 핵심은 **테스트 기술보다 먼저, 책임이 나뉜 구조를 만드는 것**입니다.
 
-```java
-public class OrderService {
-    public void placeOrder() {
-        Order order = new Order("order-1");
-        int quantity = 2;
-        process(order, quantity);
-    }
+## 8.3 API 수동 검증: curl 활용
 
-    private void process(Order order, int quantity) {
-        String message = "processing";
-        System.out.println(order.getOrderNumber() + ": " + quantity + ", " + message);
-    }
-}
+**🎯 목표**: curl로 API를 수동 검증한다.
+
+### 개요
+
+이 문서는 `curl`을 사용해 HTTP API를 직접 검증하는 방법을 정리한 가이드입니다. 자동화 테스트가 있어도, 실제 요청과 응답을 눈으로 확인해야 하는 순간은 계속 존재합니다. 핵심은 수동 검증을 많이 하는 것이 아니라, **어떤 문제를 `curl`로 빨리 확인하고 어떤 문제를 자동화 테스트로 남길지 구분하는 것**입니다.
+
+#### 왜 중요한가
+
+테스트 코드는 회귀 방지에 강하지만, 실제 HTTP 요청을 한 번에 점검하는 데는 `curl`이 더 빠를 때가 많습니다. 특히 아래 상황에서는 수동 검증이 유용합니다.
+
+- 인증 헤더를 포함한 실제 요청을 바로 보내 보고 싶을 때
+- JSON 바디와 상태 코드를 빠르게 확인하고 싶을 때
+- 로컬 프로파일, 포트, 프록시, CORS 이전 단계 문제를 확인할 때
+- Swagger UI 없이도 재현 가능한 요청 스크립트를 남기고 싶을 때
+#### 이 문서의 역할
+
+이 문서는 자동화 테스트를 대체하지 않습니다. 책 기준에서 `curl`은 아래 역할에 가깝습니다.
+
+- API 설계가 실제 요청/응답으로 어떻게 보이는지 확인한다.
+- 인증, 직렬화, 상태 코드 같은 경계 지점을 빠르게 점검한다.
+- 버그 재현 절차를 텍스트로 남긴다.
+반대로 아래는 자동화 테스트가 더 적합합니다.
+
+- 반복 실행이 필요한 회귀 검증
+- 비즈니스 규칙 검증
+- 레이어별 실패 원인 추적
+#### 1. 수동 검증 전에 먼저 확인할 것
+
+좋은 `curl` 테스트는 명령보다 **사전 조건**이 먼저 분명해야 합니다.
+
+- 애플리케이션이 어떤 프로파일로 실행 중인가
+- 서버 주소와 포트는 무엇인가
+- 필요한 인증 토큰이 준비되었는가
+- 테스트용 데이터가 이미 있는가, 아니면 먼저 만들어야 하는가
+- 성공 기준이 응답 바디인지, 상태 코드인지, 둘 다인지
+이 기준이 없으면 `curl` 명령이 많아져도 문서 품질은 올라가지 않습니다.
+
+#### 2. 가장 먼저 보는 것은 상태 코드입니다
+
+초중급 단계에서 가장 흔한 실수는 JSON 바디만 보고 성공 여부를 판단하는 것입니다. 하지만 API 검증의 첫 줄은 상태 코드입니다.
+
+- `200 OK`: 조회나 수정이 정상 처리되었는가
+- `201 Created`: 생성 요청이 새 리소스를 만들었는가
+- `400 Bad Request`: 잘못된 요청 형식을 제대로 거부하는가
+- `401 Unauthorized`: 인증 없는 요청을 막는가
+- `403 Forbidden`: 권한 없는 사용자를 막는가
+- `404 Not Found`: 없는 리소스 접근을 적절히 처리하는가
+#### 3. 기본 `curl` 패턴
+
+##### GET 요청
+
+```bash
+curl -i http://localhost:8080/api/books/1
 ```
 
-이 코드를 볼 때 중요한 기준은 아래와 같습니다.
+##### JSON 바디를 포함한 POST 요청
 
-- `order`, `quantity`, `message` 같은 지역 변수와 참조값은 스택 프레임에서 다뤄진다.
-- 실제 `Order` 객체는 힙에 생성된다.
-- 메서드가 끝나면 스택 프레임은 사라지지만, 힙 객체는 다른 참조가 남아 있으면 계속 살아 있을 수 있다.
-즉, 스택은 메서드 실행 흐름과 함께 정리되지만, 힙 객체는 **참조 관계가 끊어져야만** 회수 후보가 됩니다.
-
-#### 4. GC는 도달 가능성으로 살아 있는 객체를 판단한다
-
-가비지 컬렉터는 단순히 "오래된 객체"를 지우는 것이 아닙니다. 핵심 기준은 **도달 가능성(reachability)** 입니다.
-
-쉽게 말하면 GC Root에서 시작해서 따라갈 수 있는 객체는 살아 있는 것으로 보고, 더 이상 따라갈 수 없는 객체는 회수 대상이 됩니다.
-
-대표적인 GC Root 예시는 아래처럼 이해하면 충분합니다.
-
-- 현재 실행 중인 스레드의 로컬 변수
-- static 필드가 가리키는 객체
-- JNI 등 네이티브 코드가 붙잡고 있는 객체
-```java
-public class ReachabilityExample {
-    private static final List<String> CACHE = new ArrayList<>();
-
-    public static void main(String[] args) {
-        String temp = new String("short-lived");
-        CACHE.add(new String("long-lived"));
-        temp = null;
-    }
-}
+```bash
+curl -i -X POST http://localhost:8080/api/books \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Effective Java",
+    "author": "Joshua Bloch"
+  }'
 ```
 
-위 예시에서 `short-lived`는 더 이상 참조가 없으면 회수 대상이 될 수 있지만, `long-lived`는 `CACHE`가 static 필드로 붙잡고 있어서 계속 남을 수 있습니다.
+##### 인증 헤더 포함 요청
 
-이 차이가 바로 "많이 생성되는 객체"와 "안 사라지는 객체"를 나누는 기준입니다.
-
-#### 5. Generational 관점은 여전히 중요하다
-
-현대 HotSpot 환경에서는 세부 구현이 수집기마다 달라도, 많은 설명이 **젊은 객체와 오래 사는 객체를 다르게 다룬다**는 관점에서 출발합니다.
-
-입문 단계에서는 아래 정도로 이해해도 충분합니다.
-
-- 대부분의 객체는 금방 죽는다.
-- 오래 살아남는 객체는 더 오래 관리되는 영역으로 이동할 수 있다.
-- 짧게 사는 객체가 폭증하면 Young 영역 중심의 GC가 자주 일어날 수 있다.
-- 오래 사는 객체가 너무 많으면 Old 영역 압박과 Full GC 성격의 부담이 커질 수 있다.
-중요한 점은 이 설명이 JVM 명세 자체라기보다, **실제 HotSpot 계열 수집기를 이해하기 위한 실무 관점**이라는 점입니다.
-
-#### 6. 메모리 문제는 증상별로 봐야 한다
-
-##### 6.1 `java.lang.OutOfMemoryError: Java heap space`
-
-힙에 더 이상 필요한 객체를 놓을 수 없을 때 발생합니다.
-
-대표 원인:
-
-- 큰 컬렉션이 계속 증가함
-- 캐시 만료 정책이 없음
-- 요청 결과를 과도하게 한 번에 메모리에 적재함
-- 누수가 있어 더 이상 회수되지 않음
-##### 6.2 `java.lang.OutOfMemoryError: Metaspace`
-
-클래스 메타데이터 영역이 부족할 때 발생합니다.
-
-대표 원인:
-
-- 동적 프록시나 클래스 생성이 과도함
-- 클래스 로더 누수
-- 애플리케이션 재배포 구조 문제
-##### 6.3 `java.lang.StackOverflowError`
-
-재귀가 끝나지 않거나 스택 프레임이 너무 깊어질 때 발생합니다.
-
-```java
-public int factorial(int n) {
-    return n * factorial(n - 1);
-}
-```
-
-이 코드처럼 종료 조건이 없으면 스택 프레임이 계속 쌓입니다.
-
-##### 6.4 힙 밖 메모리 문제도 있다
-
-NIO Direct Buffer, 네이티브 라이브러리, 스레드 생성 비용 때문에 힙 크기가 넉넉해도 프로세스 전체 메모리가 부족할 수 있습니다. 그래서 운영 환경에서는 OS 관점의 메모리 사용량과 JVM 내부 메모리 지표를 같이 봐야 합니다.
-
-#### 7. 메모리 누수는 "참조가 남아 있는 상태"다
-
-Java는 GC가 있으니 메모리 누수가 없다고 오해하기 쉽습니다. 하지만 실제로는 **안 써도 참조가 남아 있으면 GC가 못 치웁니다.**
-
-대표적인 누수 패턴은 아래와 같습니다.
-
-- static 컬렉션이 계속 커짐
-- 캐시에 만료나 제거 정책이 없음
-- 이벤트 리스너를 등록만 하고 해제하지 않음
-- 스레드 로컬 값을 정리하지 않음
-- 큰 객체 그래프를 싱글톤 빈이 오래 붙잡고 있음
-```java
-public class BadCache {
-    private static final Map<String, Object> CACHE = new HashMap<>();
-
-    public static void put(String key, Object value) {
-        CACHE.put(key, value);
-    }
-}
-```
-
-이 코드는 문법상 문제는 없지만, 제거 정책이 없으면 장기적으로 메모리 사용량이 계속 증가할 수 있습니다.
-
-#### 현재 저장소에서 먼저 확인할 것
-
-현재 `day_by_spring` 저장소는 애플리케이션 코드 안에서 힙 크기를 고정하지 않고, 컨테이너 실행 레이어에서 `JAVA_OPTS`로 JVM 메모리 정책을 넘깁니다. 그래서 이 문서는 **현재 코드에 박힌 값 설명**이라기보다 **운영 환경에서 어떤 메모리 관찰 포인트를 먼저 볼지**에 더 가깝습니다.
-
-```dockerfile
-ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+```bash
+curl -i http://localhost:8080/api/client/loans \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 ```text
 예상 결과
-JVM은 컨테이너 메모리 한계를 기준으로 힙 상한을 공격적으로 쓰지 않도록 동작한다.
-현재 프로젝트에서 메모리 문제를 볼 때는 애플리케이션 힙만이 아니라 컨테이너 제한과 프로세스 전체 메모리를 함께 봐야 한다.
+유효한 사용자 또는 관리자 토큰이면 현재 로그인 사용자의 대출 목록이 반환된다.
+이 프로젝트에서는 `@AuthenticationPrincipal CustomUserDetails`를 통해 토큰에서 복원된 `memberId`를 사용한다.
 ```
 
-#### 8. 관찰 없이 튜닝부터 하면 실패하기 쉽다
+##### PATCH 요청
 
-메모리 문제를 만나면 바로 `-Xmx`를 키우고 싶어집니다. 하지만 순서는 대개 아래가 더 안전합니다.
-
-1. 어떤 에러인지 정확히 구분한다.
-1. GC 로그와 힙 사용 패턴을 본다.
-1. 어떤 객체가 남는지 힙 덤프에서 확인한다.
-1. 그다음에야 옵션 조정이나 구조 변경을 검토한다.
-입문 단계에서 먼저 알아둘 만한 관찰 포인트는 아래 정도입니다.
-
-- GC 로그: GC 빈도와 정지 시간을 본다.
-- 힙 덤프: 어떤 객체가 많이 남는지 본다.
-- `jcmd`: JVM 상태를 질의한다.
-- Native Memory Tracking: 힙 밖 메모리를 추적할 때 사용한다.
 ```bash
-java -XX:+HeapDumpOnOutOfMemoryError \
-     -XX:HeapDumpPath=/tmp/heap.hprof \
-     -Xlog:gc* \
-     -jar app.jar
+curl -i -X PATCH http://localhost:8080/api/books/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Effective Java 3rd"
+  }'
 ```
 
-위 설정은 메모리 문제가 재현될 때 원인을 남겨 두는 기본적인 출발점으로 자주 사용됩니다.
+##### DELETE 요청
 
-#### 9. Spring 애플리케이션에서 특히 주의할 지점
+```bash
+curl -i -X DELETE http://localhost:8080/api/books/1
+```
 
-Spring Boot에서는 아래 상황이 메모리 사용량에 큰 영향을 줍니다.
+여기서 중요한 것은 명령어 자체보다, **각 요청이 어떤 HTTP 의미를 가지는지 알고 보내는 것**입니다.
 
-- 대량 조회 결과를 한 번에 리스트로 적재하는 경우
-- 캐시를 넣고 만료 정책을 충분히 설계하지 않은 경우
-- 요청/응답 DTO를 과도하게 복사하는 경우
-- 로그 메시지와 JSON 직렬화 중 임시 객체가 많이 생기는 경우
-- 테스트에서 컨텍스트를 과도하게 반복 생성하는 경우
-즉, Spring 메모리 문제는 종종 JVM 옵션보다 **애플리케이션 구조와 데이터 흐름**에서 먼저 원인을 찾는 편이 맞습니다.
+#### 4. 추천 검증 순서
 
-#### 자주 헷갈리는 지점
+책 기준에서 가장 실수 적은 순서는 아래와 같습니다.
 
-- 지역 변수가 사라진다고 해서 관련 힙 객체가 반드시 바로 사라지는 것은 아닙니다.
-- GC가 있다고 해서 메모리 누수가 사라지는 것은 아닙니다.
+1. 서버 기동과 포트 확인
+1. 공개 조회 API로 기본 연결 확인
+1. `/api/auth/login`으로 토큰 발급 확인
+1. 보호된 사용자 API 검증
+1. 보호된 관리자 API 검증
+1. 잘못된 입력으로 `400` 확인
+1. 인증 실패와 권한 부족 흐름 확인
+1. 없는 ID로 요청해서 `404` 확인
+이 순서가 좋은 이유는, 환경 문제와 도메인 문제를 섞지 않게 해 주기 때문입니다.
+
+현재 저장소 기준으로는 아래 순서가 특히 자연스럽습니다.
+
+```text
+GET /api/books/{id}
+  → POST /api/auth/login
+  → GET /api/client/loans
+  → PUT /api/admin/members/{id}/promote
+```
+
+관리자 토큰과 일반 사용자 토큰을 나눠 보면 `hasRole("ADMIN")` 규칙 검증까지 한 번에 이어집니다.
+
+#### 5. 인증 API는 헤더와 실패 케이스를 같이 봅니다
+
+인증이 들어가는 API는 성공 요청만 보면 부족합니다. 최소한 아래 세 가지는 같이 확인하는 편이 좋습니다.
+
+- 토큰이 있을 때 정상 동작하는가
+- 토큰이 없을 때 요청이 차단되는가
+- 권한이 부족할 때 `403 Forbidden`이 나는가
+즉, 인증 API 검증은 “요청이 된다”가 아니라 **경계가 올바르게 막히는지**까지 포함해야 합니다.
+
+현재 저장소는 `AuthenticationEntryPoint`와 `AccessDeniedHandler`를 별도로 커스터마이징하지 않았습니다. 따라서 보호된 API에서 토큰이 없을 때의 정확한 실패 응답은 실제 실행 환경에서 확인하는 편이 안전합니다. 반면 **인증된 USER 토큰으로 `/api/admin/**`를 호출했을 때 권한 부족으로 차단되는 흐름은 반드시 확인해야 합니다.
+
+```bash
+curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" \
+  -H "Authorization: Bearer USER_ACCESS_TOKEN"
+```
+
+```text
+예상 결과
+관리자 권한이 없는 사용자 토큰이면 `403 Forbidden`으로 차단된다.
+현재 보안 설정의 `requestMatchers("/api/admin/**").hasRole("ADMIN")` 규칙이 실제로 동작하는지 확인하는 가장 짧은 검증이다.
+```
+
+#### 6. 예제 프로젝트에 적용하는 방법
+
+도서 대여 같은 예제 프로젝트에서는 아래 흐름으로 검증 문서를 만들면 좋습니다.
+
+- 회원가입 또는 기존 테스트 계정 확인
+- 로그인 후 JWT 토큰 발급
+- 공개 API와 보호된 API를 구분해 호출
+- 대출 생성
+- 내 대출 조회
+- 반납 또는 상태 변경
+- 권한 부족 요청으로 `403` 확인
+- 삭제 후 `404` 확인
+핵심은 특정 도메인이 아니라, **사전 데이터 생성 → 정상 흐름 → 오류 흐름** 순서가 보이는 것입니다.
+
+로그인 실패도 별도 검증 가치가 있습니다.
+
+```bash
+curl -i -X POST "http://localhost:8080/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "hong@test.com",
+    "password": "wrong-password"
+  }'
+```
+
+```text
+예상 결과
+인증 실패 시 토큰은 발급되지 않는다.
+현재 저장소는 `GlobalExceptionHandler`에서 `AuthenticationException`을 받아 `401 Unauthorized`와 `AUTHENTICATION_FAILED` 형태의 응답으로 정리한다.
+```
+
+#### 7. `curl` 문서를 남길 때 좋은 형식
+
+좋은 수동 검증 문서는 아래 네 가지를 함께 남깁니다.
+
+- 사전 조건
+- 요청 명령
+- 기대 상태 코드
+- 기대 결과 요약
+예를 들면 아래처럼 적는 편이 좋습니다.
+
+```text
+목적: 없는 리소스 조회 시 404 확인
+사전 조건: ID 9999는 존재하지 않음
+요청: GET /api/books/9999
+기대 결과: 404 Not Found
+```
+
+이 정도만 있어도 나중에 버그 재현 문서로 바로 재사용할 수 있습니다.
+
+#### 자주 하는 실수
+
+- 서버를 띄우지 않고 요청부터 보내는 것
+- 인증 API인데 토큰 없이 성공만 기대하는 것
+- 사전 데이터 생성 없이 수정/삭제부터 시도하는 것
+- 상태 코드를 보지 않고 응답 바디만 확인하는 것
+- 수동 검증 절차를 남기지 않아 같은 버그를 다시 재현하지 못하는 것
+#### 공식 문서
+
+- [everything curl](https://everything.curl.dev/)
 
 ---
 
 ### ✏️ 직접 해보기
 
-객체와 지역변수가 각각 힙·스택 어디에 저장되는지 예제로 짚어 보라.
-
-## 9.2 JVM 기초 가이드 3: 튜닝과 실전 활용
-
-**🎯 목표**: GC 로그를 읽고 힙을 튜닝한다.
-
-#### 개요
-
-이 문서는 JVM 옵션을 외우는 문서가 아니라, **운영 중인 Java 애플리케이션을 어떻게 관찰하고 조정할 것인가**를 정리한 실전 가이드입니다. 튜닝은 몇 개의 유명한 옵션을 복사해 붙이는 작업이 아니라, 현재 증상을 측정하고 원인을 좁힌 뒤, 작은 변경을 적용하고 다시 확인하는 반복 과정입니다.
-
-앞선 문서에서 JVM 구조와 메모리 관리를 다뤘다면, 이번 문서는 그 지식을 실제 운영 판단으로 연결합니다. 특히 Spring Boot 애플리케이션에서는 시작 시간, GC 정지 시간, 힙 사용량, 스레드 수, 네이티브 메모리 사용량이 함께 얽히기 때문에 단순히 `-Xmx`만 조정해서는 해결되지 않는 경우가 많습니다.
-
-#### 현재 저장소 기준으로 보면
-
-현재 `day_by_spring` 저장소의 실행 이미지는 컨테이너 친화적인 JVM 옵션만 최소한으로 두고 있습니다.
-
-```dockerfile
-ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
-```
-
-`docs/DEPLOYMENT.md`에는 여기에 `-XX:InitialRAMPercentage=50.0`를 더한 예시도 있습니다. 즉 현재 프로젝트는 복잡한 GC 튜닝 값을 고정해 둔 상태가 아니라, **컨테이너 메모리 한도 안에서 안전하게 시작하고 실제 증상을 본 뒤 조정하는 방향**에 가깝습니다.
-
-```text
-예상 결과
-이 프로젝트의 JVM 튜닝은 특정 GC 옵션을 미리 많이 주는 방식이 아니라,
-기본 메모리 정책을 두고 운영 지표와 로그를 보면서 추가 조정하는 방식으로 이해하는 편이 맞다.
-```
-
-#### 1. 튜닝의 출발점은 옵션이 아니라 관찰이다
-
-메모리나 성능 문제가 보이면 초보 단계에서는 바로 힙 크기를 키우고 싶어집니다. 하지만 그 순서는 보통 좋지 않습니다.
-
-더 안전한 순서는 아래와 같습니다.
-
-1. 증상을 구체적으로 정의한다.
-1. 현재 상태를 관찰한다.
-1. 원인 후보를 좁힌다.
-1. 작은 조정을 적용한다.
-1. 다시 측정한다.
-예를 들어 아래 증상들은 서로 다른 대응이 필요합니다.
-
-- 응답이 간헐적으로 멈춘다.
-- 메모리 사용량이 계속 증가한다.
-- 애플리케이션 시작이 너무 느리다.
-- 컨테이너에서 OOMKilled가 난다.
-- CPU는 낮은데 처리량이 안 나온다.
-같은 "느리다"라는 말 안에도 원인이 전혀 다를 수 있습니다.
-
-#### 2. 가장 먼저 확인할 기본 옵션
-
-운영에서 자주 먼저 보게 되는 옵션은 크게 네 묶음입니다.
-
-##### 2.1 힙 크기
-
-```bash
-java -Xms512m -Xmx2g -jar app.jar
-```
-
-- `-Xms`: 초기 힙 크기
-- `-Xmx`: 최대 힙 크기
-힙을 너무 작게 잡으면 GC가 지나치게 자주 일어날 수 있고, 너무 크게 잡으면 컨테이너나 서버 전체 메모리와 충돌할 수 있습니다. 크다고 항상 좋은 것이 아닙니다.
-
-##### 2.2 스레드 스택 크기
-
-```bash
-java -Xss1m -jar app.jar
-```
-
-`-Xss`는 스레드당 스택 크기입니다. 재귀가 깊거나 스레드가 매우 많은 환경에서는 영향을 줄 수 있습니다. 다만 이를 바꾸기 전에 먼저 왜 스택이 부족한지, 스레드 수가 왜 많은지부터 봐야 합니다.
-
-##### 2.3 GC 로그
-
-```bash
-java -Xlog:gc*:file=/var/log/app-gc.log:time,level,tags -jar app.jar
-```
-
-GC 로그는 튜닝의 출발점입니다. 정지 시간이 얼마나 긴지, 수집이 얼마나 자주 일어나는지, 메모리가 회수되는지 같은 기본 정보를 먼저 봐야 합니다.
-
-##### 2.4 장애 분석용 옵션
-
-```bash
-java -XX:+HeapDumpOnOutOfMemoryError \
-     -XX:HeapDumpPath=/var/log/app.hprof \
-     -jar app.jar
-```
-
-이 옵션은 메모리 장애가 났을 때 사후 분석 자료를 남기기 위한 최소한의 안전장치입니다. 운영 환경에서는 이런 기록 장치가 없는 편이 더 위험합니다.
-
-#### 3. 무엇을 볼 것인가: 기본 관찰 포인트
-
-튜닝은 관찰 항목이 정리되어 있어야 합니다. 아래 다섯 가지는 거의 항상 기본입니다.
-
-- 힙 사용량의 추세
-- GC 빈도와 정지 시간
-- 스레드 수와 상태
-- 클래스 수와 메타스페이스 사용량
-- 프로세스 전체 메모리와 컨테이너 메모리 제한
-애플리케이션 내부 지표도 중요하지만, JVM은 OS와 컨테이너 위에서 돌아가기 때문에 외부 메모리 제한과 함께 봐야 합니다.
-
-#### 4. `jcmd`를 기본 진단 도구로 익히기
-
-현대 JDK에서는 `jcmd`가 가장 기본적인 현장 진단 도구 중 하나입니다. 도구를 여러 개 외우기보다, 먼저 `jcmd`로 무엇을 뽑아낼 수 있는지 익히는 편이 좋습니다.
-
-##### 4.1 프로세스 확인
-
-```bash
-jcmd
-```
-
-실행 중인 Java 프로세스 목록을 확인할 수 있습니다.
-
-##### 4.2 힙 정보 확인
-
-```bash
-jcmd <pid> GC.heap_info
-```
-
-힙 구조와 사용 현황을 빠르게 볼 수 있습니다. 힙이 실제로 부족한지, 특정 구간이 압박받는지 확인할 때 출발점이 됩니다.
-
-##### 4.3 클래스 히스토그램 확인
-
-```bash
-jcmd <pid> GC.class_histogram
-```
-
-어떤 클래스 인스턴스가 많이 쌓여 있는지 볼 때 유용합니다. 힙 덤프보다 가볍게 빠른 감을 잡는 용도로 좋습니다.
-
-##### 4.4 스레드 덤프 확인
-
-```bash
-jcmd <pid> Thread.print
-```
-
-응답 지연, 데드락 의심, 스레드 과다 생성 문제를 볼 때 자주 사용합니다.
-
-##### 4.5 네이티브 메모리 확인
-
-```bash
-jcmd <pid> VM.native_memory summary
-```
-
-힙만 보고는 설명되지 않는 메모리 증가를 추적할 때 매우 중요합니다. 특히 Direct Buffer, 클래스 메타데이터, 스레드 관련 메모리를 같이 봐야 할 때 도움이 됩니다.
-
-#### 5. GC를 바꾸기 전에 먼저 봐야 할 것
-
-GC 알고리즘은 중요하지만, 대부분의 문제는 GC 종류를 바꾸기 전에 아래 항목에서 먼저 걸립니다.
-
-- 힙 크기가 workload에 비해 너무 작다.
-- 한 번에 너무 많은 데이터를 메모리에 적재한다.
-- 캐시 정책이 없다.
-- 큰 객체 그래프가 오래 살아남는다.
-- 로그나 직렬화 때문에 짧게 사는 객체가 과도하게 생성된다.
-즉, GC 튜닝은 구조 문제를 완전히 대신하지 못합니다. 애플리케이션이 비효율적으로 메모리를 쓰고 있다면 GC만 바꿔도 한계가 있습니다.
-
-#### 6. G1 GC를 볼 때의 기본 질문
-
-현대 HotSpot 환경에서는 G1 GC를 자주 만나게 됩니다. 입문 단계에서는 세부 알고리즘보다 아래 질문이 더 중요합니다.
-
-- pause가 사용자가 느낄 만큼 긴가
-- Young GC가 지나치게 자주 발생하는가
-- Old 영역 압박이 계속 증가하는가
-- Full GC 성격의 무거운 수집이 보이는가
-- GC 후에도 메모리가 충분히 회수되지 않는가
-```bash
-java -XX:MaxGCPauseMillis=200 \
-     -Xms1g -Xmx1g \
-     -Xlog:gc*:file=/var/log/app-gc.log:time,level,tags \
-     -jar app.jar
-```
-
-`MaxGCPauseMillis` 같은 옵션은 목표치를 제시하는 것이지, 마법처럼 pause를 보장하는 스위치는 아닙니다. 결국 실제 workload에서 로그를 봐야 판단할 수 있습니다.
-
-#### 7. 튜닝 시나리오별로 접근이 달라야 한다
-
-##### 7.1 응답 시간이 중요한 웹 애플리케이션
-
-웹 애플리케이션은 보통 짧은 정지 시간이 중요합니다.
-
-이 경우 먼저 볼 질문:
-
-- 특정 시간대에 pause가 몰리는가
-- 대량 응답 생성이나 JSON 직렬화가 객체 폭증을 만드는가
-- 캐시가 힙을 과도하게 잡아먹는가
-- 요청 폭증 시 스레드 수가 과하게 늘어나는가
-##### 7.2 처리량이 중요한 배치 애플리케이션
-
-배치는 응답 시간보다 전체 처리량이 더 중요할 수 있습니다.
-
-이 경우 먼저 볼 질문:
-
-- 한 번에 너무 큰 chunk를 메모리에 쌓고 있지 않은가
-- 결과를 스트리밍하지 않고 전부 리스트에 올리고 있지 않은가
-- GC pause보다 객체 생성량 자체가 비정상적으로 많지 않은가
-##### 7.3 컨테이너 환경
-
-컨테이너에서는 JVM 내부 힙만이 아니라, 컨테이너 제한 메모리와 프로세스 전체 메모리를 함께 봐야 합니다.
-
-이 경우 먼저 볼 질문:
-
-- `-Xmx`가 컨테이너 메모리 한계 대비 너무 공격적이지 않은가
-- 힙 밖 메모리까지 고려했는가
-
----
-
-### ✏️ 직접 해보기
-
-`-Xmx`·`-verbose:gc` 옵션으로 실행해 GC 로그를 출력하고 읽어 보라.
+실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라.

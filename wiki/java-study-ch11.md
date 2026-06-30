@@ -7,7 +7,7 @@ created: 2026-04-18
 updated: 2026-06-30
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재의 11장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
+> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
 # 부록
 
@@ -17,7 +17,7 @@ updated: 2026-06-30
 - 면접 질문·Git·포트폴리오 등 실무 준비
 - [PJ] 종합 토이프로젝트로 전체 통합
 
-**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch09]] · **학습 경로**: [[guide-java-learning-path]]
+**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch10]] · **학습 경로**: [[guide-java-learning-path]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 약한 곳을 골라 보강하고, 11.19·11.22·11.25 등 토이프로젝트 하나를 README까지 완성한다.
 

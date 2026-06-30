@@ -1,25 +1,25 @@
 ---
-title: "Java 스터디 — 데이터 접근과 SQL"
+title: "Java 스터디 — Spring과 프로젝트 실행"
 type: source
 tags: [java, study, notion, ch06]
-sources: [java-study/java-study-ch06-데이터접근과SQL.md]
+sources: [java-study/java-study-ch06-Spring과프로젝트실행.md]
 created: 2026-04-18
 updated: 2026-06-30
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재의 6장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
+> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 데이터 접근과 SQL
+# Spring과 프로젝트 실행
 
 ## 🎯 이 장에서 배우는 것
 
-- DB 설계·정규화·인덱스의 판단 기준
-- SQL 기본기(DDL·DML·JOIN·집계)와 쿼리 최적화
-- Querydsl로 타입 안전 동적 쿼리
+- IoC·DI·Bean·MVC로 객체 조립을 컨테이너에 위임
+- 실습 환경·Maven·프로파일 구성
+- 스프링 부트 프로젝트를 직접 띄우기
 
 **단계**: 2단계 — Spring & 웹 백엔드 · **앞 장**: [[java-study-ch05]] · **다음 장**: [[java-study-ch07]]
 
-> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. SQL을 직접 쳐보고, 6.12 연습문제와 Querydsl 예제를 따라 만든다. 깊이: [[entity-querydsl]]·[[concept-db-connection-pool]].
+> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 환경 세팅을 그대로 따라 하고, 빈 주입을 직접 코드로 확인한다. 깊이: [[concept-spring-core]].
 
 ---
 
@@ -27,2320 +27,626 @@ updated: 2026-06-30
 
 ---
 
-## 6.0 데이터베이스 설계
+## 5.0 Spring 핵심 개념: IoC, DI, Bean, MVC
 
-**🎯 목표**: 정규화·키·관계를 고려해 DB를 설계한다.
-
-#### 개요
-
-이 문서는 서비스 요구사항을 관계형 데이터베이스 구조로 옮길 때 어떤 순서와 기준으로 설계해야 하는지 정리한 출판용 가이드입니다. JPA를 쓰든 MyBatis를 쓰든, 결국 애플리케이션은 **잘 설계된 테이블과 제약조건 위에서만 안정적으로 동작**합니다.
-
-초중급 개발자는 종종 엔티티 클래스부터 만들고 나중에 테이블을 맞추려 합니다. 하지만 실제로는 반대가 더 안전합니다. 먼저 저장해야 할 사실과 관계를 분리하고, 그다음 애플리케이션 코드를 얹어야 합니다.
-
-#### 왜 데이터베이스 설계가 먼저인가
-
-잘못된 DB 설계는 아래 문제를 거의 항상 함께 부릅니다.
-
-- 같은 사실이 여러 테이블과 컬럼에 중복 저장됩니다.
-- 조회는 되지만 수정 시 데이터가 어긋납니다.
-- FK가 없어 고아 데이터가 남습니다.
-- 인덱스 없이 조회가 느려지고, 뒤늦게 응급처방이 붙습니다.
-즉, DB 설계는 저장소 구조만의 문제가 아니라 도메인 모델, 쿼리, 운영 안정성까지 이어지는 출발점입니다.
-
-#### 1. 요구사항을 테이블이 아니라 개체와 관계로 읽어야 한다
-
-예를 들어 도서 주문 서비스를 만든다고 가정하면 처음에는 아래 개체가 보입니다.
-
-- 회원
-- 도서
-- 주문
-- 주문 항목
-- 결제
-- 배송
-이 단계에서는 컬럼부터 정하지 않습니다. 먼저 무엇이 독립된 개체인지, 무엇이 관계를 표현하는 중간 구조인지 분리해야 합니다.
-
-가장 흔한 실수는 주문에 여러 도서를 담는 구조를 `book_ids = "1,2,3"` 같은 문자열이나 JSON으로 임시 저장해 버리는 것입니다. 이렇게 시작하면 검색, 집계, 무결성 검증, 수정 로직이 전부 복잡해집니다.
-
-#### 2. 관계형 설계의 핵심은 책임 분리다
-
-좋은 테이블은 "필드를 많이 담는 테이블"이 아니라 **한 가지 책임이 분명한 테이블**입니다.
-
-- `members`: 회원 자체의 정보
-- `books`: 도서 자체의 정보
-- `orders`: 주문 행위 자체의 정보
-- `order_items`: 주문과 도서의 연결, 수량과 주문 시점 가격
-이 기준이 잡히면 자연스럽게 관계도 정리됩니다.
-
-```text
-members 1 --- N orders
-orders  1 --- N order_items
-books   1 --- N order_items
-```
-
-`order_items`가 필요한 이유는 주문과 도서가 논리적으로 다대다 관계이기 때문입니다. 관계형 데이터베이스에서는 이런 구조를 보통 **중간 테이블로 푼다**고 이해하면 됩니다.
-
-#### 3. PK와 FK는 단순 문법이 아니라 규칙이다
-
-##### PK는 행의 정체성을 보장한다
-
-PK는 한 행을 유일하게 구분하는 기준입니다. 실무에서는 보통 대체키를 PK로 두고, 이메일 같은 비즈니스 식별자는 `UNIQUE`로 별도 관리하는 편이 안정적입니다.
-
-##### FK는 참조 무결성을 강제한다
-
-FK는 "이 값이 저쪽 테이블에 실제로 존재해야 한다"는 규칙입니다. 애플리케이션 코드로만 검증하고 DB에는 FK를 두지 않으면, 결국 데이터 정합성이 느슨해집니다.
-
-```sql
-CREATE TABLE orders (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    member_id BIGINT NOT NULL,
-    status VARCHAR(30) NOT NULL,
-    ordered_at TIMESTAMP NOT NULL,
-    CONSTRAINT fk_orders_member
-        FOREIGN KEY (member_id) REFERENCES members(id)
-);
-```
-
-관계형 DB는 `PRIMARY KEY`, `UNIQUE`, `NOT NULL`, `CHECK`, `FOREIGN KEY` 같은 제약조건으로 데이터를 보호할 수 있습니다. 이 규칙은 애플리케이션 안에만 두기보다 DB에도 함께 두는 편이 더 강합니다.
-
-#### 4. 정규화는 먼저, 역정규화는 나중이다
-
-정규화의 목적은 이론 시험을 통과하는 것이 아니라, **중복과 이상 현상을 줄이는 것**입니다.
-
-정규화를 먼저 하는 이유는 단순합니다.
-
-- 같은 사실을 한 곳에만 저장하게 해줍니다.
-- 수정 시 누락 가능성을 줄여줍니다.
-- 엔티티 책임이 더 분명해집니다.
-예를 들어 상품명과 상품 가격을 주문 테이블마다 복제하면 처음에는 조회가 편해 보일 수 있습니다. 하지만 상품명이 바뀌거나 가격 정책이 달라질 때 어떤 값을 현재 기준으로 볼지, 주문 당시 기준으로 볼지 혼란이 생깁니다.
-
-다만 실무에서는 항상 정규화만이 답은 아닙니다. 읽기 성능이 매우 중요하고, 집계 비용이 큰 값을 반복해서 보여줘야 할 때는 역정규화를 고려할 수 있습니다. 하지만 그 판단은 **정규화된 설계와 실제 조회 병목을 먼저 확인한 뒤**에 하는 편이 맞습니다.
-
-#### 5. 인덱스는 나중 옵션이 아니라 설계의 일부다
-
-초보 단계에서는 테이블만 만들고 인덱스를 튜닝 단계의 일로 미루기 쉽습니다. 하지만 실제로는 인덱스도 설계의 일부입니다.
-
-인덱스를 먼저 의식해야 하는 대표 상황은 아래와 같습니다.
-
-- FK로 조인되는 컬럼
-- `WHERE` 조건에 반복적으로 등장하는 컬럼
-- 정렬과 페이징 기준 컬럼
-- 유일성을 보장해야 하는 컬럼
-```sql
-CREATE INDEX idx_orders_member_id_ordered_at
-    ON orders(member_id, ordered_at DESC);
-```
-
-이 인덱스는 "회원의 최근 주문 목록"처럼 자주 나오는 조회 패턴을 염두에 둔 예시입니다. 즉, 인덱스는 막연히 많이 만드는 것이 아니라 **실제 접근 경로를 기준으로 배치**해야 합니다.
-
-반대로 인덱스가 너무 많으면 쓰기 비용이 늘고 관리도 어려워집니다. 조회 성능만 보고 무제한으로 추가하는 방식은 오래 못 갑니다.
-
-#### 6. 컬럼 설계도 의미 중심으로 해야 한다
-
-컬럼 이름은 짧은 것보다 **뜻이 분명한 것**이 중요합니다.
-
-좋은 예시:
-
-- `created_at`
-- `ordered_at`
-- `total_amount`
-- `stock_quantity`
-- `delivery_status`
-피해야 할 예시:
-
-- `value1`
-- `data`
-- `info`
-- `flag`
-또한 한 컬럼에는 한 가지 의미만 담아야 합니다. 예를 들어 여러 상품 ID를 문자열에 이어 붙여 넣거나, 주소 전체를 무조건 한 칸에만 몰아넣는 방식은 이후 검색과 검증을 어렵게 만듭니다.
-
-#### 7. 예제 스키마로 보면 더 분명하다
-
-아래는 도서 주문 도메인을 단순화한 예시입니다.
-
-```sql
-CREATE TABLE members (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    name VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE books (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    isbn VARCHAR(20) NOT NULL UNIQUE,
-    title VARCHAR(200) NOT NULL,
-    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0)
-);
-
-CREATE TABLE orders (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    member_id BIGINT NOT NULL,
-    status VARCHAR(30) NOT NULL,
-    ordered_at TIMESTAMP NOT NULL,
-    CONSTRAINT fk_orders_member
-        FOREIGN KEY (member_id) REFERENCES members(id)
-);
-
-CREATE TABLE order_items (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    order_id BIGINT NOT NULL,
-    book_id BIGINT NOT NULL,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    order_price NUMERIC(10, 2) NOT NULL CHECK (order_price >= 0),
-    CONSTRAINT fk_order_items_order
-        FOREIGN KEY (order_id) REFERENCES orders(id),
-    CONSTRAINT fk_order_items_book
-        FOREIGN KEY (book_id) REFERENCES books(id),
-    CONSTRAINT uq_order_items_order_book UNIQUE (order_id, book_id)
-);
-
-CREATE INDEX idx_orders_member_id_ordered_at
-    ON orders(member_id, ordered_at DESC);
-```
-
-이 예시에서 중요한 포인트는 세 가지입니다.
-
-- 다대다 관계를 `order_items`로 풀었다.
-- 애플리케이션 규칙 일부를 `CHECK`, `UNIQUE`, `FK`로 DB에 반영했다.
-- 조회 패턴을 고려해 인덱스를 함께 설계했다.
-#### 8. JPA를 쓰더라도 DB 설계 감각은 따로 필요하다
-
-JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워집니다. 하지만 JPA가 설계를 대신해 주지는 않습니다.
-
-보통 아래처럼 대응된다고 이해하면 됩니다.
-
-- 테이블 -> 엔티티
-- PK/FK -> 식별자와 연관관계
-- `UNIQUE`, `NOT NULL` -> 도메인 제약과 DB 제약
-- 금액, 주소 -> 값 객체 후보
-즉, 좋은 엔티티 설계는 좋은 DB 설계 위에서 나옵니다. 엔티티 코드만 예쁘게 짠다고 구조 문제가 사라지지 않습니다.
-
-#### 자주 하는 실수
-
-- 다대다 관계를 문자열 배열이나 JSON 한 칸으로 처리하는 것
-- FK 없이 애플리케이션 코드만 믿는 것
-- 상태값을 의미 없는 숫자로만 저장해 해석을 외부에 떠넘기는 것
-- 모든 조회를 나중에 해결하겠다고 인덱스를 설계에서 완전히 빼는 것
-- 정규화도 하지 않은 채 너무 빨리 역정규화를 시작하는 것
-#### 함께 보면 좋은 부록 실습
-
-- 추가시나리오 예제 (→ 6.0-1)
-이 문서는 본문에서 설명한 `개체 -> 관계 -> 제약조건 -> 인덱스` 기준을 다른 도메인에 다시 적용해 보는 연습 자료입니다. 첫 시나리오는 예시처럼 읽고, 뒤 시나리오는 직접 설계해 보는 방식으로 활용하면 좋습니다.
-
-#### 공식 문서 기준으로 더 보면 좋은 자료
-
-- [PostgreSQL Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html)
-- [PostgreSQL Indexes](https://www.postgresql.org/docs/current/indexes.html)
-
-### ✏️ 직접 해보기
-
-회원-주문-상품을 ERD로 그리고 FK 관계를 정의해 보라.
-
-#### 정리
-
-데이터베이스 설계는 ERD를 예쁘게 그리는 작업이 아니라, 서비스의 규칙과 관계를 **중복 없이, 무결하게, 조회 가능하게** 구조화하는 과정입니다. 초중급 개발자에게 가장 중요한 기준은 "테이블 수가 적은가"가 아니라, **책임이 섞이지 않았는가**입니다.
-
-#### 한 줄 정리
-
-좋은 DB 설계는 컬럼을 많이 아는 것보다, `개체`, `관계`, `제약조건`, `인덱스`를 한 흐름으로 설계하는 데서 시작합니다.
-
-
----
-
-## 6.0-1 추가시나리오 예제
-
-**🎯 목표**: 추가 시나리오로 설계 감각을 넓힌다.
-
-### 시나리오 1: 온라인 학습 플랫폼
-
-"우리 서비스는 학생과 교사가 온라인에서 효과적으로 학습할 수 있는 교육 플랫폼을 목표로 합니다. 사용자는 학생과 교사로 구분되어 회원가입 및 로그인할 수 있어야 합니다. 교사는 다양한 주제의 강의를 생성하고, 각 강의에는 제목, 설명, 난이도, 대상 학년이 포함되어야 합니다.
-
-강의 내에서 교사는 여러 개의 강의 자료(문서, 비디오, 퀴즈 등)를 업로드할 수 있어야 하며, 각 자료는 특정 순서로 정렬되어야 합니다. 학생들은 강의에 등록하고, 진도율을 확인할 수 있어야 합니다.
-
-상호작용을 위해 학생들은 각 강의 자료에 질문을 남길 수 있으며, 교사나 다른 학생들이 이에 답변할 수 있어야 합니다. 또한 질문에 대한 추가 질문(대댓글)도 가능해야 합니다.
-
-효과적인 학습 관리를 위해 각 학생의 퀴즈 점수와 과제 제출 현황을 추적할 수 있어야 하며, 교사는 전체 학생의 성취도를 대시보드에서 확인할 수 있어야 합니다.
-
-마지막으로, 검색 기능을 통해 학생들이 관심 있는 주제나 키워드로 강의를 찾을 수 있도록 각 강의에는 여러 주제 태그를 지정할 수 있어야 합니다."
-
-
-
-### 온라인 학습 플랫폼 테이블 정의서
-
-#### 1. 사용자(users)
-
-<!-- table -->
-#### 2. 학생(students)
-
-<!-- table -->
-#### 3. 교사(teachers)
-
-<!-- table -->
-#### 4. 강의(courses)
-
-<!-- table -->
-#### 5. 강의 자료(course_contents)
-
-<!-- table -->
-#### 6. 문서(Contents)
-
-<!-- table -->
-#### 7. 비디오(videos)
-
-<!-- table -->
-#### 8. 퀴즈(quizzes)
-
-<!-- table -->
-#### 9. 퀴즈 문항(quiz_questions)
-
-<!-- table -->
-#### 10. 퀴즈 보기(quiz_options)
-
-<!-- table -->
-#### 11. 과제(assignments)
-
-<!-- table -->
-#### 12. 질문(questions)
-
-<!-- table -->
-#### 13. 답변(answers)
-
-<!-- table -->
-#### 14. 퀴즈 제출(quiz_submissions)
-
-<!-- table -->
-#### 15. 퀴즈 답안(quiz_answers)
-
-<!-- table -->
-#### 16. 과제 제출(assignment_submissions)
-
-<!-- table -->
-#### 17. 태그(tags)
-
-<!-- table -->
-#### 18. 강의-태그(course_tags)
-
-<!-- table -->
-#### 19. 학생-강의(student_courses)
-
-<!-- table -->
-#### 20. 학생 컨텐츠 진도(student_content_progress)
-
-<!-- table -->
-
-
-##### 시나리오 2: 레시피 공유 애플리케이션
-
-"우리 앱은 요리 애호가들이 자신만의 레시피를 공유하고 다른 사람들의 레시피를 발견할 수 있는 플랫폼을 제공합니다. 사용자는 고유 아이디로 가입하여 프로필을 설정할 수 있으며, 각 프로필에는 요리 전문 분야와 짧은 자기소개가 포함됩니다.
-
-사용자는 레시피를 등록할 수 있으며, 각 레시피에는 제목, 요리 시간, 난이도, 재료 목록, 조리 단계, 완성된 요리 사진이 포함되어야 합니다. 조리 단계는 순서대로 표시되어야 하며, 각 단계마다 텍스트 설명과 선택적으로 사진을 추가할 수 있어야 합니다.
-
-사용자들은 레시피에 별점을 매기고 리뷰를 남길 수 있으며, 리뷰에는 텍스트 설명과 함께 실제로 요리해본 사진을 첨부할 수 있어야 합니다. 레시피 작성자는 리뷰에 답변을 달 수 있어야 합니다.
-
-사용자들이 원하는 레시피를 쉽게 찾을 수 있도록 요리 종류(한식, 중식, 양식 등), 재료, 조리 방법(찜, 볶음, 구이 등)에 따라 레시피를 분류하고 태그를 지정할 수 있어야 합니다.
-
-추가 기능으로, 사용자들은 마음에 드는 레시피를 저장하여 나중에 쉽게 찾아볼 수 있어야 하며, 일주일치 식단을 계획할 수 있는 캘린더 기능도 제공되어야 합니다."
-
-
-
-##### 시나리오 3: 프리랜서 마켓플레이스
-
-"우리 플랫폼은 프리랜서와 프로젝트 의뢰인을 연결하는 마켓플레이스입니다. 사용자는 프리랜서나 의뢰인으로 회원가입하고 프로필을 작성할 수 있습니다. 프리랜서 프로필에는 이름, 직업, 전문 분야, 경력, 포트폴리오, 시간당 요율이 포함되어야 합니다.
-
-의뢰인은 프로젝트를 등록할 수 있으며, 각 프로젝트에는 제목, 상세 설명, 필요한 기술, 예산 범위, 마감일이 명시되어야 합니다. 프리랜서들은 이에 맞춰 제안서를 제출할 수 있어야 하며, 제안서에는 가격 견적, 작업 기간, 접근 방식 등이 포함됩니다.
-
-의뢰인은 제출된 제안서들을 검토하고 프리랜서를 선택할 수 있어야 하며, 계약이 체결되면 작업 진행 상태를 추적할 수 있어야 합니다. 작업은 여러 단계(마일스톤)로 나뉠 수 있으며, 각 단계가 완료될 때마다 결제가 이루어질 수 있어야 합니다.
-
-프로젝트 완료 후에는 의뢰인과 프리랜서가 서로에 대한 리뷰와 평점을 남길 수 있어야 하며, 이는 각 사용자의 평판 점수에 반영됩니다.
-
-효율적인 검색을 위해 프로젝트와 프리랜서 모두 관련 기술이나 산업 분야로 태그를 지정할 수 있어야 하며, 의뢰인은 필요한 기술을 갖춘 프리랜서를 쉽게 찾을 수 있어야 합니다."
-
-##### 시나리오 4: 여행 계획 및 리뷰 플랫폼
-
-"우리 서비스는 여행자들이 여행 경험을 공유하고 새로운 여행을 계획할 수 있는 플랫폼입니다. 사용자는 개인 프로필을 만들어 방문한 국가와 도시, 여행 스타일 등을 설정할 수 있습니다.
-
-사용자는 방문한 장소에 대한 리뷰를 작성할 수 있으며, 각 리뷰에는 장소명, 방문 날짜, 평점, 상세 설명, 사진 등이 포함됩니다. 또한 방문한 장소의 카테고리(숙소, 식당, 관광지 등)를 지정하고 예산 범위, 추천 방문 시간대 등의 정보도 제공할 수 있어야 합니다.
-
-사용자들은 다른 사람의 리뷰에 댓글을 남기거나 질문을 할 수 있으며, 리뷰 작성자는 이에 대해 답변할 수 있어야 합니다. 유용한 정보를 제공한 리뷰에는 '도움이 됨' 표시를 할 수 있습니다.
-
-여행 계획 기능을 통해 사용자는 방문할 도시와 날짜를 선택하고, 일별 일정에 방문할 장소를 추가할 수 있어야 합니다. 계획된 여행은 다른 사용자들과 공유하거나 비공개로 설정할 수 있어야 합니다.
-
-효과적인 검색을 위해 리뷰와 장소에는 지역, 활동 유형(모험, 문화, 휴식 등), 여행자 유형(가족, 커플, 솔로 등)에 따른 태그를 지정할 수 있어야 합니다."
-
-##### 시나리오 5: 헬스케어 및 피트니스 트래킹 앱
-
-"우리 앱은 사용자들이 건강 목표를 설정하고 일상적인 운동과 영양 섭취를 추적할 수 있는 종합적인 헬스케어 플랫폼입니다. 사용자는 가입 시 기본 정보(나이, 성별, 키, 체중)와 함께 건강 목표(체중 감량, 근육 증가, 전반적인 건강 개선 등)를 설정할 수 있습니다.
-
-사용자는 매일의 운동 세션을 기록할 수 있으며, 각 세션에는 운동 유형, 지속 시간, 강도, 소모 칼로리, 운동 중 느낌 등을 포함할 수 있습니다. 특히 웨이트 트레이닝의 경우 각 운동별 세트, 횟수, 무게를 상세히 기록할 수 있어야 합니다.
-
-식단 추적 기능을 통해 사용자는 매 끼니마다 섭취한 음식과 양을 기록할 수 있으며, 이를 통해 총 칼로리와 영양소(단백질, 탄수화물, 지방, 비타민 등) 섭취량을 자동으로 계산해야 합니다.
-
-사용자들은 자신만의 운동 루틴이나 건강식 레시피를 커뮤니티에 공유할 수 있으며, 다른 사용자들은 이에 댓글을 달거나 '좋아요'를 표시할 수 있습니다. 또한 비슷한 목표를 가진 사용자들이 서로 응원하고 동기부여할 수 있는 그룹 기능도 필요합니다.
-
-정기적인 건강 체크를 위해 사용자는 체중, 체지방률, 근육량 등의 신체 측정치를 기록할 수 있어야 하며, 이러한 데이터를 기반으로 한 진행 상황 그래프와 분석 정보를 제공해야 합니다."
-
-
-
-
-
-게시판.
-
-
-
-블로그.
-
-
-
-sns.
-
-
-
-cal ai. ⇒ 칼로리 계산.
-
-
-
-rpg ⇒ 던전게임 (도스 커맨드)  ⇒ 유니티 ⇒ json 
-
-### 시나리오 1: 온라인 학습 플랫폼
-
-"우리 서비스는 학생과 교사가 온라인에서 효과적으로 학습할 수 있는 교육 플랫폼을 목표로 합니다. 사용자는 학생과 교사로 구분되어 회원가입 및 로그인할 수 있어야 합니다. 교사는 다양한 주제의 강의를 생성하고, 각 강의에는 제목, 설명, 난이도, 대상 학년이 포함되어야 합니다.
-
-강의 내에서 교사는 여러 개의 강의 자료(문서, 비디오, 퀴즈 등)를 업로드할 수 있어야 하며, 각 자료는 특정 순서로 정렬되어야 합니다. 학생들은 강의에 등록하고, 진도율을 확인할 수 있어야 합니다.
-
-상호작용을 위해 학생들은 각 강의 자료에 질문을 남길 수 있으며, 교사나 다른 학생들이 이에 답변할 수 있어야 합니다. 또한 질문에 대한 추가 질문(대댓글)도 가능해야 합니다.
-
-효과적인 학습 관리를 위해 각 학생의 퀴즈 점수와 과제 제출 현황을 추적할 수 있어야 하며, 교사는 전체 학생의 성취도를 대시보드에서 확인할 수 있어야 합니다.
-
-마지막으로, 검색 기능을 통해 학생들이 관심 있는 주제나 키워드로 강의를 찾을 수 있도록 각 강의에는 여러 주제 태그를 지정할 수 있어야 합니다."
-
-
-
-### 온라인 학습 플랫폼 테이블 정의서
-
-#### 1. 사용자(users)
-
-<!-- table -->
-#### 2. 학생(students)
-
-<!-- table -->
-#### 3. 교사(teachers)
-
-<!-- table -->
-#### 4. 강의(courses)
-
-
----
-
-## 6.1 데이터베이스 설계 Q&A
-
-**🎯 목표**: 정규화·인덱스·트랜잭션에 대한 자주 묻는 판단 기준을 잡는다.
+**🎯 목표**: IoC·DI·Bean·MVC로 객체 조립을 컨테이너에 맡기는 개념을 잡는다.
 
 <!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
 
 ### 개요
-이 문서는 데이터베이스 설계를 공부할 때 자주 마주치는 질문을 정리한 Q&A 문서입니다. 설계 원칙은 단순하게 보이지만, 실제로는 성능, 일관성, 운영, 백업까지 같이 고민해야 합니다.
+이 문서는 Java와 객체지향 기초를 마친 독자가 Spring 프로젝트로 넘어가기 전에 잡아야 할 공통 개념을 정리한 본문 가이드입니다. 뒤 장에서 환경 구성, 데이터 접근, 보안, 테스트를 각각 다루기 전에, 여기서 IoC, DI, Bean, MVC, 프록시 같은 핵심 축을 먼저 연결합니다.
 
-### 왜 중요한가
-초중급 개발자는 종종 `정규화가 무조건 좋은가`, `인덱스는 많이 만들수록 좋은가`, `트랜잭션은 언제 신경써야 하나` 같은 질문에서 막힙니다. 이 문서는 그 판단 기준을 잡기 위한 참고 문서입니다.
-
-### 정규화를 하면 성능이 떨어지나요
-정규화 자체가 문제라기보다, 정규화된 구조 위에서 어떤 조회 패턴이 반복되는지가 더 중요합니다.
-- 정규화는 중복을 줄이고 수정 일관성을 높입니다.
-- 대신 조회 시 JOIN이 늘어날 수 있습니다.
-- 그러나 대부분의 서비스는 먼저 정규화된 설계로 시작하는 편이 안전합니다.
-```sql
-CREATE INDEX idx_posts_user_id ON posts(user_id);
-CREATE INDEX idx_comments_post_id ON comments(post_id);
-```
-성능이 걱정된다면 보통은 역정규화보다 인덱스, 쿼리 최적화, 캐시를 먼저 검토합니다.
-
-### 역정규화는 언제 고려하나요
-역정규화는 읽기 성능이 압도적으로 중요하고, 계산 비용이 큰 값을 자주 보여줘야 할 때 고려합니다.
-예를 들면:
-- 게시글 목록에 댓글 수를 항상 보여줘야 하는 경우
-- 상품 목록에 평균 평점과 리뷰 수를 반복적으로 노출하는 경우
-- 집계 결과를 실시간처럼 읽어야 하는 경우
-```sql
-CREATE TABLE posts (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(200) NOT NULL,
-    content TEXT NOT NULL,
-    comment_count INT DEFAULT 0
-);
-```
-다만 중복된 값을 저장하면 수정 경로가 늘어나므로, 갱신 전략까지 같이 설계해야 합니다.
-
-### 인덱스는 어떻게 잡아야 하나요
-인덱스는 많이 만드는 것이 아니라, 자주 조회되는 조건에 맞게 만드는 것입니다.
-- `WHERE` 조건에 자주 등장하는 컬럼
-- `JOIN`에 사용되는 FK 컬럼
-- 정렬과 페이징에 자주 사용되는 컬럼
-```sql
-CREATE INDEX idx_products_category_price ON products(category_id, price);
-EXPLAIN SELECT *
-FROM products
-WHERE category_id = 5 AND price > 1000;
-```
-복합 인덱스는 컬럼 순서가 매우 중요합니다. 선택도가 높은 컬럼과 실제 조회 패턴을 같이 봐야 합니다.
-
-### 트랜잭션과 락은 언제부터 의식해야 하나요
-한 번의 처리에서 여러 데이터가 함께 바뀌는 순간부터 트랜잭션을 생각해야 합니다.
-예를 들어:
-- 주문 생성과 재고 차감
-- 계좌 이체
-- 좌석 예약
-```sql
-START TRANSACTION;
-SELECT stock_quantity FROM products WHERE id = 101 FOR UPDATE;
-UPDATE products SET stock_quantity = stock_quantity - 1 WHERE id = 101;
-INSERT INTO orders (product_id, quantity, user_id) VALUES (101, 1, 42);
-COMMIT;
-```
-락은 데이터 일관성을 지키기 위한 도구지만, 너무 길게 잡으면 성능 저하와 교착 상태를 부릅니다.
-
-### 백업은 어느 수준까지 준비해야 하나요
-운영을 생각한다면 백업은 설계의 일부입니다.
-- 정기 백업
-- 다른 물리적 위치 보관
-- 복원 테스트
-이 세 가지가 함께 있어야 의미가 있습니다.
-```bash
-mysqldump -u root -p mydb > mydb_backup.sql
-mysql -u root -p mydb < mydb_backup.sql
-```
-복원 테스트를 하지 않은 백업은 실제 장애 시 믿기 어렵습니다.
-
-### 초중급 개발자가 가장 자주 하는 오해
-- 정규화만 잘하면 성능 문제는 사라진다고 생각함
-- 인덱스는 많을수록 좋다고 생각함
-- 트랜잭션은 결제 시스템에만 필요하다고 생각함
-- 백업은 운영팀의 일이라 개발자는 몰라도 된다고 생각함
-실제로는 이 네 가지 모두 설계 단계에서 개발자가 이해하고 있어야 합니다.
-
-### 정리
-DB 설계 Q&A의 핵심은 정답 암기가 아니라 판단 기준을 만드는 데 있습니다. 구조를 먼저 단단하게 만들고, 실제 병목이 보일 때 인덱스와 역정규화, 캐시, 운영 전략을 조합하는 쪽이 더 건강한 접근입니다.
-
-### 한 줄 정리
-DB 설계의 좋은 답은 항상 하나가 아니라, 일관성·성능·운영 비용 사이의 균형에서 나옵니다.
-
-## 6.2 SQL 기본기: DDL, DML, JOIN, 집계
-
-**🎯 목표**: DDL·DML·JOIN·집계 SQL을 직접 작성한다.
-
-#### 개요
-
-이 문서는 Java 개발자가 데이터 접근 계층을 읽고 설계할 때 꼭 알아야 하는 SQL 기본기를 한 흐름으로 정리한 가이드입니다. JPA나 Querydsl을 쓰더라도 실제로는 SQL의 구조를 이해해야 조회와 변경 로직을 제대로 설계할 수 있습니다.
-
-#### 왜 SQL 기본기가 먼저 필요한가
-
-애플리케이션 코드가 아무리 깔끔해도, 결국 데이터베이스와 대화하는 언어는 SQL입니다.
-
-- 조회가 왜 느린지 이해하려면 `WHERE`, `JOIN`, `GROUP BY`, 인덱스를 함께 봐야 합니다.
-- Querydsl을 읽으려면 `select`, `join`, `groupBy`, `orderBy`, `limit`가 SQL에서 어떤 의미인지 먼저 잡혀 있어야 합니다.
-- JPA를 쓸 때도 N+1, 잘못된 fetch join, 과한 update 같은 문제는 SQL 감각이 없으면 원인을 놓치기 쉽습니다.
-#### 1. SQL은 크게 세 가지 축으로 보면 된다
-
-##### DDL: 구조를 정의한다
-
-DDL은 테이블, 인덱스, 제약조건처럼 저장 구조를 만드는 언어입니다.
-
-```sql
-CREATE TABLE books (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
-    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0)
-);
-
-CREATE INDEX idx_books_title ON books(title);
-```
-
-대표 명령은 `CREATE`, `ALTER`, `DROP`입니다.
-
-##### DML: 데이터를 조회하고 바꾼다
-
-DML은 애플리케이션이 실제로 가장 자주 쓰는 축입니다.
-
-```sql
-INSERT INTO books (title, price)
-VALUES ('객체지향의 사실과 오해', 18000);
-
-UPDATE books
-SET price = 19000
-WHERE id = 1;
-
-DELETE FROM books
-WHERE id = 1;
-```
-
-실무에서는 `INSERT`, `UPDATE`, `DELETE`보다 `SELECT`가 훨씬 많이 보입니다.
-
-##### TCL/DCL: 트랜잭션과 권한을 다룬다
-
-책의 중심은 아니지만, `COMMIT`, `ROLLBACK`, `GRANT`, `REVOKE`도 SQL 문맥 안에서 이해해야 합니다. 특히 서비스 개발에서는 트랜잭션 경계와 롤백이 중요합니다.
-
-#### 2. 조회 SQL은 실행 순서를 기준으로 읽어야 한다
-
-처음 SQL을 배울 때는 위에서 아래로 읽기 쉽지만, DB는 논리적으로 아래 순서에 가깝게 평가합니다.
-
-1. `FROM`
-1. `JOIN`
-1. `WHERE`
-1. `GROUP BY`
-1. `HAVING`
-1. `SELECT`
-1. `ORDER BY`
-1. `LIMIT/OFFSET`
-예를 들어 아래 SQL은 "주문 테이블에서 회원별 총 주문 금액을 계산한 뒤, 금액이 큰 순서로 상위 10명만 보여준다"는 뜻입니다.
-
-```sql
-SELECT o.member_id, SUM(o.total_amount) AS total_amount
-FROM orders o
-WHERE o.status = 'PAID'
-GROUP BY o.member_id
-HAVING SUM(o.total_amount) >= 50000
-ORDER BY total_amount DESC
-LIMIT 10;
-```
-
-이 순서를 이해하면 Querydsl 코드도 훨씬 읽기 쉬워집니다.
-
-#### 3. JOIN은 테이블을 붙이는 문법이 아니라 관계를 읽는 도구다
-
-관계형 데이터베이스에서는 데이터를 보통 한 테이블에 몰아넣지 않습니다. 그래서 조회할 때는 관계를 따라 JOIN이 필요합니다.
-
-##### INNER JOIN
-
-양쪽에 모두 매칭되는 행만 가져옵니다.
-
-```sql
-SELECT o.id, m.name
-FROM orders o
-JOIN members m ON m.id = o.member_id;
-```
-
-##### LEFT JOIN
-
-왼쪽 테이블은 유지하고, 오른쪽이 없으면 `NULL`로 채웁니다.
-
-```sql
-SELECT b.id, b.title, c.name
-FROM books b
-LEFT JOIN categories c ON c.id = b.category_id;
-```
-
-이 차이를 이해하지 못하면 "왜 데이터가 빠졌지?" 같은 문제를 자주 만납니다.
-
-#### 4. 집계는 한 행이 아니라 그룹을 다룬다
-
-집계 함수는 여러 행을 하나의 결과로 요약합니다.
-
-- `COUNT`: 개수
-- `SUM`: 합계
-- `AVG`: 평균
-- `MIN`, `MAX`: 최소/최대
-```sql
-SELECT category_id, COUNT(*) AS book_count, AVG(price) AS avg_price
-FROM books
-GROUP BY category_id;
-```
-
-`GROUP BY`를 쓰면 이제 한 행이 아니라 그룹 단위로 생각해야 합니다. 그래서 `WHERE`와 `HAVING`도 역할이 다릅니다.
-
-- `WHERE`: 그룹핑 전 행 필터
-- `HAVING`: 그룹핑 후 결과 필터
-#### 5. 정렬과 페이징은 조회 설계의 마지막 단계다
-
-목록 API는 대개 정렬과 페이징이 함께 붙습니다.
-
-```sql
-SELECT id, title, price
-FROM books
-WHERE price >= 10000
-ORDER BY created_at DESC, id DESC
-LIMIT 20 OFFSET 0;
-```
-
-실무에서는 `ORDER BY` 기준 컬럼에 인덱스가 없으면 페이지가 뒤로 갈수록 느려질 수 있습니다. 그래서 정렬은 화면 요구사항이 아니라 성능 설계와도 연결됩니다.
-
-#### 6. 변경 SQL은 조건과 영향 범위를 먼저 봐야 한다
-
-조회보다 더 위험한 SQL은 변경문입니다.
-
-```sql
-UPDATE books
-SET price = price * 1.1
-WHERE category_id = 3;
-```
-
-이때 가장 먼저 봐야 할 것은 `WHERE`가 맞는지입니다. 조건이 빠진 `UPDATE`나 `DELETE`는 전체 데이터를 바꿉니다. 서비스 코드에서도 같은 기준이 필요합니다.
-
-#### 7. Java 개발자는 SQL을 어느 수준까지 알아야 하나
-
-초중급 Java 개발자라면 최소한 아래는 직접 읽고 설명할 수 있어야 합니다.
-
-- `SELECT`, `INSERT`, `UPDATE`, `DELETE`
-- `INNER JOIN`, `LEFT JOIN`
-- `GROUP BY`, `HAVING`
-- `ORDER BY`, `LIMIT/OFFSET`
-- PK, FK, UNIQUE, CHECK 같은 기본 제약조건
-이 정도가 잡혀 있어야 JPA와 Querydsl도 단순 복붙이 아니라 설계 도구로 쓸 수 있습니다.
-
-#### 8. Querydsl과 JPA로 이어지는 연결점
-
-이 장 다음 문서들이 중요한 이유는 SQL 기본기가 바로 거기서 재사용되기 때문입니다.
-
-- Querydsl의 `select`, `from`, `join`, `where`는 SQL 조회 구조를 코드로 옮긴 것입니다.
-- JPA의 연관관계와 fetch 전략도 결국 어떤 JOIN SQL이 나갈지와 연결됩니다.
-- 쿼리 최적화는 SQL을 모르면 증상을 봐도 원인을 해석하기 어렵습니다.
-#### 자주 하는 실수
-
-- JOIN 조건 없이 테이블을 붙여 카티전 곱을 만드는 것
-- `GROUP BY` 없이 집계와 일반 컬럼을 섞는 것
-- `LEFT JOIN`이 필요한 상황에서 `JOIN`을 써서 데이터가 빠지는 것
-- 정렬 기준 없이 페이징을 걸어 결과가 흔들리는 것
-- 변경문에서 `WHERE` 범위를 충분히 검토하지 않는 것
-
-### ✏️ 직접 해보기
-
-두 테이블을 JOIN해 그룹별 집계(GROUP BY)를 구하는 SQL을 작성하라.
-
-#### 정리
-
-SQL은 ORM을 쓰더라도 사라지지 않습니다. Java 개발자에게 SQL 기본기는 DB와 애플리케이션 사이의 번역 감각에 가깝습니다. 결국 좋은 데이터 접근 코드는 SQL 구조를 이해한 상태에서만 제대로 설계할 수 있습니다.
-
-#### 한 줄 정리
-
-SQL 기본기는 문법 암기가 아니라, `조회 구조`, `관계`, `집계`, `변경 범위`를 읽는 감각입니다.
-
-
----
-
-## 6.3 쿼리 최적화
-
-**🎯 목표**: 실행 계획을 보고 쿼리를 최적화한다.
-
-[TOC]
-
-#### 개요
-
-이 문서는 SQL을 작성한 뒤 한 단계 더 나아가, 왜 느린지 판단하고 어떤 방향으로 개선해야 하는지를 정리한 최적화 가이드입니다. 초중급 Java 개발자에게는 쿼리를 작성하는 능력만큼, 병목을 읽는 능력이 중요합니다.
-
-#### 왜 중요한가
-
-- 기능은 맞는데 응답이 느린 상황은 실무에서 매우 흔합니다.
-- JPA, Querydsl, MyBatis를 쓰더라도 결국 데이터베이스는 SQL을 실행합니다.
-- 따라서 실행 계획과 인덱스를 읽을 수 있어야 ORM의 한계도 판단할 수 있습니다.
-#### 가장 먼저 볼 것
-
-##### 1. 필요한 컬럼만 조회했는가
-
-```sql
-SELECT product_id, product_name, price
-FROM products
-WHERE category_id = 1;
-```
-
-`SELECT *`는 학습 단계에서는 편하지만, 실무에서는 네트워크 비용과 메모리 사용량까지 같이 늘립니다.
-
-##### 2. 인덱스를 탈 수 있는 조건인가
-
-```sql
--- 비추천
-SELECT * FROM orders WHERE YEAR(order_date) = 2023;
-
--- 권장
-SELECT * FROM orders
-WHERE order_date BETWEEN '2023-01-01' AND '2023-12-31';
-```
-
-컬럼에 함수를 직접 적용하면 인덱스 활용이 깨질 수 있습니다.
-
-#### 인덱스 설계 기본
-
-```sql
-CREATE INDEX idx_products_category_price ON products(category_id, price);
-EXPLAIN SELECT *
-FROM products
-WHERE category_id = 1 AND price > 100;
-```
-
-인덱스는 아래 기준으로 검토합니다.
-
-- WHERE 조건
-- JOIN 조건
-- ORDER BY
-- 페이징 정렬 컬럼
-복합 인덱스는 컬럼 순서가 중요하며, 실제 조회 패턴과 함께 봐야 합니다.
-
-#### EXPLAIN으로 실행 계획 읽기
-
-`EXPLAIN`은 쿼리가 어떤 순서로 실행될지 보여주는 도구입니다.
-
-중점적으로 볼 항목은 아래와 같습니다.
-
-- `type`: `ALL`이면 전체 스캔 가능성이 큽니다.
-- `key`: 실제 사용된 인덱스입니다.
-- `rows`: 읽을 것으로 예상하는 행 수입니다.
-- `Extra`: `Using filesort`, `Using temporary` 같은 추가 비용을 확인합니다.
-```sql
-EXPLAIN SELECT
-    c.category_name,
-    p.product_name,
-    p.price
-FROM products p
-JOIN categories c ON p.category_id = c.category_id
-WHERE p.price > 50
-ORDER BY p.price DESC;
-```
-
-#### 자주 보는 비효율 패턴
-
-##### 1. 상관 서브쿼리 남용
-
-```sql
--- 비효율적인 형태
-SELECT p.product_name, p.price
-FROM products p
-WHERE p.price > (
-    SELECT AVG(price)
-    FROM products
-    WHERE category_id = p.category_id
-);
-```
-
-이 경우는 집계 결과를 미리 구해서 JOIN하는 방식이 더 읽기 쉽고 빠를 수 있습니다.
-
-##### 2. 불필요한 LEFT JOIN
-
-필터 조건 때문에 사실상 INNER JOIN처럼 동작하는 경우가 많습니다.
-
-##### 3. 앞에 `%`가 붙는 LIKE 검색
-
-```sql
-SELECT * FROM products WHERE product_name LIKE '%phone%';
-```
-
-이런 검색은 일반 인덱스를 활용하기 어렵습니다.
-
-#### 실무에서 자주 쓰는 개선 방향
-
-##### 집계 쿼리 분리
-
-복잡한 보고서 쿼리는 한 번에 끝내려 하지 말고, 중간 집계 결과를 만들어 단계적으로 분리할 수 있습니다.
-
-##### 임시 테이블 또는 뷰 검토
-
-반복되는 분석 쿼리는 뷰나 별도 집계 구조를 둘 수 있습니다.
-
-```sql
-CREATE VIEW product_sales_summary AS
-SELECT p.product_id,
-       p.product_name,
-       SUM(oi.quantity) AS total_quantity,
-       ROUND(SUM(oi.quantity * oi.unit_price), 2) AS total_revenue
-FROM products p
-LEFT JOIN order_items oi ON p.product_id = oi.product_id
-GROUP BY p.product_id, p.product_name;
-```
-
-##### 캐시와 읽기 모델 고려
-
-조회 빈도가 매우 높다면 인덱스만으로는 한계가 있습니다. 이때는 캐시, 읽기 전용 테이블, 비동기 집계까지 같이 검토합니다.
-
-#### ORM과 연결해서 보기
-
-##### JPA
-
-- N+1 문제
-- fetch join과 페이징 충돌
-- 불필요한 지연 로딩
-##### Querydsl
-
-- 동적 쿼리는 편하지만, 결국 생성되는 SQL을 확인해야 합니다.
-##### MyBatis
-
-- 복잡한 조회 SQL을 명시적으로 다루기 좋지만, 인덱스 설계와 실행 계획 검토는 여전히 필요합니다.
-#### 체크리스트
-
-- 이 쿼리에 정말 필요한 컬럼만 조회하는가
-- 인덱스를 탈 수 있는 조건인가
-- `EXPLAIN` 결과에서 전체 스캔이 발생하는가
-- 상관 서브쿼리를 JOIN으로 바꿀 수 있는가
-- 정렬과 페이징 기준이 인덱스와 맞는가
-- 문제를 SQL 하나로 해결하려다 지나치게 복잡해진 것은 아닌가
-
-### ✏️ 직접 해보기
-
-느린 쿼리에 인덱스를 추가하기 전후로 실행 계획을 비교해 보라.
-
-#### 정리
-
-쿼리 최적화는 비밀스러운 트릭 모음이 아니라, 데이터 접근량을 줄이고 실행 계획을 읽는 기본기에서 시작합니다. 초중급 개발자라면 먼저 느린 이유를 설명할 수 있어야 하고, 그 다음에 개선안을 선택할 수 있어야 합니다.
-
-#### 한 줄 정리
-
-쿼리 최적화의 출발점은 빠른 SQL을 쓰는 것이 아니라, 느린 이유를 읽는 능력을 갖추는 데 있습니다.
-
-
----
-
-## 6.4 Querydsl 도입과 프로젝트 구성
-
-**🎯 목표**: Querydsl을 프로젝트에 도입하고 구성한다.
-
-#### 개요
-
-이 문서는 `6장 데이터 접근과 SQL` 안에서 Querydsl 묶음을 시작하는 안내 문서입니다. Querydsl은 단순히 JPQL을 다른 문법으로 바꾸는 도구가 아니라, **복잡한 조회를 더 안전하고 읽기 좋은 구조로 옮기기 위한 선택지**입니다.
-
-이 문서의 목적은 설정 방법만 나열하는 데 있지 않습니다. Querydsl을 언제 도입해야 하는지, Spring Data JPA와 어떤 역할로 나눠 써야 하는지, 그리고 이후 문서를 어떤 순서로 읽어야 하는지를 먼저 정리하는 데 있습니다.
-
-#### 왜 Querydsl이 필요한가
-
-JPA를 쓰다 보면 기본 CRUD는 편하지만, 조회가 복잡해질수록 아래 문제가 빠르게 드러납니다.
-
-- JPQL 문자열이 길어지고 오타에 취약해집니다.
-- 동적 조건이 늘어나면서 `if` 분기가 복잡해집니다.
-- DTO 조회와 조인 로직이 읽기 어려워집니다.
-- 페이징과 count 최적화, fetch join 같은 조회 전략 판단이 까다로워집니다.
-Querydsl은 이 지점에서 장점이 드러납니다. 핵심은 SQL을 숨기는 것이 아니라, **조회 구조를 타입 안전한 코드로 표현한다**는 데 있습니다.
-
-#### Querydsl을 모든 곳에 쓰는 것이 답은 아니다
-
-입문 단계에서 흔한 오해는 Querydsl을 도입하면 모든 조회를 다 Querydsl로 옮겨야 한다는 생각입니다. 실제로는 그럴 필요가 없습니다.
-
-보통 더 현실적인 기준은 아래와 같습니다.
-
-- 단순 CRUD와 간단한 단건 조회: Spring Data JPA
-- 복잡한 검색 조건과 다중 조인: Querydsl
-- 화면/API 전용 조회 DTO: Querydsl
-즉, Querydsl은 JPA를 대체하는 기술이라기보다 **복잡한 조회를 분리하는 도구**로 보는 편이 맞습니다.
-
-#### 현재 저장소 기준에서 먼저 확인할 것
-
-이 책은 Querydsl을 설명하지만, **현재 `day_by_spring` 저장소 자체가 아직 Querydsl을 사용하고 있지는 않습니다.**
-
-현재 저장소에서 확인되는 기준은 아래와 같습니다.
-
-- `pom.xml`에 Querydsl 의존성이 없습니다.
-- Q 타입 생성 설정이 없습니다.
-- 리포지토리는 `JpaRepository`, `JpaSpecificationExecutor`, `@Query` 중심입니다.
-- 예를 들어 `BookRepository`, `MemberRepository`, `LoanRepository`는 Spring Data JPA 방식으로 조회를 구성합니다.
-즉, 이 묶음은 "현재 프로젝트가 이미 이렇게 구현돼 있다"는 설명이 아니라, **복잡한 조회가 더 커질 때 어떤 방향으로 확장할 수 있는가**를 설명하는 참고 축으로 읽어야 합니다.
-
-#### 이 묶음에서 먼저 잡아야 할 세 가지
-
-##### 1. Q 타입
-
-Querydsl은 엔티티를 기반으로 `QMember`, `QBook`, `QLoan` 같은 Q 타입을 생성합니다. 이 타입이 있어야 문자열이 아니라 코드로 조건을 표현할 수 있습니다.
-
-##### 2. `JPAQueryFactory`
-
-실제 Querydsl 쿼리를 조합할 때 중심이 되는 객체입니다. 보통 설정에서 빈으로 등록하고 조회 리포지토리에서 주입받아 사용합니다.
-
-##### 3. 조회 전용 구조
-
-Querydsl은 단순 문법보다, **어디에 조회 로직을 둘 것인가**와 더 강하게 연결됩니다. 그래서 서비스에 직접 쿼리를 쌓기보다, 조회 전용 리포지토리나 커스텀 리포지토리 구조로 분리하는 편이 자연스럽습니다.
-
-#### 프로젝트 구성에서 먼저 확인할 것
-
-Spring Boot 3.x와 Jakarta 환경에서는 Querydsl 의존성도 그 기준에 맞춰야 합니다.
-
-```xml
-<dependency>
-    <groupId>com.querydsl</groupId>
-    <artifactId>querydsl-jpa</artifactId>
-    <version>5.1.0</version>
-    <classifier>jakarta</classifier>
-</dependency>
-
-<dependency>
-    <groupId>com.querydsl</groupId>
-    <artifactId>querydsl-apt</artifactId>
-    <version>5.1.0</version>
-    <classifier>jakarta</classifier>
-    <scope>provided</scope>
-</dependency>
-```
-
-이 설정은 "Querydsl을 도입하려는 프로젝트" 기준 예시입니다. 현재 `day_by_spring`에 이미 들어 있는 설정이 아니라, **추가 도입 시 검토해야 하는 방향**으로 읽어야 합니다.
-
-도입 초기에 가장 많이 막히는 부분도 설정 자체보다 아래입니다.
-
-- Q 타입이 생성되지 않음
-- generated sources 경로를 IDE가 인식하지 못함
-- Jakarta/JPA 버전 조합이 맞지 않음
-- DTO 프로젝션 구조가 어긋남
-#### 권장 읽는 순서
-
-1. `Querydsl 기본 문법`
-1. `Querydsl 프로젝션과 DTO 조회`
-1. `Querydsl 동적 쿼리와 조건 조합`
-1. `Querydsl 조회 리포지토리와 API 설계`
-1. `Spring Data JPA와 Querydsl 통합 전략`
-1. `Querydsl 페이징과 성능 최적화`
-이 순서를 추천하는 이유는 단순합니다. 먼저 문법을 익히고, 그다음 DTO 조회와 동적 조건을 보고, 이후에 구조와 성능으로 확장하는 흐름이 가장 자연스럽기 때문입니다.
-
-#### Querydsl을 공부할 때 계속 붙잡아야 할 질문
-
-- 이 조회는 Querydsl까지 필요한 복잡도인가
-- 엔티티 조회가 맞는가, DTO 조회가 맞는가
-- 조건 조합이 늘어날 때 코드가 읽히는가
-- 페이징과 count 쿼리를 분리해야 하는가
-- 이 조회 로직은 어느 계층에 두는 것이 자연스러운가
-이 질문이 있어야 Querydsl이 단순 문법 학습을 넘어, 실제 설계 도구로 보이기 시작합니다.
-
-#### 공식 문서 기준으로 더 보면 좋은 자료
-
-- [Querydsl GitHub](https://github.com/querydsl/querydsl)
-- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
-#### 정리
-
-Querydsl 도입의 핵심은 설정을 완료하는 데 있지 않습니다. 어떤 조회가 복잡해지고 있는지, 그 조회를 더 안전하고 유지보수하기 좋은 구조로 바꾸기 위해 Querydsl을 어디에 적용할지를 판단하는 데 있습니다.
-
-#### 한 줄 정리
-
-Querydsl 입문의 핵심은 `문법`보다, **복잡한 조회를 어떤 구조로 분리할 것인가를 판단하는 것**입니다.
-
-
----
-
-## 6.5 Querydsl 기본 문법
-
-**🎯 목표**: Querydsl 기본 문법으로 타입 안전 쿼리를 짠다.
-
-#### 개요
-
-이 문서는 Querydsl을 처음 접하는 개발자를 위해 **가장 자주 쓰는 기본 문법**을 정리한 자료입니다. 여기서 중요한 것은 문법을 외우는 것이 아니라, JPQL과 비교했을 때 Querydsl이 왜 읽기 쉬운지 체감하는 것입니다.
-
-#### 왜 중요한가
-
-Querydsl은 문법이 어렵다기보다, 처음에 Q 타입과 메서드 체인 형태가 낯설게 느껴집니다. 기본 문법만 익숙해지면 이후의 DTO 조회, 동적 쿼리, 페이징도 같은 패턴으로 읽히기 시작합니다.
-
-중요한 점은 Querydsl이 SQL을 없애는 도구가 아니라, **조회 구조를 타입 안전한 코드로 표현하는 도구**라는 점입니다. 그래서 기본 문법 단계에서는 `select`, `where`, `join`, `orderBy`, `offset`, `limit`이 SQL과 어떻게 대응되는지만 정확히 잡아도 충분합니다.
-
-#### 현재 저장소 기준에서 먼저 확인할 것
-
-현재 `day_by_spring` 저장소는 Querydsl을 아직 도입하지 않았습니다. 실제 리포지토리는 Spring Data JPA 메서드 쿼리, `@Query`, `JpaSpecificationExecutor`를 사용합니다. 따라서 이 문서는 **현재 구현 설명**이 아니라 **도입 시 읽는 기본 문법**으로 받아들이는 편이 정확합니다.
-
-```java
-public interface LoanRepository extends JpaRepository<Loan, Long>, JpaSpecificationExecutor<Loan> {
-
-    @Query("SELECT l FROM Loan l WHERE l.member.id = :memberId AND l.returnDate IS NULL ORDER BY l.loanDate DESC")
-    List<Loan> findByMemberIdAndReturnDateIsNull(@Param("memberId") Long memberId);
-}
-```
-
-```text
-예상 결과
-특정 회원의 미반납 대출 목록이 대출일 역순으로 반환된다.
-현재 저장소에서는 이런 조회 구조를 Querydsl 체인이 아니라 Spring Data JPA + JPQL 문자열로 표현하고 있다.
-```
-
-Querydsl을 도입하면 같은 의도를 `selectFrom`, `where`, `orderBy` 체인으로 옮겨 적는다고 이해하면 된다.
-
-#### 1. JPQL과 Querydsl 비교
-
-```java
-List<Member> members = em.createQuery(
-        "select m from Member m where m.age > 18", Member.class)
-    .getResultList();
-```
-
-```java
-QMember member = QMember.member;
-
-List<Member> members = queryFactory
-        .selectFrom(member)
-        .where(member.age.gt(18))
-        .fetch();
-```
-
-JPQL은 문자열 기반이고, Querydsl은 코드 기반입니다. 이 차이 때문에 오타와 리팩터링 대응성에서 큰 차이가 납니다.
-
-#### 2. 가장 기본이 되는 조회
-
-```java
-QMember member = QMember.member;
-
-Member result = queryFactory
-        .selectFrom(member)
-        .where(member.username.eq("member1"))
-        .fetchOne();
-```
-
-- `selectFrom(member)`: `select member from Member member`와 비슷한 역할입니다.
-- `where(...)`: 조건절입니다.
-- `fetchOne()`: 단건 조회입니다.
-#### 3. 자주 쓰는 조건식
-
-- `eq()`: 같음
-- `ne()`: 다름
-- `gt()`, `goe()`: 초과, 이상
-- `lt()`, `loe()`: 미만, 이하
-- `between()`: 범위 조회
-- `contains()`, `startsWith()`: 문자열 검색
-```java
-.where(member.age.between(20, 30))
-.where(member.username.startsWith("mem"))
-```
-
-#### 4. 정렬과 페이징
-
-```java
-List<Member> result = queryFactory
-        .selectFrom(member)
-        .orderBy(member.age.desc(), member.username.asc())
-        .offset(0)
-        .limit(10)
-        .fetch();
-```
-
-초중급 개발자 입장에서는 이 구문이 SQL의 `order by`, `offset`, `limit`과 거의 그대로 연결된다고 이해하면 됩니다.
-
-#### 5. 조인
-
-```java
-QMember member = QMember.member;
-QTeam team = QTeam.team;
-
-List<Member> result = queryFactory
-        .selectFrom(member)
-        .join(member.team, team)
-        .where(team.name.eq("teamA"))
-        .fetch();
-```
-
-조인은 Querydsl을 쓰는 가장 큰 이유 중 하나입니다. 문자열 조인보다 훨씬 구조적으로 읽힙니다.
-
-#### 6. 페치 조인
-
-```java
-Member findMember = queryFactory
-        .selectFrom(member)
-        .join(member.team, team).fetchJoin()
-        .where(member.username.eq("member1"))
-        .fetchOne();
-```
-
-페치 조인은 연관 엔티티를 즉시 함께 읽어와서 N+1 문제를 줄이는 데 도움을 줍니다. 다만 컬렉션 fetch join과 페이지네이션은 함께 사용할 때 주의가 필요합니다.
-
-#### 7. 집계와 그룹화
-
-```java
-List<Tuple> result = queryFactory
-        .select(team.name, member.age.avg())
-        .from(member)
-        .join(member.team, team)
-        .groupBy(team.name)
-        .fetch();
-```
-
-그룹화 결과는 `Tuple`로 많이 받지만, 실무에서는 DTO로 매핑하는 편이 더 안전합니다.
-
-#### 8. 서브쿼리와 Case 문
-
-```java
-QMember memberSub = new QMember("memberSub");
-
-List<Member> result = queryFactory
-        .selectFrom(member)
-        .where(member.age.eq(
-                JPAExpressions.select(memberSub.age.max())
-                        .from(memberSub)
-        ))
-        .fetch();
-```
-
-서브쿼리와 Case 문도 지원하지만, 너무 복잡해지면 Querydsl 자체보다 쿼리 설계가 맞는지 먼저 점검해야 합니다.
-
-#### 자주 하는 실수
-
-- `fetchOne()`을 여러 건 결과에 사용해서 예외를 내는 것
-- `Tuple`을 서비스나 컨트롤러까지 그대로 넘기는 것
-- Q 타입과 엔티티 타입을 혼동하는 것
-#### 공식 문서 기준으로 더 보면 좋은 자료
-
-- [Querydsl GitHub](https://github.com/querydsl/querydsl)
-- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
-
-### ✏️ 직접 해보기
-
-단순 조건 조회를 Querydsl로 작성해 보라.
-
-#### 정리
-
-기본 문법 단계에서는 `select`, `where`, `join`, `orderBy`, `offset`, `limit`만 익숙해져도 충분합니다. 이 다섯 축만 잡히면 Querydsl은 갑자기 어렵지 않게 느껴집니다.
-
-#### 한 줄 정리
-
-Querydsl 기본 문법은 **SQL의 핵심 구조를 코드 기반으로 옮긴 형태**라고 이해하면 가장 빠릅니다.
-
-
----
-
-## 6.6 Querydsl 프로젝션과 DTO 조회
-
-**🎯 목표**: 프로젝션·DTO로 필요한 컬럼만 조회한다.
-
-#### 개요
-
-이 문서는 Querydsl에서 **엔티티 대신 DTO로 결과를 조회하는 방법**을 정리한 자료입니다. 실무에서는 엔티티 전체를 그대로 반환하기보다, 화면과 API에 필요한 필드만 조회하는 경우가 훨씬 많습니다.
-
-#### 왜 중요한가
-
-엔티티를 그대로 노출하면 조회 범위가 과해지고, 연관관계 로딩과 직렬화 이슈가 따라오기 쉽습니다. DTO 프로젝션은 조회 결과를 필요한 형태로 제한하는 가장 현실적인 방법입니다.
-
-특히 목록 조회, 검색 결과, 관리자 화면처럼 읽기 전용 응답이 중심인 경우에는 엔티티보다 DTO 조회가 훨씬 자연스러운 경우가 많습니다. 반대로 변경을 위해 엔티티 상태를 다뤄야 하는 명령 흐름에서는 엔티티 조회가 더 적합할 수 있습니다.
-
-#### 현재 저장소에서 먼저 구분할 것
-
-Spring Data JPA 공식 문서만으로도 인터페이스 기반 프로젝션, DTO 생성자 프로젝션, 동적 프로젝션, `Page`/`Slice` 조회가 가능합니다. 따라서 **DTO 조회 = 반드시 Querydsl**은 아닙니다.
-
-현재 `day_by_spring` 저장소는 Querydsl DTO 프로젝션을 사용하지 않고, 리포지토리에서 엔티티와 스칼라 값을 조회하는 구조가 중심입니다.
-
-```java
-public interface OrderRepository extends JpaRepository<Order, Long> {
-
-    @Query("SELECT COALESCE(SUM(o.totalAmount.amount - COALESCE(o.discountAmount.amount, 0)), 0) FROM Order o WHERE o.status <> :excludeStatus")
-    BigDecimal calculateTotalRevenue(@Param("excludeStatus") OrderStatus excludeStatus);
-}
-```
-
-```text
-예상 결과
-주문 엔티티 목록이 아니라 취소 상태를 제외한 총 매출 합계 한 값이 반환된다.
-현재 저장소는 이런 스칼라 조회를 Spring Data JPA + JPQL로 처리하고 있다.
-```
-
-Querydsl 프로젝션은 조회 모델이 더 복잡해질 때 선택하는 확장 카드로 이해하는 편이 정확하다.
-
-#### 1. 단일 필드 조회
-
-```java
-List<String> result = queryFactory
-        .select(member.username)
-        .from(member)
-        .fetch();
-```
-
-이 방식은 가장 단순하지만, 필드가 두 개 이상이면 구조화된 반환 타입이 필요해집니다.
-
-#### 2. Tuple 조회
-
-```java
-List<Tuple> result = queryFactory
-        .select(member.username, member.age)
-        .from(member)
-        .fetch();
-```
-
-`Tuple`은 Querydsl 내부에서는 편하지만, 서비스 계층 바깥으로 넘기기에는 적합하지 않습니다.
-
-#### 3. DTO 조회 방식
-
-##### `Projections.bean`
-
-```java
-List<MemberDto> result = queryFactory
-        .select(Projections.bean(MemberDto.class,
-                member.username,
-                member.age))
-        .from(member)
-        .fetch();
-```
-
-Setter 기반 주입입니다.
-
-##### `Projections.fields`
-
-```java
-List<MemberDto> result = queryFactory
-        .select(Projections.fields(MemberDto.class,
-                member.username,
-                member.age))
-        .from(member)
-        .fetch();
-```
-
-필드 직접 주입 방식입니다.
-
-##### `Projections.constructor`
-
-```java
-List<MemberDto> result = queryFactory
-        .select(Projections.constructor(MemberDto.class,
-                member.username,
-                member.age))
-        .from(member)
-        .fetch();
-```
-
-생성자 기반이지만, 컴파일 시점에 타입 불일치를 완전히 잡아주지는 못합니다.
-
-#### 4. 필드명이 다를 때
-
-```java
-List<UserDto> result = queryFactory
-        .select(Projections.fields(UserDto.class,
-                member.username.as("name")))
-        .from(member)
-        .fetch();
-```
-
-DTO 필드명과 엔티티 필드명이 다르면 `as()`로 맞춰줘야 합니다.
-
-#### 5. `@QueryProjection`
-
-```java
-public class MemberDto {
-    private final String username;
-    private final int age;
-
-    @QueryProjection
-    public MemberDto(String username, int age) {
-        this.username = username;
-        this.age = age;
-    }
-}
-```
-
-```java
-List<MemberDto> result = queryFactory
-        .select(new QMemberDto(member.username, member.age))
-        .from(member)
-        .fetch();
-```
-
-이 방식은 타입 안전성이 높지만, DTO가 Querydsl에 의존하게 됩니다.
-
-#### 6. 어떤 방식을 선택할까
-
-- 단순 조회: `fields` 또는 `constructor`
-- 타입 안정성 중시: `@QueryProjection`
-- 외부 라이브러리 의존 최소화: `constructor`
-정답은 하나가 아니라, 팀의 기준과 DTO 관리 방식에 따라 달라집니다.
-
-책 기준으로는 아래처럼 정리해두면 판단이 쉬워집니다.
-
-- 빠르게 읽히는 조회 모델이 필요하다: DTO 프로젝션
-- 엔티티 변경이 이어지는 흐름이다: 엔티티 조회
-- DTO가 Querydsl 의존을 가져도 괜찮고 컴파일 안정성이 더 중요하다: `@QueryProjection`
-- DTO를 순수하게 유지하고 싶다: `constructor` 또는 `fields`
-#### 자주 하는 실수
-
-- `Tuple`을 컨트롤러까지 그대로 반환하는 것
-- DTO 필드명과 별칭을 맞추지 않는 것
-- 엔티티 조회와 DTO 조회의 목적을 혼동하는 것
-#### 실무 연결 포인트
-
-목록 API, 검색 결과, 관리자 화면 조회는 대부분 DTO 프로젝션과 잘 맞습니다. 반대로 엔티티 변경을 동반하는 명령 처리에서는 엔티티 조회가 더 자연스러운 경우가 많습니다.
-
-#### 공식 문서 기준으로 더 보면 좋은 자료
-
-- [Querydsl GitHub](https://github.com/querydsl/querydsl)
-- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
-
-### ✏️ 직접 해보기
-
-엔티티 전체 대신 DTO 두 필드만 조회하는 Querydsl 쿼리를 작성하라.
-
-#### 정리
-
-DTO 조회는 Querydsl의 실전 활용에서 매우 중요한 축입니다. 조회 모델과 도메인 모델을 분리하면 API와 화면 요구사항에 더 유연하게 대응할 수 있습니다.
-
-#### 한 줄 정리
-
-Querydsl 프로젝션은 **필요한 데이터만 안전하게 조회해 DTO로 반환하기 위한 핵심 기법**입니다.
-
-
----
-
-## 6.7 Querydsl 동적 쿼리와 조건 조합
-
-**🎯 목표**: 동적 쿼리와 조건 조합을 구현한다.
-
-<!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
-
-### 개요
-이 문서는 Querydsl에서 **동적 쿼리를 어떻게 읽기 좋게 구성할 것인가**를 정리한 자료입니다. 실제 검색 API는 조건이 고정되어 있지 않기 때문에, Querydsl의 진짜 가치는 동적 조건 조합에서 더 크게 드러납니다.
-
-### 왜 중요한가
-단순 조회는 JPA 메서드 쿼리로도 충분할 때가 많습니다. 하지만 조건이 늘어나고, 일부 조건만 선택적으로 들어오는 순간 코드가 급격히 복잡해집니다. 이때 Querydsl은 구조를 정리하는 데 매우 유용합니다.
-실무에서 진짜 어려운 것은 문법보다도, 조건을 어디까지 메서드로 나눌지, 어떤 조건을 검색 DTO에 묶을지, Querydsl 타입을 어느 계층까지 노출할지 판단하는 일입니다.
-
-### 현재 저장소에서 먼저 보는 축
-현재 `day_by_spring` 저장소는 Querydsl 기반 동적 조건 조합을 아직 쓰지 않지만, `BookRepository`, `MemberRepository`, `LoanRepository`가 `JpaSpecificationExecutor`를 확장하고 있습니다. 즉 동적 검색을 받아들일 진입점은 이미 Spring Data JPA 쪽에 열려 있습니다.
-```java
-public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-}
-```
-```text
-예상 결과
-제목, 저자, 가격, 대출 가능 여부처럼 선택적으로 들어오는 조건이 많아지면 Specification 또는 별도 조회 리포지토리로 확장할 수 있다.
-현재 저장소는 Querydsl 조건 메서드 조합까지는 가지 않았고, 동적 조회의 1차 선택지는 Spring Data JPA Specification이다.
-```
-그래서 이 문서는 **현재 구현 설명**보다는 **Querydsl 도입 시 조건 조합을 어떻게 설계할지**를 미리 배우는 장으로 읽는 편이 정확하다.
-
-### 1. `BooleanBuilder` 방식
-```java
-public List<Member> search(String usernameCond, Integer ageCond) {
-    BooleanBuilder builder = new BooleanBuilder();
-
-    if (usernameCond != null) {
-        builder.and(member.username.eq(usernameCond));
-    }
-    if (ageCond != null) {
-        builder.and(member.age.eq(ageCond));
-    }
-
-    return queryFactory
-            .selectFrom(member)
-            .where(builder)
-            .fetch();
-}
-```
-가장 직관적인 방식이지만, 조건이 많아질수록 메서드가 비대해질 수 있습니다.
-
-### 2. `BooleanExpression` 분리 방식
-```java
-public List<Member> search(String usernameCond, Integer ageCond) {
-    return queryFactory
-            .selectFrom(member)
-            .where(usernameEq(usernameCond), ageEq(ageCond))
-            .fetch();
-}
-
-private BooleanExpression usernameEq(String usernameCond) {
-    return usernameCond != null ? member.username.eq(usernameCond) : null;
-}
-
-private BooleanExpression ageEq(Integer ageCond) {
-    return ageCond != null ? member.age.eq(ageCond) : null;
-}
-```
-이 방식은 조건을 메서드로 분리할 수 있어 재사용성과 가독성이 훨씬 좋습니다.
-
-### 3. 조건 메서드를 조합하는 방법
-```java
-private BooleanExpression usernameEq(String usernameCond) {
-    return hasText(usernameCond) ? member.username.eq(usernameCond) : null;
-}
-
-private BooleanExpression ageBetween(Integer ageGoe, Integer ageLoe) {
-    if (ageGoe == null || ageLoe == null) {
-        return null;
-    }
-    return member.age.between(ageGoe, ageLoe);
-}
-```
-조건 메서드가 잘 정리되면 검색 API도 훨씬 읽기 쉬워집니다.
-
-### 4. 검색 조건 DTO와 함께 쓰기
-```java
-public List<Member> search(MemberSearchCondition condition) {
-    return queryFactory
-            .selectFrom(member)
-            .where(
-                    usernameEq(condition.getUsername()),
-                    ageGoe(condition.getAgeGoe()),
-                    ageLoe(condition.getAgeLoe())
-            )
-            .fetch();
-}
-```
-실무에서는 개별 파라미터보다 검색 조건 DTO를 사용하는 편이 유지보수에 유리합니다.
-
-### 5. 어떤 방식을 더 추천하는가
-- 조건이 적고 단순할 때: `BooleanBuilder`
-- 조건이 많고 재사용해야 할 때: `BooleanExpression` 분리 방식
-초중급 개발자 기준으로는 결국 **조건 메서드 분리 방식**에 익숙해지는 것이 더 중요합니다.
-이때 기준을 하나 더 두면 좋습니다.
-- 서비스 계층은 검색 조건 DTO를 넘긴다.
-- Querydsl 전용 `BooleanExpression` 조합은 조회 리포지토리 안에 둔다.
-이렇게 나누면 서비스는 비즈니스 흐름에 집중하고, 조회 기술 세부사항은 리포지토리에 가둘 수 있습니다.
-
-### 자주 하는 실수
-- 조건 메서드가 너무 많아져 오히려 추적이 어려워지는 것
-- null 처리 기준이 메서드마다 달라지는 것
-- 동적 쿼리를 서비스 계층까지 끌고 가는 것
-
-### 실무 연결 포인트
-관리자 검색, 회원 목록 필터, 주문 조회, 도서 검색처럼 조건이 많고 조합이 바뀌는 조회는 대부분 이 패턴으로 정리할 수 있습니다.
-
-### 공식 문서 기준으로 더 보면 좋은 자료
-- [Querydsl GitHub](https://github.com/querydsl/querydsl)
-- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
-
-### 정리
-동적 쿼리의 핵심은 Querydsl 문법이 아니라, 조건을 어떻게 분해해서 읽기 좋게 구성할 것인가에 있습니다. 코드가 길어져도 조건의 의도가 보이면 유지보수는 훨씬 쉬워집니다.
-
-### 한 줄 정리
-Querydsl 동적 쿼리는 **조건을 메서드 단위로 잘게 나누어 조합하는 방식**으로 읽기 쉽게 만드는 것이 핵심입니다.
-
-### ✏️ 직접 해보기
-
-검색 조건이 있을 때만 where에 붙는 동적 쿼리를 작성하라.
-
-## 6.8 Spring Data JPA와 Querydsl 통합 전략
-
-**🎯 목표**: Spring Data JPA와 Querydsl을 통합한다.
-
-### 개요
-
-이 문서는 Spring Data JPA와 Querydsl을 함께 사용할 때 **어디까지를 기본 리포지토리에 맡기고, 어디서부터 조회 전용 설계를 분리할지** 정리한 가이드입니다. 핵심은 기능 비교가 아니라 **역할 분담 기준**을 세우는 것입니다.
-
-#### 이 문서의 역할
-
-앞선 문서에서 Querydsl 문법, DTO 조회, 동적 조건 조합을 다뤘다면, 이제는 그것을 실제 프로젝트 구조 안에 어떻게 배치할지를 결정해야 합니다. 책 기준으로 이 문서는 `문법` 다음, `조회 리포지토리 설계` 직전의 연결 문서입니다.
-
-#### 1. 역할을 먼저 나눕니다
-
-Spring Data JPA와 Querydsl은 경쟁 관계가 아니라 역할 분담 관계로 보는 편이 자연스럽습니다.
-
-- Spring Data JPA: 기본 CRUD, 단건 조회, 단순한 조건 조회
-- Querydsl: 동적 검색, 여러 엔티티 조인, 목록 API, DTO 프로젝션, 복잡한 정렬과 페이지 조회
-기준은 단순합니다. **애그리거트의 생애주기를 다루는 작업**은 JPA 리포지토리가 맡고, **읽기 모델을 조립하는 작업**은 Querydsl 쿼리 쪽으로 보냅니다.
-
-#### 현재 저장소는 어디까지 와 있는가
-
-현재 `day_by_spring` 저장소는 이미 Spring Data JPA 구조를 적극적으로 사용하고 있습니다.
-
-- `BookRepository`, `MemberRepository`, `LoanRepository` 등이 `JpaRepository`를 확장합니다.
-- 일부 리포지토리는 `JpaSpecificationExecutor`도 함께 사용합니다.
-- 단순 조회와 복합 조회는 메서드 이름 기반 쿼리와 `@Query`로 구성되어 있습니다.
-반면 Querydsl fragment나 `JPAQueryFactory` 기반 구현은 아직 없습니다. 따라서 이 문서는 "현재 코드 설명"이라기보다, **현재 JPA 구조를 앞으로 어떻게 확장할 수 있는지 보여주는 설계 문서**에 가깝습니다.
-
-#### 2. 기본 리포지토리와 조회 전용 Fragment를 함께 둡니다
-
-Spring Data JPA 공식 문서와 실무 관점에서 보면, Querydsl을 붙일 때는 기본 리포지토리와 조회 전용 fragment를 분리하는 편이 읽기 쉽습니다.
-
-```java
-public interface MemberRepository extends JpaRepository<Member, Long>, MemberQueryRepository {
-}
-
-public interface MemberQueryRepository {
-    Page<MemberListItem> search(MemberSearchCondition condition, Pageable pageable);
-}
-
-@Repository
-public class MemberQueryRepositoryImpl implements MemberQueryRepository {
-
-    private final JPAQueryFactory queryFactory;
-
-    public MemberQueryRepositoryImpl(JPAQueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
-    }
-
-    @Override
-    public Page<MemberListItem> search(MemberSearchCondition condition, Pageable pageable) {
-        // Querydsl 조회 구현
-        return Page.empty(pageable);
-    }
-}
-```
-
-이 구조는 **도입 이후의 권장 방향**입니다. 현재 저장소의 실제 구조는 아직 여기에 도달해 있지 않고, 아래에 더 가깝습니다.
-
-```java
-public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecificationExecutor<Member> {
-    Optional<Member> findByEmail(String email);
-    List<Member> findByNameContainingIgnoreCase(String name);
-}
-```
-
-즉, 현재 저장소는 Spring Data JPA 기본 리포지토리와 메서드 쿼리, `@Query`, Specification 기반 동적 조건 쪽에 서 있고, Querydsl fragment 구조는 이후 확장안으로 보는 편이 정확합니다.
-
-이 구조의 장점은 세 가지입니다.
-
-- 기본 저장 기능과 조회 전용 로직의 책임이 섞이지 않습니다.
-- 서비스 계층이 Querydsl 세부 구현에 덜 의존합니다.
-- 목록 API가 복잡해져도 조회 모델을 별도 진화시키기 쉽습니다.
-#### 3. `QuerydslPredicateExecutor`는 기본 해법이 아닙니다
-
-간단한 데모에서는 편해 보이지만, 책 원고 기준에서는 기본 권장안으로 두기 어렵습니다.
-
-이유는 다음과 같습니다.
-
-- 조인과 DTO 프로젝션 제어가 약합니다.
-- 실제 검색 화면에서 필요한 조건 조합을 세밀하게 표현하기 어렵습니다.
-- count 쿼리 분리나 목록 응답 최적화 같은 실무 제어가 제한됩니다.
-- API 요구사항이 바뀔수록 Predicate 조립이 서비스나 컨트롤러로 새기 쉽습니다.
-즉, `PredicateExecutor`는 간단한 필터에는 쓸 수 있어도, **출판용 기준의 실무 검색 설계 기본값**으로 두기에는 약합니다.
-
-#### 4. 서비스 계층은 쿼리를 조립하지 않습니다
-
-복잡한 조회가 생겼다고 해서 서비스 계층에 `BooleanBuilder`, `where()` 조립 코드를 쌓기 시작하면 구조가 금방 흐려집니다.
-
-서비스 계층의 역할은 다음 쪽에 더 가깝습니다.
-
-- 유스케이스를 조합한다.
-- 트랜잭션 경계를 관리한다.
-- 입력 조건을 검증하고 조회 리포지토리에 전달한다.
-반대로 아래 작업은 조회 전용 리포지토리 쪽으로 보내는 편이 낫습니다.
-
-- 어떤 조인을 사용할지 결정
-- 엔티티 대신 어떤 DTO를 반환할지 결정
-- count 쿼리를 어떻게 분리할지 결정
-- 페이징과 정렬 전략 결정
-#### 5. 실무 권장 조합
-
-출판 기준에서 가장 안정적인 기본 조합은 아래와 같습니다.
-
-- `JpaRepository`: 저장, 수정, 삭제, 단건 조회
-- Querydsl fragment: 검색, 목록, 조인, 페이징
-- DTO projection: API 응답 모델
-이 조합이 좋은 이유는 **쓰기 모델과 읽기 모델의 관심사를 최소한으로 분리**하기 때문입니다. CQRS를 과하게 도입하지 않아도, 읽기 복잡도가 높아지는 지점에서 구조가 버텨 줍니다.
-
-#### 6. 언제 `@Query`로 충분한가
-
-모든 조회를 Querydsl로 옮길 필요는 없습니다. 아래 정도면 `@Query`나 쿼리 메서드로도 충분합니다.
-
-- 단일 엔티티 중심의 단순 조회
-- 조건이 거의 고정된 조회
-- 조인 수가 적고 응답 형태가 안정적인 경우
-반대로 아래부터는 Querydsl이 더 자연스럽습니다.
-
-- 조건이 화면 입력에 따라 달라짐
-- 정렬, 검색, 범위 조건이 함께 붙음
-- 목록 API와 count 최적화가 중요함
-- 엔티티가 아니라 DTO 조회가 중심임
-#### 7. 추천 구조 예시
-
-패키지 이름은 프로젝트마다 다를 수 있지만, 책임 분리는 비슷하게 가져가는 편이 좋습니다.
-
-```text
-repository/
-  MemberRepository.java
-  MemberQueryRepository.java
-  MemberQueryRepositoryImpl.java
-application/
-  dto/
-    MemberSearchCondition.java
-    MemberListItem.java
-```
-
-핵심은 **리포지토리 인터페이스는 도메인에 가깝게, 구현은 조회 기술에 가깝게** 두는 것입니다.
-
-#### 자주 하는 실수
-
-- Querydsl을 붙였는데도 서비스 계층에 조회 로직을 쌓는 것
-- 모든 조회를 엔티티 반환으로 통일하는 것
-- `PredicateExecutor` 하나로 검색 API를 끝내려는 것
-- CRUD 리포지토리와 목록 조회 리포지토리의 책임을 구분하지 않는 것
-#### 공식 문서
-
-- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
-- [Spring Data JPA - Custom Repository Implementations](https://docs.spring.io/spring-data/jpa/reference/repositories/custom-implementations.html)
-- [Spring Data JPA - Projections](https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html)
-- [Querydsl Reference Guide](https://querydsl.com/static/querydsl/latest/reference/html/)
-
-### ✏️ 직접 해보기
-
-커스텀 리포지토리에 Querydsl 메서드를 추가해 보라.
-
-#### 정리
-
-Spring Data JPA와 Querydsl을 함께 쓸 때 핵심은 “둘 다 쓴다”가 아니라 **무엇을 어느 계층에 맡길지 먼저 결정하는 것**입니다. CRUD는 기본 리포지토리에 남기고, 검색과 목록은 조회 전용 Querydsl fragment로 분리하는 편이 가장 오래 버팁니다.
-
-#### 한 줄 정리
-
-Spring Data JPA와 Querydsl은 **기본 저장 작업과 복잡한 조회를 분리할 때 가장 잘 맞는 조합**입니다.
-
-
----
-
-## 6.9 Querydsl 조회 리포지토리 설계
-
-**🎯 목표**: 조회 전용 리포지토리를 설계한다.
-
-### 개요
-
-이 문서는 Querydsl을 사용할 때 **조회 전용 리포지토리의 인터페이스를 어떻게 만들고, API와 어떤 경계로 연결할지** 정리한 가이드입니다. 핵심은 Querydsl 문법이 아니라 **조회 모델의 표면을 설계하는 것**입니다.
-
-#### 이 문서의 역할
-
-앞 문서에서 Spring Data JPA와 Querydsl의 역할 분담을 정했다면, 이제는 그 결정을 실제 메서드와 DTO 형태로 드러내야 합니다. 책 기준으로 이 문서는 `통합 전략` 다음, `페이징과 성능` 직전의 설계 문서입니다.
-
-#### 현재 저장소 기준에서 읽는 법
-
-현재 `day_by_spring` 저장소는 `MemberQueryRepository` 같은 Querydsl 전용 조회 리포지토리를 아직 두지 않았습니다. 대신 Spring Data JPA 리포지토리 인터페이스 안에서 메서드 쿼리, `@Query`, `JpaSpecificationExecutor`를 섞어 사용합니다.
-
-```java
-public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecificationExecutor<Member> {
-
-    List<Member> findByMembershipTypeAndNameContainingIgnoreCase(MembershipType membershipType, String name);
-}
-```
-
-```text
-예상 결과
-회원 유형과 이름 조건을 조합한 조회가 Spring Data JPA 리포지토리 한 곳에서 처리된다.
-현재 저장소는 조회 전용 리포지토리를 따로 나누기 전 단계이며, 이 문서는 조회 복잡도가 더 커졌을 때의 다음 구조를 설명한다.
-```
-
-검색, 목록, 통계 API가 더 늘어나면 그때 Querydsl fragment 또는 조회 전용 리포지토리 분리가 자연스러운 다음 단계가 된다.
-
-#### 1. 조회 전용 리포지토리를 두는 이유
-
-검색 API가 복잡해질수록 서비스 계층에 쿼리 상세가 새어 나오기 쉽습니다. 이때 조회 전용 리포지토리를 두면 책임이 선명해집니다.
-
-- 서비스: 유스케이스 조합, 검증, 트랜잭션 경계
-- 조회 리포지토리: 조인, 조건 조합, projection, 페이징
-- 컨트롤러: 요청을 DTO로 받고 응답을 반환
-즉, Querydsl을 직접 노출하지 않고 **조회 요구사항을 하나의 읽기 전용 경계**로 감싸는 것이 목적입니다.
-
-#### 2. 입력 DTO와 출력 DTO를 분리합니다
-
-조회 API 설계에서 가장 먼저 정리해야 할 것은 메서드 이름보다 데이터 형태입니다.
-
-```java
-public record MemberSearchCondition(
-        String username,
-        String teamName,
-        Integer ageGoe,
-        Integer ageLoe
-) {
-}
-
-public record MemberListItem(
-        Long memberId,
-        String username,
-        int age,
-        String teamName
-) {
-}
-```
-
-검색 조건과 응답 모델을 분리하면 아래 장점이 생깁니다.
-
-- API 요구사항이 엔티티 구조에 덜 끌려갑니다.
-- 조회 조건이 늘어나도 서비스 메서드 시그니처가 덜 무너집니다.
-- 목록, 상세, 통계 응답을 목적별로 나누기 쉬워집니다.
-#### 3. 리포지토리 인터페이스는 Querydsl 세부사항을 숨깁니다
-
-조회 전용 리포지토리는 `BooleanBuilder`, `JPAQuery`, `Tuple` 같은 구현 세부를 바깥으로 새기지 않는 편이 좋습니다.
-
-```java
-public interface MemberQueryRepository {
-    Page<MemberListItem> search(MemberSearchCondition condition, Pageable pageable);
-
-    Optional<MemberDetailItem> findDetail(Long memberId);
-}
-```
-
-좋은 인터페이스의 기준은 단순합니다.
-
-- 입력은 조건 객체와 페이징 정보
-- 출력은 DTO, `Page`, `Slice`, `Optional`
-- Querydsl 타입은 구현 내부에만 존재
-이 원칙을 지키면 나중에 조회 전략이 바뀌어도 서비스와 컨트롤러 수정 범위를 줄일 수 있습니다.
-
-#### 4. 구현은 목록 API 목적에 맞게 작성합니다
-
-```java
-@Repository
-public class MemberQueryRepositoryImpl implements MemberQueryRepository {
-
-    private final JPAQueryFactory queryFactory;
-
-    public MemberQueryRepositoryImpl(JPAQueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
-    }
-
-    @Override
-    public Page<MemberListItem> search(MemberSearchCondition condition, Pageable pageable) {
-        List<MemberListItem> content = queryFactory
-                .select(Projections.constructor(MemberListItem.class,
-                        member.id,
-                        member.username,
-                        member.age,
-                        team.name))
-                .from(member)
-                .leftJoin(member.team, team)
-                .where(
-                        usernameEq(condition.username()),
-                        teamNameEq(condition.teamName()),
-                        ageGoe(condition.ageGoe()),
-                        ageLoe(condition.ageLoe())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        Long total = queryFactory
-                .select(member.count())
-                .from(member)
-                .leftJoin(member.team, team)
-                .where(
-                        usernameEq(condition.username()),
-                        teamNameEq(condition.teamName()),
-                        ageGoe(condition.ageGoe()),
-                        ageLoe(condition.ageLoe())
-                )
-                .fetchOne();
-
-        return new PageImpl<>(content, pageable, total == null ? 0L : total);
-    }
-}
-```
-
-핵심은 “Querydsl을 썼다”가 아니라 **목록 API가 필요로 하는 응답 모양과 페이징 규칙을 리포지토리 구현 안에서 완결**하는 것입니다.
-
-#### 5. 컨트롤러와 서비스는 얇게 유지합니다
-
-```java
-@RestController
-@RequiredArgsConstructor
-public class MemberController {
-
-    private final MemberQueryService memberQueryService;
-
-    @GetMapping("/members")
-    public Page<MemberListItem> searchMembers(MemberSearchCondition condition, Pageable pageable) {
-        return memberQueryService.search(condition, pageable);
-    }
-}
-```
-
+### 1. IoC와 DI는 무엇이 다른가
+`IoC`는 객체 생성과 연결의 제어권을 코드 바깥으로 넘기는 관점이고, `DI`는 그 제어를 실제 코드에서 구현하는 대표적인 방법입니다.
 ```java
 @Service
-@RequiredArgsConstructor
-public class MemberQueryService {
+public class OrderService {
+    private final PaymentClient paymentClient;
 
-    private final MemberQueryRepository memberQueryRepository;
-
-    @Transactional(readOnly = true)
-    public Page<MemberListItem> search(MemberSearchCondition condition, Pageable pageable) {
-        return memberQueryRepository.search(condition, pageable);
+    public OrderService(PaymentClient paymentClient) {
+        this.paymentClient = paymentClient;
     }
 }
 ```
+핵심은 `new PaymentClient()`를 직접 호출하지 않고, 외부에서 준비된 객체를 받는다는 점입니다.
+- IoC: 누가 객체를 만들고 연결할 것인가
+- DI: 그 객체를 생성자나 메서드로 주입하는 방식
 
-여기서 서비스는 쿼리 문장을 조립하지 않습니다. 조회 리포지토리가 읽기 모델을 담당하고, 서비스는 유스케이스 경계만 유지합니다.
+### 2. 왜 생성자 주입을 기본값으로 두나
+Spring에서는 필드 주입도 가능하지만, 기본값은 생성자 주입이 더 낫습니다.
+- 의존성이 드러납니다.
+- `final`로 불변성을 유지하기 쉽습니다.
+- 테스트에서 직접 객체를 만들기 쉽습니다.
+즉 Spring을 배우는 핵심은 어노테이션을 많이 외우는 것이 아니라, **객체 그래프를 명시적으로 설계하는 감각**을 익히는 데 있습니다.
 
-#### 6. 목록, 상세, 통계는 같은 방식으로 다루지 않습니다
+### 3. Bean과 컨테이너는 어떻게 보나
+`@Component`, `@Service`, `@Repository`, `@Controller`로 등록된 객체는 보통 Spring 컨테이너가 관리하는 `Bean`입니다.
+```java
+@Service
+public class BookService {
+}
+```
+여기서 중요한 점은 다음입니다.
+- 대부분 기본 스코프는 싱글톤입니다.
+- 그래서 Bean 안에 가변 상태를 오래 들고 있으면 동시성 문제가 생길 수 있습니다.
+- 직접 싱글톤 패턴을 구현하는 것보다, Spring의 Bean 생명주기를 이해하는 편이 더 중요합니다.
 
-출판 기준에서는 조회 API를 한 덩어리로 보지 않는 편이 중요합니다.
+### 4. MVC는 무엇을 나누는가
+Spring MVC는 `DispatcherServlet`을 중심으로 요청을 받고, 컨트롤러에 연결하고, 응답을 조립합니다.
+- Controller: HTTP 계약
+- Service: 유스케이스 조율
+- Repository: 데이터 접근
+- DTO: 요청/응답 형태 분리
+즉 MVC를 본다는 것은 화면 기술을 보는 것이 아니라, **웹 요청을 어디서 끊어 책임을 나누는지** 보는 것입니다.
 
-- 목록 API: DTO projection + 페이징
-- 상세 API: 필요한 경우 fetch join 또는 전용 DTO
-- 통계 API: 집계 쿼리 전용 메서드
-이 구분이 있어야 나중에 `Page`, `Slice`, count 분리, N+1 대응 전략도 자연스럽게 따라옵니다.
+### 5. AOP와 프록시는 왜 자꾸 같이 나오나
+트랜잭션, 로깅, 보안은 비즈니스 메서드마다 반복되기 쉽습니다. Spring은 프록시 기반 AOP로 이런 공통 관심사를 분리합니다.
+```java
+@Transactional
+public void placeOrder(CreateOrderRequest request) {
+    // 핵심 비즈니스 로직
+}
+```
+여기서 중요한 것은 `@Transactional`을 외우는 것이 아니라, **실제 메서드 호출 앞뒤에 부가 동작이 끼어들 수 있다**는 프록시 모델을 이해하는 것입니다.
 
-#### 7. 메서드 수보다 응답 목적을 먼저 봅니다
+### 6. Spring을 어떤 순서로 읽는 게 좋은가
+이 저장소 기준으로는 아래 흐름이 자연스럽습니다.
+- `Spring 실습 환경 구성 가이드`: 실행 준비
+- `Local Docker Deployment Guide`: Docker 기반 로컬 실행이 필요할 때 보는 보조 문서
+- `Tomcat 실행과 설정`: 요청이 어디서 시작되는가
+- `Spring Security 인증 흐름`: 필터 체인과 인증
+- `Spring Security 용어 정리`: 용어 정리
+- `Spring Boot 테스트 전략`: 테스트 계층 구분
+- `Swagger 설정 가이드`: API 문서화
+즉 Spring 전체를 한 장에서 끝내려 하기보다, **실제 관심사마다 필요한 조각을 읽는 구조**가 더 낫습니다.
 
-`findAll`, `search`, `searchByCondition`, `findList`처럼 이름만 늘리는 것은 큰 도움이 되지 않습니다. 더 중요한 것은 아래 질문입니다.
+### 7. 자주 헷갈리는 연결점
+- IoC와 DIP는 다릅니다. DIP는 추상화 의존 원칙이고, IoC는 생성 제어의 위치 문제입니다.
+- Bean 싱글톤과 디자인 패턴 싱글톤은 같은 단어를 쓰지만 관심사가 다릅니다.
+- MVC와 REST는 같은 개념이 아닙니다. MVC는 구조, REST는 HTTP 설계 관점입니다.
+- AOP를 이해하면 `@Transactional`, 보안 프록시, 로깅 설계가 함께 보이기 시작합니다.
 
-- 이 API는 목록인가 상세인가
-- 엔티티가 필요한가 DTO면 충분한가
-- 전체 개수가 필요한가, 다음 페이지 존재 여부만 알면 되는가
-- 정렬 기준은 무엇인가
-즉, 조회 전용 리포지토리 설계의 핵심은 메서드 개수보다 **읽기 요구사항을 명시적으로 드러내는 것**입니다.
-
-#### 자주 하는 실수
-
-- 조회 로직을 서비스 계층에 직접 작성하는 것
-- 엔티티를 그대로 응답 DTO처럼 사용하는 것
-- 검색 조건 객체 없이 파라미터를 계속 늘리는 것
-- 목록 API와 상세 API를 같은 조회 메서드로 처리하려는 것
-- Querydsl 타입을 인터페이스 바깥으로 노출하는 것
-#### 공식 문서
-
-- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
-- [Spring Data JPA - Custom Repository Implementations](https://docs.spring.io/spring-data/jpa/reference/repositories/custom-implementations.html)
-- [Spring Data JPA - Projections](https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html)
-- [Querydsl Reference Guide](https://querydsl.com/static/querydsl/latest/reference/html/)
+### 한 줄 정리
+Spring 핵심 개념의 핵심은 **어노테이션 이름**보다, **객체 생성과 요청 흐름과 공통 관심사를 어떻게 분리하는지 이해하는 것**입니다.
 
 ### ✏️ 직접 해보기
 
-조회 책임을 분리한 리포지토리 인터페이스를 설계하라.
+두 클래스를 생성자 주입으로 연결한 빈을 만들어 컨테이너가 주입하는지 확인하라.
 
-#### 정리
+## 5.1 Spring 실습 환경 구성 가이드
 
-Querydsl 조회 설계의 핵심은 복잡한 검색을 한곳에 몰아 넣는 것이 아니라, **읽기 전용 경계를 만들고 그 안에서 조건, projection, 페이징을 책임지게 하는 것**입니다. 이 구조가 잡혀 있어야 이후 성능 최적화도 흔들리지 않습니다.
-
-#### 한 줄 정리
-
-Querydsl 조회 리포지토리 설계의 핵심은 **Querydsl을 노출하지 않고, 읽기 요구사항을 DTO와 메서드 경계로 명확하게 드러내는 것**입니다.
-
-
----
-
-## 6.10 Querydsl 페이징과 성능
-
-**🎯 목표**: Querydsl 페이징과 성능을 다룬다.
-
-### 개요
-
-이 문서는 Querydsl을 사용할 때 가장 자주 부딪히는 **목록 API, 페이징, count 쿼리, fetch join, N+1** 문제를 실무 기준으로 정리한 가이드입니다. Querydsl의 난이도는 문법이 아니라 **조회 전략**에서 올라갑니다.
-
-#### 이 문서의 역할
-
-앞선 문서에서 조회 문법과 리포지토리 구조를 정리했다면, 이제는 같은 조회를 **어떻게 더 적게 읽고, 더 안정적으로 페이지로 나눌지**를 결정해야 합니다. 이 문서는 `5장`의 마무리이자, 이후 API 설계를 현실로 끌어내리는 문서입니다.
-
-#### 현재 저장소에서 먼저 확인할 것
-
-현재 `day_by_spring` 저장소는 Querydsl 페이징을 쓰지 않고, Spring Data JPA `Pageable`과 JPQL `JOIN FETCH`를 함께 사용합니다. 따라서 이 문서는 **현재 구현 설명**이 아니라 **향후 목록 API를 Querydsl로 옮기거나 확장할 때 지켜야 할 성능 기준**으로 읽는 편이 정확합니다.
-
-```java
-public interface OrderRepository extends JpaRepository<Order, Long> {
-
-    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
-}
-```
-
-```text
-예상 결과
-주문 상태별 목록이 페이지 단위로 조회된다.
-현재 저장소는 이 페이징을 Querydsl이 아니라 Spring Data JPA 메서드 쿼리로 처리하고 있다.
-```
-
-```java
-public interface LoanRepository extends JpaRepository<Loan, Long>, JpaSpecificationExecutor<Loan> {
-
-    @Query("SELECT l FROM Loan l JOIN FETCH l.member JOIN FETCH l.book")
-    List<Loan> findAllWithMemberAndBook();
-}
-```
-
-```text
-예상 결과
-대출 목록을 읽을 때 회원과 도서 정보를 한 번에 함께 가져와 N+1을 줄일 수 있다.
-다만 이런 fetch join 방식은 목록 페이징의 기본값으로 쓰기보다 상세 조회나 제한된 목록 최적화로 보는 편이 안전하다.
-```
-
-#### 1. 페이지 조회는 사실 두 개의 쿼리입니다
-
-목록 API를 `Page`로 반환한다면 보통 두 종류의 쿼리를 생각해야 합니다.
-
-- 현재 페이지의 실제 데이터 목록을 가져오는 content 쿼리
-- 전체 개수를 계산하는 count 쿼리
-둘의 목적이 다르기 때문에, 같은 모양으로 만들 필요가 없습니다.
-
-```java
-List<MemberListItem> content = queryFactory
-        .select(Projections.constructor(MemberListItem.class,
-                member.id,
-                member.username,
-                team.name))
-        .from(member)
-        .leftJoin(member.team, team)
-        .where(usernameEq(condition.username()))
-        .orderBy(member.id.desc())
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize())
-        .fetch();
-
-Long total = queryFactory
-        .select(member.count())
-        .from(member)
-        .where(usernameEq(condition.username()))
-        .fetchOne();
-```
-
-content 쿼리는 화면에 필요한 데이터를 읽는 데 집중하고, count 쿼리는 전체 개수 계산에만 집중해야 합니다.
-
-#### 2. count 쿼리는 복사본이 아니라 별도 설계입니다
-
-실무에서 가장 흔한 실수는 content 쿼리를 거의 그대로 복사해서 count 쿼리를 만드는 것입니다. 하지만 count 쿼리에는 보통 아래가 불필요합니다.
-
-- 불필요한 `left join`
-- DTO projection
-- `fetch join`
-- 복잡한 `order by`
-즉, count 쿼리는 “같은 쿼리의 축약판”이 아니라 **전체 개수 계산 전용 쿼리**로 다시 보는 편이 맞습니다.
-
-#### 3. `fetchResults()`에 의존하지 않습니다
-
-예전 Querydsl 예제에서는 `fetchResults()`나 `fetchCount()`를 많이 볼 수 있지만, Querydsl 릴리즈 노트는 복잡한 `group by`나 `having`이 있는 경우 이 방식에 한계가 있음을 분명히 드러냅니다. 출판 기준에서는 **content 쿼리와 count 쿼리를 직접 분리하는 방식**을 기본값으로 두는 편이 안전합니다.
-
-#### 4. `PageableExecutionUtils`는 최적화 도구입니다
-
-항상 count 쿼리를 바로 실행할 필요는 없습니다. 마지막 페이지가 명확하거나 결과 크기로 전체 개수를 유추할 수 있는 경우에는 `PageableExecutionUtils`를 사용할 수 있습니다.
-
-```java
-return PageableExecutionUtils.getPage(content, pageable, () ->
-        queryFactory
-                .select(member.count())
-                .from(member)
-                .where(usernameEq(condition.username()))
-                .fetchOne()
-);
-```
-
-하지만 이것은 **count를 없애 주는 마법**이 아닙니다. count 쿼리를 언제 늦게 실행할지 도와주는 최적화 도구일 뿐입니다.
-
-#### 5. fetch join은 상세 조회와 목록 조회를 구분해서 씁니다
-
-`fetch join`은 N+1 문제를 줄이는 데 강력하지만, 페이지 조회에 무조건 좋은 선택은 아닙니다.
-
-특히 Hibernate 공식 문서는 **fetch join은 제한된 결과나 페이지 조회에서 보통 피하는 편이 좋다**고 설명합니다. 컬렉션 fetch join과 페이징을 섞으면 중복, 메모리 후처리, 예상과 다른 row 수 같은 문제가 쉽게 생깁니다.
-
-책 기준에서는 아래처럼 구분하는 편이 자연스럽습니다.
-
-- 상세 조회: 필요하면 fetch join 사용
-- 목록 조회: DTO projection + 필요한 조인만 사용
-- 컬렉션 탐색이 늦게 일어나는 경우: 배치 크기 최적화 검토
-#### 6. 목록 API의 기본값은 DTO projection입니다
-
-목록 화면은 보통 엔티티 전체가 아니라 일부 필드만 필요합니다. 이때 엔티티를 그대로 노출하는 것보다 DTO projection이 더 안전합니다.
-
-```java
-List<MemberListItem> content = queryFactory
-        .select(Projections.constructor(MemberListItem.class,
-                member.id,
-                member.username,
-                team.name))
-        .from(member)
-        .leftJoin(member.team, team)
-        .fetch();
-```
-
-이 방식의 장점은 다음과 같습니다.
-
-- API 응답 모양이 엔티티 구조에 덜 끌려갑니다.
-- 목록 조회와 상세 조회의 목적을 분리하기 쉽습니다.
-- 불필요한 연관 엔티티 로딩을 줄이기 좋습니다.
-#### 7. `Page`가 꼭 필요하지 않다면 `Slice`도 고려합니다
-
-무한 스크롤이나 “다음 페이지가 있는지만” 알면 되는 화면이라면 전체 count가 꼭 필요하지 않을 수 있습니다. 이 경우 `Page` 대신 `Slice`를 고려하면 count 쿼리 자체를 생략할 수 있습니다.
-
-기준은 단순합니다.
-
-- 전체 페이지 수가 필요하다: `Page`
-- 다음 페이지 존재 여부만 필요하다: `Slice`
-#### 8. N+1은 Querydsl 문법 문제가 아닙니다
-
-N+1은 Querydsl 자체의 문제가 아니라 **조회 전략 문제**입니다. 해결도 문법 암기가 아니라 아래 선택에서 나옵니다.
-
-- 지금 이 API가 목록인가 상세인가
-- 엔티티가 필요한가 DTO면 충분한가
-- 조인을 즉시 가져와야 하는가, 나중에 배치로 읽어도 되는가
-- count 쿼리를 정말 정확히 계산해야 하는가
-즉, 성능 최적화의 핵심은 Querydsl 문장을 더 복잡하게 쓰는 것이 아니라 **읽기 모델을 더 정확히 정의하는 것**입니다.
-
-#### 자주 하는 실수
-
-- content 쿼리와 count 쿼리를 거의 똑같이 만드는 것
-- 목록 API에 컬렉션 fetch join을 붙이는 것
-- DTO 대신 엔티티를 그대로 응답에 노출하는 것
-- `Page`가 꼭 필요하지 않은데도 습관적으로 count를 계산하는 것
-- 성능 문제를 Querydsl 문법 부족으로 오해하는 것
-#### 공식 문서
-
-- [Spring Data Commons - PageableExecutionUtils](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/support/PageableExecutionUtils.html)
-- [Spring Data JPA - Projections](https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html)
-- [Hibernate ORM User Guide](https://docs.hibernate.org/orm/current/userguide/html_single/)
-- [Querydsl Reference Guide](https://querydsl.com/static/querydsl/latest/reference/html/)
-- [Querydsl Releases](https://querydsl.com/releases.html)
-
-### ✏️ 직접 해보기
-
-count 쿼리를 분리한 페이징 조회를 구현해 보라.
-
-#### 정리
-
-Querydsl 페이징 최적화의 핵심은 메서드를 외우는 것이 아니라 **목록 조회, count 계산, 연관 로딩 전략을 목적에 따라 분리하는 것**입니다. 상세 조회와 목록 조회를 같은 방식으로 다루면 성능과 구조가 함께 흔들립니다.
-
-#### 한 줄 정리
-
-Querydsl 페이징과 성능의 핵심은 **content 쿼리, count 쿼리, fetch join, DTO 조회를 같은 문제로 보지 않는 것**입니다.
-
-
----
-
-## 6.12 SQL 연습 문제
-
-**🎯 목표**: SQL을 연습 문제로 굳힌다.
+**🎯 목표**: 스프링 실습 환경을 구성해 첫 애플리케이션을 띄운다.
 
 #### 개요
 
-이 문서는 `SQL 기본기: DDL, DML, JOIN, 집계`를 읽은 뒤 바로 이어서 푸는 실전문제 모음입니다. 초중급 Java 개발자가 SQL 기본기와 실무 감각을 함께 익힐 수 있도록 구성했습니다. 단순히 문법을 외우기보다, 스키마를 읽고 JOIN, 집계, 서브쿼리, 윈도우 함수를 상황에 맞게 선택하는 힘을 기르는 것을 목표로 합니다.
+이 문서는 **초중급 Java 개발자**가 Spring 실습을 시작하기 전에 로컬 개발 환경을 안정적으로 맞추기 위한 가이드입니다. 단순 설치 목록을 나열하는 것이 아니라, 왜 이 순서로 준비해야 하는지와 어디서 가장 자주 막히는지를 함께 설명합니다.
 
-#### 어떻게 활용하면 좋은가
+#### 왜 먼저 읽어야 하는가
 
-- 먼저 스키마를 직접 생성합니다.
-- 샘플 데이터를 넣고 문제를 한 번 스스로 풉니다.
-- 그 다음 `EXPLAIN`, 인덱스, 실행 순서를 함께 생각합니다.
-- 가능하면 JPA 또는 MyBatis 코드로도 한 번 연결해봅니다.
-#### 실습용 스키마
+Spring 학습 초반에는 문법보다 **실행 가능한 환경을 먼저 확보하는 것**이 더 중요합니다. 환경이 흔들리면 예제 코드가 틀린 것인지, 내 설정이 잘못된 것인지 구분하기 어려워집니다. 이 문서는 그런 혼란을 줄이기 위한 출발점입니다.
 
-```sql
-CREATE DATABASE company_db;
-USE company_db;
+#### 대상 독자
 
-CREATE TABLE departments (
-  department_id INT PRIMARY KEY,
-  department_name VARCHAR(50) NOT NULL
-);
+- Java 문법과 IDE 사용 경험은 있지만 Spring 프로젝트 실행은 아직 익숙하지 않은 개발자
+- 강의나 책의 예제를 따라 하다가 JDK, 빌드 도구, IDE 설정 문제로 자주 막히는 개발자
+- 실습 전에 개발 환경을 한 번 정리하고 싶었던 초중급 Java 개발자
+#### 준비물과 권장 기준
 
-CREATE TABLE employees (
-  employee_id INT PRIMARY KEY,
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
-  email VARCHAR(100),
-  hire_date DATE,
-  department_id INT,
-  CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES departments (department_id)
-);
+##### 필수 준비물
 
-CREATE TABLE salaries (
-  salary_id INT PRIMARY KEY,
-  employee_id INT,
-  salary_amount DECIMAL(10,2),
-  start_date DATE,
-  end_date DATE,
-  CONSTRAINT fk_employee FOREIGN KEY (employee_id) REFERENCES employees (employee_id)
-);
+- JDK 21
+- IntelliJ IDEA 또는 VS Code
+- Git
+- Maven Wrapper가 포함된 Spring Boot 프로젝트
+##### 권장 기준
+
+- 현재 실습 저장소 기준은 **Java 21**입니다.
+- 일반적인 Spring Boot 예제는 Java 17에서도 많이 동작하지만, 저장소 기준 버전과 다르면 작은 설정 차이로 시간을 낭비할 수 있습니다.
+- 가능하면 실습 저장소의 기준 버전에 맞추는 편이 좋습니다.
+#### 1. JDK를 먼저 맞추는 이유
+
+Spring 실습에서 가장 먼저 확인해야 할 것은 IDE가 아니라 **JDK 버전**입니다. 컴파일러와 런타임 버전이 다르면 애플리케이션이 실행되지 않거나, Lombok과 같은 도구가 이상하게 동작할 수 있습니다.
+
+##### 확인 명령
+
+```bash
+java -version
+javac -version
 ```
 
-#### 샘플 데이터
+##### 체크 포인트
 
-이 문서는 기존 샘플 데이터를 그대로 사용해도 좋고, 직접 직원을 몇 명 더 추가해서 난이도를 높여도 좋습니다. 중요한 것은 문제를 풀 수 있는 최소 데이터셋을 직접 손에 익히는 것입니다.
+- `java`와 `javac`가 같은 버전을 가리키는지 확인합니다.
+- IDE 내부 JDK와 터미널 JDK가 서로 다른 경우가 많으므로 둘 다 점검합니다.
+- macOS, Windows, Linux 모두 `JAVA_HOME`과 PATH가 일관되게 잡혀 있는지 확인합니다.
+#### 2. IDE는 왜 IntelliJ IDEA를 우선 추천하는가
 
-#### 문제 구성
+VS Code로도 실습은 가능하지만, 초중급 개발자에게는 **프로젝트 구조를 눈으로 파악하기 쉬운 도구**가 더 유리합니다. Spring Boot 학습 초반에는 빠른 편집보다 구조 이해가 더 중요하므로 IntelliJ IDEA가 보통 더 적합합니다.
 
-##### 1. 기본 SELECT와 JOIN
+##### 추천 플러그인
 
-- 모든 직원 조회
-- 특정 부서 직원 조회
-- 직원과 부서를 조인해서 조회
-- 현재 급여만 필터링해서 조회
-- 입사일 기준 정렬과 상위 N건 조회
-##### 2. DDL과 DML
+- Lombok
+- Spring Boot
+- Spring Data
+##### IDE에서 확인할 설정
 
-- 부서 추가
-- 직원 추가
-- 컬럼 추가
-- 특정 직원 수정
-- 트랜잭션 시작 후 ROLLBACK 연습
-##### 3. 집계와 GROUP BY
+- Project SDK가 JDK 21로 지정되어 있는지 확인합니다.
+- Annotation Processing이 활성화되어 있는지 확인합니다.
+- Maven 프로젝트가 정상적으로 import 되었는지 확인합니다.
+#### 3. 프로젝트 생성보다 먼저 알아야 할 것
 
-- 부서별 직원 수
-- 부서별 평균 급여
-- 급여 구간별 분포
-- 중복 이메일 탐지
-##### 4. 서브쿼리와 고급 JOIN
+Spring Initializr로 프로젝트를 만드는 것은 어렵지 않습니다. 하지만 더 중요한 것은 **왜 그 의존성을 넣는지 이해하는 것**입니다. 의존성을 무작정 많이 넣으면 초반 학습 범위가 불필요하게 넓어집니다.
 
-- 두 번째로 높은 급여 찾기
-- 평균 이상 급여 직원 찾기
-- 부서 평균보다 높은 급여 찾기
-- 직원 수가 평균 이상인 부서 찾기
-##### 5. 윈도우 함수
+##### 권장 기본 설정
 
-- `ROW_NUMBER()`로 입사 순위 매기기
-- `RANK()`로 부서별 급여 순위 계산
-- `LAG()`로 급여 증가율 계산
-- `SUM() OVER (...)`로 누적합 계산
-#### 예시 문제
+- Project: Maven
+- Language: Java
+- Packaging: Jar
+- Java: 21
+##### 초반 학습용 권장 의존성
 
-##### 문제 1. 현재 재직 중인 직원의 현재 급여 조회
+- Spring Web
+- Spring Data JPA
+- Validation
+- H2 Database
+- Lombok
+- Spring Boot Starter Test
+##### 왜 이 조합이 적절한가
 
-```sql
-SELECT e.employee_id, e.first_name, e.last_name, s.salary_amount
-FROM employees e
-JOIN salaries s ON e.employee_id = s.employee_id
-WHERE s.end_date = '9999-12-31';
+- `Spring Web`: HTTP 요청과 컨트롤러 흐름을 이해하기 좋습니다.
+- `Spring Data JPA`: 엔티티, 리포지토리, 트랜잭션 개념을 함께 익힐 수 있습니다.
+- `Validation`: 요청 검증을 일찍 경험할 수 있습니다.
+- `H2 Database`: 로컬에서 빠르게 실습하기 좋습니다.
+- `Spring Boot Starter Test`: 테스트 습관을 초반부터 잡을 수 있습니다.
+#### 4. 프로젝트 구조는 어디까지 먼저 이해하면 되는가
+
+초반에는 모든 패키지와 설정을 한 번에 이해하려고 하지 않는 편이 좋습니다. 먼저 아래 네 가지 위치만 익혀도 실습을 시작하는 데 충분합니다.
+
+```text
+src/main/java
+src/main/resources
+src/test/java
+pom.xml
 ```
 
-##### 문제 2. 부서별 평균 급여 구하기
+##### 의미
 
-```sql
-SELECT d.department_name, ROUND(AVG(s.salary_amount), 2) AS avg_salary
-FROM departments d
-JOIN employees e ON d.department_id = e.department_id
-JOIN salaries s ON e.employee_id = s.employee_id
-WHERE s.end_date = '9999-12-31'
-GROUP BY d.department_name;
+- `src/main/java`: 애플리케이션 코드가 들어갑니다.
+- `src/main/resources`: 설정 파일과 리소스가 들어갑니다.
+- `src/test/java`: 테스트 코드가 들어갑니다.
+- `pom.xml`: 의존성과 빌드 설정이 들어갑니다.
+##### 초반에 특히 눈여겨볼 것
+
+- `application.yml` 또는 `application.properties`
+- 메인 애플리케이션 클래스
+- 가장 단순한 Controller 또는 Test 코드
+#### 5. 실행 전에 반드시 확인할 설정
+
+프로젝트를 바로 실행하기 전에, 어떤 프로파일과 어떤 데이터베이스를 바라보는지 먼저 확인해야 합니다. 이 저장소는 추상적인 `local/dev` 설명보다, **실제 `application-*.yml` 파일과 활성 프로파일 이름**을 기준으로 읽는 편이 정확합니다.
+
+##### 이 저장소에서 먼저 볼 파일
+
+- `src/main/resources/application.yml`
+- `src/main/resources/application-h2.yml`
+- `src/main/resources/application-dev-my.yml`
+- `src/main/resources/application-dev-pg.yml`
+- `src/main/resources/application-prod.yml`
+##### 우선 확인할 항목
+
+- 서버 포트
+- 기본 활성 프로파일이 무엇인지
+- 현재 실행이 `h2`, `dev-my`, `dev-pg`, `prod` 중 어느 환경인지
+- 데이터베이스 URL과 계정 정보가 파일 고정값인지 환경변수 주입인지
+- JPA SQL 로그와 DDL 전략이 어떤 값으로 설정되어 있는지
+##### 왜 중요한가
+
+- 포트 충돌은 가장 흔한 실행 실패 원인입니다.
+- 프로파일이 다르면 같은 코드도 완전히 다르게 동작합니다.
+- 데이터베이스 설정을 모르면 오류 메시지를 읽어도 원인을 찾기 어렵습니다.
+- `create-drop`, `update`, `validate` 같은 전략은 환경 목적과 함께 읽어야 의미가 맞습니다.
+#### 6. 첫 실행은 어떻게 해야 하는가
+
+첫 실행의 목표는 기능 확인이 아니라 **애플리케이션이 정상적으로 뜨는지 확인하는 것**입니다. 처음부터 API 호출과 DB 저장까지 다 보려고 하면 문제 범위가 너무 넓어집니다.
+
+##### 실행 명령
+
+```bash
+./mvnw spring-boot:run
 ```
 
-##### 문제 3. 급여 순위 매기기
+이 저장소는 기본 활성 프로파일이 `h2`이므로, 위 명령은 별도 옵션이 없으면 H2 환경으로 실행됩니다.
 
-```sql
-SELECT e.employee_id,
-       e.first_name,
-       e.last_name,
-       s.salary_amount,
-       DENSE_RANK() OVER (ORDER BY s.salary_amount DESC) AS salary_rank
-FROM employees e
-JOIN salaries s ON e.employee_id = s.employee_id
-WHERE s.end_date = '9999-12-31';
+필요하면 아래처럼 프로파일을 명시해서 실행할 수 있습니다.
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=h2
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-my
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-pg
 ```
 
-#### 연습할 때 체크할 포인트
+##### 첫 실행에서 볼 것
 
-- `INNER JOIN`과 `LEFT JOIN`의 차이를 정확히 구분했는가
-- 집계 쿼리에서 `GROUP BY`와 `WHERE`, `HAVING` 순서를 이해했는가
-- 서브쿼리 대신 JOIN으로 바꿀 수 있는지 생각해봤는가
-- 윈도우 함수가 일반 집계와 어떻게 다른지 이해했는가
-#### Java 프로젝트와 연결하기
+- 애플리케이션이 예외 없이 기동되는지
+- 내장 서버가 지정한 포트에서 뜨는지
+- DB 연결 오류가 없는지
+- 현재 프로파일에 맞는 설정이 실제로 반영되는지
+- Swagger나 가장 단순한 엔드포인트로 기본 응답을 확인할 수 있는지
 
-이 연습은 SQL만의 문제가 아닙니다.
+---
 
-- JPA에서는 어떤 쿼리가 N+1로 이어질지 감을 잡게 해줍니다.
-- MyBatis에서는 어떤 조회를 XML로 분리하면 좋은지 감을 잡게 해줍니다.
-- Querydsl에서는 어떤 조건 조합이 동적 쿼리 후보인지 보이기 시작합니다.
+### ✏️ 직접 해보기
+
+Spring Initializr로 프로젝트를 만들어 내장 톰캣으로 실행해 보라.
+
+## 5.2 Maven 환경 구성과 프로젝트 전환
+
+**🎯 목표**: Maven으로 의존성·빌드를 관리한다.
+
+#### 개요
+
+이 문서는 Java 학습 환경을 `javac` 중심의 수동 실행에서 `Maven` 기반 프로젝트 구조로 전환할 때 필요한 흐름을 정리한 가이드입니다. 초중급 Java 개발자에게는 빌드 도구를 이해하는 시점이 중요합니다. Maven을 도입하면 의존성 관리, 표준 디렉터리 구조, 테스트 실행, 패키징 과정을 한 번에 통일할 수 있습니다.
+
+#### 왜 중요한가
+
+- 프로젝트 구조가 팀 단위로 일관됩니다.
+- 라이브러리 버전을 직접 관리하지 않아도 됩니다.
+- 테스트와 빌드 명령을 반복 가능한 형태로 고정할 수 있습니다.
+- 이후 Spring Boot, JUnit, Querydsl 같은 도구를 붙이기 쉬워집니다.
+#### 대상 독자
+
+- Java 프로젝트를 IDE에서만 실행해본 개발자
+- `pom.xml`이 무엇을 하는지 아직 감이 약한 개발자
+- 기존 수동 구조를 Maven 표준 구조로 옮기고 싶은 개발자
+#### 준비물
+
+- JDK 설치 및 `JAVA_HOME` 설정
+- 터미널 또는 명령 프롬프트 사용 가능 환경
+- IntelliJ IDEA 또는 VS Code
+#### Maven 설치와 확인
+
+##### 설치
+
+- 공식 사이트에서 바이너리를 내려받아 압축을 해제합니다.
+- Windows는 `MAVEN_HOME`, macOS 또는 Linux는 셸 환경 변수에 Maven 경로를 설정합니다.
+- `PATH`에 Maven의 `bin` 경로를 추가합니다.
+##### 확인
+
+```bash
+mvn -version
+```
+
+```text
+예상 결과
+- Apache Maven 버전이 표시됩니다.
+- Java version 항목이 함께 표시됩니다.
+- Maven home 또는 실행 경로가 표시됩니다.
+```
+
+정상이라면 Maven 버전, Java 버전, 실행 경로가 함께 출력됩니다.
+
+#### 이번 원고에서 Maven을 읽는 기준
+
+이 원고는 Maven을 하나의 프로젝트에만 묶어서 설명하지 않습니다.
+
+##### `day_by_spring`
+
+- Maven Wrapper(`./mvnw`)를 사용합니다.
+- 팀 단위로 Maven 버전을 통일하고 싶을 때 더 적합합니다.
+##### `day-by-java`
+
+- 현재는 Wrapper 없이 `pom.xml` 중심의 예제 프로젝트입니다.
+- 따라서 시스템에 설치된 `mvn` 명령으로 실행하는 전통적인 Maven 흐름을 보기 좋습니다.
+즉, 책에서는 **실무형 저장소는 Wrapper 중심**, **예제형 저장소는 기본 Maven 구조 이해용**으로 구분해서 설명하는 편이 자연스럽습니다.
+
+#### Maven 프로젝트 구조 이해하기
+
+Maven은 아래 구조를 기본으로 사용합니다.
+
+```text
+project-root
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   └── resources
+    └── test
+        ├── java
+        └── resources
+```
+
+이 구조를 이해하면 소스 코드, 설정 파일, 테스트 코드의 위치가 자연스럽게 정리됩니다.
+
+#### 새 프로젝트를 Maven으로 시작하기
+
+가장 단순한 예시는 archetype 기반 생성입니다.
+
+```bash
+mvn archetype:generate \
+  -DgroupId=com.example \
+  -DartifactId=myapp \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DinteractiveMode=false
+```
+
+이 방식은 학습용으로 유용하지만, 실무에서는 Spring Initializr나 팀 템플릿을 더 자주 사용합니다.
+
+#### 기존 프로젝트를 Maven 구조로 옮기기
+
+##### 1. 디렉터리부터 정리하기
+
+- 기존 `src` 아래 Java 파일은 `src/main/java`로 이동합니다.
+- 설정 파일은 `src/main/resources`로 이동합니다.
+- 테스트 코드는 `src/test/java`로 분리합니다.
+##### 2. `pom.xml` 작성하기
+
+`pom.xml`은 이 프로젝트의 빌드 규칙과 의존성을 설명하는 문서입니다.
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>myapp</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>
+```
+
+지금 저장소 기준으로는 Java 21과 Maven Wrapper를 쓰는 방식이 더 자연스럽습니다.
+
+#### 자주 쓰는 Maven 명령
+
+##### Wrapper가 있는 프로젝트 (`day_by_spring`)
+
+```bash
+./mvnw clean compile
+./mvnw test
+./mvnw clean package
+```
+
+```text
+예상 결과
+- `compile`: `target/classes` 아래에 컴파일 결과가 생성됩니다.
+- `test`: 테스트 리포트와 함께 성공/실패 여부가 출력됩니다.
+- `package`: `target/` 아래에 실행 가능한 JAR이 생성됩니다.
+```
+
+##### 시스템 Maven을 쓰는 프로젝트 (`day-by-java`)
+
+```bash
+mvn clean compile
+mvn test
+mvn package
+```
+
+```text
+예상 결과
+- `compile`: 소스 코드가 컴파일되고 문법 오류가 있으면 여기서 실패합니다.
+- `test`: 테스트가 있으면 실행되고, 없으면 빌드 흐름만 계속 진행됩니다.
+- `package`: JAR 산출물이 생성됩니다.
+```
+
+- `compile`: 컴파일만 수행합니다.
+- `test`: 테스트를 실행합니다.
+- `package`: JAR 또는 WAR 같은 산출물을 만듭니다.
+#### 기존 방식과 무엇이 달라지는가
+
+##### Before
+
+- 클래스 경로를 직접 잡아야 했습니다.
+- 라이브러리를 수동으로 추가했습니다.
+- 프로젝트 구조가 사람마다 달랐습니다.
+##### After
+
+- 표준 디렉터리 구조를 따릅니다.
+- 의존성과 플러그인을 `pom.xml`에서 관리합니다.
+- 빌드와 테스트가 명령 한 줄로 재현됩니다.
+#### 자주 하는 실수
+
+- `JAVA_HOME`은 맞는데 `PATH`에 Maven이 빠져 있는 경우
+- `src/main/resources` 대신 Java 코드 옆에 설정 파일을 두는 경우
+- Java 버전과 `pom.xml`의 컴파일 버전이 다른 경우
+- `mvn`만 믿고 Wrapper(`./mvnw`)를 쓰지 않아 팀 환경이 갈리는 경우
+
+### ✏️ 직접 해보기
+
+`pom.xml`에 의존성을 하나 추가하고 빌드해 적용되는지 확인하라.
+
 #### 정리
 
-SQL 실력은 문법 암기보다 문제를 많이 풀어보는 과정에서 자랍니다. 특히 JOIN, 집계, 윈도우 함수는 실무에서 계속 반복되므로, 단순한 정답 작성보다 왜 그 쿼리를 선택했는지 설명할 수 있어야 합니다.
+Maven은 단순한 라이브러리 다운로드 도구가 아니라, Java 프로젝트의 구조와 실행 방식을 표준화하는 핵심 도구입니다. 학습 단계에서 Maven 구조를 익혀두면 Spring Boot 프로젝트를 다룰 때도 훨씬 수월해집니다.
 
 #### 한 줄 정리
 
-SQL 연습의 목표는 쿼리를 쓰는 손보다, 데이터를 읽는 눈을 기르는 데 있습니다.
+Maven 도입의 핵심은 빌드 명령 하나가 아니라, 프로젝트 구조와 협업 방식을 표준화하는 데 있습니다.
 
 
 ---
 
-## 6.12-1 SQL 연습 문제 풀이
+## 5.3 프로파일 설정 가이드
 
-**🎯 목표**: SQL 연습 문제 풀이를 단계별로 확인한다.
+**🎯 목표**: 프로파일로 dev/prod 환경을 분리한다.
 
-<!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
+<!-- 2026-06-29 라이브 Notion에서 수집 (4월 ingest 이후 추가분) -->
 
 ### 개요
-이 문서는 `SQL 연습 문제`의 풀이 가이드입니다. 정답만 나열하기보다, 왜 그 쿼리를 선택했는지와 다른 방식으로 풀 수 있는지까지 함께 보는 것이 목적입니다. 초중급 Java 개발자라면 결과를 맞히는 것에서 멈추지 않고, 실행 방식과 대안까지 설명할 수 있어야 합니다.
+이 문서는 `day_by_spring` 프로젝트를 기준으로 Spring Boot 프로파일을 어떻게 나누고 실행하는지 정리한 가이드입니다. 이 저장소는 추상적인 `local/dev/test/prod` 예시를 설명하는 문서가 아니라, **실제 `application-*.yml` 파일 구조와 실행 명령을 기준으로 읽어야 하는 문서**입니다.
 
-### 풀이를 읽는 방법
-- 먼저 문제를 스스로 풀어봅니다.
-- 그 다음 이 문서의 풀이와 비교합니다.
-- 결과가 같아도 JOIN 방식, 필터 위치, 윈도우 함수 사용 여부를 다시 봅니다.
-- 가능하면 `EXPLAIN`으로 실행 계획까지 확인합니다.
+### 왜 중요한가
+Spring Boot는 활성 프로파일에 따라 `application-{profile}.yml`을 함께 읽습니다. 따라서 같은 코드라도 어떤 프로파일로 실행하느냐에 따라 데이터베이스, 로그 레벨, DDL 전략, SQL 출력 방식이 달라질 수 있습니다. 프로파일을 코드와 분리해서 외운다면 실행은 되더라도 왜 그렇게 동작하는지 이해하기 어렵습니다.
 
-### 기본 SELECT와 JOIN 풀이
-
-#### 모든 직원 정보 조회
-```sql
-SELECT *
-FROM employees;
+### 1. 이 프로젝트의 실제 프로파일 구조
+현재 저장소의 기준 파일은 아래와 같습니다.
+```text
+src/main/resources/application.yml
+src/main/resources/application-h2.yml
+src/main/resources/application-dev-my.yml
+src/main/resources/application-dev-pg.yml
+src/main/resources/application-prod.yml
+src/test/resources/application.yml
+src/test/resources/application-dev-pg.yml
 ```
-가장 단순한 형태입니다. 실제 서비스에서는 `SELECT *`보다 필요한 컬럼만 고르는 습관이 더 좋습니다.
-
-#### 특정 부서 직원 조회
-```sql
-SELECT e.employee_id, e.first_name, e.last_name, d.department_name
-FROM employees e
-JOIN departments d ON e.department_id = d.department_id
-WHERE d.department_name = 'Sales';
+기본 활성 프로파일은 `application.yml`에서 `h2`로 지정되어 있습니다.
+```yaml
+spring:
+  profiles:
+    active: h2
 ```
-이 문제의 핵심은 `employees`만으로는 부서명을 알 수 없기 때문에 `JOIN`이 필요하다는 점입니다.
+즉, 별도 옵션 없이 실행하면 먼저 H2 환경으로 기동됩니다.
 
-#### 특정 직원의 급여 이력 조회
-```sql
-SELECT salary_id, employee_id, salary_amount, start_date, end_date
-FROM salaries
-WHERE employee_id = 101
-ORDER BY start_date ASC;
+### 2. 프로파일별 역할
+
+#### h2
+- 기본 로컬 실행 프로파일입니다.
+- `application-h2.yml`이 함께 로드됩니다.
+- `jdbc:h2:mem:localdb`를 사용합니다.
+- `ddl-auto: create-drop`으로 빠르게 실습하기 좋습니다.
+- H2 콘솔(`/h2-console`)이 활성화되어 있습니다.
+
+#### dev-my
+- 로컬 MySQL 기반 개발 프로파일입니다.
+- `application-dev-my.yml`이 함께 로드됩니다.
+- 기본값은 `jdbc:mysql://localhost:3306/daybyspring`입니다.
+- `DEV_MY_DB_URL`, `DEV_MY_DB_USERNAME`, `DEV_MY_DB_PASSWORD` 환경변수로 덮어쓸 수 있습니다.
+- 현재 설정은 `ddl-auto: create-drop`입니다.
+
+#### dev-pg
+- 로컬 PostgreSQL 기반 개발 프로파일입니다.
+- `application-dev-pg.yml`이 함께 로드됩니다.
+- 기본값은 `jdbc:postgresql://localhost:5432/daybyspring`입니다.
+- `DEV_PG_DB_URL`, `DEV_PG_DB_USERNAME`, `DEV_PG_DB_PASSWORD` 환경변수로 덮어쓸 수 있습니다.
+- 현재 설정은 `ddl-auto: update`입니다.
+
+#### prod
+- 운영 환경 프로파일입니다.
+- `application-prod.yml`이 함께 로드됩니다.
+- PostgreSQL 기반으로 동작하며 DB 정보는 환경변수에서 주입받습니다.
+- `ddl-auto: validate`로 스키마를 검증만 하고 자동 변경하지 않습니다.
+- SQL 로그는 줄이고 운영 옵션을 우선합니다.
+
+### 3. 왜 `local/dev/test/prod` 일반론으로 설명하면 안 되는가
+이 저장소는 이름이 곧 프로파일 의미가 되는 구조가 아닙니다. 실제로는 아래처럼 역할이 분리되어 있습니다.
+- `h2`: 가장 가벼운 기본 로컬 실행
+- `dev-my`: MySQL 개발 환경
+- `dev-pg`: PostgreSQL 개발 환경
+- `prod`: 운영 환경
+즉, 이 프로젝트를 설명할 때 `local`이라는 이름을 기본값처럼 쓰면 실제 설정 파일과 바로 어긋납니다. 책 문서도 저장소 기반 설명을 할 때는 반드시 이 이름을 그대로 따라가야 합니다.
+
+### 4. 실행 방법
+
+#### 기본 실행
+```bash
+./mvnw spring-boot:run
 ```
-이력 조회에서는 정렬 기준이 빠지기 쉽습니다. 시간 축이 있는 데이터는 정렬까지 포함해야 의미가 살아납니다.
-
-### 집계와 GROUP BY 풀이
-
-#### 부서별 직원 수
-```sql
-SELECT d.department_id, d.department_name, COUNT(e.employee_id) AS employee_count
-FROM departments d
-LEFT JOIN employees e ON d.department_id = e.department_id
-GROUP BY d.department_id, d.department_name
-ORDER BY d.department_id;
+기본 활성 프로파일이 `h2`이므로 별도 옵션이 없으면 H2 환경으로 실행됩니다.
+```text
+예상 결과
+The following 1 profile is active: "h2"
+H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:localdb'
+Started SpringApplication in 3.x seconds
+Tomcat started on port 8080
 ```
-부서에 속한 직원이 한 명도 없더라도 결과에 보여야 하므로 `LEFT JOIN`이 자연스럽습니다.
 
-#### 부서별 평균 급여
-```sql
-SELECT d.department_name, ROUND(AVG(s.salary_amount), 2) AS avg_salary
-FROM departments d
-JOIN employees e ON d.department_id = e.department_id
-JOIN salaries s ON e.employee_id = s.employee_id
-WHERE s.end_date = '9999-12-31'
-GROUP BY d.department_name;
+#### h2 명시 실행
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=h2
 ```
-현재 급여만 보려면 종료일 조건을 함께 둬야 합니다. 그렇지 않으면 과거 급여 이력까지 평균에 섞입니다.
-
-### DDL과 DML 풀이
-
-#### 직원 추가
-```sql
-INSERT INTO employees (employee_id, first_name, last_name, email, hire_date, department_id)
-VALUES (121, 'David', 'Kim', 'david.kim2@example.com', '2023-08-01', 30);
+```text
+예상 결과
+The following 1 profile is active: "h2"
+H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:localdb'
+Started SpringApplication in 3.x seconds
 ```
-샘플 데이터와 충돌하지 않도록 새로운 식별자를 쓰는 것이 안전합니다.
 
-#### 트랜잭션과 ROLLBACK
-```sql
-START TRANSACTION;
-
-UPDATE employees
-SET first_name = CONCAT(first_name, '_updated')
-WHERE employee_id < 105;
-
-ROLLBACK;
+#### dev-my 실행
+```bash
+set -a; source .env; set +a
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-my
 ```
-이 문제는 SQL 문법보다, 변경 내용을 실제로 되돌릴 수 있다는 점을 체감하는 것이 중요합니다.
-
-### 서브쿼리와 고급 JOIN 풀이
-
-#### 두 번째로 높은 급여
-```sql
-SELECT e.employee_id, e.first_name, e.last_name, s.salary_amount
-FROM employees e
-JOIN salaries s ON e.employee_id = s.employee_id
-WHERE s.end_date = '9999-12-31'
-  AND s.salary_amount = (
-      SELECT DISTINCT salary_amount
-      FROM salaries
-      WHERE end_date = '9999-12-31'
-      ORDER BY salary_amount DESC
-      LIMIT 1, 1
-  );
+```text
+예상 결과
+The following 1 profile is active: "dev-my"
+HikariPool-1 - Starting...
+HikariPool-1 - Start completed.
+Started SpringApplication in 4.x seconds
 ```
-이 문제는 단순 정렬과 `LIMIT`만으로도 풀 수 있지만, 윈도우 함수로 다시 풀어보면 더 안정적인 해법을 익힐 수 있습니다.
+MySQL 접속 정보가 잘못되거나 서버가 없으면 `HikariPool ... Unable to acquire JDBC Connection` 오류가 발생합니다.
 
-#### 평균 이상 급여 직원 조회
-```sql
-SELECT e.employee_id, e.first_name, e.last_name, s.salary_amount
-FROM employees e
-JOIN salaries s ON e.employee_id = s.employee_id
-WHERE s.end_date = '9999-12-31'
-  AND s.salary_amount > (
-      SELECT AVG(salary_amount)
-      FROM salaries
-      WHERE end_date = '9999-12-31'
-  );
+#### dev-pg 실행
+```bash
+set -a; source .env; set +a
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-pg
 ```
-이 문제에서는 전체 평균을 먼저 계산한 뒤 비교하는 사고가 중요합니다.
-
-### 윈도우 함수 풀이
-
-#### 급여 순위 계산
-```sql
-SELECT e.employee_id,
-       e.first_name,
-       e.last_name,
-       s.salary_amount,
-       DENSE_RANK() OVER (ORDER BY s.salary_amount DESC) AS salary_rank
-FROM employees e
-JOIN salaries s ON e.employee_id = s.employee_id
-WHERE s.end_date = '9999-12-31';
+```text
+예상 결과
+The following 1 profile is active: "dev-pg"
+HikariPool-1 - Starting...
+HikariPool-1 - Start completed.
+Started SpringApplication in 4.x seconds
 ```
-윈도우 함수는 집계 결과를 행 단위 데이터와 함께 보여줄 수 있다는 점이 핵심입니다.
 
-#### 급여 증가율 계산
-```sql
-SELECT e.employee_id,
-       s.salary_amount,
-       LAG(s.salary_amount) OVER (PARTITION BY e.employee_id ORDER BY s.start_date) AS previous_salary
-FROM employees e
-JOIN salaries s ON e.employee_id = s.employee_id;
+#### JAR 실행
+```bash
+java -jar -Dspring.profiles.active=h2 target/spring-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=dev-my target/spring-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=dev-pg target/spring-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=prod target/spring-0.0.1-SNAPSHOT.jar
 ```
-`LAG`를 이해하면 이력 데이터 분석 문제를 훨씬 쉽게 풀 수 있습니다.
+```text
+예상 결과
+The following 1 profile is active: "<지정한 프로파일>"
+기동 로그에서 활성 프로파일 이름과 Hikari 연결 풀 시작 여부를 확인합니다.
+```
 
-### 자주 틀리는 포인트
-- `LEFT JOIN`이 필요한 문제를 `INNER JOIN`으로 푸는 경우
-- 현재 급여 조건을 빠뜨리는 경우
-- `GROUP BY` 컬럼과 SELECT 컬럼 관계를 놓치는 경우
-- 윈도우 함수와 일반 집계 함수를 혼동하는 경우
+### 5. 테스트와 프로파일을 같이 볼 때의 기준
+이 저장소는 `src/test/resources/application.yml`과 `src/test/resources/application-dev-pg.yml`을 사용합니다.
+- `src/test/resources/application.yml`: `spring.test.database.replace=none`
+- `src/test/resources/application-dev-pg.yml`: `ddl-auto: create-drop`
+즉, 이 프로젝트의 테스트 설명을 할 때는 막연히 `test` 프로파일을 가정하기보다, **테스트 리소스 파일이 어떤 프로파일을 보조하는지** 같이 봐야 합니다.
+
+### 6. DDL 전략을 읽는 기준
+현재 저장소 기준으로 보면 다음처럼 이해하는 편이 정확합니다.
+- `h2`: 빠른 실습용이므로 `create-drop`
+- `dev-my`: 로컬 MySQL 실험용으로 `create-drop`
+- `dev-pg`: 개발 DB를 유지하며 검증하기 위해 `update`
+- `prod`: 운영 안정성을 위해 `validate`
+여기서 중요한 점은 `create-drop`, `update`, `validate`를 추상적으로 외우는 것이 아니라, **어떤 환경에서 어떤 위험을 감수하는지와 함께 읽는 것**입니다.
+
+### 7. 프로파일 문서를 읽을 때 먼저 확인할 항목
+- 현재 활성 프로파일이 무엇인가
+- 실제로 어떤 `application-{profile}.yml`이 로드되는가
+- DB URL이 어느 데이터베이스를 가리키는가
+- 민감 정보가 파일 고정값인지 환경변수 주입인지
+- DDL 전략이 현재 환경 목적과 맞는가
+- SQL 로그 수준이 디버깅용인지 운영용인지
+
+### 8. 자주 하는 실수
+- 저장소에는 없는 `local` 프로파일이 있다고 가정하는 것
+- `dev-my`와 `dev-pg`를 같은 개발 환경으로만 뭉뚱그려 설명하는 것
+- 운영 환경인데 `update` 같은 자동 변경 전략을 허용하는 것
+- 테스트 설명에서 실제 `src/test/resources` 구성을 보지 않는 것
+- 환경변수 주입 값을 문서에서 고정값처럼 오해하는 것
+
+### 공식 문서 기준으로 같이 보면 좋은 주제
+- Spring Boot Externalized Configuration
+- Spring Boot Profiles
+- Spring Boot Testing
+공식 문서는 프로파일별 설정 파일이 활성 프로파일에 따라 함께 로드된다는 구조와, 실행 시 프로파일을 바꾸는 방식을 기준으로 읽으면 됩니다.
+
+
+### ✏️ 직접 해보기
+
+`application-dev`·`application-prod`를 만들고 프로파일에 따라 다른 값이 주입되는지 확인하라.
 
 ### 정리
-풀이 문서는 정답 확인용 문서가 아니라, SQL 문제를 어떤 관점으로 접근해야 하는지 보여주는 해설서로 읽는 것이 좋습니다. 같은 결과를 내더라도 더 명확하고 유지보수하기 쉬운 SQL을 쓰는 방향으로 계속 다듬는 연습이 필요합니다.
+프로파일 설정의 핵심은 이름을 외우는 데 있지 않습니다. **현재 저장소가 어떤 프로파일 파일을 가지고 있고, 그 프로파일이 DB·로그·DDL 전략을 어떻게 바꾸는지**를 정확히 읽는 데 있습니다. 이 프로젝트에서는 `h2`, `dev-my`, `dev-pg`, `prod`가 실제 기준선입니다.
 
 ### 한 줄 정리
-좋은 SQL 풀이란 정답을 맞히는 것보다, 왜 그 쿼리가 적절한지 설명할 수 있는 풀이입니다.
+이 저장소의 프로파일 가이드는 일반론이 아니라, **`h2`를 기본으로 하고 `dev-my`, `dev-pg`, `prod`로 확장되는 실제 설정 구조**를 기준으로 이해해야 합니다.

@@ -1,25 +1,25 @@
 ---
-title: "Java 스터디 — 테스트와 품질"
+title: "Java 스터디 — 서버와 인증"
 type: source
 tags: [java, study, notion, ch08]
-sources: [java-study/java-study-ch08-테스트와품질.md]
+sources: [java-study/java-study-ch08-서버와인증.md]
 created: 2026-04-18
 updated: 2026-06-30
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재의 8장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
+> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 테스트와 품질
+# 서버와 인증
 
 ## 🎯 이 장에서 배우는 것
 
-- 테스트 피라미드(단위→통합→E2E)
-- Spring Boot 테스트 전략과 계산기 테스트 실습
-- curl로 API 수동 검증
+- Tomcat 실행과 서블릿 컨테이너 이해
+- Spring Security 인증 흐름
+- 토큰(JWT) 기반 인증 구현
 
-**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch07]] · **다음 장**: [[java-study-ch09]]
+**단계**: 2단계 — Spring & 웹 백엔드 · **앞 장**: [[java-study-ch07]] · **다음 장**: [[java-study-ch09]]
 
-> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 8.2 계산기 테스트를 직접 작성하고, 8.3에서 curl로 API를 찔러본다. 방법론: [[entity-tdd]].
+> **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 인증 흐름을 그림→코드 순으로 따라 구현한다.
 
 ---
 
@@ -27,540 +27,809 @@ updated: 2026-06-30
 
 ---
 
-## 8.0 테스트와 품질
+## 7.0 Tomcat 실행과 설정
 
-**🎯 목표**: 테스트 피라미드와 품질 전략의 큰 그림을 잡는다.
-
-<!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
-
-### 개요
-이 문서는 책의 `테스트와 품질` 챕터를 안내하는 문서입니다. 테스트는 기능이 다 만들어진 뒤 붙이는 보너스 작업이 아니라, **변경을 두려워하지 않게 만드는 구조적 장치**입니다.
-
-### 왜 중요한가
-Java와 Spring 실무에서는 기능 구현보다 유지보수가 더 오래 지속됩니다. 이때 테스트가 없으면 리팩터링, 버그 수정, 의존성 교체가 모두 위험한 작업이 됩니다.
-현재 `day_by_spring` 저장소도 이미 테스트를 여러 층으로 나눠 사용하고 있습니다. 도메인 모델 테스트, 서비스 단위 테스트, `@WebMvcTest` 기반 컨트롤러 테스트, `@DataJpaTest` 기반 리포지토리 테스트, `@SpringBootTest` 통합 테스트가 함께 존재합니다. 이 장은 그 구조를 읽는 법을 익히는 데 목적이 있습니다.
-
-### 이 챕터에서 다루는 범위
-- Spring Boot 테스트 도구 구성
-- 테스트 피라미드와 레이어별 테스트 선택
-- 단위 테스트와 슬라이스 테스트의 역할
-- 작은 예제를 통해 보는 테스트 가능한 구조
-- `curl`을 활용한 API 수동 검증과 자동화 테스트의 경계
-
-### 읽는 순서
-1. `Spring Boot 테스트 전략`
-1. `계산기 테스트 기초`
-1. `API 수동 검증: curl 활용`
-
-### 이 챕터를 읽을 때 체크할 것
-- 모든 테스트를 `@SpringBootTest`로 해결하려 하지 않는가
-- 테스트 대상이 서비스인지, 웹 계층인지, 저장소인지 먼저 구분하는가
-- 수동 확인과 자동화 테스트를 서로 대체재가 아니라 보완재로 보는가
-
-### 정리
-좋은 테스트 전략은 테스트가 많아 보이는 구조가 아니라, **어떤 문제를 어떤 레벨에서 검증할지 분명한 구조**입니다.
-
-### 한 줄 정리
-`테스트와 품질` 챕터의 핵심은 **변경 비용을 줄이는 검증 구조를 만드는 것**입니다.
-
-## 8.1 Spring Boot 테스트 전략
-
-**🎯 목표**: Spring Boot 테스트 전략(단위·슬라이스·통합)을 적용한다.
+**🎯 목표**: Tomcat 실행과 기본 설정을 이해한다.
 
 #### 개요
 
-이 문서는 Spring Boot 프로젝트에서 테스트를 어떤 레벨로 나누고, 어떤 도구를 선택해야 하는지 정리한 가이드입니다. 핵심은 테스트를 많이 쓰는 것이 아니라, **가장 적절한 범위로 검증하는 것**입니다.
+이 문서는 Java 웹 애플리케이션이 어떤 서버 위에서 실행되는지 이해하기 위한 Tomcat 입문 가이드입니다. Spring Boot를 주로 쓰는 요즘에도 Tomcat을 따로 배우는 이유는 단순합니다. **내장 톰캣이 대신해 주는 일이 무엇인지 알아야 서버 실행, 포트, 배포, 로그, JVM 옵션을 한 번에 이해할 수 있기 때문**입니다.
 
-#### 왜 중요한가
+이 장은 인증 문서보다 앞에 두는 것이 자연스럽습니다. 인증도 결국 HTTP 요청이 Tomcat 같은 서블릿 컨테이너를 통과해 필터 체인과 애플리케이션 코드로 들어오는 흐름 위에서 동작하기 때문입니다.
 
-Spring Boot는 웹, 데이터, 보안, 설정이 함께 묶인 프레임워크라서 테스트도 한 가지 방식으로 해결되지 않습니다. 모든 테스트를 무겁게 만들면 느리고, 모든 테스트를 가볍게 만들면 실제 동작을 놓치게 됩니다.
+#### 1. 웹 서버와 WAS를 먼저 구분해야 한다
 
-#### 1. 기본 출발점
+입문 단계에서 자주 섞이는 개념이 웹 서버와 WAS입니다.
 
-Spring Boot는 `spring-boot-starter-test`를 통해 테스트에 필요한 기본 구성을 제공합니다. 초중급 단계에서는 먼저 이 스타터가 어떤 테스트 도구를 묶어 주는지 이해하는 것이 좋습니다.
+- 웹 서버: 정적 파일 전달, 리버스 프록시, TLS 종료 같은 역할에 강합니다.
+- WAS: 애플리케이션 코드를 실행하고 동적 요청을 처리합니다.
+Tomcat은 흔히 WAS라고 부르지만, 더 정확히는 **서블릿 컨테이너를 중심으로 Java 웹 애플리케이션을 실행하는 서버**로 이해하는 편이 좋습니다. 핵심은 Tomcat이 HTTP 요청을 받아 서블릿 스펙에 맞는 실행 흐름으로 연결해 준다는 점입니다.
 
-#### 2. 테스트를 나누는 기본 기준
+#### 2. Tomcat이 실제로 해 주는 일
 
-##### 단위 테스트
+Tomcat을 공부할 때는 설치 방법보다 역할을 먼저 잡아야 합니다.
 
-Spring 컨테이너 없이, 클래스 하나나 협력 객체 몇 개만 검증합니다. 가장 빠르고, 실패 원인을 좁히기 쉽습니다.
+Tomcat은 대략 아래 일을 합니다.
 
-##### 슬라이스 테스트
+- HTTP 연결을 받아 요청을 해석합니다.
+- 요청과 응답 객체를 준비합니다.
+- 서블릿과 필터를 로딩하고 생명주기를 관리합니다.
+- 여러 요청을 스레드 기반으로 처리합니다.
+- 애플리케이션을 컨텍스트 경로 아래에 배포합니다.
+- 로그와 에러를 서버 수준에서 남깁니다.
+즉, Spring MVC나 Spring Security도 결국 Tomcat이 열어 준 요청 처리 파이프라인 위에서 돌아갑니다.
 
-웹 계층이나 JPA 계층처럼 특정 레이어만 잘라서 검증합니다. 단위 테스트보다 실제 프레임워크와 더 가깝고, 전체 통합 테스트보다 가볍습니다.
+현재 `day_by_spring` 저장소 기준으로는 이 흐름을 아래처럼 더 구체적으로 볼 수 있습니다.
 
-##### 통합 테스트
+```text
+HTTP 요청
+  ↓
+내장 Tomcat
+  ↓
+Spring Security Filter Chain
+  ↓
+JwtAuthenticationFilter
+  ↓
+Controller / Service
+```
 
-여러 레이어를 함께 붙여 실제 동작을 확인합니다. 설정, 트랜잭션, 직렬화, 보안 필터 같은 경계 지점을 검증할 때 필요합니다.
+이 연결을 먼저 이해해야 뒤 문서의 `AuthenticationManager`, `SecurityContextHolder`, Bearer 토큰 흐름이 덜 추상적으로 읽힙니다.
 
-#### 3. Spring Boot에서 자주 쓰는 테스트 애노테이션
+#### 3. Spring Boot에서는 왜 Tomcat을 덜 의식하게 되는가
 
-##### `@WebMvcTest`
+Spring Boot의 서블릿 웹 애플리케이션은 보통 내장 톰캣으로 실행됩니다. 그래서 개발자는 별도 톰캣을 설치하지 않고도 `java -jar`나 `spring-boot:run`으로 애플리케이션을 바로 띄울 수 있습니다.
 
-컨트롤러, JSON 직렬화, 요청/응답 매핑 같은 웹 계층 검증에 적합합니다. 서비스와 리포지토리까지 전부 띄우는 대신, 웹 레이어에 집중합니다.
+하지만 이 편의성 때문에 오히려 아래 개념이 흐려지기 쉽습니다.
 
-##### `@DataJpaTest`
+- 포트 8080은 어디서 열리는가
+- 요청은 어떤 서버가 먼저 받는가
+- WAR 배포와 JAR 실행은 무엇이 다른가
+- JVM 옵션은 어디에 붙는가
+- 로그와 컨텍스트 경로는 누가 관리하는가
+외장 톰캣을 한 번이라도 이해해 두면, 내장 톰캣이 이 과정을 얼마나 많이 감춰주고 있는지 명확해집니다.
 
-리포지토리와 JPA 매핑, 쿼리 동작을 검증할 때 적합합니다. 영속성 계층만 빠르게 확인하고 싶을 때 유용합니다.
+#### 4. 내장 Tomcat과 외장 Tomcat의 차이
 
-##### `@SpringBootTest`
+##### 4.1 내장 Tomcat
 
-애플리케이션 전체를 실제와 가깝게 띄웁니다. 가장 강력하지만 가장 무겁기 때문에, 꼭 필요한 경계 검증에 집중해서 써야 합니다.
+내장 톰캣은 애플리케이션 안에 서버가 함께 포함되는 방식입니다.
 
-#### 4. 실무에서 추천하는 기본 조합
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=h2
+```
 
-- 도메인 로직과 서비스 규칙: 단위 테스트
-- 컨트롤러 요청/응답 검증: `@WebMvcTest`
-- JPA 매핑과 조회 검증: `@DataJpaTest`
-- 설정, 보안, 전체 흐름 검증: `@SpringBootTest`
-이 조합이 중요한 이유는, 테스트 실패 원인을 빨리 좁히면서도 실제 동작 검증을 놓치지 않기 때문입니다.
+```text
+예상 결과
+현재 저장소 기준 기본 실습 환경인 `h2` 프로파일로 애플리케이션이 실행되고,
+내장 Tomcat이 요청을 받은 뒤 Spring Security 필터 체인과 애플리케이션 코드로 요청을 넘긴다.
+```
 
-#### 현재 저장소에서 실제로 쓰는 조합
+또는 패키징 후 아래처럼 실행합니다.
 
-현재 `day_by_spring` 저장소는 추상적인 권장 조합이 아니라 아래 패턴을 실제로 사용합니다.
+```bash
+java -jar app.jar
+```
 
-- 서비스 단위 테스트: `@ExtendWith(MockitoExtension.class)` + 목 객체 (`AuthServiceImplTest`, `LoanServiceImplTest`)
-- 컨트롤러 슬라이스 테스트: `@WebMvcTest` + `@MockitoBean` + `MockMvc` (`LoanControllerTest`, `BookControllerTest`)
-- JPA 슬라이스 테스트: `@DataJpaTest` + `TestEntityManager` (`LoanRepositoryTest`, `BookRepositoryTest`)
-- 통합 테스트: `@SpringBootTest` (`OrderServiceIntegrationTest`, `AopLoggingIntegrationTest`)
+이 방식의 장점은 배포와 실행이 단순하다는 점입니다. 서버 설치보다 애플리케이션 실행에 집중할 수 있습니다.
+
+##### 4.2 외장 Tomcat
+
+외장 톰캣은 애플리케이션을 WAR 형태로 만들고, 이미 설치된 Tomcat 서버에 배포하는 방식입니다.
+
+이 방식의 장점은 여러 애플리케이션을 같은 서버에 배포하거나, 전통적인 운영 환경에서 서버와 애플리케이션을 분리해 관리할 수 있다는 점입니다. 대신 배포 구조와 서버 설정을 별도로 관리해야 합니다.
+
+#### 5. `CATALINA_HOME`과 `CATALINA_BASE`를 구분해야 한다
+
+Tomcat 공식 문서를 따라가다 보면 `CATALINA_HOME`과 `CATALINA_BASE`가 나옵니다. 이 둘을 같은 것으로만 이해하면 운영 구조를 놓치기 쉽습니다.
+
+- `CATALINA_HOME`: Tomcat 바이너리와 기본 설치 구조
+- `CATALINA_BASE`: 실행 인스턴스별 설정, 로그, 배포 대상 같은 런타임 구조
+작은 실습 환경에서는 둘을 같게 두어도 동작합니다. 하지만 운영에서는 Tomcat 설치본은 공통으로 두고, 인스턴스별 설정과 로그는 `CATALINA_BASE`로 분리하는 편이 더 유연합니다.
+
+#### 6. 설치보다 중요한 실행 구조
+
+Tomcat 설치 자체는 복잡하지 않습니다. 공식 배포판을 풀고, Java가 준비된 상태에서 `bin` 스크립트로 실행하면 됩니다.
+
+macOS 또는 Linux에서는 보통 아래 스크립트를 사용합니다.
+
+```bash
+$CATALINA_HOME/bin/startup.sh
+$CATALINA_HOME/bin/shutdown.sh
+```
+
+Windows에서는 `startup.bat`, `shutdown.bat`를 사용합니다.
+
+실습 수준에서는 `http://localhost:8080` 접속으로 확인하면 충분합니다. 다만 여기서 중요한 건 "페이지가 뜬다"보다 **어떤 프로세스가 어떤 포트를 열고 있는지**를 이해하는 것입니다.
+
+#### 7. 가장 자주 만지는 설정 세 가지
+
+##### 7.1 포트
+
+Tomcat은 기본적으로 8080 포트를 많이 사용합니다. 외장 톰캣에서는 `conf/server.xml`의 Connector 설정을 통해 포트를 바꿀 수 있습니다.
+
+```xml
+<Connector port="9090" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443" />
+```
+
+포트 충돌이 나면 서버가 시작되지 않을 수 있으므로, 먼저 어떤 프로세스가 그 포트를 쓰는지 확인해야 합니다.
+
+```bash
+lsof -i :8080
+```
+
+##### 7.2 JVM 옵션
+
+Tomcat도 결국 Java 프로세스이므로 JVM 옵션이 중요합니다. 다만 `startup.sh`를 직접 고치기보다, 공식 문서가 권장하는 방식처럼 `setenv.sh` 또는 `setenv.bat`로 분리하는 편이 관리에 유리합니다.
+
+```bash
+export JAVA_OPTS="$JAVA_OPTS -Xms512m -Xmx1024m"
+```
+
+이 방식이 좋은 이유는 Tomcat 기본 스크립트를 건드리지 않고 환경별 설정만 따로 관리할 수 있기 때문입니다.
+
+##### 7.3 로그
+
+실행 실패 원인은 대개 로그에 먼저 남습니다. Tomcat이 안 뜨거나 배포가 실패하면 브라우저보다 로그를 먼저 보는 습관이 중요합니다.
+
+```bash
+tail -f $CATALINA_BASE/logs/catalina.out
+```
+
+#### 8. Spring Boot에서는 무엇이 달라지는가
+
+Spring Boot에서는 위 설정 상당 부분을 애플리케이션 레벨에서 다룹니다.
+
+예를 들어 포트는 보통 `application.yml`에서 바꿉니다.
+
+```yaml
+server:
+  port: 9090
+```
+
+컨텍스트 경로도 마찬가지입니다.
+
+```yaml
+server:
+  servlet:
+    context-path: /api
+```
+
+즉, 외장 톰캣에서는 서버 설정 파일 중심으로 다루던 항목을, 내장 톰캣 환경에서는 애플리케이션 설정으로 더 자주 다루게 됩니다. 이 차이를 이해해야 운영 환경을 바꿔도 덜 헷갈립니다.
+
+#### 9. WAR 배포가 왜 필요한지 이해하기
+
+전통적인 Java 웹 애플리케이션에서는 WAR 패키징 후 외장 톰캣에 배포하는 방식이 일반적이었습니다. Spring Boot도 필요하면 여전히 이 방식을 지원합니다.
+
+이 흐름에서 핵심은 아래입니다.
+
+- 실행 주체가 `java -jar`가 아니라 외장 Tomcat이다.
+- 애플리케이션은 독립 실행형 JAR이 아니라 배포 대상 WAR이다.
+- 컨테이너가 애플리케이션을 로딩하고 시작한다.
+이 차이를 이해하면 내장 톰캣 기반 프로젝트와 전통적인 엔터프라이즈 배포 구조를 비교하기 쉬워집니다.
+
+#### 10. 자주 만나는 문제와 해석 방법
+
+##### 10.1 포트 충돌
+
+증상:
+
+- 서버 시작 실패
+- 이미 사용 중인 포트라는 메시지
+우선 확인:
+
+- 어떤 프로세스가 포트를 점유하는지
+- 내장 서버와 외장 서버를 동시에 띄운 것은 아닌지
+##### 10.2 권한 문제
+
+증상:
+
+- 실행 스크립트가 실행되지 않음
+우선 확인:
+
+```bash
+chmod +x $CATALINA_HOME/bin/*.sh
+```
+
+##### 10.3 배포는 됐는데 404가 난다
+
+우선 확인:
+
+- 컨텍스트 경로가 기대와 다른지
+- WAR 이름이 배포 경로에 영향을 주는지
+- 애플리케이션 로그에 초기화 실패가 있는지
+##### 10.4 메모리 문제
+
+우선 확인:
+
+- 애플리케이션 자체 메모리 문제인지
+
+---
+
+### ✏️ 직접 해보기
+
+내장 톰캣 포트를 바꿔 실행해 보라.
+
+## 7.1 Spring Security 인증 흐름
+
+**🎯 목표**: Spring Security의 인증 흐름을 따라 구현한다.
+
+#### 개요
+
+이 문서는 Spring Security를 처음 공부할 때 가장 먼저 잡아야 하는 **인증 흐름의 큰 그림**을 정리한 입문 가이드입니다. 설정 코드를 바로 읽기 시작하면 `filterChain`, `AuthenticationManager`, `SecurityContextHolder` 같은 이름이 한꺼번에 등장해서 구조가 잘 안 잡힙니다. 그래서 이 문서에서는 문법보다 먼저, 요청이 들어와서 인증 정보가 저장되고 인가 판단이 일어나는 흐름을 한 번에 연결합니다.
+
+#### 왜 이 문서가 먼저 필요한가
+
+`토큰 기반 인증`이나 `스프링 시큐리티 용어`를 각각 따로 읽으면 개념은 외워도 흐름이 끊기기 쉽습니다. 하지만 실제로는 아래 질문이 먼저 정리되어야 합니다.
+
+- 요청은 어디서부터 보안 검사를 받는가
+- 누가 사용자를 인증하는가
+- 인증 결과는 어디에 저장되는가
+- 권한 검사는 어느 시점에 일어나는가
+이 흐름이 잡히면 세션 기반 인증이든 토큰 기반 인증이든 같은 구조 위에서 이해할 수 있습니다.
+
+#### 현재 저장소 기준에서 먼저 연결할 것
+
+현재 `day_by_spring` 저장소는 **로그인 시점**과 **JWT 요청 시점**을 분리해서 봐야 합니다.
+
+- 로그인 요청 `/api/auth/login`: `AuthController` -> `AuthServiceImpl.login()` -> `AuthenticationManager.authenticate(...)` -> `JwtTokenProvider.createToken(...)`
+- 보호된 API 요청: `JwtAuthenticationFilter`가 `Authorization: Bearer ...` 헤더를 읽고 `validateToken()`과 `getAuthentication()`을 거쳐 `SecurityContextHolder`를 채웁니다.
+즉 현재 프로젝트에서 `AuthenticationManager`는 로그인 시점에 쓰이고, JWT가 포함된 모든 요청마다 다시 호출되는 구조는 아닙니다.
+
 ```java
-@ExtendWith(MockitoExtension.class)
-class AuthServiceImplTest {
-    @Mock private AuthenticationManager authenticationManager;
-    @Mock private JwtTokenProvider jwtTokenProvider;
-    @InjectMocks private AuthServiceImpl authService;
-}
+Authentication authentication = authenticationManager.authenticate(
+    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+);
+String jwt = jwtTokenProvider.createToken(authentication);
 ```
 
 ```java
-@WebMvcTest(LoanController.class)
-@AutoConfigureMockMvc(addFilters = false)
-class LoanControllerTest {
-    @MockitoBean private LoanService loanService;
-    @Autowired private MockMvc mockMvc;
-}
-```
-
-```java
-@DataJpaTest
-class LoanRepositoryTest {
-    @Autowired private TestEntityManager entityManager;
-    @Autowired private LoanRepository loanRepository;
+String jwt = resolveToken(httpServletRequest);
+if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
+    Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+    SecurityContextHolder.getContext().setAuthentication(authentication);
 }
 ```
 
 ```text
 예상 결과
-서비스 테스트는 빠르게 유스케이스 오케스트레이션을 검증한다.
-컨트롤러 테스트는 보안 필터를 끈 상태에서 HTTP 계약을 검증한다.
-리포지토리 테스트는 실제 JPA 매핑과 쿼리 동작을 확인한다.
+로그인 성공 시 Bearer access token이 발급된다.
+이후 보호된 요청에서는 필터가 토큰을 검증하고 SecurityContext에 인증 정보를 채운 뒤 인가 규칙이 적용된다.
 ```
 
-#### 5. 수동 검증은 왜 여전히 필요한가
+#### 1. 요청은 필터 체인부터 지난다
 
-자동화 테스트가 있더라도 `curl`, Swagger, Postman 같은 수동 검증은 여전히 의미가 있습니다. 특히 인증 헤더, 실제 JSON 바디, 운영과 유사한 요청 흐름은 수동 점검이 빠를 때가 많습니다. 다만 수동 검증은 회귀 방지를 대신하지 못하므로, 자동화 테스트와 역할을 분리해야 합니다.
+Spring Security는 서블릿 기반 애플리케이션에서 **필터 체인**을 통해 보안 처리를 시작합니다. 즉, 컨트롤러에 도달하기 전에 이미 인증과 인가 관련 로직이 앞단에서 실행됩니다.
 
-#### 6. 자주 하는 실수
+큰 흐름은 아래처럼 이해하면 됩니다.
 
-- 모든 테스트를 `@SpringBootTest`로만 작성하는 것
-- 컨트롤러 테스트에서 서비스 내부 로직까지 다 검증하려는 것
-- 테스트 데이터 준비가 너무 복잡해져 본론이 흐려지는 것
-- 성공 케이스만 작성하고 실패 케이스를 빼는 것
-#### 공식 문서 참고
+```text
+클라이언트 요청
+    ↓
+Tomcat 같은 서블릿 컨테이너
+    ↓
+Spring Security Filter Chain
+    ↓
+인증 처리
+    ↓
+SecurityContext 저장
+    ↓
+인가 판단
+    ↓
+컨트롤러 진입
+```
 
-- [Spring Boot Testing Reference](https://docs.spring.io/spring-boot/reference/testing/index.html)
-- [Spring Framework Testing](https://docs.spring.io/spring-framework/reference/testing.html)
-- [Spring Boot Test Auto-configuration Annotations](https://docs.spring.io/spring-boot/reference/test-auto-configuration/index.html)
+여기서 중요한 점은 Security가 컨트롤러 안쪽 기능이 아니라, **요청 입구에서 동작하는 구조**라는 것입니다.
+
+#### 2. 인증과 인가는 같은 일이 아니다
+
+이 구분이 안 되면 시큐리티 설정이 계속 헷갈립니다.
+
+- 인증(Authentication): 사용자가 누구인지 확인
+- 인가(Authorization): 그 사용자가 무엇을 할 수 있는지 판단
+예를 들어 로그인 성공 자체는 인증입니다. 하지만 `/admin` API에 접근 가능한지 확인하는 것은 인가입니다.
+
+#### 3. `Authentication`은 입력이기도 하고 결과이기도 하다
+
+Spring Security에서 `Authentication`은 두 번 등장합니다.
+
+첫 번째는 로그인 시도 단계입니다. 이때는 아직 인증되지 않은 자격 증명입니다.
+
+두 번째는 인증 성공 후 상태입니다. 이때는 현재 사용자의 principal, authorities 같은 정보가 담긴 결과 객체가 됩니다.
+
+이 차이를 이해하면 `UsernamePasswordAuthenticationToken`이 왜 어떤 순간에는 입력값처럼 보이고, 어떤 순간에는 인증 결과처럼 보이는지 자연스럽게 이해할 수 있습니다.
+
+#### 4. 누가 인증을 실제로 수행하는가
+
+핵심 역할은 `AuthenticationManager`가 맡습니다. 가장 흔한 구현은 `ProviderManager`이고, 실제 인증 방식은 여러 `AuthenticationProvider`가 나눠 처리합니다.
+
+즉, 구조는 대략 이렇습니다.
+
+```text
+Filter
+  ↓
+AuthenticationManager
+  ↓
+AuthenticationProvider
+  ↓
+인증 성공 또는 실패
+```
+
+이 구조가 중요한 이유는 인증 방식을 바꿔도 큰 틀은 유지되기 때문입니다.
+
+- 폼 로그인
+- 세션 로그인
+- JWT 검증
+- OAuth2 Resource Server
+방식은 달라도 결국 "필터가 인증 정보를 받고, 적절한 인증 처리 컴포넌트가 검증하고, 결과를 컨텍스트에 저장한다"는 큰 구조는 비슷합니다.
+
+다만 현재 저장소처럼 커스텀 JWT 필터를 두는 구조에서는, 로그인 이후의 요청 인증이 `AuthenticationManager`를 다시 거치지 않고 필터 내부에서 토큰 검증 후 `SecurityContext`를 채우는 형태가 될 수 있습니다.
+
+#### 5. 인증 결과는 `SecurityContextHolder`에 저장된다
+
+인증이 성공하면 Spring Security는 현재 요청의 인증 상태를 `SecurityContextHolder`를 통해 보관합니다.
+
+이 문맥 덕분에 이후 코드에서 현재 사용자를 꺼낼 수 있습니다.
+
+```java
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+String username = authentication.getName();
+```
+
+실무에서는 이 구조를 모르고 `principal`만 사용하다가, 필터 단계와 컨트롤러 단계의 연결을 놓치는 경우가 많습니다. 핵심은 **로그인 성공 자체보다, 그 결과가 현재 요청 문맥에 저장된다는 점**입니다.
+
+#### 6. 권한 판단은 인증 이후에 일어난다
+
+사용자가 누구인지 확인되었다고 해서 모든 API를 호출할 수 있는 것은 아닙니다. 이후에는 권한 판단이 이어집니다.
+
+보통 아래 같은 규칙이 여기에 해당합니다.
+
+- 로그인한 사용자만 접근 가능
+- 특정 역할이 있어야 접근 가능
+- 특정 scope가 있어야 접근 가능
+```java
+http
+    .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/public/**").permitAll()
+        .requestMatchers("/admin/**").hasRole("ADMIN")
+        .anyRequest().authenticated()
+    );
+```
+
+이 설정에서 `permitAll`, `authenticated`, `hasRole`은 모두 인가 규칙입니다.
+
+#### 7. 인증 실패와 인가 실패도 다르게 봐야 한다
+
+둘은 HTTP 응답도 보통 다르게 나타납니다.
+
+- 인증 실패: 아직 누구인지 확인되지 않음
+- 인가 실패: 누구인지는 알지만 권한이 부족함
+그래서 보안 문제를 디버깅할 때는 먼저 아래를 구분해야 합니다.
+
+- 토큰이 없거나 잘못되었는가
+- 로그인은 되었지만 권한이 부족한가
+이 차이를 구분하지 못하면 401과 403을 섞어 해석하게 됩니다.
+
+현재 `day_by_spring` 저장소 기준으로 보면 예시를 이렇게 잡을 수 있습니다.
+
+- 로그인 요청 `/api/auth/login`에서 잘못된 이메일/비밀번호: `AuthenticationManager` 단계 실패, `GlobalExceptionHandler`를 통해 `401 Unauthorized`
+- USER 토큰으로 `/api/admin/**` 접근: 인가는 되었지만 역할 부족, `403 Forbidden`
+```text
+예상 결과
+같은 보안 실패처럼 보여도 원인이 다르면 진단 지점도 달라진다.
+로그인 실패는 인증 흐름을 보고, 관리자 API 거부는 권한 규칙(`hasRole("ADMIN")`)을 봐야 한다.
+```
+
+#### 8. JWT를 써도 이 구조는 그대로 유지된다
+
+토큰 기반 인증을 쓰면 세션이 사라질 뿐, 보안 구조 자체가 없어지는 것은 아닙니다.
+
+JWT 기반 요청도 결국 아래 순서로 흘러갑니다.
+
+- 요청 헤더에서 토큰 추출
+- 필터에서 토큰 검증
+- 검증 성공 시 `Authentication` 생성
+- `SecurityContextHolder`에 저장
+- 이후 인가 규칙 적용
+즉, JWT는 인증 정보를 전달하는 방식이 다를 뿐, Spring Security의 큰 흐름을 대체하지 않습니다.
+
+#### 자주 헷갈리는 지점
+
+- Security 설정 클래스가 보안 전체 로직의 전부는 아닙니다.
+- 인증 객체와 회원 엔티티는 같은 것이 아닙니다.
+- JWT를 사용한다고 해서 SecurityContext가 없어지는 것은 아닙니다.
+- 컨트롤러에서 보안을 처리하는 것이 아니라 필터 체인 앞단에서 이미 상당 부분이 처리됩니다.
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [Servlet Authentication Architecture](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html)
+- [Authorization Architecture](https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html)
+- [OAuth 2.0 Bearer Tokens](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/bearer-tokens.html)
 
 ### ✏️ 직접 해보기
 
-`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라.
+폼 로그인을 설정해 인증된 사용자만 특정 URL에 접근하게 하라.
 
 #### 정리
 
-테스트 전략은 기술 선택 문제가 아니라 경계 설정 문제입니다. 무엇을 어디까지 검증할지 먼저 정하면, 애노테이션과 도구 선택은 그 다음에 자연스럽게 따라옵니다.
+Spring Security 입문의 핵심은 설정 메서드를 외우는 데 있지 않습니다. HTTP 요청이 필터 체인을 지나면서 인증되고, 그 결과가 `SecurityContext`에 저장되고, 그 다음 권한 판단이 일어난다는 흐름을 먼저 잡아야 합니다.
 
 #### 한 줄 정리
 
-Spring Boot 테스트의 핵심은 **가장 작은 비용으로 가장 큰 회귀 위험을 줄이는 검증 레벨을 고르는 것**입니다.
+Spring Security의 핵심은 `설정 코드`가 아니라, **요청이 인증되고 권한이 판단되는 전체 흐름**을 이해하는 것입니다.
 
 
 ---
 
-## 8.2 계산기 테스트 기초
+## 7.2 Spring Security 용어 정리
 
-**🎯 목표**: 계산기 예제로 단위 테스트 기초를 익힌다.
+**🎯 목표**: Spring Security 핵심 용어를 정리한다.
 
-<!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
+#### 개요
 
-### 개요
-이 문서는 작은 계산기 예제를 통해 **테스트 가능한 코드가 어떤 구조를 요구하는지** 설명하는 실습 문서입니다. 핵심은 계산기를 만드는 것이 아니라, 테스트가 가능하도록 책임을 분리하는 과정을 이해하는 데 있습니다.
+이 문서는 Spring Security를 읽을 때 반복해서 등장하는 핵심 용어를 정리한 책 본문 보조 문서입니다. 설정 코드가 어려운 이유는 문법보다 용어가 낯설기 때문입니다. 그래서 이 문서에서는 단어 뜻만 나열하지 않고, **각 용어가 인증 흐름에서 어디에 등장하는지**를 함께 설명합니다.
 
-### 왜 중요한가
-테스트는 완성된 코드에 붙이는 마지막 장식이 아닙니다. 테스트를 쓰려는 순간, 입력 파싱과 계산 규칙, 예외 처리, 출력 책임을 분리해야 한다는 사실이 드러납니다. 그래서 작은 예제일수록 구조 개선 연습에 적합합니다.
+#### 왜 용어 정리가 먼저 필요한가
 
-### 실습 목표
-- 연산 규칙을 순수한 계산 로직으로 분리하기
-- 입력 파싱과 계산 책임을 나누기
-- 성공 케이스와 실패 케이스를 JUnit 5로 검증하기
+Spring Security 문서를 읽다 보면 `Authentication`, `Principal`, `SecurityContextHolder`, `AuthenticationManager`, `GrantedAuthority` 같은 이름이 계속 나옵니다. 이 단어들을 흐름 없이 외우면 설정 코드가 암기 과목처럼 느껴집니다. 반대로 용어의 위치를 알고 나면 코드가 훨씬 덜 복잡해 보입니다.
 
-### 1. 처음 코드가 왜 테스트하기 어려운가
-아래와 같은 코드는 콘솔 입력, 문자열 파싱, 계산, 출력이 모두 `main` 메서드에 붙어 있어 테스트가 어렵습니다.
-- 입력을 직접 넣기 어렵습니다.
-- 계산 규칙만 따로 검증하기 어렵습니다.
-- 예외 상황을 세밀하게 확인하기 어렵습니다.
-즉, 문제는 계산기가 아니라 **책임 분리 실패**입니다.
+#### 가장 먼저 구분할 두 개념
 
-### 2. 첫 단계는 계산 규칙을 메서드로 분리하는 것이다
+- 인증(Authentication): 누구인지 확인하는 과정
+- 인가(Authorization): 무엇을 할 수 있는지 판단하는 과정
+이 두 개념을 섞어 이해하면 대부분의 보안 설정이 흐려집니다.
+
+#### 핵심 용어
+
+<!-- table -->
+#### 현재 저장소에서 특히 구분할 용어
+
+현재 `day_by_spring` 저장소에서는 아래 구분이 특히 중요합니다.
+
+- `AuthenticationManager`: 로그인 요청에서 이메일/비밀번호를 검증할 때 사용
+- `JwtAuthenticationFilter`: 보호된 요청에서 Bearer 토큰을 읽고 검증할 때 사용
+- `UserDetailsService`: 로그인 시 회원을 조회할 때 사용
+- `SecurityContextHolder`: 검증이 끝난 인증 객체를 현재 요청 문맥에 저장할 때 사용
 ```java
-public class Calculator {
-    public int calculate(int left, String operator, int right) {
-        return switch (operator) {
-            case "+" -> left + right;
-            case "-" -> left - right;
-            case "*" -> left * right;
-            case "/" -> {
-                if (right == 0) {
-                    throw new IllegalArgumentException("0으로 나눌 수 없습니다.");
-                }
-                yield left / right;
-            }
-            default -> throw new IllegalArgumentException("지원하지 않는 연산자입니다.");
-        };
-    }
-}
+Authentication authentication = authenticationManager.authenticate(authenticationToken);
+String jwt = jwtTokenProvider.createToken(authentication);
 ```
-이 단계만 해도 테스트는 훨씬 쉬워집니다. 입력과 출력이 아니라, 계산 규칙 자체를 검증할 수 있기 때문입니다.
 
-### 3. 입력 파싱은 별도 책임으로 분리한다
 ```java
-public record Expression(int left, String operator, int right) {
-}
-
-public class ExpressionParser {
-    public Expression parse(String input) {
-        String sanitized = input.replace("(", "")
-            .replace(")", "")
-            .trim();
-        String[] tokens = sanitized.split(" ");
-        if (tokens.length != 3) {
-            throw new IllegalArgumentException("수식 형식이 올바르지 않습니다.");
-        }
-        return new Expression(
-            Integer.parseInt(tokens[0]),
-            tokens[1],
-            Integer.parseInt(tokens[2])
-        );
-    }
-}
+UserDetails principal = new CustomUserDetails(memberId, email, name, authorities);
+return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 ```
-이제 파싱 실패와 계산 실패를 분리해서 테스트할 수 있습니다. 이 분리가 실제 서비스 코드에서도 매우 중요합니다.
 
-### 4. JUnit 5 테스트 예제
-```java
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-class CalculatorTest {
-
-    private final Calculator calculator = new Calculator();
-
-    @Test
-    @DisplayName("덧셈을 계산한다")
-    void addsNumbers() {
-        assertEquals(8, calculator.calculate(5, "+", 3));
-    }
-
-    @Test
-    @DisplayName("0으로 나누면 예외가 발생한다")
-    void rejectsDivisionByZero() {
-        assertThrows(IllegalArgumentException.class,
-            () -> calculator.calculate(5, "/", 0));
-    }
-
-    @Test
-    @DisplayName("지원하지 않는 연산자는 예외가 발생한다")
-    void rejectsUnsupportedOperator() {
-        assertThrows(IllegalArgumentException.class,
-            () -> calculator.calculate(5, "^", 2));
-    }
-}
-```
-이 테스트에서 중요한 점은 세 가지입니다.
-- 정상 흐름을 먼저 검증합니다.
-- 실패 케이스를 명시적으로 검증합니다.
-- 콘솔 출력이 아니라 핵심 규칙을 직접 검증합니다.
-
-### 5. 어디까지 테스트해야 하는가
-초중급 단계에서는 아래 순서로 보는 것이 좋습니다.
-1. 계산 규칙 테스트
-1. 파싱 규칙 테스트
-1. 두 객체를 엮는 작은 애플리케이션 서비스 테스트
-콘솔 `main` 메서드까지 무리하게 테스트하려 하기보다, 핵심 규칙을 먼저 보호하는 편이 훨씬 효과적입니다.
-
-### 6. 이 예제가 Spring Boot 테스트와 이어지는 이유
-이 계산기 예제는 아주 작지만, 실제 Spring Boot 구조와 동일한 감각을 요구합니다.
-- Controller는 입력을 받고
-- Service는 규칙을 처리하고
-- Parser나 Mapper는 변환을 담당합니다.
-테스트 전략도 같습니다. 규칙은 단위 테스트로, 웹 요청/응답은 슬라이스 테스트로, 전체 흐름은 통합 테스트로 검증합니다.
-현재 `day_by_spring` 저장소에서도 같은 감각이 보입니다.
-```java
-@DisplayName("Loan 엔티티 테스트")
-class LoanTest {
-
-    @Test
-    @DisplayName("회원 정보가 null이면 검증 실패")
-    void memberShouldNotBeNull() {
-        // Bean Validation 기반 도메인 규칙 검증
-    }
-}
-```
-```java
-@ExtendWith(MockitoExtension.class)
-@DisplayName("LoanService 테스트")
-class LoanServiceImplTest {
-
-    @Mock private LoanRepository loanRepository;
-    @Mock private BookRepository bookRepository;
-    @Mock private MemberRepository memberRepository;
-    @InjectMocks private LoanServiceImpl loanService;
-}
-```
 ```text
 예상 결과
-도메인 테스트는 엔티티 규칙과 상태 제약을 빠르게 검증한다.
-서비스 테스트는 저장소와 협력 객체를 목으로 두고 유스케이스 흐름과 예외 처리를 검증한다.
-계산기 예제에서 본 책임 분리가 실제 프로젝트에서도 거의 같은 방식으로 확장된다.
+로그인 시에는 이메일/비밀번호 검증이 수행되고,
+JWT 요청 시에는 토큰 클레임으로 Authentication이 다시 구성된다.
+현재 저장소의 JWT 요청 흐름은 매 요청마다 DB 재조회를 강제하는 구조가 아니라 토큰 클레임 기반 재구성에 가깝다.
 ```
 
-### 자주 하는 실수
-- 출력 결과만 눈으로 보고 테스트 코드를 생략하는 것
-- 성공 케이스만 테스트하고 실패 케이스를 빼는 것
-- 테스트하려고 하기보다, 테스트가 어려운 구조를 그대로 유지하는 것
+#### 1. `Authentication`은 가장 자주 등장하는 중심 객체다
 
-### 공식 문서 참고
-- [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
-- [Spring Boot Testing Reference](https://docs.spring.io/spring-boot/reference/testing/index.html)
+`Authentication`은 단순히 "로그인 여부"만 담는 값이 아닙니다. 보통 아래 정보를 함께 가집니다.
 
-### 정리
-좋은 테스트 예제는 화려한 프레임워크보다, 책임이 잘 나뉜 작은 코드에서 시작합니다. 계산기 같은 작은 문제를 테스트 가능하게 바꾸는 과정은 이후의 서비스, 컨트롤러, 리포지토리 테스트로 그대로 이어집니다.
+- principal: 현재 사용자 식별 정보
+- credentials: 자격 증명
+- authorities: 권한 목록
+- authenticated: 인증 여부
+중요한 점은 `Authentication`이 인증 전 입력값으로도 쓰이고, 인증 후 결과 객체로도 쓰인다는 점입니다.
 
-### 한 줄 정리
-테스트 가능한 코드의 핵심은 **테스트 기술보다 먼저, 책임이 나뉜 구조를 만드는 것**입니다.
+#### 2. `Principal`과 사용자 엔티티는 같은 것이 아니다
 
-## 8.3 API 수동 검증: curl 활용
+실무에서 자주 하는 오해가 이것입니다. `principal`은 현재 인증된 사용자를 대표하는 보안 관점의 정보이고, 애플리케이션의 회원 엔티티와 완전히 동일한 개념은 아닙니다.
 
-**🎯 목표**: curl로 API를 수동 검증한다.
+즉, 보안 계층이 필요로 하는 사용자 표현과 도메인 모델은 연결될 수는 있어도 항상 같지는 않습니다.
 
-### 개요
+#### 3. `AuthenticationManager`와 `AuthenticationProvider`
 
-이 문서는 `curl`을 사용해 HTTP API를 직접 검증하는 방법을 정리한 가이드입니다. 자동화 테스트가 있어도, 실제 요청과 응답을 눈으로 확인해야 하는 순간은 계속 존재합니다. 핵심은 수동 검증을 많이 하는 것이 아니라, **어떤 문제를 `curl`로 빨리 확인하고 어떤 문제를 자동화 테스트로 남길지 구분하는 것**입니다.
+Spring Security는 인증을 한 클래스가 전부 처리하지 않습니다.
+
+- `AuthenticationManager`: 인증 요청을 받아 적절한 처리로 위임
+- `AuthenticationProvider`: 실제 인증 로직 수행
+이 구조 덕분에 인증 방식이 달라도 큰 흐름은 유지됩니다.
+
+- 폼 로그인
+- 세션 기반 로그인
+- JWT 기반 요청 인증
+- OAuth2 기반 인증
+즉, 어떤 방식을 쓰더라도 "누가 인증을 총괄하고, 누가 실제 검증을 수행하는가"를 분리해서 볼 수 있습니다.
+
+#### 4. `UserDetailsService`는 회원 조회와 시큐리티 구조를 연결한다
+
+`UserDetailsService`는 보통 사용자 이름이나 이메일을 기준으로 회원 정보를 불러오는 역할을 맡습니다.
+
+실무에서 로그인 문제가 생기면 아래를 먼저 점검하게 됩니다.
+
+- 사용자를 제대로 찾는가
+- 비밀번호 비교가 올바른가
+- 권한 목록이 기대대로 붙는가
+즉, `UserDetailsService`는 DB 회원 정보와 시큐리티 인증 구조가 만나는 접점입니다.
+
+#### 5. `PasswordEncoder`는 비밀번호를 안전하게 다루기 위한 기본 장치다
+
+비밀번호는 평문 그대로 저장하면 안 됩니다. Spring Security에서는 `PasswordEncoder`를 통해 해시 기반 저장과 비교를 수행합니다.
+
+실무에서는 보통 아래 질문을 같이 보게 됩니다.
+
+- 회원가입 시 해시가 올바르게 적용되는가
+- 로그인 시 같은 인코더로 비교하는가
+- 테스트 코드가 평문 기준으로 오해를 만들고 있지 않은가
+#### 6. `SecurityContextHolder`는 현재 요청의 인증 상태를 보관한다
+
+인증이 성공하면 결과는 `SecurityContextHolder`를 통해 현재 실행 문맥에 저장됩니다.
+
+```java
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+```
+
+이 구조 덕분에 컨트롤러나 서비스에서 현재 사용자를 조회할 수 있습니다. 그래서 인증의 핵심은 로그인 API를 성공시키는 데서 끝나지 않고, **그 결과가 현재 요청 문맥에 반영되는가**까지 포함합니다.
+
+#### 7. `GrantedAuthority`는 권한 판단의 기본 단위다
+
+인가에서 핵심은 역할 이름 자체보다, 현재 사용자가 어떤 권한 목록을 갖고 있는가입니다. Spring Security는 이를 `GrantedAuthority`로 표현합니다.
+
+`ROLE_ADMIN`, `ROLE_USER` 같은 문자열을 보게 되는 이유도 이 구조 때문입니다. `hasRole`, `hasAuthority` 차이도 결국 이 권한 표현 방식과 연결됩니다.
+
+#### 8. 인증 실패와 인가 실패는 처리 지점이 다르다
+
+이 부분은 운영에서 특히 중요합니다.
+
+- `AuthenticationEntryPoint`: 인증이 안 된 요청을 처리
+- `AccessDeniedHandler`: 인증은 되었지만 권한이 부족한 요청을 처리
+이 둘을 구분해야 401과 403을 제대로 해석할 수 있습니다.
+
+#### 설정에서 자주 보이는 메서드
+
+- `authorizeHttpRequests()`: 요청별 인가 규칙 시작
+- `requestMatchers()`: 경로 패턴 지정
+- `permitAll()`: 인증 없이 허용
+- `authenticated()`: 인증된 사용자만 허용
+- `hasRole()`: 특정 역할 요구
+- `formLogin()`: 폼 로그인 설정
+- `logout()`: 로그아웃 흐름 설정
+- `sessionManagement()`: 세션 생성 정책 제어
+- `addFilterBefore()`: 커스텀 필터 순서 조정
+#### 실무 연결 포인트
+
+- 로그인 실패는 `UserDetailsService`와 `PasswordEncoder`부터 봅니다.
+- 권한 문제는 `GrantedAuthority`, `requestMatchers`, `hasRole`을 먼저 봅니다.
+- JWT를 쓰더라도 `Authentication`과 `SecurityContextHolder` 구조는 그대로 유지됩니다.
+- 필터 순서를 잘못 잡으면 인증이 되기도 전에 요청이 차단될 수 있습니다.
+#### 자주 헷갈리는 지점
+
+- 인증 객체와 회원 엔티티는 같은 것이 아닙니다.
+- `permitAll()`은 인증 없이 허용하는 것이지, 보안이 아예 없는 설정과는 다릅니다.
+- JWT를 도입한다고 해서 시큐리티 용어가 사라지지 않습니다.
+- `SecurityContextHolder`는 로그인 컨트롤러 안에서만 쓰는 것이 아닙니다.
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [Servlet Authentication Architecture](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html)
+- [Authorization Architecture](https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html)
+- [Password Storage](https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html)
+#### 정리
+
+Spring Security 용어는 단어 뜻만 아는 것으로는 부족합니다. 각 용어가 인증 흐름의 어느 지점에서 등장하는지 함께 이해해야 설정과 디버깅이 쉬워집니다.
+
+#### 한 줄 정리
+
+Spring Security 용어 학습의 핵심은 **단어 암기**가 아니라, 그 용어가 인증 흐름의 어디에 놓이는지 아는 것입니다.
+
+
+---
+
+## 7.3 토큰 기반 인증
+
+**🎯 목표**: 토큰(JWT) 기반 인증을 구현한다.
+
+#### 개요
+
+이 문서는 세션 기반 인증에서 토큰 기반 인증으로 사고를 확장할 때 꼭 알아야 할 개념을 정리한 입문 문서입니다. 초중급 Java 개발자에게는 `JWT를 쓰는 이유`, `Stateful과 Stateless의 차이`, `Spring Security에서 필터와 토큰이 어떻게 연결되는지`를 한 번에 이해하는 것이 중요합니다.
 
 #### 왜 중요한가
 
-테스트 코드는 회귀 방지에 강하지만, 실제 HTTP 요청을 한 번에 점검하는 데는 `curl`이 더 빠를 때가 많습니다. 특히 아래 상황에서는 수동 검증이 유용합니다.
+- 모바일 앱, SPA, API 서버 구조에서는 세션보다 토큰 기반 인증이 더 자연스러운 경우가 많습니다.
+- Spring Security를 공부할 때 인증과 인가, 필터 체인, SecurityContext를 함께 이해할 수 있습니다.
+- JWT를 도입할 때 무엇을 토큰에 넣어야 하고, 무엇을 넣으면 안 되는지 판단할 수 있습니다.
+#### 핵심 용어
 
-- 인증 헤더를 포함한 실제 요청을 바로 보내 보고 싶을 때
-- JSON 바디와 상태 코드를 빠르게 확인하고 싶을 때
-- 로컬 프로파일, 포트, 프록시, CORS 이전 단계 문제를 확인할 때
-- Swagger UI 없이도 재현 가능한 요청 스크립트를 남기고 싶을 때
-#### 이 문서의 역할
+##### 인증과 인가
 
-이 문서는 자동화 테스트를 대체하지 않습니다. 책 기준에서 `curl`은 아래 역할에 가깝습니다.
+- 인증(Authentication): 누구인지 확인하는 과정
+- 인가(Authorization): 무엇을 할 수 있는지 결정하는 과정
+##### Stateful과 Stateless
 
-- API 설계가 실제 요청/응답으로 어떻게 보이는지 확인한다.
-- 인증, 직렬화, 상태 코드 같은 경계 지점을 빠르게 점검한다.
-- 버그 재현 절차를 텍스트로 남긴다.
-반대로 아래는 자동화 테스트가 더 적합합니다.
+- Stateful: 서버가 로그인 상태를 기억합니다.
+- Stateless: 서버가 세션 상태를 기억하지 않고, 요청마다 토큰으로 검증합니다.
+##### JWT
 
-- 반복 실행이 필요한 회귀 검증
-- 비즈니스 규칙 검증
-- 레이어별 실패 원인 추적
-#### 1. 수동 검증 전에 먼저 확인할 것
+JWT는 `Header.Payload.Signature` 구조를 가지는 토큰입니다.
 
-좋은 `curl` 테스트는 명령보다 **사전 조건**이 먼저 분명해야 합니다.
+- Header: 토큰 종류와 알고리즘
+- Payload: 사용자 식별 정보, 권한, 만료 시간
+- Signature: 위변조 방지용 서명
+주의할 점은 Payload는 암호화 자체가 아니라 인코딩된 데이터로 이해해야 한다는 점입니다. 민감 정보는 넣지 않는 것이 원칙입니다.
 
-- 애플리케이션이 어떤 프로파일로 실행 중인가
-- 서버 주소와 포트는 무엇인가
-- 필요한 인증 토큰이 준비되었는가
-- 테스트용 데이터가 이미 있는가, 아니면 먼저 만들어야 하는가
-- 성공 기준이 응답 바디인지, 상태 코드인지, 둘 다인지
-이 기준이 없으면 `curl` 명령이 많아져도 문서 품질은 올라가지 않습니다.
+현재 `day_by_spring` 저장소는 토큰에 아래 성격의 정보를 담습니다.
 
-#### 2. 가장 먼저 보는 것은 상태 코드입니다
-
-초중급 단계에서 가장 흔한 실수는 JSON 바디만 보고 성공 여부를 판단하는 것입니다. 하지만 API 검증의 첫 줄은 상태 코드입니다.
-
-- `200 OK`: 조회나 수정이 정상 처리되었는가
-- `201 Created`: 생성 요청이 새 리소스를 만들었는가
-- `400 Bad Request`: 잘못된 요청 형식을 제대로 거부하는가
-- `401 Unauthorized`: 인증 없는 요청을 막는가
-- `403 Forbidden`: 권한 없는 사용자를 막는가
-- `404 Not Found`: 없는 리소스 접근을 적절히 처리하는가
-#### 3. 기본 `curl` 패턴
-
-##### GET 요청
-
-```bash
-curl -i http://localhost:8080/api/books/1
-```
-
-##### JSON 바디를 포함한 POST 요청
-
-```bash
-curl -i -X POST http://localhost:8080/api/books \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Effective Java",
-    "author": "Joshua Bloch"
-  }'
-```
-
-##### 인증 헤더 포함 요청
-
-```bash
-curl -i http://localhost:8080/api/client/loans \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+- `sub`: 이메일
+- `memberId`: 회원 ID
+- `name`: 회원 이름
+- `auth`: 권한 목록
+- `exp`: 만료 시각
+```java
+return Jwts.builder()
+        .setSubject(authentication.getName())
+        .claim("memberId", memberId)
+        .claim("name", name)
+        .claim("auth", authorities)
+        .setIssuedAt(new Date(now))
+        .setExpiration(validity)
+        .signWith(key, SignatureAlgorithm.HS256)
+        .compact();
 ```
 
 ```text
 예상 결과
-유효한 사용자 또는 관리자 토큰이면 현재 로그인 사용자의 대출 목록이 반환된다.
-이 프로젝트에서는 `@AuthenticationPrincipal CustomUserDetails`를 통해 토큰에서 복원된 `memberId`를 사용한다.
+토큰만으로도 현재 요청의 사용자 식별값과 권한 목록을 다시 구성할 수 있다.
+다만 Payload는 노출 가능한 영역이므로 비밀번호 같은 민감 정보는 넣지 않는 것이 원칙이다.
 ```
 
-##### PATCH 요청
+#### 세션과 토큰의 차이
 
-```bash
-curl -i -X PATCH http://localhost:8080/api/books/1 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Effective Java 3rd"
-  }'
+##### 세션 방식
+
+- 서버가 로그인 상태를 보관합니다.
+- 서버 수가 늘어나면 세션 공유 전략을 고민해야 합니다.
+##### 토큰 방식
+
+- 클라이언트가 토큰을 들고 다닙니다.
+- 서버는 요청마다 토큰의 유효성만 검증합니다.
+이 구조는 API 중심 서비스나 MSA, 모바일 앱 환경과 잘 맞습니다.
+
+#### Spring Security에서의 구현 흐름
+
+```mermaid
+graph LR
+    User -->|로그인 요청| Controller
+    Controller -->|인증 성공| TokenProvider
+    User -->|Bearer 토큰 포함 API 요청| Filter
+    Filter -->|토큰 검증| TokenProvider
+    Filter -->|인증 정보 저장| SecurityContext
 ```
 
-##### DELETE 요청
+핵심은 세 가지입니다.
 
-```bash
-curl -i -X DELETE http://localhost:8080/api/books/1
-```
+- 로그인 시 토큰 발급
+- 요청 시 필터에서 토큰 검증
+- 검증 성공 시 `SecurityContext`에 인증 정보 저장
+#### 현재 저장소 기준으로 보면
 
-여기서 중요한 것은 명령어 자체보다, **각 요청이 어떤 HTTP 의미를 가지는지 알고 보내는 것**입니다.
+현재 `day_by_spring` 저장소는 완전한 OAuth2 Resource Server 설정이 아니라, **Spring Security + 커스텀 JWT 필터** 구조를 사용합니다.
 
-#### 4. 추천 검증 순서
-
-책 기준에서 가장 실수 적은 순서는 아래와 같습니다.
-
-1. 서버 기동과 포트 확인
-1. 공개 조회 API로 기본 연결 확인
-1. `/api/auth/login`으로 토큰 발급 확인
-1. 보호된 사용자 API 검증
-1. 보호된 관리자 API 검증
-1. 잘못된 입력으로 `400` 확인
-1. 인증 실패와 권한 부족 흐름 확인
-1. 없는 ID로 요청해서 `404` 확인
-이 순서가 좋은 이유는, 환경 문제와 도메인 문제를 섞지 않게 해 주기 때문입니다.
-
-현재 저장소 기준으로는 아래 순서가 특히 자연스럽습니다.
-
-```text
-GET /api/books/{id}
-  → POST /api/auth/login
-  → GET /api/client/loans
-  → PUT /api/admin/members/{id}/promote
-```
-
-관리자 토큰과 일반 사용자 토큰을 나눠 보면 `hasRole("ADMIN")` 규칙 검증까지 한 번에 이어집니다.
-
-#### 5. 인증 API는 헤더와 실패 케이스를 같이 봅니다
-
-인증이 들어가는 API는 성공 요청만 보면 부족합니다. 최소한 아래 세 가지는 같이 확인하는 편이 좋습니다.
-
-- 토큰이 있을 때 정상 동작하는가
-- 토큰이 없을 때 요청이 차단되는가
-- 권한이 부족할 때 `403 Forbidden`이 나는가
-즉, 인증 API 검증은 “요청이 된다”가 아니라 **경계가 올바르게 막히는지**까지 포함해야 합니다.
-
-현재 저장소는 `AuthenticationEntryPoint`와 `AccessDeniedHandler`를 별도로 커스터마이징하지 않았습니다. 따라서 보호된 API에서 토큰이 없을 때의 정확한 실패 응답은 실제 실행 환경에서 확인하는 편이 안전합니다. 반면 **인증된 USER 토큰으로 `/api/admin/**`를 호출했을 때 권한 부족으로 차단되는 흐름은 반드시 확인해야 합니다.
-
-```bash
-curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" \
-  -H "Authorization: Bearer USER_ACCESS_TOKEN"
+```java
+http
+    .csrf(AbstractHttpConfigurer::disable)
+    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api/auth/**").permitAll()
+        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+        .requestMatchers("/api/client/**").hasAnyRole("USER", "ADMIN")
+        .anyRequest().authenticated()
+    )
+    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 ```
 
 ```text
 예상 결과
-관리자 권한이 없는 사용자 토큰이면 `403 Forbidden`으로 차단된다.
-현재 보안 설정의 `requestMatchers("/api/admin/**").hasRole("ADMIN")` 규칙이 실제로 동작하는지 확인하는 가장 짧은 검증이다.
+`/api/auth/**`는 로그인 전에도 호출할 수 있지만,
+관리자 API와 사용자 API는 Bearer 토큰이 있어야 필터 체인 뒤쪽으로 진행된다.
+세션은 저장되지 않고 요청마다 토큰으로 인증 상태를 다시 만든다.
 ```
 
-#### 6. 예제 프로젝트에 적용하는 방법
+#### 코드 예시
 
-도서 대여 같은 예제 프로젝트에서는 아래 흐름으로 검증 문서를 만들면 좋습니다.
+##### SecurityConfig
 
-- 회원가입 또는 기존 테스트 계정 확인
-- 로그인 후 JWT 토큰 발급
-- 공개 API와 보호된 API를 구분해 호출
-- 대출 생성
-- 내 대출 조회
-- 반납 또는 상태 변경
-- 권한 부족 요청으로 `403` 확인
-- 삭제 후 `404` 확인
-핵심은 특정 도메인이 아니라, **사전 데이터 생성 → 정상 흐름 → 오류 흐름** 순서가 보이는 것입니다.
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .addFilterBefore(jwtAuthenticationFilter,
+            UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}
+```
 
-로그인 실패도 별도 검증 가치가 있습니다.
+##### 로그인 후 토큰 발급
 
-```bash
-curl -i -X POST "http://localhost:8080/api/auth/login" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "hong@test.com",
-    "password": "wrong-password"
-  }'
+```java
+@PostMapping("/api/auth/login")
+public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+    Authentication authentication = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+    );
+
+    String accessToken = jwtTokenProvider.createToken(authentication);
+    return ResponseEntity.ok(
+        TokenResponse.builder()
+            .accessToken(accessToken)
+            .tokenType("Bearer")
+            .expiresIn(3600000L)
+            .build()
+    );
+}
 ```
 
 ```text
 예상 결과
-인증 실패 시 토큰은 발급되지 않는다.
-현재 저장소는 `GlobalExceptionHandler`에서 `AuthenticationException`을 받아 `401 Unauthorized`와 `AUTHENTICATION_FAILED` 형태의 응답으로 정리한다.
+로그인 성공 시 `accessToken`, `tokenType`, `expiresIn`이 포함된 응답이 반환된다.
+이 토큰은 이후 보호된 API 요청의 `Authorization: Bearer ...` 헤더에 담겨 사용된다.
 ```
 
-#### 7. `curl` 문서를 남길 때 좋은 형식
+##### 필터에서 토큰 검증
 
-좋은 수동 검증 문서는 아래 네 가지를 함께 남깁니다.
-
-- 사전 조건
-- 요청 명령
-- 기대 상태 코드
-- 기대 결과 요약
-예를 들면 아래처럼 적는 편이 좋습니다.
-
-```text
-목적: 없는 리소스 조회 시 404 확인
-사전 조건: ID 9999는 존재하지 않음
-요청: GET /api/books/9999
-기대 결과: 404 Not Found
+```java
+String token = resolveToken(request);
+if (token != null && jwtTokenProvider.validateToken(token)) {
+    Authentication auth = jwtTokenProvider.getAuthentication(token);
+    SecurityContextHolder.getContext().setAuthentication(auth);
+}
+chain.doFilter(request, response);
 ```
 
-이 정도만 있어도 나중에 버그 재현 문서로 바로 재사용할 수 있습니다.
+#### Bearer 토큰 요청 예시
+
+```bash
+curl -X PUT "http://localhost:8080/api/admin/members/1/promote" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+```
+
+이 요청에서 서버는 세션을 찾는 대신, 헤더의 토큰을 검사합니다.
+
+#### JWT와 Bearer 토큰을 구분해서 이해하기
+
+토큰 기반 인증이라고 해서 항상 JWT를 써야 하는 것은 아닙니다. HTTP에서는 보통 `Authorization: Bearer ...` 헤더로 토큰을 전달하고, JWT는 그 Bearer 토큰의 한 구현 방식일 수 있습니다.
+
+즉, 아래처럼 구분하면 혼란이 줄어듭니다.
+
+- Bearer Token: 요청이 토큰을 전달하는 방식
+- JWT: 토큰 안에 클레임과 서명을 담는 표현 형식 중 하나
+Spring Security에서도 직접 JWT를 파싱하는 커스텀 필터 구조를 만들 수 있고, OAuth2 Resource Server처럼 표준 흐름 위에서 Bearer 토큰을 검증하는 방식도 사용할 수 있습니다. 중요한 것은 라이브러리 이름보다, **요청 헤더에서 토큰을 읽고 검증한 뒤 인증 정보를 컨텍스트에 반영하는 흐름**입니다.
 
 #### 자주 하는 실수
 
-- 서버를 띄우지 않고 요청부터 보내는 것
-- 인증 API인데 토큰 없이 성공만 기대하는 것
-- 사전 데이터 생성 없이 수정/삭제부터 시도하는 것
-- 상태 코드를 보지 않고 응답 바디만 확인하는 것
-- 수동 검증 절차를 남기지 않아 같은 버그를 다시 재현하지 못하는 것
-#### 공식 문서
+- JWT Payload에 비밀번호 같은 민감 정보를 넣는 경우
+- Access Token 만료 전략 없이 무기한 토큰을 발급하는 경우
+- 로그아웃과 재발급 전략 없이 토큰 발급만 구현하는 경우
+- 인증과 인가를 같은 개념으로 다루는 경우
+#### 실무 연결 포인트
 
-- [everything curl](https://everything.curl.dev/)
+- Spring Boot에서는 Security Filter Chain 이해가 핵심입니다.
+- Refresh Token, Redis, 블랙리스트, 토큰 재발급 전략은 다음 단계에서 다뤄야 할 주제입니다.
+- 세션 기반이 더 적합한 시스템도 있으므로, JWT는 유행이 아니라 요구사항에 따라 선택해야 합니다.
+#### 공식 문서 기준으로 더 보면 좋은 자료
 
----
+- [OAuth 2.0 Resource Server JWT](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html)
+- [OAuth 2.0 Bearer Tokens](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/bearer-tokens.html)
 
 ### ✏️ 직접 해보기
 
-실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라.
+로그인 시 JWT를 발급하고, 요청 헤더의 토큰을 검증하는 필터를 만들어 보라.
+
+#### 정리
+
+토큰 기반 인증은 서버 확장성과 API 구조에 잘 맞는 방식이지만, 단순히 라이브러리 추가만으로 끝나는 주제가 아닙니다. 인증 흐름, 토큰 수명, 필터 체인, 보안 위험을 함께 이해해야 실제 프로젝트에서 안전하게 사용할 수 있습니다.
+
+#### 한 줄 정리
+
+JWT의 핵심은 토큰 문자열이 아니라, 세션 없이 인증 상태를 검증하는 구조를 이해하는 데 있습니다.
+
+
+---

@@ -252,14 +252,14 @@ nav:
       - Java 문법과 객체: java-study-ch02.md
       - 컬렉션과 함수형: java-study-ch03.md
       - 객체지향 설계와 패턴: java-study-ch04.md
-      - 입출력과 네트워크: java-study-ch10.md
+      - 입출력과 네트워크: java-study-ch05.md
     - 2단계 — Spring & 웹 백엔드:
-      - Spring과 프로젝트 실행: java-study-ch05.md
-      - 데이터 접근과 SQL: java-study-ch06.md
-      - 서버와 인증: java-study-ch07.md
+      - Spring과 프로젝트 실행: java-study-ch06.md
+      - 데이터 접근과 SQL: java-study-ch07.md
+      - 서버와 인증: java-study-ch08.md
     - 3단계 — 고급·품질:
-      - 테스트와 품질: java-study-ch08.md
-      - JVM과 성능: java-study-ch09.md
+      - 테스트와 품질: java-study-ch09.md
+      - JVM과 성능: java-study-ch10.md
       - 부록: java-study-ch11.md
     - "학습 코스 (미니프로젝트 동선)":
       - "T1. Java 기초 다지기": guide-java-track1-basics.md

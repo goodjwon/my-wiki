@@ -2,7 +2,7 @@
 title: Querydsl
 type: entity
 tags: [java, spring, jpa, querydsl, sql, type-safe-query]
-sources: [java-study/java-study-ch06-데이터접근과SQL.md]
+sources: [java-study/java-study-ch07-데이터접근과SQL.md]
 external:
   - http://querydsl.com/
   - https://github.com/querydsl/querydsl
@@ -320,7 +320,7 @@ public class QuerydslConfig {
 
 ## 원본 출처
 
-- raw: `raw/java-study/java-study-ch06-데이터접근과SQL.md`
+- raw: `raw/java-study/java-study-ch07-데이터접근과SQL.md`
 - 공식: [Querydsl 프로젝트](http://querydsl.com/)
 - GitHub: [querydsl/querydsl](https://github.com/querydsl/querydsl)
 

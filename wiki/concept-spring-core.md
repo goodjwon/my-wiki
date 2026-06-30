@@ -2,7 +2,7 @@
 title: Spring 핵심 개념 (IoC · DI · Bean · AOP · MVC)
 type: concept
 tags: [spring, ioc, di, bean, aop, mvc, dispatcher-servlet, proxy]
-sources: [java-study/java-study-ch05-Spring과프로젝트실행.md, spring/Spring Framework Versions.md]
+sources: [java-study/java-study-ch06-Spring과프로젝트실행.md, spring/Spring Framework Versions.md]
 external:
   - https://docs.spring.io/spring-framework/reference/core/beans.html
   - https://docs.spring.io/spring-framework/reference/core/aop/proxying.html
@@ -342,7 +342,7 @@ curl -s http://localhost:8080/actuator/metrics/jvm.memory.used
 
 ## 원본 출처
 
-- raw: `raw/java-study/java-study-ch05-Spring과프로젝트실행.md`
+- raw: `raw/java-study/java-study-ch06-Spring과프로젝트실행.md`
 - 공식: [Spring — The IoC Container](https://docs.spring.io/spring-framework/reference/core/beans.html)
 - 공식: [Spring AOP — Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
 - 공식: [Spring Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html)

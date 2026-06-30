@@ -7,7 +7,7 @@ created: 2026-04-18
 updated: 2026-06-30
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재의 4장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
+> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
 # 객체지향 설계와 패턴
 
@@ -17,7 +17,7 @@ updated: 2026-06-30
 - 전략·템플릿·팩토리·싱글톤·옵저버·프록시·어댑터·파사드
 - if-else를 전략 패턴으로 리팩터링
 
-**단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch03]] · **다음 장**: [[java-study-ch10]]
+**단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch03]] · **다음 장**: [[java-study-ch05]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 패턴마다 Before/After 코드를 비교하고, 4.9 실전문제로 OCP를 코드로 확인한다. 깊이: [[concept-design-patterns]].
 
