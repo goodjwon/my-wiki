@@ -21,7 +21,7 @@ updated: 2026-06-27
 
 ## 📅 마지막 업데이트
 
-2026-06-29
+2026-06-30
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -38,6 +38,14 @@ updated: 2026-06-27
 
 ## ✅ 최근 완료 작업 (2026-06 누적)
 
+### 2026-06-30
+- ✅ **Java 스터디 3단계 로드맵 재편** — 외부 AI 지적(nav 비유기성) 검증 후 "언어→프레임워크→고급" 3단계로. nav 그룹화 + 챕터 11편 절대번호 제거·"다음 장" 체인 학습순 재배선 + [[guide-java-learning-path]] 3단계 재작성. (에이전트 3병렬)
+- ✅ **챕터 번호 학습순 재부여 (raw+wiki)** — 입출력 ch10→05 회전(번호=학습순서). raw 6 + wiki 6 `git mv` + 링크·sources·tags·nav 회전 치환. Notion 원본 장번호는 `raw/java-study/README.md` 매핑표로 보존. (zsh 단어분리 함정으로 `while read`·명시 치환 사용)
+- ✅ **Java·Spring nav 학습/레퍼런스 분리** — 개념·도구·소스를 「📚 레퍼런스 (찾아보기)」 그룹으로 묶어 학습(3단계·트랙)과 역할 분리. → 외부 AI 지적 3건(주객전도·순서·메뉴중첩) 모두 종결.
+- ✅ **GSC 사이트 인증** — `overrides/main.html`(google-site-verification) + mkdocs `custom_dir: overrides`. (원격 sitemap/robots 작업과 짝)
+- ✅ **멀티-PC 동기화** — 원격 14커밋(다른 PC Java 스터디 트랙/챕터, 변환 아티팩트 정리, sitemap/robots) fast-forward pull. **작업 전 `git pull --ff-only` 습관**을 메모리 [[project_overview]]에 기록.
+- ✅ 라이브 확인(`wiki.wonslab.dev`) — 3단계·체인·카피라이트 정상.
+
 ### 2026-06-29
 - ✅ **harness module 1~5 정밀 검증 + 후속 전부 종결** (에이전트 5병렬 검증 → 수정):
   - **Module 3 hooks 사양 3건 교정 (wiki+raw 동시)** — 실습이 실제로 안 돌던 결함: ① 차단 `exit 1`→`exit 2` ② 입력 argv→**stdin JSON `jq -r '.tool_input.command'`** ③ PostToolUse 파일경로 `CLAUDE_TOOL_OUTPUT_FILE`(없는 변수)→`jq -r '.tool_input.file_path'`. jq 설치 안내·Step5 검증을 stdin 방식으로. 실측 검증 완료.
@@ -51,6 +59,10 @@ updated: 2026-06-27
   - ② **1차 출처 검증·보존** — `raw/loop-engineering/primary-sources.md` 신설. Osmani(✅)·Sonar(✅)·arXiv 3편 verbatim, Steinberger "650만 조회"는 2차 주장·OpenAI 소속 교정. src 페이지 반영.
   - ③ **토큰 비용 심화** — demo "Step 6.5" 신설(비용모델·무료 게이트 우선·종료조건 3종 goal/resource/budget).
 - ✅ **커밋·배포 완료** — `ea49634`·`b98b6cc` (Firebase `wiki.wonslab.dev` 라이브). *(Loop 후속분은 별도 커밋 예정)*
+
+### 2026-06-28
+- ✅ **harness module1 Step 2 실습 흐름 정비** — "반복 문제 분석" 프롬프트가 신규 실습 프로젝트엔 빈 표가 정상임을 프롬프트 앞 맥락 박스로 명시 + `claude` 실행 블록 분리. (사용자가 따라하다 "갑자기 나온다" 지적)
+- ✅ **harness 가이드 7편 톤앤매너·흐름 통일** (에이전트 7병렬) — H2 Step 시간표기 대시형(`— N분`), 커밋 코드블록만(`→ git commit` 화살표 제거), 단계 간 연결문 보강, module3 설명-코드 불일치(신규=새로 만들기/기존=머지) 수정, demo 정리→Step6 편입. (※ 별개로 다른 PC가 2026-06-29 module1~5 hooks 사양 검증 수행 — 영역 다름)
 
 ### 2026-06-27
 - ✅ **글쓰기 스타일 1차 일괄 13편** — 비유 괄호 매핑·명사구 단편 → 장면+매핑 2문단 완결 문장(에이전트 13병렬). 규칙: 메모리 `feedback-wiki-writing-style`, 모범: ch6 "회의 vs 사람".
