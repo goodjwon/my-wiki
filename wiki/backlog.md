@@ -187,6 +187,7 @@ updated: 2026-06-27
 
 ## ⚠️ 주의사항·결정 사항
 
+- **메모리 동기화 안 함 (2026-06-30)**: Claude 메모리(`~/.claude/projects/.../memory/`)는 git 저장소 바깥 PC별 로컬 파일 → push 대상 아님. 멀티-PC 공유 인계는 **이 backlog가 전담**(메모리는 각 PC 보조 캐시). 다른 PC에서 "메모리도 push?"는 No.
 - **GCP 배포 결정 (2026-06-07)**: Firebase Hosting 그대로 유지. Cloud Storage+CDN/Cloud Run 이전 안 함.
 - **다이어그램 표준 (2026-06-06)**: subgraph + 외부 연결은 무조건 HTML+flexbox. mermaid 사용 X.
 - **commit 메시지 (2026-05-31)**: 학생용 가이드 안의 git commit 예시는 한글. 위키 자체 commit 메시지는 한글+영어 prefix 자유.
