@@ -213,29 +213,31 @@ public class OrderService {
 
 ### 해결책 3가지
 
-1. **별도 Bean으로 분리** (권장):
-   ```java
-   @Service
-   public class OrderService {
-       private final NotificationService notification;
-       @Transactional
-       public void placeOrder(Order o) {
-           repo.save(o);
-           notification.send(o);  // 다른 Bean → 프록시 통과 ✅
-       }
-   }
-   ```
+**1) 별도 Bean으로 분리 (권장)**
 
-2. **자기 자신 주입** (anti-pattern으로 보는 의견 다수):
-   ```java
-   @Service
-   public class OrderService {
-       @Lazy private final OrderService self;
-       // self.sendNotification(o) → 프록시 통과
-   }
-   ```
+```java
+@Service
+public class OrderService {
+    private final NotificationService notification;
+    @Transactional
+    public void placeOrder(Order o) {
+        repo.save(o);
+        notification.send(o);  // 다른 Bean → 프록시 통과 ✅
+    }
+}
+```
 
-3. **`AopContext.currentProxy()`** — `@EnableAspectJAutoProxy(exposeProxy = true)` 필요. 코드가 지저분해짐.
+**2) 자기 자신 주입 (anti-pattern으로 보는 의견 다수)**
+
+```java
+@Service
+public class OrderService {
+    @Lazy private final OrderService self;
+    // self.sendNotification(o) → 프록시 통과
+}
+```
+
+**3) `AopContext.currentProxy()`** — `@EnableAspectJAutoProxy(exposeProxy = true)` 필요. 코드가 지저분해짐.
 
 → 1번이 정답. [[concept-transactional-rollback-policy|@Transactional 롤백 정책]]과 함께 알아야 할 두 가지 함정.
 

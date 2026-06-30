@@ -358,10 +358,11 @@ git commit -m "harness(M5): M1↔M5 Before/After 비교"
 - 일주일이 짧으면 다음 주에 더 명확해진다.
 - 의도적으로 베이스라인 태스크를 다시 던져 보라 (Module 01의 태스크 A·B·C).
 - guard.sh 차단 로그를 별도 파일에 남기도록 수정하면 분석이 쉬워짐:
-  ```bash
-  # guard.sh의 block() 함수에 추가
-  echo "$(date '+%Y-%m-%d %H:%M') BLOCKED: $1 — $COMMAND" >> .claude/guard-blocked.log
-  ```
+
+```bash
+# guard.sh의 block() 함수에 추가
+echo "$(date '+%Y-%m-%d %H:%M') BLOCKED: $1 — $COMMAND" >> .claude/guard-blocked.log
+```
 
 ### Q. Rippable 점검에서 삭제할 게 없어요
 정상. 하네스가 아직 새로워서 모든 규칙이 살아있다. **3개월쯤 후 다시** 점검하면 분명 나온다.
