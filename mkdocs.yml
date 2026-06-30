@@ -267,26 +267,27 @@ nav:
       - "T3. 입출력과 네트워크": guide-java-track3-io-network.md
       - "T4. Spring 웹 애플리케이션": guide-java-track4-spring-web.md
       - "T5. 심화·워크북·종합": guide-java-track5-deep-dive.md
-    - 개념:
-      - Spring Core: concept-spring-core.md
-      - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md
-      - API Versioning: concept-api-versioning.md
-      - API 하위 호환성 (Tolerant Reader): concept-api-backward-compatibility.md
-      - JSpecify Null Safety: concept-jspecify-null-safety.md
-    - 도구·생태계:
-      - JVM: entity-jvm.md
-      - Querydsl: entity-querydsl.md
-      - Spring Framework: entity-spring-framework.md
-      - Spring Boot: entity-spring-boot.md
-      - Spring Initializr: entity-spring-initializr.md
-    - 소스:
-      - Spring Boot 소개: src-spring-boot.md
-      - Spring Framework 7: src-spring-framework-7.md
-      - Spring Guide (cheese10yun): src-spring-guide.md
-      - Spring Data Access Ref: src-spring-data-access-ref.md
-      - Spring Web MVC Ref: src-spring-web-mvc-ref.md
-      - Spring Testing Ref: src-spring-testing-ref.md
-      - Java 스터디 2024-2025: src-java-study-2024-2025.md
+    - "📚 레퍼런스 (필요할 때 찾아보기)":
+      - 개념 — 심화 주제:
+        - Spring Core: concept-spring-core.md
+        - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md
+        - API Versioning: concept-api-versioning.md
+        - API 하위 호환성 (Tolerant Reader): concept-api-backward-compatibility.md
+        - JSpecify Null Safety: concept-jspecify-null-safety.md
+      - 도구·생태계:
+        - JVM: entity-jvm.md
+        - Querydsl: entity-querydsl.md
+        - Spring Framework: entity-spring-framework.md
+        - Spring Boot: entity-spring-boot.md
+        - Spring Initializr: entity-spring-initializr.md
+      - 원본 소스:
+        - Spring Boot 소개: src-spring-boot.md
+        - Spring Framework 7: src-spring-framework-7.md
+        - Spring Guide (cheese10yun): src-spring-guide.md
+        - Spring Data Access Ref: src-spring-data-access-ref.md
+        - Spring Web MVC Ref: src-spring-web-mvc-ref.md
+        - Spring Testing Ref: src-spring-testing-ref.md
+        - Java 스터디 2024-2025: src-java-study-2024-2025.md
   - DB·운영·인프라:
     - 개념:
       - DB 커넥션 풀 (HikariCP): concept-db-connection-pool.md

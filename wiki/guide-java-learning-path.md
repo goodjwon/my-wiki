@@ -115,3 +115,5 @@ Spring으로 웹 애플리케이션을 만들고 데이터베이스를 연동한
 - [[src-java-study-2024-2025]] — 원본 교재 (97개 문서 전체 카탈로그)
 - 트랙: [[guide-java-track1-basics]] · [[guide-java-track2-design]] · [[guide-java-track3-io-network]] · [[guide-java-track4-spring-web]] · [[guide-java-track5-deep-dive]]
 - 방법론: [[guide-code-authoring-and-review]] · [[entity-tdd]] · [[entity-refactoring]]
+
+> **챕터와 레퍼런스의 역할 구분**: 챕터 본문(3단계)은 **순서대로 따라가는 학습 흐름**이고, nav의 「📚 레퍼런스」에 있는 개념([[concept-spring-core]]·[[concept-transactional-rollback-policy]] 등)과 도구([[entity-spring-boot]]·[[entity-jvm]] 등)는 **챕터에서 만난 주제를 더 깊이 팔 때 찾아보는 자료**다. 둘은 겹치는 게 아니라 "배우기 → 깊이 파기"로 이어진다.
