@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 5. Spring과 프로젝트 실행"
+title: "Java 스터디 — Spring과 프로젝트 실행"
 type: source
 tags: [java, study, notion, ch05]
 sources: [java-study/java-study-ch05-Spring과프로젝트실행.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 5장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 5. Spring과프로젝트실행
+# Spring과 프로젝트 실행
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 실습 환경·Maven·프로파일 구성
 - 스프링 부트 프로젝트를 직접 띄우기
 
-**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch06]]
+**단계**: 2단계 — Spring & 웹 백엔드 · **앞 장**: [[java-study-ch10]] · **다음 장**: [[java-study-ch06]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 환경 세팅을 그대로 따라 하고, 빈 주입을 직접 코드로 확인한다. 깊이: [[concept-spring-core]].
 

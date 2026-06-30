@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 3. 컬렉션과 함수형"
+title: "Java 스터디 — 컬렉션과 함수형"
 type: source
 tags: [java, study, notion, ch03]
 sources: [java-study/java-study-ch03-컬렉션과함수형.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 3장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 3. 컬렉션과함수형
+# 컬렉션과 함수형
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 람다·스트림으로 명령형→선언형 사고 전환
 - 알고리즘 기초(시간복잡도·탐색·정렬)
 
-**트랙**: [[guide-java-track1-basics]] · **다음 장**: [[java-study-ch04]]
+**단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch02]] · **다음 장**: [[java-study-ch04]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 컬렉션 예제를 직접 돌려보고, 3.8 알고리즘 실전문제로 마무리한다.
 

@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 4. 객체지향 설계와 패턴"
+title: "Java 스터디 — 객체지향 설계와 패턴"
 type: source
 tags: [java, study, notion, ch04]
 sources: [java-study/java-study-ch04-객체지향설계와패턴.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 4장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 4. 객체지향설계와패턴
+# 객체지향 설계와 패턴
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 전략·템플릿·팩토리·싱글톤·옵저버·프록시·어댑터·파사드
 - if-else를 전략 패턴으로 리팩터링
 
-**트랙**: [[guide-java-track2-design]] · **다음 장**: [[java-study-ch05]]
+**단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch03]] · **다음 장**: [[java-study-ch10]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 패턴마다 Before/After 코드를 비교하고, 4.9 실전문제로 OCP를 코드로 확인한다. 깊이: [[concept-design-patterns]].
 

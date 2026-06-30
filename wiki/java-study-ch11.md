@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 11. 부록"
+title: "Java 스터디 — 부록"
 type: source
 tags: [java, study, notion, ch11]
 sources: [java-study/java-study-ch11-부록.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 11장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 11. 부록
+# 부록
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 면접 질문·Git·포트폴리오 등 실무 준비
 - [PJ] 종합 토이프로젝트로 전체 통합
 
-**트랙**: [[guide-java-track5-deep-dive]]
+**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch09]] · **학습 경로**: [[guide-java-learning-path]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 약한 곳을 골라 보강하고, 11.19·11.22·11.25 등 토이프로젝트 하나를 README까지 완성한다.
 

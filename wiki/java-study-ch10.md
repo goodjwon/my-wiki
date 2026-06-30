@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 10. 입출력과 네트워크"
+title: "Java 스터디 — 입출력과 네트워크"
 type: source
 tags: [java, study, notion, ch10]
 sources: [java-study/java-study-ch10-입출력과네트워크.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 10장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 10. 입출력과네트워크
+# 입출력과 네트워크
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - try-with-resources로 파일·소켓 자원 닫기
 - 파일 I/O·네트워크·JDBC 기초
 
-**트랙**: [[guide-java-track3-io-network]] · **다음 장**: [[java-study-ch11]]
+**단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch04]] · **다음 장**: [[java-study-ch05]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 10.7 설계 실습 후 10.8·10.9 파일 처리 실전문제를 경계 케이스부터 푼다. 깊이: [[concept-http-hol-blocking]].
 

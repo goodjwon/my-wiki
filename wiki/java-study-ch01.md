@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 1. 환경과 실행"
+title: "Java 스터디 — 환경과 실행"
 type: source
 tags: [java, study, notion, ch01]
 sources: [java-study/java-study-ch01-환경과실행.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 1장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 1. 환경과실행
+# 환경과 실행
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - "한 번 작성, 어디서나 실행"이 가능한 이유
 - 첫 프로그램을 직접 실행
 
-**트랙**: [[guide-java-track1-basics]] · **다음 장**: [[java-study-ch02]]
+**단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch00]] · **다음 장**: [[java-study-ch02]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 설치부터 그대로 따라 하며 Hello World를 띄운다.
 

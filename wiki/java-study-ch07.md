@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 7. 서버와 인증"
+title: "Java 스터디 — 서버와 인증"
 type: source
 tags: [java, study, notion, ch07]
 sources: [java-study/java-study-ch07-서버와인증.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 7장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 7. 서버와인증
+# 서버와 인증
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - Spring Security 인증 흐름
 - 토큰(JWT) 기반 인증 구현
 
-**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch08]]
+**단계**: 2단계 — Spring & 웹 백엔드 · **앞 장**: [[java-study-ch06]] · **다음 장**: [[java-study-ch08]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 인증 흐름을 그림→코드 순으로 따라 구현한다.
 

@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 9. JVM과 성능"
+title: "Java 스터디 — JVM과 성능"
 type: source
 tags: [java, study, notion, ch09]
 sources: [java-study/java-study-ch09-JVM과성능.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 9장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 9. JVM과성능
+# JVM과 성능
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 힙·스택·메서드 영역과 객체가 사는 곳
 - GC 로그를 읽고 메모리 튜닝
 
-**트랙**: [[guide-java-track2-design]] · **다음 장**: [[java-study-ch10]]
+**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch08]] · **다음 장**: [[java-study-ch11]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 9.0→9.1→9.2 순으로 읽고, 11.90 JVM 워크북 문제로 굳힌다. 깊이: [[entity-jvm]].
 

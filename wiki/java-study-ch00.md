@@ -1,22 +1,22 @@
 ---
-title: "Java 스터디 — 0. 안내"
+title: "Java 스터디 — 안내"
 type: source
 tags: [java, study, notion, ch00]
 sources: [java-study/java-study-ch00-안내.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 0장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 0. 안내
+# 안내
 
 ## 🎯 이 장에서 배우는 것
 
 - 이 교재를 어떤 순서로 읽고 어떻게 활용하는지
 - 학습 로드맵과 문서 포맷 약속
 
-**트랙**: [[guide-java-learning-path]] · **다음 장**: [[java-study-ch01]]
+**단계**: 1단계 — Java Core · **다음 장**: [[java-study-ch01]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 먼저 [[guide-java-learning-path]]에서 5개 트랙 지도를 보고, 본인 수준에 맞는 트랙부터 시작한다.
 

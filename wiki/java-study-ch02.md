@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 2. Java 문법과 객체"
+title: "Java 스터디 — Java 문법과 객체"
 type: source
 tags: [java, study, notion, ch02]
 sources: [java-study/java-study-ch02-Java문법과객체.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 2장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 2. Java문법과객체
+# Java 문법과 객체
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - 객체지향 4원칙(캡슐화·상속·다형성·추상화)을 코드로
 - if-else를 객체 협력으로 바꾸는 첫 감각
 
-**트랙**: [[guide-java-track1-basics]] · **다음 장**: [[java-study-ch03]]
+**단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch01]] · **다음 장**: [[java-study-ch03]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 각 절의 코드를 직접 쳐보고, 끝의 2.9 실전문제를 풀어본다. 막히면 [[concept-oop]].
 

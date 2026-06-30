@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 8. 테스트와 품질"
+title: "Java 스터디 — 테스트와 품질"
 type: source
 tags: [java, study, notion, ch08]
 sources: [java-study/java-study-ch08-테스트와품질.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 8장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 8. 테스트와품질
+# 테스트와 품질
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - Spring Boot 테스트 전략과 계산기 테스트 실습
 - curl로 API 수동 검증
 
-**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch09]]
+**단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch07]] · **다음 장**: [[java-study-ch09]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 8.2 계산기 테스트를 직접 작성하고, 8.3에서 curl로 API를 찔러본다. 방법론: [[entity-tdd]].
 

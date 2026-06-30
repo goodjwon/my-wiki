@@ -1,15 +1,15 @@
 ---
-title: "Java 스터디 — 6. 데이터 접근과 SQL"
+title: "Java 스터디 — 데이터 접근과 SQL"
 type: source
 tags: [java, study, notion, ch06]
 sources: [java-study/java-study-ch06-데이터접근과SQL.md]
 created: 2026-04-18
-updated: 2026-06-29
+updated: 2026-06-30
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재의 6장 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
-# 6. 데이터접근과SQL
+# 데이터 접근과 SQL
 
 ## 🎯 이 장에서 배우는 것
 
@@ -17,7 +17,7 @@ updated: 2026-06-29
 - SQL 기본기(DDL·DML·JOIN·집계)와 쿼리 최적화
 - Querydsl로 타입 안전 동적 쿼리
 
-**트랙**: [[guide-java-track4-spring-web]] · **다음 장**: [[java-study-ch07]]
+**단계**: 2단계 — Spring & 웹 백엔드 · **앞 장**: [[java-study-ch05]] · **다음 장**: [[java-study-ch07]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. SQL을 직접 쳐보고, 6.12 연습문제와 Querydsl 예제를 따라 만든다. 깊이: [[entity-querydsl]]·[[concept-db-connection-pool]].
 
