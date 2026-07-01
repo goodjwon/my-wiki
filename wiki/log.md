@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-02] fix | ch07 빈 스키마 표 복구 (Notion 표 블록 변환 손실) + 중복 제거
+- ch07 7.0-1 "추가시나리오 예제"의 DB 스키마 표 20개가 4월 ingest 때 Notion 표 블록 변환 실패로 `<!-- table -->` 플레이스홀더로 비어 있던 것을 복구.
+- 라이브 published-site API로 재수집(loadPageChunk 2청크) → **표 대응 렌더러(render_tbl) 신작**(table/table_row 블록 → 마크다운 표, 첫 행=헤더, `plain text`→`text` 보정) → 20표 렌더.
+- cluster A 20 placeholder에 순서대로 채움 + **시나리오 1 중복판(cluster B) 제거**(4월 ingest 중복 버그). 시나리오 2~5 설계 프롬프트는 유지.
+- 검증: 위키 전체 빈 표 0, 7.0-1 마크다운 표 20개, 중복 1→해소, 펜스 짝맞음, 빌드 통과.
+
+
 ## [2026-07-02] feat | ch01 "첫 프로젝트 만들기" 신설 (빈약한 프로젝트 셋업 보강)
 - 사용자 지적: 최초 프로젝트 생성·설정 내용이 빈약(단일 파일 Hello World에서 곧장 2장으로). 실제 프로젝트 스캐폴딩·빌드·구조·git이 없었음.
 - **1.2 첫 프로젝트 만들기 (Maven·Gradle)** 신설: 왜 빌드도구 → 생성(둘 다 병기) → 표준 구조 → 빌드·실행 사이클 → 의존성(pom.xml/build.gradle) → git init+.gitignore. IDE 최소화·커맨드 중심.
