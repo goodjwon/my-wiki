@@ -166,10 +166,7 @@ updated: 2026-06-27
 - [ ] **본인 프로젝트 GCP 배포 학습** — 하네스 5모듈 후 단계
   - playground (api/ + web/) → Cloud Run 또는 Cloud Functions
   - **결정 보류**: 현재 위키는 Firebase 그대로, GCP 다른 서비스 이전은 안 함 (2026-06-07 확정)
-- [ ] **Notion DB "개발" ingest** — 보류 (2026-06-07)
-  - 워크스페이스: `goodjwon`, DB ID: `3afaeb60-3963-4def-b97b-a3da70c4b843`
-  - 막힌 원인: Notion 2025-09-03 API의 database → data_source 분리, MCP 도구가 새 data_source ID를 응답에 노출 안 함
-  - 다음 시도: (a) Notion 통합 권한 "full content access" 재점검, (b) page URL 1개로 샘플 ingest 후 일괄 처리 패턴 마련, (c) MCP 버전 업데이트 대기
+- [ ] **외부 DB ingest (선택)** — 필요 시. **방법 확립됨**: 공개된 DB는 MCP 없이 published-site API(`loadPageChunk`+`queryCollection` curl)로 추출 → md 변환(java-study 97문서로 검증). 비공개 DB는 API 토큰/통합 권한 필요.
 
 ### 보강 후보 (낮은 우선순위)
 
