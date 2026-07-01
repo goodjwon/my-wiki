@@ -385,6 +385,8 @@ mvn archetype:generate \
   -DinteractiveMode=false
 ```
 
+> **Windows**: 줄 끝 `\`(줄바꿈 잇기)는 bash 전용이다. cmd에서는 `^`, PowerShell에서는 백틱(`` ` ``)을 쓰거나, **한 줄로 붙여서** 실행한다.
+
 이 방식은 학습용으로 유용하지만, 실무에서는 Spring Initializr나 팀 템플릿을 더 자주 사용합니다.
 
 #### 기존 프로젝트를 Maven 구조로 옮기기
@@ -417,6 +419,26 @@ mvn archetype:generate \
 ```
 
 지금 저장소 기준으로는 Java 21과 Maven Wrapper를 쓰는 방식이 더 자연스럽습니다.
+
+##### 의존성 추가 예시
+
+라이브러리는 `pom.xml`의 `<dependencies>`에 좌표를 적으면 자동으로 받아진다. 예를 들어 `commons-lang3`을 추가하려면 `</properties>` 다음에:
+
+```xml
+<dependencies>
+  <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.14.0</version>
+  </dependency>
+</dependencies>
+```
+
+반영됐는지 확인:
+
+```bash
+./mvnw dependency:tree | grep commons-lang3    # Windows: mvnw.cmd dependency:tree | findstr commons-lang3
+```
 
 #### 자주 쓰는 Maven 명령
 
@@ -580,10 +602,24 @@ Started SpringApplication in 3.x seconds
 ```
 
 #### dev-my 실행
+
+`dev-my`는 MySQL 접속 정보를 환경변수로 주입한다. 먼저 프로젝트 루트에 `.env`를 만든다:
+
+```text
+DEV_MY_DB_URL=jdbc:mysql://localhost:3306/daybyspring
+DEV_MY_DB_USERNAME=root
+DEV_MY_DB_PASSWORD=changeme
+```
+
+그다음 `.env`를 셸에 불러들여 실행한다:
+
 ```bash
+# Mac / Linux
 set -a; source .env; set +a
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-my
 ```
+
+> **Windows**: `source`는 bash 전용이다. PowerShell에서는 값을 직접 주입하거나(`$env:DEV_MY_DB_URL="..."`) IDE 실행 구성의 환경변수에 넣고 `mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev-my` 로 실행한다. (전제: 로컬 MySQL이 떠 있고 `daybyspring` DB가 있어야 한다.)
 ```text
 예상 결과
 The following 1 profile is active: "dev-my"
