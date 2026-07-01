@@ -991,6 +991,77 @@ socket.receive(packet);
 - 종료 신호를 어떻게 표현할지
 초보 단계에서는 `println`과 `readLine` 기반의 간단한 텍스트 프로토콜로 시작하는 편이 좋습니다. 핵심은 복잡한 포맷보다, **양쪽이 같은 규칙을 공유하는 것**입니다.
 
+#### 실제로 띄워 보기 — 서버 먼저, 클라이언트는 다른 터미널
+
+소켓 실습의 핵심은 **서버를 먼저 띄우고, 클라이언트를 별도 터미널에서 실행**하는 것이다. 아래 두 파일을 만들어 그대로 돌려 본다.
+
+`EchoServer.java`:
+
+```java
+import java.io.*;
+import java.net.*;
+
+public class EchoServer {
+    public static void main(String[] args) throws IOException {
+        try (ServerSocket server = new ServerSocket(8888)) {
+            System.out.println("서버 시작 — 8888에서 클라이언트 대기 중...");
+            try (Socket socket = server.accept();
+                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+                System.out.println("클라이언트 연결됨: " + socket.getInetAddress());
+                String line = in.readLine();
+                System.out.println("받음: " + line);
+                out.println("echo: " + line);
+            }
+        }
+    }
+}
+```
+
+`EchoClient.java`:
+
+```java
+import java.io.*;
+import java.net.*;
+
+public class EchoClient {
+    public static void main(String[] args) throws IOException {
+        try (Socket socket = new Socket("127.0.0.1", 8888);
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            out.println("hello");
+            System.out.println("서버 응답: " + in.readLine());
+        }
+    }
+}
+```
+
+```bash
+# 터미널 1 — 서버 (먼저 실행, 포그라운드로 계속 떠 있음)
+javac EchoServer.java
+java EchoServer
+# → "서버 시작 — 8888에서 대기 중..." 출력 후 멈춘 듯 보이면 정상
+```
+
+```bash
+# 터미널 2 — 클라이언트 (별도 창)
+javac EchoClient.java
+java EchoClient
+# → 클라이언트: "서버 응답: echo: hello"
+#   서버 창:   "클라이언트 연결됨: /127.0.0.1", "받음: hello"
+```
+
+> ⚠️ **서버가 멈춘 듯 보이는 건 오류가 아니다.** `accept()`가 연결을 기다리는 정상 상태다. 그래서 클라이언트는 **반드시 다른 터미널**에서 실행한다(같은 터미널은 서버가 점유 중).
+
+```bash
+# 클라이언트 코드 없이 서버만 빠르게 확인 (한 줄 입력 후 Enter)
+nc 127.0.0.1 8888          # Mac/Linux
+# Windows: ncat 127.0.0.1 8888   (telnet은 기본 비활성일 수 있음)
+```
+
+- `javac`/`java`는 Mac·Windows 공통. 빠른 확인 도구만 `nc`(Mac/Linux) ↔ `ncat`(Windows) 다르다.
+- `Address already in use` → 8888을 이미 다른 프로세스가 사용 중. 포트를 바꾸거나 기존 프로세스를 종료한다.
+
 ---
 
 ### ✏️ 직접 해보기
@@ -1013,7 +1084,7 @@ socket.receive(packet);
 
 ```java
 Connection conn = DriverManager.getConnection(url, user, password);
-PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM user");
+PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM users");
 ResultSet rs = pstmt.executeQuery();
 
 while (rs.next()) {
@@ -1241,6 +1312,71 @@ JPA는 엔티티 중심으로 더 높은 추상화를 제공하고, MyBatis는 S
 - `Statement`보다 `PreparedStatement`를 먼저 습관으로 잡는 편이 안전합니다.
 - `ResultSet`도 닫아야 하는 자원입니다.
 - ORM을 쓴다고 해서 JDBC 구조를 몰라도 되는 것은 아닙니다.
+
+#### 실제로 연결해 보기 — 설치 없이 H2로
+
+DB를 설치하지 않고 바로 실습하려면 **H2 인메모리 DB**가 가장 쉽다. 드라이버 jar 하나만 있으면 된다.
+
+빌드 도구를 쓰면 의존성 한 줄로 드라이버가 잡힌다:
+
+```groovy
+// build.gradle
+implementation 'com.h2database:h2:2.2.224'
+```
+
+```xml
+<!-- pom.xml -->
+<dependency>
+  <groupId>com.h2database</groupId>
+  <artifactId>h2</artifactId>
+  <version>2.2.224</version>
+</dependency>
+```
+
+빌드 도구 없이 단일 파일로 실습하려면 [H2 jar](https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar)를 내려받아 같은 폴더에 둔다.
+
+`JdbcExample.java`:
+
+```java
+import java.sql.*;
+
+public class JdbcExample {
+    public static void main(String[] args) throws SQLException {
+        String url = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1";
+        try (Connection conn = DriverManager.getConnection(url, "sa", "")) {
+            try (Statement st = conn.createStatement()) {
+                st.execute("CREATE TABLE users(id INT PRIMARY KEY, name VARCHAR(50), email VARCHAR(100))");
+                st.execute("INSERT INTO users VALUES (1,'alice','alice@example.com')");
+            }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT id, name, email FROM users");
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println(rs.getInt("id") + " : " + rs.getString("name") + " : " + rs.getString("email"));
+                }
+            }
+        }
+    }
+}
+```
+
+실행 — 드라이버 jar를 classpath에 포함한다. **classpath 구분자가 OS마다 다르다**:
+
+```bash
+# Mac / Linux — 구분자 :
+javac -cp h2-2.2.224.jar JdbcExample.java
+java  -cp .:h2-2.2.224.jar JdbcExample
+```
+
+```bash
+# Windows — 구분자 ;
+javac -cp h2-2.2.224.jar JdbcExample.java
+java  -cp ".;h2-2.2.224.jar" JdbcExample
+```
+
+- 성공 출력: `1 : alice : alice@example.com`
+- `No suitable driver found` → 드라이버 jar가 classpath에 없다. `-cp`에 h2 jar를 포함했는지 확인.
+- Gradle/Maven 프로젝트라면 `./gradlew run` / `./mvnw exec:java`로 실행하면 classpath는 자동으로 잡힌다.
+- MySQL로 하려면 `jdbc:mysql://localhost:3306/DB이름` + `com.mysql:mysql-connector-j` 드라이버로 바꾸고, DB를 먼저 띄운다(`docker run -e MYSQL_ROOT_PASSWORD=pw -p 3306:3306 mysql`).
 
 ---
 

@@ -476,7 +476,18 @@ Spring Security 문서를 읽다 보면 `Authentication`, `Principal`, `Security
 
 #### 핵심 용어
 
-<!-- table -->
+| 용어 | 뜻 | 인증 흐름에서 어디에 등장하나 |
+|------|-----|------------------------------|
+| `Authentication` | 인증 요청·결과를 담는 객체 (누구 + 권한) | 검증 결과가 담겨 요청 문맥에 저장됨 |
+| `Principal` | 인증된 주체(보통 로그인 사용자) | `Authentication` 안의 "누구" 부분 |
+| `GrantedAuthority` | 부여된 권한 (`ROLE_USER`·`ROLE_ADMIN` 등) | 인가(무엇을 할 수 있나) 판단 기준 |
+| `UserDetails` | 사용자 정보 + 권한의 표준 인터페이스 | 로그인 시 조회한 회원을 표현 |
+| `UserDetailsService` | 사용자를 조회하는 서비스 | 로그인 검증 단계에서 회원 조회 |
+| `AuthenticationManager` | 자격(이메일/비밀번호)을 검증하는 관문 | 로그인 요청에서 인증 수행 |
+| `SecurityContextHolder` | 현재 요청의 인증 객체 보관소 | 검증 끝난 `Authentication` 저장·조회 |
+| `SecurityFilterChain` | 요청이 통과하는 보안 필터들의 사슬 | 모든 보호 요청이 지나감 |
+| `AuthenticationFilter`(JWT) | 요청의 토큰을 읽어 `Authentication` 재구성 | 보호 API 요청마다 |
+
 #### 현재 저장소에서 특히 구분할 용어
 
 현재 `day_by_spring` 저장소에서는 아래 구분이 특히 중요합니다.
