@@ -166,9 +166,28 @@ class LoanRepositoryTest {
 - [Spring Framework Testing](https://docs.spring.io/spring-framework/reference/testing.html)
 - [Spring Boot Test Auto-configuration Annotations](https://docs.spring.io/spring-boot/reference/test-auto-configuration/index.html)
 
+#### 테스트 실행 방법 (커맨드)
+
+테스트는 IDE의 ▶ 버튼으로도 돌지만, **빌드 도구 커맨드로 돌려 초록불을 직접 확인**하는 습관을 들인다.
+
+```bash
+# Gradle — Mac/Linux (Windows는 gradlew.bat)
+./gradlew test                                # 전체
+./gradlew test --tests "*LoanControllerTest"  # 특정 클래스만
+```
+
+```bash
+# Maven — Mac/Linux (Windows는 mvnw.cmd)
+./mvnw test
+./mvnw test -Dtest=LoanControllerTest         # 특정 클래스만
+```
+
+- 성공 판정: `BUILD SUCCESSFUL`(Gradle) / `Tests run: N, Failures: 0`(Maven).
+- 실패하면 리포트를 본다: `build/reports/tests/test/index.html`(Gradle) · `target/surefire-reports/*.txt`(Maven).
+
 ### ✏️ 직접 해보기
 
-`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라.
+`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. 위 `./gradlew test --tests`로 그 클래스만 돌려 초록불을 확인하라.
 
 #### 정리
 
@@ -337,6 +356,47 @@ class LoanServiceImplTest {
 - [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
 - [Spring Boot Testing Reference](https://docs.spring.io/spring-boot/reference/testing/index.html)
 
+#### 프로젝트에 두고 실행하기
+
+위 `Calculator`·`CalculatorTest`를 실제로 돌리려면 JUnit 5 의존성과 표준 위치가 필요하다.
+
+의존성 (빌드 파일):
+
+```groovy
+// build.gradle
+test { useJUnitPlatform() }
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+```
+
+```xml
+<!-- pom.xml — Spring Boot 프로젝트면 spring-boot-starter-test 하나로 충분 -->
+<dependency>
+  <groupId>org.junit.jupiter</groupId>
+  <artifactId>junit-jupiter</artifactId>
+  <version>5.10.2</version>
+  <scope>test</scope>
+</dependency>
+```
+
+파일 배치 — 프로덕션과 테스트를 나눈다:
+
+```text
+src/main/java/com/example/Calculator.java       ← 대상 코드
+src/test/java/com/example/CalculatorTest.java   ← 테스트 코드
+```
+
+실행:
+
+```bash
+./gradlew test --tests "CalculatorTest"   # Windows: gradlew.bat
+# 또는 Maven
+./mvnw test -Dtest=CalculatorTest         # Windows: mvnw.cmd
+```
+
+- 성공: 콘솔에 `CalculatorTest > add() PASSED …` + `BUILD SUCCESSFUL`. 초록불이 뜨면 완료.
+
 ### 정리
 좋은 테스트 예제는 화려한 프레임워크보다, 책임이 잘 나뉜 작은 코드에서 시작합니다. 계산기 같은 작은 문제를 테스트 가능하게 바꾸는 과정은 이후의 서비스, 컨트롤러, 리포지토리 테스트로 그대로 이어집니다.
 
@@ -350,6 +410,19 @@ class LoanServiceImplTest {
 ### 개요
 
 이 문서는 `curl`을 사용해 HTTP API를 직접 검증하는 방법을 정리한 가이드입니다. 자동화 테스트가 있어도, 실제 요청과 응답을 눈으로 확인해야 하는 순간은 계속 존재합니다. 핵심은 수동 검증을 많이 하는 것이 아니라, **어떤 문제를 `curl`로 빨리 확인하고 어떤 문제를 자동화 테스트로 남길지 구분하는 것**입니다.
+
+#### 먼저 — 서버를 띄우고 시작한다
+
+curl은 떠 있는 서버에 요청을 보내는 도구다. **다른 터미널에서 서버를 먼저 띄운 뒤**, 이 터미널에서 curl을 친다.
+
+```bash
+# 별도 터미널에서 (포그라운드로 계속 떠 있음, 종료는 Ctrl+C)
+./gradlew bootRun        # Windows: gradlew.bat bootRun
+# 또는  ./mvnw spring-boot:run   (Windows: mvnw.cmd spring-boot:run)
+# → 로그에 "Started ...Application" 이 뜨면 8080 준비 완료
+```
+
+> **Windows 주의**: PowerShell에서 `curl`은 `Invoke-WebRequest`의 별칭이라 아래 `-X`/`-d` 문법이 깨진다. **`curl.exe`** 로 명시하거나 **Git Bash**에서 실행한다.
 
 #### 왜 중요한가
 
