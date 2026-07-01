@@ -789,14 +789,42 @@ if (token != null && jwtTokenProvider.validateToken(token)) {
 chain.doFilter(request, response);
 ```
 
-#### Bearer 토큰 요청 예시
+#### 실제로 해보기 — 로그인 → 토큰 → 보호 API (curl 왕복)
+
+먼저 서버를 띄운다(`./mvnw spring-boot:run`, Windows는 `mvnw.cmd spring-boot:run`). curl은 새 터미널에서 친다.
+
+> **전제**: `io.jsonwebtoken:jjwt-api`(+`jjwt-impl`,`jjwt-jackson`) 의존성과 `application.yml`의 `jwt.secret`(HS256이면 32바이트 이상)·`jwt.expiration` 설정이 있어야 토큰이 발급·검증된다.
+
+**1) 로그인해서 토큰을 받는다:**
 
 ```bash
-curl -X PUT "http://localhost:8080/api/admin/members/1/promote" \
-  -H "Authorization: Bearer <ACCESS_TOKEN>"
+curl -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@test.com","password":"pw"}'
 ```
 
-이 요청에서 서버는 세션을 찾는 대신, 헤더의 토큰을 검사합니다.
+응답(예):
+
+```json
+{"accessToken":"eyJhbGciOiJIUzI1NiJ9...","tokenType":"Bearer","expiresIn":3600000}
+```
+
+**2) 받은 토큰을 변수에 담아 보호 API를 호출한다** (`jq`로 추출):
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@test.com","password":"pw"}' | jq -r .accessToken)
+
+curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" -H "Authorization: Bearer $TOKEN"
+```
+
+**3) 실패 케이스도 눈으로 확인한다:**
+
+```bash
+# 토큰 없이 → 401 Unauthorized
+curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote"
+
+# USER 권한 토큰으로 admin API 호출 → 403 Forbidden (인증은 됐지만 권한 부족)
+```
+
+> **Windows**: PowerShell의 `curl`은 별칭이라 위 문법이 깨진다 → `curl.exe` 사용 또는 **Git Bash** 권장. 서버는 세션이 아니라 **헤더의 토큰**을 검사하므로, 요청마다 `Authorization: Bearer` 헤더가 있어야 한다.
 
 #### JWT와 Bearer 토큰을 구분해서 이해하기
 
