@@ -1,7 +1,7 @@
 ---
 title: "Java 스터디 — JVM과 성능"
 type: source
-tags: [java, study, notion, ch10]
+tags: [java, study, ch10]
 sources: [java-study/java-study-ch10-JVM과성능.md]
 created: 2026-04-18
 updated: 2026-06-30
@@ -20,10 +20,6 @@ updated: 2026-06-30
 **단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch09]] · **다음 장**: [[java-study-ch11]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 10.0→10.1→10.2 순으로 읽고, 11.90 JVM 워크북 문제로 굳힌다. 깊이: [[entity-jvm]].
-
----
-
-원본: Notion 데이터베이스 "[2024-2025]java 스터디 자료"
 
 ---
 
@@ -225,7 +221,6 @@ JVM은 자바 코드를 실행하는 중간 계층이 아니라, **클래스 로
 #### 한 줄 정리
 
 JVM 입문의 핵심은 `자바 코드가 어떻게 실행되는가`를 소스 코드가 아니라 **런타임 구조의 관점**에서 보기 시작하는 것입니다.
-
 
 ---
 

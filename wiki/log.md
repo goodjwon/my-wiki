@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-02] style | 위키 콘텐츠에서 Notion(소스 도구) 언급 제거
+- 사용자 지적 "Notion 자체는 언급할 필요 없다" — 소스 도구는 독자 콘텐츠에 등장할 이유 없음.
+- **A 일괄(12챕터)**: `원본: Notion 데이터베이스 "..."` 구분 블록 12개 제거, frontmatter `tags`의 `notion` 12개 제거, `<!-- 라이브 Notion 수집/갱신 -->` HTML 주석 48건 제거.
+- **B 판단(사용자 선택: 0.1 삭제 + ch01 유지)**: ch00 문서 `0.1 출판용 Notion 뷰 운영 가이드`(저자 운영 메모, Java 학습 무관) 147줄 삭제. ch01 "Notion 계정 준비"(학습자 노트 도구 안내)는 유지.
+- **콘텐츠 페이지**: index("Notion DB"·"Notion 북마크"→제거, 91→97 정정), src-java-study(개요 "Notion 데이터베이스 기반"→제거·갱신노트 정리·0.1 참조 삭제), src-my-links(개요 "Notion 데이터베이스" 제거).
+- **유지**: log/backlog(내부 작업기록), raw catalog/README(source-of-record), frontmatter `sources:` 경로. dangling(→0.1) 0, 빌드 통과.
+
 ## [2026-07-01] fix | bash 명령 정확성·복붙 안정성 점검 (에이전트 5병렬) + 수정
 - 복붙 실행용 가이드 11편 + java-study 6챕터 전수 검증(대화형 혼합/포그라운드 장기실행/heredoc 따옴표/변수·cwd 의존/명령 정확성). heredoc 따옴표·exit code 등은 /tmp 실측까지.
 - **🔴 module5 Step3-2 펜스 깨짐**: 바깥 ` ```bash `가 heredoc 본문 중첩 ` ``` `를 못 감싸 렌더·복사버튼 truncation → 4-backtick(Step2와 동일)으로 수정.

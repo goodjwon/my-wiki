@@ -1,7 +1,7 @@
 ---
 title: "Java 스터디 — Spring과 프로젝트 실행"
 type: source
-tags: [java, study, notion, ch06]
+tags: [java, study, ch06]
 sources: [java-study/java-study-ch06-Spring과프로젝트실행.md]
 created: 2026-04-18
 updated: 2026-06-30
@@ -23,15 +23,9 @@ updated: 2026-06-30
 
 ---
 
-원본: Notion 데이터베이스 "[2024-2025]java 스터디 자료"
-
----
-
 ## 6.0 Spring 핵심 개념: IoC, DI, Bean, MVC
 
 **🎯 목표**: IoC·DI·Bean·MVC로 객체 조립을 컨테이너에 맡기는 개념을 잡는다.
-
-<!-- 2026-06-29 라이브 Notion 최신본으로 갱신 -->
 
 ### 개요
 이 문서는 Java와 객체지향 기초를 마친 독자가 Spring 프로젝트로 넘어가기 전에 잡아야 할 공통 개념을 정리한 본문 가이드입니다. 뒤 장에서 환경 구성, 데이터 접근, 보안, 테스트를 각각 다루기 전에, 여기서 IoC, DI, Bean, MVC, 프록시 같은 핵심 축을 먼저 연결합니다.
@@ -467,14 +461,11 @@ Maven은 단순한 라이브러리 다운로드 도구가 아니라, Java 프로
 
 Maven 도입의 핵심은 빌드 명령 하나가 아니라, 프로젝트 구조와 협업 방식을 표준화하는 데 있습니다.
 
-
 ---
 
 ## 6.3 프로파일 설정 가이드
 
 **🎯 목표**: 프로파일로 dev/prod 환경을 분리한다.
-
-<!-- 2026-06-29 라이브 Notion에서 수집 (4월 ingest 이후 추가분) -->
 
 ### 개요
 이 문서는 `day_by_spring` 프로젝트를 기준으로 Spring Boot 프로파일을 어떻게 나누고 실행하는지 정리한 가이드입니다. 이 저장소는 추상적인 `local/dev/test/prod` 예시를 설명하는 문서가 아니라, **실제 `application-*.yml` 파일 구조와 실행 명령을 기준으로 읽어야 하는 문서**입니다.
@@ -639,7 +630,6 @@ The following 1 profile is active: "<지정한 프로파일>"
 - Spring Boot Profiles
 - Spring Boot Testing
 공식 문서는 프로파일별 설정 파일이 활성 프로파일에 따라 함께 로드된다는 구조와, 실행 시 프로파일을 바꾸는 방식을 기준으로 읽으면 됩니다.
-
 
 ### ✏️ 직접 해보기
 
