@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-02] feat | ch01 "첫 프로젝트 만들기" 신설 (빈약한 프로젝트 셋업 보강)
+- 사용자 지적: 최초 프로젝트 생성·설정 내용이 빈약(단일 파일 Hello World에서 곧장 2장으로). 실제 프로젝트 스캐폴딩·빌드·구조·git이 없었음.
+- **1.2 첫 프로젝트 만들기 (Maven·Gradle)** 신설: 왜 빌드도구 → 생성(둘 다 병기) → 표준 구조 → 빌드·실행 사이클 → 의존성(pom.xml/build.gradle) → git init+.gitignore. IDE 최소화·커맨드 중심.
+- **Mac/Windows 감안**: OS 분기 3가지(래퍼 `./gradlew`↔`gradlew`, 줄바꿈 `\`는 Unix 전용→한 줄, `.gitignore` heredoc→편집기 생성) 표로 명시. 생성 명령 한 줄화로 양쪽 호환. `.gitignore` 값 옆 주석 제거(gitignore는 줄 전체 # 만 인식).
+- 반영: ch01 목표·따라하는법, [[guide-java-track1-basics]] 1단계 표, src 챕터 표. 빌드·펜스 통과.
+
+
 ## [2026-07-02] style | 위키 콘텐츠에서 Notion(소스 도구) 언급 제거
 - 사용자 지적 "Notion 자체는 언급할 필요 없다" — 소스 도구는 독자 콘텐츠에 등장할 이유 없음.
 - **A 일괄(12챕터)**: `원본: Notion 데이터베이스 "..."` 구분 블록 12개 제거, frontmatter `tags`의 `notion` 12개 제거, `<!-- 라이브 Notion 수집/갱신 -->` HTML 주석 48건 제거.
