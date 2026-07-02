@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch01]
 sources: [java-study/java-study-ch01-환경과실행.md]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -181,14 +181,28 @@ Java와 Spring 학습에 가장 무난한 선택입니다.
 
 #### 5. 첫 Java 프로그램
 
-가장 단순한 출발점은 콘솔에 한 줄을 출력하는 프로그램입니다. 예제 소스 다발인 `day-by-java`에도 같은 목적의 최소 실행 예제가 있습니다.
+가장 단순한 출발점은 콘솔에 한 줄을 출력하는 프로그램입니다. 예제 소스 다발인 `day-by-java`에도 같은 목적의 최소 실행 예제가 있습니다. 아직 프로젝트를 만들기 전 단계이므로, 아무 작업 디렉터리(예: `~/hello-first`)에 **파일 하나**만 만들어 시작합니다. package 선언도 아직 필요 없습니다(프로젝트 구조로 옮기는 것은 1.2에서 다룹니다).
+
+**파일**: HelloJava.java
 
 ```java
-public class Main {
+public class HelloJava {
     public static void main(String[] args) {
         System.out.println("Hello world!");
     }
 }
+```
+
+파일이 있는 디렉터리에서 컴파일하고 실행합니다.
+
+```bash
+javac HelloJava.java
+java HelloJava
+```
+
+```text
+예상 결과
+Hello world!
 ```
 
 ##### 여기서 먼저 볼 것
@@ -206,6 +220,14 @@ public class Main {
 1. `java` 명령으로 JVM에서 실행
 
 이 흐름을 이해하면 IDE가 내부에서 해주는 일도 더 잘 보입니다.
+
+##### 자주 나는 에러
+
+| 에러 | 원인 확인 |
+|------|----------|
+| `class HelloJava is public, should be declared in a file named HelloJava.java` | 클래스명과 파일명이 다름 — 파일명을 `HelloJava.java`로 맞춤 |
+| `javac: command not found` (Windows: `'javac'은(는) ... 인식할 수 없습니다`) | JDK 미설치 또는 PATH 미설정 — `javac -version`으로 확인 |
+| `Error: Could not find or load main class HelloJava` | `.class`가 없는 디렉터리에서 실행했거나 `java HelloJava.class`처럼 확장자를 붙임 |
 
 #### 자주 하는 실수
 
@@ -232,7 +254,7 @@ Java 입문의 핵심은 **언어 특징을 아는 것보다, JDK 설치와 첫 
 
 #### 개요
 
-`javac Main.java` 한 줄은 파일 하나짜리입니다. 하지만 실제 프로젝트는 **여러 소스·테스트·외부 라이브러리**를 다뤄야 하고, 그걸 사람이 손으로 관리할 수 없습니다. 그래서 **빌드 도구**(Maven 또는 Gradle)가 표준 구조·의존성·빌드·실행을 대신 관리합니다. 이 스터디는 Spring 단계에서 **Maven**을 쓰지만, 현업에서 **Gradle**도 널리 쓰이므로 둘 다 익혀 둡니다.
+1.1의 `javac HelloJava.java` 한 줄은 파일 하나짜리입니다. 하지만 실제 프로젝트는 **여러 소스·테스트·외부 라이브러리**를 다뤄야 하고, 그걸 사람이 손으로 관리할 수 없습니다. 그래서 **빌드 도구**(Maven 또는 Gradle)가 표준 구조·의존성·빌드·실행을 대신 관리합니다. 이 스터디는 Spring 단계에서 **Maven**을 쓰지만, 현업에서 **Gradle**도 널리 쓰이므로 둘 다 익혀 둡니다.
 
 > IDE(IntelliJ)의 *New Project*로도 같은 프로젝트를 만들 수 있습니다. 하지만 **구조를 이해하려면 먼저 명령으로 한 번** 만들어 보는 편이 낫습니다. 아래는 CLI 기준입니다.
 
@@ -370,6 +392,8 @@ Maven **또는** Gradle 중 하나로 `hello-java` 프로젝트를 만들고, `A
 
 첫 프로젝트의 핵심은 언어가 아니라 **"빌드 도구가 잡아 주는 표준 구조 위에서 소스를 빌드·실행하는 흐름"**입니다. Maven·Gradle 어느 쪽이든 `생성 → 구조 확인 → 빌드 → 실행 → 의존성 → git` 한 바퀴를 실행해 보면, 이후 Spring 프로젝트(6장)도 같은 골격의 확장임을 알게 됩니다.
 
+1.1의 `HelloJava.java`를 이 구조로 옮긴다면 `src/main/java/com/example/HelloJava.java`에 두고 첫 줄에 `package com.example;`을 선언하면 됩니다. 이후 장(2장~)의 실습도 이 프로젝트의 `com.example.chNN` 패키지에서 이어집니다.
+
 #### 한 줄 정리
 
 단일 파일 실행을 넘어 **빌드 도구로 프로젝트를 만들고 빌드·실행 사이클을 손에 익히는 것**이 진짜 프로젝트의 출발점입니다.
@@ -422,6 +446,9 @@ Java와 C/C++은 모두 프로그래밍 언어지만, 여러 면에서 차이점
 #### 2.5 코드 예시 비교
 
 #### Java 코드 예시
+
+> 참고 코드 — C/C++과의 문법 비교용입니다. 실행 실습은 1.1의 `HelloJava.java`로 합니다.
+
 ```java
 public class HelloWorld {
     public static void main(String[] args) {
