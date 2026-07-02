@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch09]
 sources: [java-study/java-study-ch09-테스트와품질.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-02
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -166,15 +166,9 @@ class LoanRepositoryTest {
 - [Spring Framework Testing](https://docs.spring.io/spring-framework/reference/testing.html)
 - [Spring Boot Test Auto-configuration Annotations](https://docs.spring.io/spring-boot/reference/test-auto-configuration/index.html)
 
-#### 테스트 실행 방법 (커맨드)
+#### 테스트 실행 방법 (명령)
 
-테스트는 IDE의 ▶ 버튼으로도 돌지만, **빌드 도구 커맨드로 돌려 초록불을 직접 확인**하는 습관을 들인다.
-
-```bash
-# Gradle — Mac/Linux (Windows는 gradlew.bat)
-./gradlew test                                # 전체
-./gradlew test --tests "*LoanControllerTest"  # 특정 클래스만
-```
+테스트는 IDE의 ▶ 버튼으로도 실행할 수 있지만, 빌드 도구 명령으로 실행해 결과를 직접 확인하는 습관을 들입니다.
 
 ```bash
 # Maven — Mac/Linux (Windows는 mvnw.cmd)
@@ -182,8 +176,14 @@ class LoanRepositoryTest {
 ./mvnw test -Dtest=LoanControllerTest         # 특정 클래스만
 ```
 
-- 성공 판정: `BUILD SUCCESSFUL`(Gradle) / `Tests run: N, Failures: 0`(Maven).
-- 실패하면 리포트를 본다: `build/reports/tests/test/index.html`(Gradle) · `target/surefire-reports/*.txt`(Maven).
+```bash
+# Gradle — Mac/Linux (Windows는 gradlew.bat)
+./gradlew test                                # 전체
+./gradlew test --tests "*LoanControllerTest"  # 특정 클래스만
+```
+
+- Maven은 `Tests run: N, Failures: 0`이, Gradle은 `BUILD SUCCESSFUL`이 출력되면 정상입니다.
+- 실패하면 리포트를 확인합니다: Maven은 `target/surefire-reports/*.txt`, Gradle은 `build/reports/tests/test/index.html`.
 
 ### ✏️ 직접 해보기
 
@@ -358,7 +358,7 @@ class LoanServiceImplTest {
 
 #### 프로젝트에 두고 실행하기
 
-위 `Calculator`·`CalculatorTest`를 실제로 돌리려면 JUnit 5 의존성과 표준 위치가 필요하다.
+위 `Calculator`·`CalculatorTest`를 실제로 실행하려면 JUnit 5 의존성과 표준 위치가 필요합니다.
 
 의존성 (빌드 파일):
 
@@ -380,7 +380,7 @@ dependencies {
 </dependency>
 ```
 
-파일 배치 — 프로덕션과 테스트를 나눈다:
+파일 배치 — 프로덕션 코드와 테스트 코드를 나눕니다:
 
 ```text
 src/main/java/com/example/Calculator.java       ← 대상 코드
@@ -395,7 +395,7 @@ src/test/java/com/example/CalculatorTest.java   ← 테스트 코드
 ./mvnw test -Dtest=CalculatorTest         # Windows: mvnw.cmd
 ```
 
-- 성공: 콘솔에 `CalculatorTest > add() PASSED …` + `BUILD SUCCESSFUL`. 초록불이 뜨면 완료.
+- 콘솔에 `CalculatorTest > add() PASSED …`와 `BUILD SUCCESSFUL`이 출력되면 정상입니다.
 
 ### 정리
 좋은 테스트 예제는 화려한 프레임워크보다, 책임이 잘 나뉜 작은 코드에서 시작합니다. 계산기 같은 작은 문제를 테스트 가능하게 바꾸는 과정은 이후의 서비스, 컨트롤러, 리포지토리 테스트로 그대로 이어집니다.
@@ -413,16 +413,16 @@ src/test/java/com/example/CalculatorTest.java   ← 테스트 코드
 
 #### 먼저 — 서버를 띄우고 시작한다
 
-curl은 떠 있는 서버에 요청을 보내는 도구다. **다른 터미널에서 서버를 먼저 띄운 뒤**, 이 터미널에서 curl을 친다.
+curl은 떠 있는 서버에 요청을 보내는 도구입니다. **다른 터미널에서 서버를 먼저 띄운 뒤**, 이 터미널에서 curl 명령을 실행합니다.
 
 ```bash
 # 별도 터미널에서 (포그라운드로 계속 떠 있음, 종료는 Ctrl+C)
-./gradlew bootRun        # Windows: gradlew.bat bootRun
-# 또는  ./mvnw spring-boot:run   (Windows: mvnw.cmd spring-boot:run)
+./mvnw spring-boot:run   # Windows: mvnw.cmd spring-boot:run
+# 또는  ./gradlew bootRun   (Windows: gradlew.bat bootRun)
 # → 로그에 "Started ...Application" 이 뜨면 8080 준비 완료
 ```
 
-> **Windows 주의**: PowerShell에서 `curl`은 `Invoke-WebRequest`의 별칭이라 아래 `-X`/`-d` 문법이 깨진다. **`curl.exe`** 로 명시하거나 **Git Bash**에서 실행한다.
+> **Windows 주의**: PowerShell에서 `curl`은 `Invoke-WebRequest`의 별칭이라 아래 `-X`/`-d` 문법이 깨집니다. **`curl.exe`** 로 명시하거나 **Git Bash**에서 실행합니다.
 
 #### 왜 중요한가
 
@@ -436,9 +436,9 @@ curl은 떠 있는 서버에 요청을 보내는 도구다. **다른 터미널�
 
 이 문서는 자동화 테스트를 대체하지 않습니다. 책 기준에서 `curl`은 아래 역할에 가깝습니다.
 
-- API 설계가 실제 요청/응답으로 어떻게 보이는지 확인한다.
-- 인증, 직렬화, 상태 코드 같은 경계 지점을 빠르게 점검한다.
-- 버그 재현 절차를 텍스트로 남긴다.
+- API 설계가 실제 요청/응답으로 어떻게 보이는지 확인합니다.
+- 인증, 직렬화, 상태 코드 같은 경계 지점을 빠르게 점검합니다.
+- 버그 재현 절차를 텍스트로 남깁니다.
 반대로 아래는 자동화 테스트가 더 적합합니다.
 
 - 반복 실행이 필요한 회귀 검증
@@ -547,9 +547,9 @@ GET /api/books/{id}
 - 토큰이 있을 때 정상 동작하는가
 - 토큰이 없을 때 요청이 차단되는가
 - 권한이 부족할 때 `403 Forbidden`이 나는가
-즉, 인증 API 검증은 “요청이 된다”가 아니라 **경계가 올바르게 막히는지**까지 포함해야 합니다.
+즉, 인증 API 검증은 "요청이 된다"가 아니라 **경계가 올바르게 막히는지**까지 포함해야 합니다.
 
-현재 저장소는 `AuthenticationEntryPoint`와 `AccessDeniedHandler`를 별도로 커스터마이징하지 않았습니다. 따라서 보호된 API에서 토큰이 없을 때의 정확한 실패 응답은 실제 실행 환경에서 확인하는 편이 안전합니다. 반면 **인증된 USER 토큰으로 `/api/admin/**`를 호출했을 때 권한 부족으로 차단되는 흐름은 반드시 확인해야 합니다.
+현재 저장소는 `AuthenticationEntryPoint`와 `AccessDeniedHandler`를 별도로 커스터마이징하지 않았습니다. 따라서 보호된 API에서 토큰이 없을 때의 정확한 실패 응답은 실제 실행 환경에서 확인하는 편이 안전합니다. 반면 인증된 USER 토큰으로 `/api/admin/**`를 호출했을 때 권한 부족으로 차단되는 흐름은 반드시 확인해야 합니다.
 
 ```bash
 curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" \
