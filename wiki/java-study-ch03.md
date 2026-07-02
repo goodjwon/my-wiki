@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch03]
 sources: [java-study/java-study-ch03-컬렉션과함수형.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -21,6 +21,8 @@ updated: 2026-06-30
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 컬렉션 예제를 직접 돌려보고, 3.8 알고리즘 실전문제로 마무리한다.
 
+> **실습 프로젝트**: 이 장의 실습 예제 파일은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/com/example/ch03/` 아래에 만듭니다(패키지 `com.example.ch03`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
+
 ---
 
 ## 3.0 컬렉션과 함수형 개요
@@ -32,16 +34,35 @@ updated: 2026-06-30
 
 ### 왜 중요한가
 컬렉션과 함수형 프로그래밍은 서로 다른 주제처럼 보이지만, 실제 Java 코드에서는 함께 등장합니다. 컬렉션이 데이터를 담는 방식이라면, 람다와 스트림은 그 데이터를 읽고 변환하고 집계하는 방식입니다.
-가장 짧은 연결 예시는 아래처럼 볼 수 있습니다.
-```java
-List<String> names = List.of("kim", "lee", "park");
-List<String> result = names.stream()
-    .filter(name -> name.startsWith("k"))
-    .map(String::toUpperCase)
-    .toList();
+가장 짧은 연결 예시는 아래처럼 볼 수 있습니다. 이 장의 첫 실행 예제이기도 합니다.
 
-System.out.println(result);
+**파일**: src/main/java/com/example/ch03/IntroPipelineDemo.java
+
+```java
+package com.example.ch03;
+
+import java.util.List;
+
+public class IntroPipelineDemo {
+    public static void main(String[] args) {
+        List<String> names = List.of("kim", "lee", "park");
+        List<String> result = names.stream()
+            .filter(name -> name.startsWith("k"))
+            .map(String::toUpperCase)
+            .toList();
+
+        System.out.println(result);
+    }
+}
 ```
+
+프로젝트 루트에서 아래 한 줄로 실행합니다. 이 장의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch03.IntroPipelineDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.IntroPipelineDemo
+```
+
 ```text
 예상 결과
 [KIM]
@@ -98,6 +119,22 @@ Java 컬렉션 프레임워크는 데이터를 담는 공통 인터페이스와 
 - 키와 값으로 조회해야 하는가
 - 앞뒤 삽입과 삭제가 잦은가
 #### 2. 가장 자주 만나는 컬렉션 인터페이스
+
+네 인터페이스의 예제는 파일 하나에 모아 실행합니다. 먼저 아래 뼈대를 만들고, 이어지는 List → Set → Queue → Map 코드 조각을 `main` 안에 순서대로 넣습니다.
+
+**파일**: src/main/java/com/example/ch03/CollectionBasicsDemo.java
+
+```java
+package com.example.ch03;
+
+import java.util.*;
+
+public class CollectionBasicsDemo {
+    public static void main(String[] args) {
+        // 아래 List → Set → Queue → Map 코드 조각을 이 자리에 순서대로 넣습니다
+    }
+}
+```
 
 ##### List
 
@@ -158,6 +195,27 @@ for (Map.Entry<Integer, String> entry : userMap.entrySet()) {
 }
 ```
 
+네 조각을 모두 넣었으면 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch03.CollectionBasicsDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.CollectionBasicsDemo
+```
+
+```text
+예상 결과
+Apple
+Banana
+Cherry
+[1, 2, 3]
+First
+Second
+Kim
+1 : Kim
+2 : Lee
+3 : Park
+```
+
 #### 3. 구현체는 언제 고를까
 
 대부분의 초중급 실무 코드에서는 아래 정도만 먼저 익혀도 충분합니다.
@@ -166,7 +224,7 @@ for (Map.Entry<Integer, String> entry : userMap.entrySet()) {
 - `HashSet`: 중복 제거와 포함 여부 확인
 - `HashMap`: 키 기반 조회
 - `ArrayDeque`: 스택과 큐를 모두 자연스럽게 처리
-핵심은 “무조건 빠른 자료구조”를 찾는 것이 아니라, **현재 코드의 접근 패턴과 수정 패턴에 맞는지**를 보는 것입니다.
+핵심은 "무조건 빠른 자료구조"를 찾는 것이 아니라, **현재 코드의 접근 패턴과 수정 패턴에 맞는지**를 보는 것입니다.
 
 ##### ArrayList와 LinkedList를 어떻게 구분할까
 
@@ -193,9 +251,13 @@ names.add("Kim");
 
 - 컬렉션의 의도가 코드에 바로 드러납니다.
 - 잘못된 타입 삽입이 런타임이 아니라 컴파일 단계에서 막힙니다.
-제네릭은 컬렉션에만 쓰는 문법이 아니라, 같은 구조를 여러 타입에 안전하게 재사용하는 도구이기도 합니다. `day-by-java`의 단순 예제를 보면 감이 더 빠르게 잡힙니다.
+제네릭은 컬렉션에만 쓰는 문법이 아니라, 같은 구조를 여러 타입에 안전하게 재사용하는 도구이기도 합니다. `day-by-java`의 단순 예제를 보면 감이 더 빠르게 잡힙니다. `Box`는 보조 클래스이므로 같은 파일에 non-public으로 함께 둡니다.
+
+**파일**: src/main/java/com/example/ch03/GenericsDemo.java
 
 ```java
+package com.example.ch03;
+
 class Box<T> {
     private T value;
 
@@ -208,13 +270,17 @@ class Box<T> {
     }
 }
 
-Box<String> stringBox = new Box<>();
-stringBox.setValue("Hello, Generics!");
-System.out.println(stringBox.getValue());
+public class GenericsDemo {
+    public static void main(String[] args) {
+        Box<String> stringBox = new Box<>();
+        stringBox.setValue("Hello, Generics!");
+        System.out.println(stringBox.getValue());
 
-Box<Integer> intBox = new Box<>();
-intBox.setValue(1234);
-System.out.println(intBox.getValue());
+        Box<Integer> intBox = new Box<>();
+        intBox.setValue(1234);
+        System.out.println(intBox.getValue());
+    }
+}
 ```
 
 ```text
@@ -260,7 +326,7 @@ public static void printNumbers(List<? extends Number> numbers) {
 - `List`, `Map` 인터페이스가 아니라 구현체 타입으로 필드를 고정하는 것
 - 제네릭을 생략한 raw type을 사용하는 것
 - 자료구조의 역할보다 익숙한 구현체만 반복해서 쓰는 것
-- `LinkedList`를 막연히 “삽입이 빠르다”는 이유만으로 기본값처럼 쓰는 것
+- `LinkedList`를 막연히 "삽입이 빠르다"는 이유만으로 기본값처럼 쓰는 것
 #### 실무 연결 포인트
 
 컬렉션과 제네릭 감각이 약하면 DTO 리스트 처리, 요청/응답 매핑, Querydsl 결과 가공, 테스트 데이터 준비가 모두 불안정해집니다. 반대로 이 감각이 잡히면 프레임워크를 바꿔도 코드 읽는 속도가 빨라집니다.
@@ -296,6 +362,22 @@ public static void printNumbers(List<? extends Number> numbers) {
 #### 왜 중요한가
 
 자료구조는 알고리즘 문제에서만 중요한 것이 아니라, 서비스 코드의 성능과 가독성에도 직접 영향을 줍니다. 같은 데이터를 다루더라도 어떤 구조를 선택하느냐에 따라 코드가 훨씬 단순해지거나 복잡해질 수 있습니다.
+
+이 절의 예제도 파일 하나에 모아 실행합니다. 아래 뼈대를 만들고, 1~7의 코드 조각을 `main` 안에 순서대로 넣습니다(5. Vector는 코드 조각이 없습니다).
+
+**파일**: src/main/java/com/example/ch03/DataStructureUsageDemo.java
+
+```java
+package com.example.ch03;
+
+import java.util.*;
+
+public class DataStructureUsageDemo {
+    public static void main(String[] args) {
+        // 아래 1~7의 코드 조각을 이 자리에 순서대로 넣습니다
+    }
+}
+```
 
 #### 1. ArrayList
 
@@ -450,6 +532,28 @@ Message 2
 
 `ArrayDeque`는 `Stack`과 `LinkedList`의 자리를 상당 부분 대체할 수 있는 실용적인 기본값입니다. 새 코드에서는 스택과 큐 문제를 만나면 `ArrayDeque`부터 검토하는 편이 더 일관됩니다.
 
+조각을 모두 넣었으면 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch03.DataStructureUsageDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.DataStructureUsageDemo
+```
+
+```text
+예상 결과
+ArrayList: [사과, 바나나, 체리]
+바나나
+[Urgent Task, Task 1, Task 2]
+true
+[spring, java]
+Lee
+Order
+Message 1
+Message 2
+```
+
+`HashSet` 출력(`[spring, java]`)의 순서는 정렬 순서가 아니라 해시 버킷 배치에 따른 것으로, 순서에 의미를 두면 안 된다는 점도 이 출력에서 함께 확인할 수 있습니다.
+
 #### 8. 선택 기준 요약
 
 - 조회 중심: `ArrayList`
@@ -486,11 +590,13 @@ Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
 
 #### 왜 필요한가
 
-기초 문서를 읽고 나면 `List`, `Set`, `Map`의 정의는 알게 되지만, 실제 문제 앞에서는 다시 막히기 쉽습니다. 이 문서는 “이 상황이라면 무엇을 고를까”를 반복해 보면서 컬렉션 선택 기준을 손에 익히도록 돕습니다.
+기초 문서를 읽고 나면 `List`, `Set`, `Map`의 정의는 알게 되지만, 실제 문제 앞에서는 다시 막히기 쉽습니다. 이 문서는 "이 상황이라면 무엇을 고를까"를 반복해 보면서 컬렉션 선택 기준을 손에 익히도록 돕습니다.
 
 #### 1. 상품 목록 관리: ArrayList
 
 상품 목록은 순서를 유지하면서 반복 조회하는 일이 많고, 인덱스 접근도 자주 일어납니다. 이런 상황에서는 `ArrayList`가 가장 자연스럽습니다.
+
+**참고 코드** (설계 골격 — `Product`는 임의의 도메인 클래스라 이 절의 Demo에는 넣지 않습니다):
 
 ```java
 public class ProductCatalog {
@@ -510,7 +616,25 @@ public class ProductCatalog {
 }
 ```
 
-핵심은 “삽입/삭제가 아주 많지 않다면 기본 리스트는 먼저 `ArrayList`를 검토한다”는 점입니다.
+핵심은 "삽입/삭제가 아주 많지 않다면 기본 리스트는 먼저 `ArrayList`를 검토한다"는 점입니다.
+
+시나리오 2~6의 코드는 파일 하나에 모아 실행합니다. 아래 뼈대를 만들고, 각 시나리오의 코드 조각을 `main` 안에 순서대로 넣습니다.
+
+**파일**: src/main/java/com/example/ch03/CollectionScenarioDemo.java
+
+```java
+package com.example.ch03;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class CollectionScenarioDemo {
+    public static void main(String[] args) {
+        // 시나리오 2~6의 코드 조각을 이 자리에 순서대로 넣습니다
+        // (4의 BlockingQueue 보강 예시와 7의 FileNode는 참고 코드라 제외합니다)
+    }
+}
+```
 
 #### 2. 진료 대기열: LinkedList보다 Queue 관점으로 보기
 
@@ -571,6 +695,8 @@ System.out.println(messages.pollFirst());
 
 단순한 큐 예제를 넘어서 멀티스레드에서 생산자와 소비자가 데이터를 주고받는 상황이라면 `Queue`보다 `BlockingQueue`를 먼저 떠올리는 편이 좋습니다.
 
+**참고 코드** (구조 발췌 — 스레드 실행 없이 골격만 보여주므로 이 절의 Demo에는 넣지 않습니다):
+
 ```java
 BlockingQueue<String> jobs = new ArrayBlockingQueue<>(10);
 Runnable producer = () -> {
@@ -613,7 +739,7 @@ VIP 주문
 일반 주문
 ```
 
-이 구조의 핵심은 “먼저 들어온 것”이 아니라 “먼저 처리할 가치가 큰 것”을 우선한다는 점입니다.
+이 구조의 핵심은 "먼저 들어온 것"이 아니라 "먼저 처리할 가치가 큰 것"을 우선한다는 점입니다.
 
 #### 6. 설정 값 공유: ConcurrentHashMap
 
@@ -629,9 +755,31 @@ System.out.println(settings.get("theme"));
 
 중요한 점은 `Vector`처럼 오래된 synchronized 컬렉션을 먼저 떠올리기보다, 요구사항에 맞는 동시성 컬렉션을 찾는 습관입니다.
 
+시나리오 2~6의 조각을 모두 넣었으면 실행합니다. `record Order`는 `main` 안에 그대로 두어도 됩니다(Java 16+의 지역 record).
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch03.CollectionScenarioDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.CollectionScenarioDemo
+```
+
+```text
+예상 결과
+응급환자
+홍길동
+/orders
+/books
+message-1
+message-2
+VIP 주문
+일반 주문
+dark
+```
+
 #### 7. 트리 구조 표현: 컬렉션을 조합해서 만든다
 
-폴더 구조나 카테고리 계층처럼 트리 구조를 다룰 때는 Java 기본 컬렉션을 조합해 직접 표현할 수 있습니다. 보통 각 노드가 자식 목록을 `List`로 가지는 방식이 단순합니다.
+디렉터리 구조나 카테고리 계층처럼 트리 구조를 다룰 때는 Java 기본 컬렉션을 조합해 직접 표현할 수 있습니다. 보통 각 노드가 자식 목록을 `List`로 가지는 방식이 단순합니다.
+
+**참고 코드** (트리 노드의 골격 — 실행 예제는 아닙니다):
 
 ```java
 class FileNode {
@@ -688,6 +836,22 @@ class FileNode {
 
 람다식은 익명 클래스가 하던 역할을 더 짧고 명확하게 표현할 수 있게 해줍니다. 하지만 핵심은 짧아진 문장이 아니라, **동작을 값처럼 다룰 수 있게 되었다는 점**입니다.
 
+이 절의 두 예제(1의 `Runnable`, 2의 `Function`)는 파일 하나에 모아 실행합니다. 아래 뼈대를 만들고, 코드 조각을 `main` 안에 순서대로 넣습니다.
+
+**파일**: src/main/java/com/example/ch03/LambdaBasicsDemo.java
+
+```java
+package com.example.ch03;
+
+import java.util.function.Function;
+
+public class LambdaBasicsDemo {
+    public static void main(String[] args) {
+        // 아래 Runnable → Function 코드 조각을 이 자리에 순서대로 넣습니다
+    }
+}
+```
+
 `day-by-java` 예제 중 가장 단순한 형태는 아래와 같습니다.
 
 ```java
@@ -730,6 +894,21 @@ System.out.println(lengthFunction.apply("Hello"));
 
 이 코드는 문자열 자체를 저장하는 것이 아니라, **문자열을 받아 길이로 바꾸는 규칙**을 변수로 들고 있다는 점이 핵심입니다.
 
+두 조각을 모두 넣었으면 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch03.LambdaBasicsDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.LambdaBasicsDemo
+```
+
+```text
+예상 결과
+Hello, Lambda!
+Hello, Lambda!
+Hello, Lambda!
+5
+```
+
 #### 3. 스트림은 컬렉션을 대체하지 않는다
 
 스트림은 데이터를 저장하는 구조가 아니라, **데이터를 처리하는 파이프라인**입니다.
@@ -769,7 +948,7 @@ List<String> result = names.stream()
 - 스트림 한 줄에 비즈니스 규칙이 과도하게 몰릴 때
 #### 6. 병렬 스트림은 신중하게 볼 것
 
-병렬 스트림은 “더 빠른 기본값”이 아닙니다. 작업 특성, 데이터 크기, 부작용 여부를 함께 봐야 합니다. 초중급 단계에서는 먼저 **순차 스트림을 명확하게 읽는 능력**을 갖추는 편이 더 중요합니다.
+병렬 스트림은 "더 빠른 기본값"이 아닙니다. 작업 특성, 데이터 크기, 부작용 여부를 함께 봐야 합니다. 초중급 단계에서는 먼저 **순차 스트림을 명확하게 읽는 능력**을 갖추는 편이 더 중요합니다.
 
 #### 7. 실무 연결 포인트
 
@@ -834,18 +1013,31 @@ Arrays.sort(numbers);             // 보통 O(n log n)
 
 정렬되지 않은 목록을 한 번 훑어야 하면 가장 단순합니다.
 
+**파일**: src/main/java/com/example/ch03/LinearSearchDemo.java
+
 ```java
-int[] data = {5, 3, 8, 4, 2};
-int target = 4;
-int index = -1;
-for (int i = 0; i < data.length; i++) {
-    System.out.println("인덱스 " + i + "에서 검사: 값 " + data[i]);
-    if (data[i] == target) {
-        index = i;
-        break;
+package com.example.ch03;
+
+public class LinearSearchDemo {
+    public static void main(String[] args) {
+        int[] data = {5, 3, 8, 4, 2};
+        int target = 4;
+        int index = -1;
+        for (int i = 0; i < data.length; i++) {
+            System.out.println("인덱스 " + i + "에서 검사: 값 " + data[i]);
+            if (data[i] == target) {
+                index = i;
+                break;
+            }
+        }
+        System.out.println("결과 인덱스: " + index);
     }
 }
-System.out.println("결과 인덱스: " + index);
+```
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch03.LinearSearchDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.LinearSearchDemo
 ```
 
 ```text
@@ -863,26 +1055,34 @@ System.out.println("결과 인덱스: " + index);
 
 데이터가 이미 정렬되어 있다면 범위를 절반씩 줄여 빠르게 찾을 수 있습니다.
 
+**파일**: src/main/java/com/example/ch03/BinarySearchDemo.java
+
 ```java
-int[] data = {2, 3, 5, 7, 11, 13, 17};
-int target = 11;
-int left = 0;
-int right = data.length - 1;
-int result = -1;
-while (left <= right) {
-    int mid = left + (right - left) / 2;
-    System.out.println("중간 인덱스: " + mid + ", 값: " + data[mid]);
-    if (data[mid] == target) {
-        result = mid;
-        break;
-    }
-    if (data[mid] < target) {
-        left = mid + 1;
-    } else {
-        right = mid - 1;
+package com.example.ch03;
+
+public class BinarySearchDemo {
+    public static void main(String[] args) {
+        int[] data = {2, 3, 5, 7, 11, 13, 17};
+        int target = 11;
+        int left = 0;
+        int right = data.length - 1;
+        int result = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            System.out.println("중간 인덱스: " + mid + ", 값: " + data[mid]);
+            if (data[mid] == target) {
+                result = mid;
+                break;
+            }
+            if (data[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        System.out.println("결과 인덱스: " + result);
     }
 }
-System.out.println("결과 인덱스: " + result);
 ```
 
 ```text
@@ -909,7 +1109,7 @@ System.out.println(users.get(2));
 
 - 평균 조회: `O(1)`
 - 전제: 키로 바로 접근할 수 있어야 합니다.
-즉, 검색의 핵심은 “무조건 빠른 알고리즘”이 아니라, **정렬 여부와 반복 조회 여부**를 먼저 보는 것입니다.
+즉, 검색의 핵심은 "무조건 빠른 알고리즘"이 아니라, **정렬 여부와 반복 조회 여부**를 먼저 보는 것입니다.
 
 #### 3. 정렬은 언제 직접 구현하고 언제 라이브러리를 쓰나
 
@@ -943,6 +1143,9 @@ System.out.println(lookup.contains(5));
 
 - 트리: 부모-자식으로 내려가는 계층 구조
 - 그래프: 순환과 복잡한 연결이 가능한 일반 연결 구조
+
+**참고 코드** (트리 노드의 골격 — 실행 예제는 아닙니다):
+
 ```java
 class TreeNode {
     int value;
@@ -982,19 +1185,27 @@ void preOrder(TreeNode node) {
 
 재귀 문제를 풀다 보면 같은 하위 문제를 여러 번 계산하는 경우가 많습니다. 동적 프로그래밍은 이 중복 계산을 줄이는 방법입니다.
 
+**파일**: src/main/java/com/example/ch03/FibonacciDpDemo.java
+
 ```java
-int fib(int n) {
-    int[] dp = new int[n + 1];
-    dp[0] = 0;
-    if (n > 0) dp[1] = 1;
+package com.example.ch03;
 
-    for (int i = 2; i <= n; i++) {
-        dp[i] = dp[i - 1] + dp[i - 2];
+public class FibonacciDpDemo {
+    static int fib(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 0;
+        if (n > 0) dp[1] = 1;
+
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
     }
-    return dp[n];
-}
 
-System.out.println(fib(10));
+    public static void main(String[] args) {
+        System.out.println(fib(10));
+    }
+}
 ```
 
 ```text
@@ -1006,7 +1217,7 @@ System.out.println(fib(10));
 
 #### 8. BFS와 DFS는 탐색의 다른 얼굴이다
 
-검색 알고리즘 문서를 보다 보면 선형 검색, 이진 검색뿐 아니라 그래프 탐색인 BFS와 DFS도 같이 등장합니다. 이 둘은 “배열에서 값 찾기”와는 결이 다르지만, **탐색 순서를 설계한다**는 점에서 연결됩니다.
+검색 알고리즘 문서를 보다 보면 선형 검색, 이진 검색뿐 아니라 그래프 탐색인 BFS와 DFS도 같이 등장합니다. 이 둘은 "배열에서 값 찾기"와는 결이 다르지만, **탐색 순서를 설계한다**는 점에서 연결됩니다.
 
 - DFS: 한 방향으로 깊게 들어갑니다.
 - BFS: 가까운 노드부터 넓게 확장합니다.
@@ -1054,7 +1265,7 @@ while (!queue.isEmpty()) {
 
 #### 문제 0. 대량 배열에서 여러 타깃 찾기
 
-크기 1,000,000의 배열에서 여러 목표 값이 몇 번째 인덱스에 있는지 찾아야 한다고 가정해 봅시다.
+크기 1,000,000의 배열에서 여러 목표 값이 몇 번째 인덱스에 있는지 찾아야 한다고 가정해 보겠습니다.
 
 - 한 번만 찾는다면 선형 검색으로도 충분한가
 - 배열이 정렬되어 있다면 이진 검색으로 무엇이 달라지는가
@@ -1190,6 +1401,44 @@ int[][] recommendations = {
 ##### 4. 빈도 계산 문제
 
 - 구매 빈도 분석
+
+#### 풀이를 실행하는 방법
+
+아홉 문제의 풀이 메서드는 파일 하나에 모아 실행합니다. 아래 뼈대를 만들면 `main`이 각 풀이를 예시 데이터로 호출합니다. 이어지는 문제별 풀이 메서드를 클래스 몸통(main 아래)에 순서대로 넣습니다. 문제 6은 정렬 한 줄이 풀이의 전부라 `main`에 이미 들어 있습니다.
+
+**파일**: src/main/java/com/example/ch03/PracticeSolutionsDemo.java
+
+```java
+package com.example.ch03;
+
+import java.util.*;
+
+public class PracticeSolutionsDemo {
+
+    public static void main(String[] args) {
+        System.out.println(findLowStockItems(new int[][]{{101, 5}, {102, 12}, {103, 8}}, 10));
+        System.out.println(findLevelUpUsers(new int[][]{{1, 1200}, {2, 800}, {3, 1500}}, 1000));
+        System.out.println(isUniqueCode("SAVE10"));
+        System.out.println(isUniqueCode("BOGO"));
+        System.out.println(calculateDropRate(20, 5));
+        System.out.println(calculateFinalPrice(new double[][]{{10000, 2}, {5000, 1}}, 25));
+
+        int[][] scores = {{1, 90}, {2, 75}, {3, 88}};
+        Arrays.sort(scores, (a, b) -> b[1] - a[1]);          // 문제 6. 리더보드 정렬
+        System.out.println(Arrays.deepToString(scores));
+
+        System.out.println(findMostPurchased(new int[]{101, 102, 101, 103, 102, 101}));
+        System.out.println(findAvailableSkills(new String[][]{{"파이어볼", "0"}, {"아이스볼트", "3"}, {"힐", "-1"}}));
+
+        int[][] recommendations = {{101, 85}, {102, 95}, {103, 70}};
+        sortRecommendations(recommendations);                 // 문제 9
+        System.out.println(Arrays.deepToString(recommendations));
+    }
+
+    // 아래에 문제 1~9의 풀이 메서드를 순서대로 붙여 넣습니다
+}
+```
+
 #### 문제 1. 재고 관리 시스템
 
 ```java
@@ -1339,6 +1588,27 @@ public static void sortRecommendations(int[][] recommendations) {
 
 리더보드 문제와 거의 같은 구조입니다. 문제를 여러 개 풀다 보면 정렬 기준과 출력 방식만 바뀌는 문제를 빠르게 인식하게 됩니다.
 
+풀이 메서드를 모두 넣었으면 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch03.PracticeSolutionsDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.PracticeSolutionsDemo
+```
+
+```text
+예상 결과
+[101, 103]
+[1, 3]
+true
+false
+25.0
+18750.0
+[[1, 90], [3, 88], [2, 75]]
+101
+[파이어볼, 힐]
+[[102, 95], [101, 85], [103, 70]]
+```
+
 #### 체크 포인트
 
 - 입력 형식을 정확히 읽었는가
@@ -1371,10 +1641,10 @@ public static void sortRecommendations(int[][] recommendations) {
 - 가능하면 `for` 문 풀이와 스트림 풀이를 둘 다 작성해봅니다.
 #### 이 문서의 목표
 
-- 함수형 인터페이스의 입력과 출력 형태를 구분한다.
-- 스트림 파이프라인의 중간 연산과 최종 연산을 구분한다.
-- `람다를 짧게 쓰는 것`과 `읽기 좋게 쓰는 것`이 다르다는 점을 이해한다.
-- `Optional`, `Comparator`, `groupingBy`, `flatMap` 같은 실전 도구를 한 번씩 직접 써 본다.
+- 함수형 인터페이스의 입력과 출력 형태를 구분합니다.
+- 스트림 파이프라인의 중간 연산과 최종 연산을 구분합니다.
+- `람다를 짧게 쓰는 것`과 `읽기 좋게 쓰는 것`이 다르다는 점을 이해합니다.
+- `Optional`, `Comparator`, `groupingBy`, `flatMap` 같은 실전 도구를 한 번씩 직접 써 봅니다.
 #### 1. 함수형 인터페이스 기본
 
 ##### 문제 1. `Runnable`을 람다식으로 바꾸기
@@ -1595,5 +1865,16 @@ for (String name : names) {
 - 함수형 인터페이스의 입력과 출력 타입을 먼저 적었는가
 - 스트림의 최종 결과 타입을 먼저 예상했는가
 - `map`과 `forEach`를 혼동하지 않았는가
+
+---
+
+#### 자주 나는 에러 → 원인 (3장 실습 공통)
+
+| 에러 메시지 | 원인 → 확인할 것 |
+|------------|----------------|
+| `Note: ... uses unchecked or unsafe operations.` 경고 | raw type 사용(`List list = new ArrayList()`) → 제네릭 타입 파라미터를 명시(`List<String>`) |
+| `IllegalStateException: stream has already been operated upon or closed` | 최종 연산이 끝난 스트림 변수를 다시 사용 → 스트림은 1회용, `list.stream()`으로 새로 연다 |
+| `ConcurrentModificationException` | for-each 순회 도중 같은 컬렉션에 add/remove → `Iterator.remove()` 또는 `removeIf()`로 교체 |
+| `Could not find or load main class com.example.ch03...` | `-Dexec.mainClass` 오타 또는 `com.example.ch03.` 접두 누락 → 리드인의 파일명(= 클래스명)과 대조 |
 
 ---
