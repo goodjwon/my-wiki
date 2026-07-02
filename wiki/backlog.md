@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-06-27
+updated: 2026-07-02
 ---
 
 # 위키 백로그
@@ -132,6 +132,9 @@ updated: 2026-06-27
 
 ### 다음 세션 최우선 (Pending)
 
+- [ ] **톤앤매너 정합 실행** — 계획·프롬프트 확정됨: [[plan-tone-consistency]] (2026-07-02 수립, 미실행)
+  - 진단: 최근 보강분(ch01·05·06·07·08·09) 신설 섹션이 평어체 섬(기존 경어 산문과 충돌) + 성공확인 라벨·OS분기·용어 흔들림. 근본 원인은 문체 규칙 미명문화.
+  - 실행 순서: 프롬프트 A(§7 문체 표준 + scripts/style-lint.sh 게이트) → B×6(파일 정합 루프, 병렬 3개씩) → C(적대적 검수) → 배포. 프롬프트 전문은 계획 페이지에.
 - [x] ~~**위키 본문 글쓰기 스타일 1차 일괄 점검·개선**~~ (2026-06-27 완료) — 비유 괄호 매핑·명사구 단편을 자연어 완결 문장 + 매핑 분리 문단으로 재작성. 규칙: 메모리 `feedback-wiki-writing-style`.
   - **1차 13편 완료** (에이전트 13병렬, ch6은 직전 세션 시연 완료): lecture-object ch4·ch5·ch7·ch9·ch12·ch13·ch15·appendixA·appendixC + lecture-clean-code ch4·ch6 + lecture-tdd ch4·ch11. 각 1건씩.
   - **2차 확장 후보 (남음)**: 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring-and-review 의 도입·비유 산문 부분. 다음 세션에 같은 방식(에이전트 병렬)으로 진행 가능.

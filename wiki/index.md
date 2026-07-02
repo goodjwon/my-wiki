@@ -74,6 +74,7 @@ updated: 2026-06-26
 - [[guide-deploy-mkdocs-firebase]] — 위키 외부 배포 가이드 (MkDocs Material + Firebase Hosting, 무료)
 - [[guide-wiki-authoring-standards]] — 위키 작성 표준 (다이어그램·분량·마킹·셀프 체크리스트)
 - [[backlog]] — 위키 백로그·진행 상태 (새 세션 시작 시 먼저 읽기)
+- [[plan-tone-consistency]] — 톤앤매너 정합 계획 (문체 표준 §7 + style-lint 게이트 + 루프 프롬프트 A/B/C)
 - [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 가이드 (CLAUDE.md 템플릿, ADR, API, 트러블슈팅)
 - [[guide-java-book-study-lab]] — Java 도서 5권 실습 환경 가이드 (Java 17, JUnit 5, Python, Node)
 - [[guide-java-learning-path]] — 📘 Java 학습 경로 전체 지도 (5개 트랙: 기초→설계→입출력→Spring→실전)
