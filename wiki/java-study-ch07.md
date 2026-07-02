@@ -311,13 +311,13 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 | order_index | INT | 자료 순서 | NOT NULL |
 | created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
 | updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
-#### 6. 문서(Contents)
+#### 6. 문서(contents)
 
 | 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
 |---|---|---|---|
 | id | INT | 문서 식별자 | PRIMARY KEY, AUTO_INCREMENT |
 | content_id | INT | 강의 자료 ID | FOREIGN KEY (course_contents.id), UNIQUE, NOT NULL |
-| content_type | ENUM | 구분 | “video”, “document” |
+| content_type | ENUM | 구분 (video/document) | NOT NULL |
 | file_path | VARCHAR(255) | 파일 경로 | NOT NULL |
 | file_type | VARCHAR(50) | 파일 타입 | NOT NULL |
 #### 7. 비디오(videos)
@@ -432,7 +432,9 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 | id | INT | 관계 식별자 | PRIMARY KEY, AUTO_INCREMENT |
 | course_id | INT | 강의 ID | FOREIGN KEY (courses.id), NOT NULL |
 | tag_id | INT | 태그 ID | FOREIGN KEY (tags.id), NOT NULL |
-| UNIQUE INDEX | (course_id, tag_id) | 중복 방지 | UNIQUE |
+
+> 인덱스: UNIQUE (course_id, tag_id) — 중복 방지
+
 #### 19. 학생-강의(student_courses)
 
 | 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
@@ -443,7 +445,9 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 | progress_percentage | FLOAT | 진도율(%) | DEFAULT 0, NOT NULL |
 | enrolled_at | DATETIME | 등록 일시 | DEFAULT CURRENT_TIMESTAMP |
 | last_accessed_at | DATETIME | 마지막 접속 일시 | DEFAULT CURRENT_TIMESTAMP |
-| UNIQUE INDEX | (student_id, course_id) | 중복 방지 | UNIQUE |
+
+> 인덱스: UNIQUE (student_id, course_id) — 중복 방지
+
 #### 20. 학생 컨텐츠 진도(student_content_progress)
 
 | 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
@@ -454,7 +458,8 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 | is_completed | BOOLEAN | 완료 여부 | DEFAULT FALSE, NOT NULL |
 | last_accessed_at | DATETIME | 마지막 접속 일시 | DEFAULT CURRENT_TIMESTAMP |
 | completed_at | DATETIME | 완료 일시 | NULL |
-| UNIQUE INDEX | (student_id, content_id) | 중복 방지 | UNIQUE |
+
+> 인덱스: UNIQUE (student_id, content_id) — 중복 방지
 
 ##### 시나리오 2: 레시피 공유 애플리케이션
 
