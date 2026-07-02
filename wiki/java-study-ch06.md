@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch06]
 sources: [java-study/java-study-ch06-Spring과프로젝트실행.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -20,6 +20,8 @@ updated: 2026-06-30
 **단계**: 2단계 — Spring & 웹 백엔드 · **앞 장**: [[java-study-ch05]] · **다음 장**: [[java-study-ch07]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 환경 세팅을 그대로 따라 하고, 빈 주입을 직접 코드로 확인한다. 깊이: [[concept-spring-core]].
+
+> **실습 프로젝트**: 이 챕터의 실습은 **6.1에서 start.spring.io로 만드는 `demo` 프로젝트**에서 진행합니다. ch07~08·10의 Spring 실습도 같은 `demo`를 이어서 씁니다. 본문에 가끔 나오는 `day_by_spring`은 필자의 실무 프로젝트 참고 사례일 뿐, 실습에 필요하지 않습니다.
 
 ---
 
@@ -232,20 +234,20 @@ pom.xml
 - 가장 단순한 Controller 또는 Test 코드
 #### 5. 실행 전에 반드시 확인할 설정
 
-프로젝트를 바로 실행하기 전에, 어떤 프로파일과 어떤 데이터베이스를 바라보는지 먼저 확인해야 합니다. 이 저장소는 추상적인 `local/dev` 설명보다, **실제 `application-*.yml` 파일과 활성 프로파일 이름**을 기준으로 읽는 편이 정확합니다.
+프로젝트를 바로 실행하기 전에, 어떤 프로파일과 어떤 데이터베이스를 바라보는지 먼저 확인해야 합니다. 추상적인 `local/dev` 설명보다, **실제 `application-*` 파일과 활성 프로파일 이름**을 기준으로 읽는 편이 정확합니다.
 
-##### 이 저장소에서 먼저 볼 파일
+##### demo 프로젝트에서 먼저 볼 파일
 
-- `src/main/resources/application.yml`
-- `src/main/resources/application-h2.yml`
-- `src/main/resources/application-dev-my.yml`
-- `src/main/resources/application-dev-pg.yml`
-- `src/main/resources/application-prod.yml`
+- `src/main/resources/application.properties` — 갓 만든 `demo`에는 설정 파일이 이것 하나뿐이고, 내용은 비어 있습니다.
+- 6.3에서 이 파일을 `application.yml`로 바꾸고, `application-h2.yml` 같은 프로파일별 파일을 직접 만들어 확장합니다.
+
+> **참고 — 실제 프로젝트에서는**: 필자의 실무 저장소(`day_by_spring`)처럼 `application-h2.yml`·`application-dev-my.yml`·`application-dev-pg.yml`·`application-prod.yml`을 두고 환경마다 골라 실행하는 구조가 일반적입니다. 6.3에서 같은 구조를 `demo`에 그대로 만들어 봅니다.
+
 ##### 우선 확인할 항목
 
 - 서버 포트
-- 기본 활성 프로파일이 무엇인지
-- 현재 실행이 `h2`, `dev-my`, `dev-pg`, `prod` 중 어느 환경인지
+- 기본 활성 프로파일이 무엇인지 (설정이 없으면 `default`)
+- 현재 실행이 어느 프로파일 환경인지 — 6.3에서 `h2`, `dev-my`, `dev-pg`, `prod`를 만든 뒤부터 의미가 생깁니다
 - 데이터베이스 URL과 계정 정보가 파일 고정값인지 환경변수 주입인지
 - JPA SQL 로그와 DDL 전략이 어떤 값으로 설정되어 있는지
 ##### 왜 중요한가
@@ -265,7 +267,7 @@ pom.xml
 ```
 
 - 이 명령은 **포그라운드로 서버를 붙잡습니다** — 종료는 `Ctrl+C`. curl 등 다른 명령은 새 터미널에서 실행합니다.
-- 이 저장소는 기본 활성 프로파일이 `h2`이므로, 별도 옵션이 없으면 H2 환경으로 실행됩니다.
+- 갓 만든 `demo`는 프로파일 설정이 없으므로 `default` 프로파일로 뜨고, 클래스패스의 H2 의존성 덕분에 인메모리 H2가 자동 구성됩니다.
 - 로그에 `Tomcat started on port 8080` / `Started ...Application in N seconds`가 출력되면 정상입니다. 새 터미널에서 아래 명령으로 확인합니다.
 
 ```bash
@@ -273,7 +275,7 @@ pom.xml
 curl -i http://localhost:8080/
 ```
 
-필요하면 아래처럼 프로파일을 명시해서 실행할 수 있습니다.
+6.3에서 프로파일 파일을 만들고 나면, 아래처럼 프로파일을 명시해서 실행할 수 있습니다.
 
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=h2
@@ -287,7 +289,7 @@ curl -i http://localhost:8080/
 - 내장 서버가 지정한 포트에서 뜨는지
 - DB 연결 오류가 없는지
 - 현재 프로파일에 맞는 설정이 실제로 반영되는지
-- Swagger나 가장 단순한 엔드포인트로 기본 응답을 확인할 수 있는지
+- 가장 단순한 요청(위 `curl -i http://localhost:8080/`)으로 기본 응답을 확인할 수 있는지
 
 ---
 
@@ -345,15 +347,17 @@ mvn -version
 
 이 원고는 Maven을 하나의 프로젝트에만 묶어서 설명하지 않습니다.
 
-##### `day_by_spring`
+##### Wrapper 방식 — 6.1에서 만든 `demo`
 
-- Maven Wrapper(`./mvnw`)를 사용합니다.
+- start.spring.io가 넣어 준 Maven Wrapper(`./mvnw`)를 사용합니다.
 - 팀 단위로 Maven 버전을 통일하고 싶을 때 더 적합합니다.
-##### `day-by-java`
+##### 시스템 Maven 방식 — 아래 archetype으로 만드는 `myapp`
 
-- 현재는 Wrapper 없이 `pom.xml` 중심의 예제 프로젝트입니다.
+- Wrapper 없이 `pom.xml` 중심의 예제 프로젝트입니다.
 - 따라서 시스템에 설치된 `mvn` 명령으로 실행하는 전통적인 Maven 흐름을 보기 좋습니다.
-즉, 책에서는 **실무형 저장소는 Wrapper 중심**, **예제형 저장소는 기본 Maven 구조 이해용**으로 구분해서 설명하는 편이 자연스럽습니다.
+즉, **실습 프로젝트(`demo`)는 Wrapper 중심**, **기본 Maven 구조 이해용(`myapp`)은 시스템 Maven**으로 구분해서 보면 자연스럽습니다.
+
+> **참고 — 실제 프로젝트에서는**: 필자의 저장소도 같은 구분입니다. Spring 서비스 저장소(`day_by_spring`)는 Wrapper를 커밋해 두어 팀원 모두 같은 Maven 버전으로 빌드하고, 순수 Java 예제 저장소(`day-by-java`)는 시스템 `mvn`으로 실행합니다.
 
 #### Maven 프로젝트 구조 이해하기
 
@@ -434,15 +438,15 @@ mvn archetype:generate \
 </dependencies>
 ```
 
-반영됐는지는 다음 명령으로 확인합니다.
+반영됐는지는 다음 명령으로 확인합니다. (`myapp`처럼 Wrapper가 없으면 `mvn`, 6.1의 `demo`처럼 Wrapper가 있으면 `./mvnw`)
 
 ```bash
-./mvnw dependency:tree | grep commons-lang3    # Windows: mvnw.cmd dependency:tree | findstr commons-lang3
+mvn dependency:tree | grep commons-lang3    # Windows: mvn dependency:tree | findstr commons-lang3
 ```
 
 #### 자주 쓰는 Maven 명령
 
-##### Wrapper가 있는 프로젝트 (`day_by_spring`)
+##### Wrapper가 있는 프로젝트 (6.1의 `demo`)
 
 ```bash
 ./mvnw clean compile
@@ -457,7 +461,7 @@ mvn archetype:generate \
 - `package`: `target/` 아래에 실행 가능한 JAR이 생성됩니다.
 ```
 
-##### 시스템 Maven을 쓰는 프로젝트 (`day-by-java`)
+##### 시스템 Maven을 쓰는 프로젝트 (archetype으로 만든 `myapp`)
 
 ```bash
 mvn clean compile
@@ -513,29 +517,102 @@ Maven 도입의 핵심은 빌드 명령 하나가 아니라, 프로젝트 구조
 **🎯 목표**: 프로파일로 dev/prod 환경을 분리한다.
 
 ### 개요
-이 문서는 `day_by_spring` 프로젝트를 기준으로 Spring Boot 프로파일을 어떻게 나누고 실행하는지 정리한 가이드입니다. 이 저장소는 추상적인 `local/dev/test/prod` 예시를 설명하는 문서가 아니라, **실제 `application-*.yml` 파일 구조와 실행 명령을 기준으로 읽어야 하는 문서**입니다.
+이 절은 6.1에서 만든 `demo` 프로젝트에 프로파일 구조를 **직접 만들어 실행**하는 실습 가이드입니다. 추상적인 `local/dev/test/prod` 예시를 외우는 대신, `application-*.yml` 파일을 하나씩 만들고 실행 명령으로 프로파일이 바뀌는 것을 눈으로 확인합니다. 프로파일 이름과 구조는 필자의 실무 프로젝트(`day_by_spring`)에서 쓰는 것을 그대로 가져왔습니다.
 
 ### 왜 중요한가
 Spring Boot는 활성 프로파일에 따라 `application-{profile}.yml`을 함께 읽습니다. 따라서 같은 코드라도 어떤 프로파일로 실행하느냐에 따라 데이터베이스, 로그 레벨, DDL 전략, SQL 출력 방식이 달라질 수 있습니다. 프로파일을 코드와 분리해서 외운다면 실행은 되더라도 왜 그렇게 동작하는지 이해하기 어렵습니다.
 
-### 1. 이 프로젝트의 실제 프로파일 구조
-현재 저장소의 기준 파일은 아래와 같습니다.
+### 1. demo에 만들 프로파일 구조
+이 절을 마치면 `demo`의 리소스 구성이 아래처럼 됩니다.
 ```text
-src/main/resources/application.yml
-src/main/resources/application-h2.yml
-src/main/resources/application-dev-my.yml
-src/main/resources/application-dev-pg.yml
-src/main/resources/application-prod.yml
-src/test/resources/application.yml
-src/test/resources/application-dev-pg.yml
+src/main/resources/application.yml          # 기본 활성 프로파일 지정
+src/main/resources/application-h2.yml       # 로컬 H2 (기본)
+src/main/resources/application-dev-my.yml   # 로컬 MySQL
+src/main/resources/application-dev-pg.yml   # 로컬 PostgreSQL
+src/main/resources/application-prod.yml     # 운영 (환경변수 주입)
 ```
-기본 활성 프로파일은 `application.yml`에서 `h2`로 지정되어 있습니다.
+먼저 갓 만든 `demo`에 있는 빈 `application.properties`를 **삭제**하고, 아래 다섯 파일을 만듭니다.
+
+**파일**: src/main/resources/application.yml
 ```yaml
 spring:
   profiles:
     active: h2
 ```
-즉, 별도 옵션 없이 실행하면 먼저 H2 환경으로 기동됩니다.
+기본 활성 프로파일을 `h2`로 지정했으므로, 별도 옵션 없이 실행하면 먼저 H2 환경으로 기동됩니다.
+
+**파일**: src/main/resources/application-h2.yml
+```yaml
+spring:
+  datasource:
+    url: jdbc:h2:mem:localdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+```
+
+**파일**: src/main/resources/application-dev-my.yml
+```yaml
+spring:
+  datasource:
+    url: ${DEV_MY_DB_URL:jdbc:mysql://localhost:3306/demo}
+    username: ${DEV_MY_DB_USERNAME:root}
+    password: ${DEV_MY_DB_PASSWORD:changeme}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+```
+
+**파일**: src/main/resources/application-dev-pg.yml
+```yaml
+spring:
+  datasource:
+    url: ${DEV_PG_DB_URL:jdbc:postgresql://localhost:5432/demo}
+    username: ${DEV_PG_DB_USERNAME:postgres}
+    password: ${DEV_PG_DB_PASSWORD:changeme}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+```
+
+**파일**: src/main/resources/application-prod.yml
+```yaml
+spring:
+  datasource:
+    url: ${PROD_DB_URL}
+    username: ${PROD_DB_USERNAME}
+    password: ${PROD_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+```
+
+`${환경변수:기본값}` 문법은 환경변수가 있으면 그 값을, 없으면 콜론 뒤 기본값을 씁니다. `prod`만 기본값이 없는데, 운영 접속 정보는 파일에 절대 적지 않기 위해서입니다.
+
+마지막으로 MySQL·PostgreSQL 드라이버를 `pom.xml`의 `<dependencies>`에 추가합니다. (6.1의 의존성에는 H2만 있습니다)
+
+```xml
+<dependency>
+  <groupId>com.mysql</groupId>
+  <artifactId>mysql-connector-j</artifactId>
+  <scope>runtime</scope>
+</dependency>
+<dependency>
+  <groupId>org.postgresql</groupId>
+  <artifactId>postgresql</artifactId>
+  <scope>runtime</scope>
+</dependency>
+```
 
 ### 2. 프로파일별 역할
 
@@ -549,16 +626,16 @@ spring:
 #### dev-my
 - 로컬 MySQL 기반 개발 프로파일입니다.
 - `application-dev-my.yml`이 함께 로드됩니다.
-- 기본값은 `jdbc:mysql://localhost:3306/daybyspring`입니다.
+- 기본값은 `jdbc:mysql://localhost:3306/demo`입니다.
 - `DEV_MY_DB_URL`, `DEV_MY_DB_USERNAME`, `DEV_MY_DB_PASSWORD` 환경변수로 덮어쓸 수 있습니다.
-- 현재 설정은 `ddl-auto: create-drop`입니다.
+- 설정은 `ddl-auto: create-drop`입니다.
 
 #### dev-pg
 - 로컬 PostgreSQL 기반 개발 프로파일입니다.
 - `application-dev-pg.yml`이 함께 로드됩니다.
-- 기본값은 `jdbc:postgresql://localhost:5432/daybyspring`입니다.
+- 기본값은 `jdbc:postgresql://localhost:5432/demo`입니다.
 - `DEV_PG_DB_URL`, `DEV_PG_DB_USERNAME`, `DEV_PG_DB_PASSWORD` 환경변수로 덮어쓸 수 있습니다.
-- 현재 설정은 `ddl-auto: update`입니다.
+- 설정은 `ddl-auto: update`입니다.
 
 #### prod
 - 운영 환경 프로파일입니다.
@@ -567,13 +644,13 @@ spring:
 - `ddl-auto: validate`로 스키마를 검증만 하고 자동 변경하지 않습니다.
 - SQL 로그는 줄이고 운영 옵션을 우선합니다.
 
-### 3. 왜 `local/dev/test/prod` 일반론으로 설명하면 안 되는가
-이 저장소는 이름이 곧 프로파일 의미가 되는 구조가 아닙니다. 실제로는 아래처럼 역할이 분리되어 있습니다.
+### 3. 왜 `local/dev/test/prod` 일반론으로 외우면 안 되는가
+프로파일 이름은 예약어가 아니라 팀이 정하는 규약입니다. 위에서 만든 구조는 아래처럼 역할이 분리됩니다.
 - `h2`: 가장 가벼운 기본 로컬 실행
 - `dev-my`: MySQL 개발 환경
 - `dev-pg`: PostgreSQL 개발 환경
 - `prod`: 운영 환경
-즉, 이 프로젝트를 설명할 때 `local`이라는 이름을 기본값처럼 쓰면 실제 설정 파일과 바로 어긋납니다. 책 문서도 저장소 기반 설명을 할 때는 반드시 이 이름을 그대로 따라가야 합니다.
+즉, "당연히 `local` 프로파일이 있겠지"라고 가정하고 실행하면 실제 설정 파일과 바로 어긋납니다. 어떤 프로젝트를 받든 **저장소에 실제로 있는 `application-*.yml` 이름**부터 확인해야 합니다.
 
 ### 4. 실행 방법
 
@@ -586,7 +663,7 @@ spring:
 예상 결과
 The following 1 profile is active: "h2"
 H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:localdb'
-Started SpringApplication in 3.x seconds
+Started DemoApplication in 3.x seconds
 Tomcat started on port 8080
 ```
 
@@ -598,15 +675,22 @@ Tomcat started on port 8080
 예상 결과
 The following 1 profile is active: "h2"
 H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:localdb'
-Started SpringApplication in 3.x seconds
+Started DemoApplication in 3.x seconds
 ```
 
 #### dev-my 실행
 
-`dev-my`는 MySQL 접속 정보를 환경변수로 주입합니다. 먼저 프로젝트 루트에 `.env`를 만듭니다.
+`dev-my`는 로컬 MySQL이 떠 있어야 합니다. 없다면 Docker로 하나 띄웁니다.
 
+```bash
+docker run -d --name demo-mysql -e MYSQL_ROOT_PASSWORD=changeme -e MYSQL_DATABASE=demo -p 3306:3306 mysql:8
+```
+
+접속 정보는 환경변수로 주입합니다. 먼저 `demo` 프로젝트 루트에 `.env`를 만듭니다.
+
+**파일**: .env
 ```text
-DEV_MY_DB_URL=jdbc:mysql://localhost:3306/daybyspring
+DEV_MY_DB_URL=jdbc:mysql://localhost:3306/demo
 DEV_MY_DB_USERNAME=root
 DEV_MY_DB_PASSWORD=changeme
 ```
@@ -619,17 +703,31 @@ set -a; source .env; set +a
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-my
 ```
 
-> **Windows**: `source`는 bash 전용입니다. PowerShell에서는 값을 직접 주입하거나(`$env:DEV_MY_DB_URL="..."`) IDE 실행 구성의 환경변수에 넣고 `mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev-my`로 실행합니다. (전제: 로컬 MySQL이 떠 있고 `daybyspring` DB가 있어야 합니다.)
+> **Windows**: `source`는 bash 전용입니다. PowerShell에서는 값을 직접 주입하거나(`$env:DEV_MY_DB_URL="..."`) IDE 실행 구성의 환경변수에 넣고 `mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev-my`로 실행합니다. (전제: 로컬 MySQL이 떠 있고 `demo` DB가 있어야 합니다.)
 ```text
 예상 결과
 The following 1 profile is active: "dev-my"
 HikariPool-1 - Starting...
 HikariPool-1 - Start completed.
-Started SpringApplication in 4.x seconds
+Started DemoApplication in 4.x seconds
 ```
 MySQL 접속 정보가 잘못되거나 서버가 없으면 `HikariPool ... Unable to acquire JDBC Connection` 오류가 발생합니다.
 
 #### dev-pg 실행
+
+로컬 PostgreSQL이 없다면 역시 Docker로 띄우고, `.env`에 접속 정보를 추가합니다.
+
+```bash
+docker run -d --name demo-pg -e POSTGRES_PASSWORD=changeme -e POSTGRES_DB=demo -p 5432:5432 postgres:16
+```
+
+**파일**: .env (아래 3줄 추가)
+```text
+DEV_PG_DB_URL=jdbc:postgresql://localhost:5432/demo
+DEV_PG_DB_USERNAME=postgres
+DEV_PG_DB_PASSWORD=changeme
+```
+
 ```bash
 set -a; source .env; set +a
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-pg
@@ -639,16 +737,19 @@ set -a; source .env; set +a
 The following 1 profile is active: "dev-pg"
 HikariPool-1 - Starting...
 HikariPool-1 - Start completed.
-Started SpringApplication in 4.x seconds
+Started DemoApplication in 4.x seconds
 ```
 
 #### JAR 실행
+먼저 `./mvnw clean package`로 JAR을 만든 뒤, 프로파일을 골라 실행합니다.
 ```bash
-java -jar -Dspring.profiles.active=h2 target/spring-0.0.1-SNAPSHOT.jar
-java -jar -Dspring.profiles.active=dev-my target/spring-0.0.1-SNAPSHOT.jar
-java -jar -Dspring.profiles.active=dev-pg target/spring-0.0.1-SNAPSHOT.jar
-java -jar -Dspring.profiles.active=prod target/spring-0.0.1-SNAPSHOT.jar
+./mvnw clean package
+java -jar -Dspring.profiles.active=h2 target/demo-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=dev-my target/demo-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=dev-pg target/demo-0.0.1-SNAPSHOT.jar
+java -jar -Dspring.profiles.active=prod target/demo-0.0.1-SNAPSHOT.jar
 ```
+`prod`는 `PROD_DB_URL`·`PROD_DB_USERNAME`·`PROD_DB_PASSWORD` 환경변수를 모두 넣어야 기동됩니다. 기본값이 없으므로 빠지면 즉시 실패하는데, 이것이 의도된 안전장치입니다.
 ```text
 예상 결과
 The following 1 profile is active: "<지정한 프로파일>"
@@ -656,13 +757,12 @@ The following 1 profile is active: "<지정한 프로파일>"
 ```
 
 ### 5. 테스트와 프로파일을 같이 볼 때의 기준
-이 저장소는 `src/test/resources/application.yml`과 `src/test/resources/application-dev-pg.yml`을 사용합니다.
-- `src/test/resources/application.yml`: `spring.test.database.replace=none`
-- `src/test/resources/application-dev-pg.yml`: `ddl-auto: create-drop`
-즉, 이 프로젝트의 테스트 설명을 할 때는 막연히 `test` 프로파일을 가정하기보다, **테스트 리소스 파일이 어떤 프로파일을 보조하는지** 같이 봐야 합니다.
+테스트는 `src/test/resources`의 설정을 우선 읽습니다. `demo`에는 아직 테스트 전용 설정 파일이 없으므로, 기본 생성된 테스트(`contextLoads`)는 메인 설정을 그대로 물려받아 활성 프로파일 `h2`로 돕니다.
+
+> **참고 — 실제 프로젝트에서는**: `day_by_spring`은 `src/test/resources/application.yml`(`spring.test.database.replace=none`)과 `src/test/resources/application-dev-pg.yml`(`ddl-auto: create-drop`)을 따로 둔다. 테스트를 설명할 때는 막연히 `test` 프로파일을 가정하기보다, **테스트 리소스 파일이 어떤 프로파일을 보조하는지** 같이 봐야 한다.
 
 ### 6. DDL 전략을 읽는 기준
-현재 저장소 기준으로 보면 다음처럼 이해하는 편이 정확합니다.
+위에서 만든 구조 기준으로 보면 다음처럼 이해하는 편이 정확합니다.
 - `h2`: 빠른 실습용이므로 `create-drop`
 - `dev-my`: 로컬 MySQL 실험용으로 `create-drop`
 - `dev-pg`: 개발 DB를 유지하며 검증하기 위해 `update`
@@ -684,6 +784,15 @@ The following 1 profile is active: "<지정한 프로파일>"
 - 테스트 설명에서 실제 `src/test/resources` 구성을 보지 않는 것
 - 환경변수 주입 값을 문서에서 고정값처럼 오해하는 것
 
+### 자주 나는 에러 → 원인
+
+| 증상 | 원인 확인 |
+|------|----------|
+| 기동 로그가 `The following 1 profile is active: "h2"`가 아니라 `No active profile set` | `application.yml`에 `spring.profiles.active: h2`가 빠졌거나, 갓 만들 때의 `application.properties`를 지우지 않아 설정이 갈라진 상태 |
+| 기동 실패 + `mapping values are not allowed here` 류 YAML 파싱 오류 | yml 들여쓰기 오류 — 탭 금지·공백 2칸, `url:`처럼 키와 값 사이에는 공백 한 칸 |
+| `http://localhost:8080/h2-console`이 404 | `spring.h2.console.enabled: true` 누락 또는 `h2`가 아닌 프로파일로 실행 중. 접속 화면의 JDBC URL은 `jdbc:h2:mem:localdb`, 사용자는 `sa` |
+| `Unable to acquire JDBC Connection` 또는 `Cannot load driver class` | 전자는 로컬 MySQL·PostgreSQL 미기동(`docker ps`로 컨테이너 확인)·접속 정보 불일치, 후자는 `pom.xml`에 드라이버 의존성 누락(1번의 마지막 단계) |
+
 ### 공식 문서 기준으로 같이 보면 좋은 주제
 - Spring Boot Externalized Configuration
 - Spring Boot Profiles
@@ -692,10 +801,10 @@ The following 1 profile is active: "<지정한 프로파일>"
 
 ### ✏️ 직접 해보기
 
-`application-dev`·`application-prod`를 만들고 프로파일에 따라 다른 값이 주입되는지 확인하라.
+프로파일마다 `server.port`를 다르게 지정해(`h2`는 8080, `dev-pg`는 8081) 실행 로그에서 포트가 프로파일에 따라 바뀌는지 확인하라.
 
 ### 정리
-프로파일 설정의 핵심은 이름을 외우는 데 있지 않습니다. **현재 저장소가 어떤 프로파일 파일을 가지고 있고, 그 프로파일이 DB·로그·DDL 전략을 어떻게 바꾸는지**를 정확히 읽는 데 있습니다. 이 프로젝트에서는 `h2`, `dev-my`, `dev-pg`, `prod`가 실제 기준선입니다.
+프로파일 설정의 핵심은 이름을 외우는 데 있지 않습니다. **내 프로젝트가 어떤 프로파일 파일을 가지고 있고, 그 프로파일이 DB·로그·DDL 전략을 어떻게 바꾸는지**를 정확히 읽는 데 있습니다. 이 절에서 `demo`에 만든 `h2`, `dev-my`, `dev-pg`, `prod`가 그 기준선입니다.
 
 ### 한 줄 정리
-이 저장소의 프로파일 가이드는 일반론이 아니라, **`h2`를 기본으로 하고 `dev-my`, `dev-pg`, `prod`로 확장되는 실제 설정 구조**를 기준으로 이해해야 합니다.
+`demo`의 프로파일 구조는 일반론이 아니라, **`h2`를 기본으로 하고 `dev-my`, `dev-pg`, `prod`로 확장되는 실제 설정 구조**를 기준으로 이해해야 합니다.
