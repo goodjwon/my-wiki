@@ -195,7 +195,7 @@ Spring Initializr로 프로젝트를 만드는 것은 어렵지 않습니다. �
 
 ##### 실제로 프로젝트 만들기 (start.spring.io)
 
-권장 의존성 그대로 프로젝트를 생성한다. 커맨드로 한 번 만들어 보면 구조가 눈에 들어온다.
+권장 의존성 그대로 프로젝트를 생성합니다. 명령으로 한 번 만들어 보면 구조가 눈에 들어옵니다.
 
 ```bash
 # start.spring.io에 요청해 zip으로 받아 푼다 (한 줄)
@@ -204,9 +204,9 @@ unzip demo.zip -d demo
 cd demo
 ```
 
-> **Windows**: PowerShell의 `curl`은 별칭이라 위 문법이 안 먹는다. **`curl.exe`** 로 명시하거나, 브라우저에서 [start.spring.io](https://start.spring.io) → 의존성 선택 → **Generate**로 zip을 받아 푼다. (IDE 대안: IntelliJ *File › New › Project › Spring Boot*)
+> **Windows**: PowerShell의 `curl`은 별칭이라 위 문법이 안 먹습니다. **`curl.exe`**로 명시하거나, 브라우저에서 [start.spring.io](https://start.spring.io) → 의존성 선택 → **Generate**로 zip을 받아 풉니다. (IDE 대안: IntelliJ *File › New › Project › Spring Boot*)
 
-생성된 프로젝트에는 래퍼(`mvnw`·`mvnw.cmd`)가 포함돼, Maven을 따로 설치하지 않아도 `./mvnw`로 빌드·실행할 수 있다.
+생성된 프로젝트에는 래퍼(`mvnw`·`mvnw.cmd`)가 포함되어 있어, Maven을 따로 설치하지 않아도 `./mvnw`로 빌드·실행할 수 있습니다.
 
 #### 4. 프로젝트 구조는 어디까지 먼저 이해하면 되는가
 
@@ -264,9 +264,9 @@ pom.xml
 ./mvnw spring-boot:run        # Windows: mvnw.cmd spring-boot:run
 ```
 
-- 이 명령은 **포그라운드로 서버를 붙잡는다** — 종료는 `Ctrl+C`. curl 등 다른 명령은 새 터미널에서 친다.
+- 이 명령은 **포그라운드로 서버를 붙잡습니다** — 종료는 `Ctrl+C`. curl 등 다른 명령은 새 터미널에서 실행합니다.
 - 이 저장소는 기본 활성 프로파일이 `h2`이므로, 별도 옵션이 없으면 H2 환경으로 실행됩니다.
-- 성공하면 로그에 `Tomcat started on port 8080` / `Started ...Application in N seconds` 가 뜬다. 확인:
+- 로그에 `Tomcat started on port 8080` / `Started ...Application in N seconds`가 출력되면 정상입니다. 새 터미널에서 아래 명령으로 확인합니다.
 
 ```bash
 # 새 터미널에서 — 아직 매핑한 API가 없으면 Whitelabel Error Page(404)가 떠도 정상(서버는 떠 있다는 뜻)
@@ -385,7 +385,7 @@ mvn archetype:generate \
   -DinteractiveMode=false
 ```
 
-> **Windows**: 줄 끝 `\`(줄바꿈 잇기)는 bash 전용이다. cmd에서는 `^`, PowerShell에서는 백틱(`` ` ``)을 쓰거나, **한 줄로 붙여서** 실행한다.
+> **Windows**: 줄 끝 `\`(줄바꿈 잇기)는 bash 전용입니다. cmd에서는 `^`, PowerShell에서는 백틱(`` ` ``)을 쓰거나, **한 줄로 붙여서** 실행합니다.
 
 이 방식은 학습용으로 유용하지만, 실무에서는 Spring Initializr나 팀 템플릿을 더 자주 사용합니다.
 
@@ -422,7 +422,7 @@ mvn archetype:generate \
 
 ##### 의존성 추가 예시
 
-라이브러리는 `pom.xml`의 `<dependencies>`에 좌표를 적으면 자동으로 받아진다. 예를 들어 `commons-lang3`을 추가하려면 `</properties>` 다음에:
+라이브러리는 `pom.xml`의 `<dependencies>`에 좌표를 적으면 자동으로 받아집니다. 예를 들어 `commons-lang3`을 추가하려면 `</properties>` 다음에 아래처럼 작성합니다.
 
 ```xml
 <dependencies>
@@ -434,7 +434,7 @@ mvn archetype:generate \
 </dependencies>
 ```
 
-반영됐는지 확인:
+반영됐는지는 다음 명령으로 확인합니다.
 
 ```bash
 ./mvnw dependency:tree | grep commons-lang3    # Windows: mvnw.cmd dependency:tree | findstr commons-lang3
@@ -603,7 +603,7 @@ Started SpringApplication in 3.x seconds
 
 #### dev-my 실행
 
-`dev-my`는 MySQL 접속 정보를 환경변수로 주입한다. 먼저 프로젝트 루트에 `.env`를 만든다:
+`dev-my`는 MySQL 접속 정보를 환경변수로 주입합니다. 먼저 프로젝트 루트에 `.env`를 만듭니다.
 
 ```text
 DEV_MY_DB_URL=jdbc:mysql://localhost:3306/daybyspring
@@ -611,7 +611,7 @@ DEV_MY_DB_USERNAME=root
 DEV_MY_DB_PASSWORD=changeme
 ```
 
-그다음 `.env`를 셸에 불러들여 실행한다:
+그다음 `.env`를 셸에 불러들여 실행합니다.
 
 ```bash
 # Mac / Linux
@@ -619,7 +619,7 @@ set -a; source .env; set +a
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev-my
 ```
 
-> **Windows**: `source`는 bash 전용이다. PowerShell에서는 값을 직접 주입하거나(`$env:DEV_MY_DB_URL="..."`) IDE 실행 구성의 환경변수에 넣고 `mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev-my` 로 실행한다. (전제: 로컬 MySQL이 떠 있고 `daybyspring` DB가 있어야 한다.)
+> **Windows**: `source`는 bash 전용입니다. PowerShell에서는 값을 직접 주입하거나(`$env:DEV_MY_DB_URL="..."`) IDE 실행 구성의 환경변수에 넣고 `mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev-my`로 실행합니다. (전제: 로컬 MySQL이 떠 있고 `daybyspring` DB가 있어야 합니다.)
 ```text
 예상 결과
 The following 1 profile is active: "dev-my"
