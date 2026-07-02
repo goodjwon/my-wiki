@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch11]
 sources: [java-study/java-study-ch11-부록.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -2733,6 +2733,35 @@ test {
 
 - 테이블 생성 SQL
 
+#### 11. 빌드·실행
+
+프로젝트는 8번의 `build.gradle`(war 플러그인) 기준입니다. 실행 전에 두 가지를 준비합니다: 4번의 SQL 스크립트를 MySQL에서 실행해 `mini_blog` 데이터베이스를 만들고, `DBConnection.java`의 접속 URL·계정을 자신의 MySQL에 맞춥니다. 서블릿 API가 `jakarta.*` 네임스페이스이므로 Tomcat은 10.1 이상을 사용합니다.
+
+```bash
+# 1) 프로젝트 루트(my-blog/)에서 war 빌드 → build/libs/my-blog-1.0-SNAPSHOT.war
+gradle war        # 래퍼가 있으면 ./gradlew war (Windows PowerShell: .\gradlew war)
+
+# 2) Tomcat webapps에 배포 — war 파일명이 곧 컨텍스트 경로가 되므로 my-blog.war로 복사
+cp build/libs/my-blog-1.0-SNAPSHOT.war $CATALINA_HOME/webapps/my-blog.war
+
+# 3) Tomcat 시작 (Windows: %CATALINA_HOME%\bin\startup.bat)
+$CATALINA_HOME/bin/startup.sh
+```
+
+```text
+예상 결과
+브라우저에서 http://localhost:8080/my-blog/ 접속 → welcome-file로 지정한 index.jsp가 열린다.
+http://localhost:8080/my-blog/user/login_form.jsp 접속 → 로그인 폼(이메일·비밀번호·로그인 상태 유지 체크박스)이 보인다.
+```
+
+자주 나는 에러 → 원인 확인:
+
+| 증상 | 원인 확인 |
+|------|----------|
+| 404 Not Found | war 파일명(=컨텍스트 경로)과 접속 URL이 일치하는지, `webapps/my-blog/` 디렉터리로 압축이 풀렸는지 확인합니다. |
+| JSTL 태그가 글자 그대로 출력되거나 taglib 오류 | JSTL 의존성 2개가 `implementation`(war에 포함)으로 선언됐는지, Tomcat 버전이 10.1 이상인지 확인합니다. |
+| DB 연결 오류 (`Communications link failure` 등) | MySQL 기동 여부, `DBConnection.java`의 URL·계정, `mini_blog` 스키마 생성 여부를 확인합니다. |
+
 ---
 
 ## 11.25 [PJ]블로그 작성하기 미니프로젝트
@@ -2987,8 +3016,13 @@ Modified: 2024-11-23 07:30:18
 ### 개요
 이 문서는 메모 앱 토이프로젝트 (→ 11.26)의 예시 풀이입니다.
 가장 단순한 콘솔 CRUD 구조를 먼저 완성한 뒤, 이후에는 파일 저장, 검색 조건 분리, 테스트 가능 구조로 확장하는 출발점으로 보면 됩니다.
+
+파일 하나짜리 콘솔 프로그램이므로 자체 프로젝트를 새로 만들 필요 없이 [[java-study-ch01]] 1.2에서 만든 프로젝트에 아래 파일을 추가합니다.
+
+**파일**: src/main/java/com/example/ch11/toy/MemoApp.java
+
 ```java
-package com.example.ch4.toy;
+package com.example.ch11.toy;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -3152,6 +3186,27 @@ public class MemoApp {
 
 ```
 
+프로젝트 루트에서 아래 한 줄로 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch11.toy.MemoApp"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch11.toy.MemoApp
+```
+
+```text
+예상 결과
+=== Memo Application ===
+1. Add Memo
+2. List Memos
+3. Search Memo
+4. Edit Memo
+5. Delete Memo
+6. Exit
+Choose an option:
+```
+
+이후 메뉴 번호를 입력하며 추가·조회·검색·수정·삭제를 왕복하는 흐름은 11.26의 콘솔 예시와 같습니다.
+
 ## 11.90 JVM 워크북: 연습 문제와 프로젝트
 
 **🎯 목표**: JVM 워크북 문제로 9장 내용을 굳힌다.
@@ -3182,7 +3237,7 @@ class A {
     static { System.out.println("A 로드"); }
 }
 
-public class Main {
+class Main {
     public static void main(String[] args) {
         System.out.println("1");
         A a = new A();
