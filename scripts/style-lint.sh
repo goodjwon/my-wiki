@@ -76,15 +76,16 @@ lint_file() {
     violations=$((violations + n))
   fi
 
-  # 4) 챕터 한정 — 평어 종결 밀도 (§7-1)
+  # 4) 독자 콘텐츠 산문 한정 — 평어 종결 밀도 (§7-1)
+  #    챕터·가이드·개념·엔티티 페이지가 대상. backlog/plan 같은 저자 전용 운영 메모(§7-1 예외)는 제외.
   #    🎯/✏️ 슬롯, 콜아웃(blockquote `>`)은 평어 예외이므로 검사에서 뺀다.
-  if [[ "$base" == java-study-ch*.md ]]; then
+  if [[ "$base" == java-study-ch*.md || "$base" == guide-*.md || "$base" == concept-*.md || "$base" == entity-*.md ]]; then
     local prose
     prose="$(printf '%s\n' "$stripped" | grep -v '🎯\|✏️' | grep -v '^[0-9]*:>' || true)"
     local heoje_hits
     heoje_hits="$(printf '%s\n' "$prose" | grep -E '다\.[\"'"'"')]*$' | grep -vE '니다\.[\"'"'"')]*$' || true)"
     if [ -n "$heoje_hits" ]; then
-      echo "  [챕터 산문 평어체] 합니다체로 교체 (스캐폴드·콜아웃 슬롯은 이미 제외됨)"
+      echo "  [산문 평어체] 합니다체로 교체 (스캐폴드·콜아웃 슬롯은 이미 제외됨)"
       printf '%s\n' "$heoje_hits" | sed 's/^/    /'
       local n
       n=$(printf '%s\n' "$heoje_hits" | grep -c '.')
