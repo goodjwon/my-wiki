@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch09]
 sources: [java-study/java-study-ch09-테스트와품질.md]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -117,6 +117,9 @@ Spring 컨테이너 없이, 클래스 하나나 협력 객체 몇 개만 검증�
 - 컨트롤러 슬라이스 테스트: `@WebMvcTest` + `@MockitoBean` + `MockMvc` (`LoanControllerTest`, `BookControllerTest`)
 - JPA 슬라이스 테스트: `@DataJpaTest` + `TestEntityManager` (`LoanRepositoryTest`, `BookRepositoryTest`)
 - 통합 테스트: `@SpringBootTest` (`OrderServiceIntegrationTest`, `AopLoggingIntegrationTest`)
+
+아래 세 블록은 **참고 코드**(day_by_spring 저장소 발췌 스텁)입니다. 조합을 읽는 용도이며, 이 장의 실습 대상이 아닙니다. 직접 작성하는 실습은 9.2에서 진행합니다.
+
 ```java
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -218,7 +221,12 @@ Spring Boot 테스트의 핵심은 **가장 작은 비용으로 가장 큰 회�
 즉, 문제는 계산기가 아니라 **책임 분리 실패**입니다.
 
 ### 2. 첫 단계는 계산 규칙을 메서드로 분리하는 것이다
+
+**파일**: src/main/java/com/example/ch09/Calculator.java
+
 ```java
+package com.example.ch09;
+
 public class Calculator {
     public int calculate(int left, String operator, int right) {
         return switch (operator) {
@@ -239,9 +247,20 @@ public class Calculator {
 이 단계만 해도 테스트는 훨씬 쉬워집니다. 입력과 출력이 아니라, 계산 규칙 자체를 검증할 수 있기 때문입니다.
 
 ### 3. 입력 파싱은 별도 책임으로 분리한다
+
+**파일**: src/main/java/com/example/ch09/Expression.java
+
 ```java
+package com.example.ch09;
+
 public record Expression(int left, String operator, int right) {
 }
+```
+
+**파일**: src/main/java/com/example/ch09/ExpressionParser.java
+
+```java
+package com.example.ch09;
 
 public class ExpressionParser {
     public Expression parse(String input) {
@@ -263,7 +282,12 @@ public class ExpressionParser {
 이제 파싱 실패와 계산 실패를 분리해서 테스트할 수 있습니다. 이 분리가 실제 서비스 코드에서도 매우 중요합니다.
 
 ### 4. JUnit 5 테스트 예제
+
+**파일**: src/test/java/com/example/ch09/CalculatorTest.java
+
 ```java
+package com.example.ch09;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -313,7 +337,7 @@ class CalculatorTest {
 - Service는 규칙을 처리하고
 - Parser나 Mapper는 변환을 담당합니다.
 테스트 전략도 같습니다. 규칙은 단위 테스트로, 웹 요청/응답은 슬라이스 테스트로, 전체 흐름은 통합 테스트로 검증합니다.
-현재 `day_by_spring` 저장소에서도 같은 감각이 보입니다.
+현재 `day_by_spring` 저장소에서도 같은 감각이 보입니다. 아래 두 블록은 **참고 코드**(day_by_spring 저장소 발췌 스텁)로, 이 장의 실습 대상이 아닙니다.
 ```java
 @DisplayName("Loan 엔티티 테스트")
 class LoanTest {
@@ -354,7 +378,7 @@ class LoanServiceImplTest {
 
 #### 프로젝트에 두고 실행하기
 
-위 `Calculator`·`CalculatorTest`를 실제로 실행하려면 JUnit 5 의존성과 표준 위치가 필요합니다.
+위 `Calculator`·`Expression`·`ExpressionParser`·`CalculatorTest`를 실제로 실행하려면 JUnit 5 의존성과 표준 위치가 필요합니다. 프로젝트는 [[java-study-ch01]] 1.2에서 만든 Maven/Gradle 프로젝트를 그대로 사용하고, 이 장의 코드는 `com.example.ch09` 패키지에 둡니다.
 
 의존성 (빌드 파일):
 
@@ -379,19 +403,30 @@ dependencies {
 파일 배치 — 프로덕션 코드와 테스트 코드를 나눕니다:
 
 ```text
-src/main/java/com/example/Calculator.java       ← 대상 코드
-src/test/java/com/example/CalculatorTest.java   ← 테스트 코드
+src/main/java/com/example/ch09/Calculator.java        ← 계산 규칙
+src/main/java/com/example/ch09/Expression.java        ← 수식 record
+src/main/java/com/example/ch09/ExpressionParser.java  ← 입력 파싱
+src/test/java/com/example/ch09/CalculatorTest.java    ← 테스트 코드
 ```
 
 실행:
 
 ```bash
-./gradlew test --tests "CalculatorTest"   # Windows: gradlew.bat
-# 또는 Maven
 ./mvnw test -Dtest=CalculatorTest         # Windows: mvnw.cmd
+# 또는 Gradle
+./gradlew test --tests "CalculatorTest"   # Windows: gradlew.bat
 ```
 
-- 콘솔에 `CalculatorTest > add() PASSED …`와 `BUILD SUCCESSFUL`이 출력되면 정상입니다.
+- Maven은 `Tests run: 3, Failures: 0`이, Gradle은 `CalculatorTest > addsNumbers() PASSED`와 `BUILD SUCCESSFUL`이 출력되면 정상입니다.
+
+자주 나는 에러 → 원인 확인:
+
+| 증상 | 원인 확인 |
+|------|----------|
+| 테스트가 0개 실행됨 (`Tests run: 0` / `NO-SOURCE`) | 테스트 파일이 `src/test/java` 아래에 있는지, 클래스명이 `*Test` 형태인지 확인합니다. |
+| `error: package com.example.ch09 does not exist` | 디렉터리 경로(`com/example/ch09/`)와 `package` 선언이 일치하는지 확인합니다. |
+| `cannot find symbol: class Calculator` | `Calculator`가 `src/main/java/com/example/ch09/`에 있고 테스트와 같은 패키지인지 확인합니다. |
+| Gradle에서 JUnit 5 테스트를 찾지 못함 | `build.gradle`에 `test { useJUnitPlatform() }`이 있는지 확인합니다. |
 
 ### 정리
 좋은 테스트 예제는 화려한 프레임워크보다, 책임이 잘 나뉜 작은 코드에서 시작합니다. 계산기 같은 작은 문제를 테스트 가능하게 바꾸는 과정은 이후의 서비스, 컨트롤러, 리포지토리 테스트로 그대로 이어집니다.
