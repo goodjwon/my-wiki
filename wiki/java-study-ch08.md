@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch08]
 sources: [java-study/java-study-ch08-서버와인증.md]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -20,6 +20,8 @@ updated: 2026-07-02
 **단계**: 2단계 — Spring & 웹 백엔드 · **앞 장**: [[java-study-ch07]] · **다음 장**: [[java-study-ch09]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 인증 흐름을 그림→코드 순으로 따라 구현한다.
+
+> **실습 프로젝트**: 이 챕터의 실행 실습은 [[java-study-ch06]] **6.1에서 start.spring.io로 만든 `demo` 프로젝트** 기준입니다. 본문 곳곳에 나오는 `day_by_spring`은 필자의 실무 프로젝트(비공개 저장소) 참고 사례일 뿐, 실습에 필요하지 않습니다.
 
 ---
 
@@ -55,7 +57,7 @@ Tomcat은 대략 아래 일을 합니다.
 - 로그와 에러를 서버 수준에서 남깁니다.
 즉, Spring MVC나 Spring Security도 결국 Tomcat이 열어 준 요청 처리 파이프라인 위에서 돌아갑니다.
 
-현재 `day_by_spring` 저장소 기준으로는 이 흐름을 아래처럼 더 구체적으로 볼 수 있습니다.
+참고로 JWT 인증을 갖춘 실무 프로젝트(예: 실무 저장소 `day_by_spring`)에서는 이 흐름을 아래처럼 더 구체적으로 볼 수 있습니다.
 
 ```text
 HTTP 요청
@@ -91,10 +93,11 @@ Spring Boot의 서블릿 웹 애플리케이션은 보통 내장 톰캣으로 �
 내장 톰캣은 애플리케이션 안에 서버가 함께 포함되는 방식입니다.
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=h2   # Windows: mvnw.cmd spring-boot:run ...
+./mvnw spring-boot:run    # Windows: mvnw.cmd spring-boot:run
 ```
 
 - 이 명령은 **포그라운드로 서버를 붙잡습니다** — 종료는 `Ctrl+C`입니다. curl 등은 새 터미널에서 실행합니다.
+- 프로파일이 구성된 프로젝트라면 `-Dspring-boot.run.profiles=h2`처럼 지정합니다. ch06 6.1의 `demo`는 프로파일 없이 그대로 뜹니다.
 - 로그에 `Tomcat started on port(s): 8080` / `Started ...Application in N seconds` 가 출력되면 서버가 준비된 것입니다. 아래 명령으로 확인합니다:
 
 ```bash
@@ -104,8 +107,8 @@ curl -i http://localhost:8080/          # 매핑 없으면 404(Whitelabel)도 �
 
 ```text
 예상 결과
-현재 저장소 기준 기본 실습 환경인 `h2` 프로파일로 애플리케이션이 실행되고,
-내장 Tomcat이 요청을 받은 뒤 Spring Security 필터 체인과 애플리케이션 코드로 요청을 넘긴다.
+ch06 6.1에서 만든 `demo` 프로젝트가 내장 Tomcat으로 실행된다.
+(Security 의존성이 있는 프로젝트라면 요청은 Spring Security 필터 체인을 먼저 지나 애플리케이션 코드로 넘어간다.)
 ```
 
 또는 패키징 후 아래처럼 실행합니다.
@@ -276,13 +279,13 @@ chmod +x $CATALINA_HOME/bin/*.sh
 - 권한 검사는 어느 시점에 일어나는가
 이 흐름이 잡히면 세션 기반 인증이든 토큰 기반 인증이든 같은 구조 위에서 이해할 수 있습니다.
 
-#### 현재 저장소 기준에서 먼저 연결할 것
+#### 참고 — 실무 프로젝트에서는 어떻게 연결되는가
 
-현재 `day_by_spring` 저장소는 **로그인 시점**과 **JWT 요청 시점**을 분리해서 봐야 합니다.
+참고로 실무 저장소(`day_by_spring`)는 **로그인 시점**과 **JWT 요청 시점**을 분리해서 봐야 합니다.
 
 - 로그인 요청 `/api/auth/login`: `AuthController` -> `AuthServiceImpl.login()` -> `AuthenticationManager.authenticate(...)` -> `JwtTokenProvider.createToken(...)`
 - 보호된 API 요청: `JwtAuthenticationFilter`가 `Authorization: Bearer ...` 헤더를 읽고 `validateToken()`과 `getAuthentication()`을 거쳐 `SecurityContextHolder`를 채웁니다.
-즉 현재 프로젝트에서 `AuthenticationManager`는 로그인 시점에 쓰이고, JWT가 포함된 모든 요청마다 다시 호출되는 구조는 아닙니다.
+즉 이 구조에서 `AuthenticationManager`는 로그인 시점에 쓰이고, JWT가 포함된 모든 요청마다 다시 호출되는 구조는 아닙니다.
 
 ```java
 Authentication authentication = authenticationManager.authenticate(
@@ -371,7 +374,7 @@ AuthenticationProvider
 - OAuth2 Resource Server
 방식은 달라도 결국 "필터가 인증 정보를 받고, 적절한 인증 처리 컴포넌트가 검증하고, 결과를 컨텍스트에 저장한다"는 큰 구조는 비슷합니다.
 
-다만 현재 저장소처럼 커스텀 JWT 필터를 두는 구조에서는, 로그인 이후의 요청 인증이 `AuthenticationManager`를 다시 거치지 않고 필터 내부에서 토큰 검증 후 `SecurityContext`를 채우는 형태가 될 수 있습니다.
+다만 실무 저장소처럼 커스텀 JWT 필터를 두는 구조에서는, 로그인 이후의 요청 인증이 `AuthenticationManager`를 다시 거치지 않고 필터 내부에서 토큰 검증 후 `SecurityContext`를 채우는 형태가 될 수 있습니다.
 
 #### 5. 인증 결과는 `SecurityContextHolder`에 저장된다
 
@@ -418,7 +421,7 @@ http
 - 로그인은 되었지만 권한이 부족한가
 이 차이를 구분하지 못하면 401과 403을 섞어 해석하게 됩니다.
 
-현재 `day_by_spring` 저장소 기준으로 보면 예시를 이렇게 잡을 수 있습니다.
+참고로 실무 저장소(`day_by_spring`) 기준으로 보면 예시를 이렇게 잡을 수 있습니다.
 
 - 로그인 요청 `/api/auth/login`에서 잘못된 이메일/비밀번호: `AuthenticationManager` 단계 실패, `GlobalExceptionHandler`를 통해 `401 Unauthorized`
 - USER 토큰으로 `/api/admin/**` 접근: 인가는 되었지만 역할 부족, `403 Forbidden`
@@ -499,9 +502,9 @@ Spring Security 문서를 읽다 보면 `Authentication`, `Principal`, `Security
 | `SecurityFilterChain` | 요청이 통과하는 보안 필터들의 사슬 | 모든 보호 요청이 지나감 |
 | `AuthenticationFilter`(JWT) | 요청의 토큰을 읽어 `Authentication` 재구성 | 보호 API 요청마다 |
 
-#### 현재 저장소에서 특히 구분할 용어
+#### 참고 — 실무 저장소에서 특히 구분할 용어
 
-현재 `day_by_spring` 저장소에서는 아래 구분이 특히 중요합니다.
+참고로 실무 저장소(`day_by_spring`)에서는 아래 구분이 특히 중요합니다.
 
 - `AuthenticationManager`: 로그인 요청에서 이메일/비밀번호를 검증할 때 사용
 - `JwtAuthenticationFilter`: 보호된 요청에서 Bearer 토큰을 읽고 검증할 때 사용
@@ -521,7 +524,7 @@ return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 예상 결과
 로그인 시에는 이메일/비밀번호 검증이 수행되고,
 JWT 요청 시에는 토큰 클레임으로 Authentication이 다시 구성된다.
-현재 저장소의 JWT 요청 흐름은 매 요청마다 DB 재조회를 강제하는 구조가 아니라 토큰 클레임 기반 재구성에 가깝다.
+이 실무 구조의 JWT 요청 흐름은 매 요청마다 DB 재조회를 강제하는 구조가 아니라 토큰 클레임 기반 재구성에 가깝다.
 ```
 
 #### 1. `Authentication`은 가장 자주 등장하는 중심 객체다
@@ -668,7 +671,7 @@ JWT는 `Header.Payload.Signature` 구조를 가지는 토큰입니다.
 - Signature: 위변조 방지용 서명
 주의할 점은 Payload는 암호화 자체가 아니라 인코딩된 데이터로 이해해야 한다는 점입니다. 민감 정보는 넣지 않는 것이 원칙입니다.
 
-현재 `day_by_spring` 저장소는 토큰에 아래 성격의 정보를 담습니다.
+참고로 실무 저장소(`day_by_spring`)는 토큰에 아래 성격의 정보를 담습니다.
 
 - `sub`: 이메일
 - `memberId`: 회원 ID
@@ -721,9 +724,9 @@ graph LR
 - 로그인 시 토큰 발급
 - 요청 시 필터에서 토큰 검증
 - 검증 성공 시 `SecurityContext`에 인증 정보 저장
-#### 현재 저장소 기준으로 보면
+#### 참고 — 실무 저장소 기준으로 보면
 
-현재 `day_by_spring` 저장소는 완전한 OAuth2 Resource Server 설정이 아니라, **Spring Security + 커스텀 JWT 필터** 구조를 사용합니다.
+참고로 실무 저장소(`day_by_spring`)는 완전한 OAuth2 Resource Server 설정이 아니라, **Spring Security + 커스텀 JWT 필터** 구조를 사용합니다.
 
 ```java
 http
@@ -745,7 +748,9 @@ http
 세션은 저장되지 않고 요청마다 토큰으로 인증 상태를 다시 만든다.
 ```
 
-#### 코드 예시
+#### 코드 예시 (참고 코드)
+
+아래 두 코드는 실무 저장소의 구조를 발췌한 **참고 코드**입니다. 그대로 붙여넣는 실습 단위가 아니라, `demo`에 인증을 직접 구현할 때의 뼈대로 참고합니다.
 
 ##### SecurityConfig
 
@@ -801,6 +806,8 @@ chain.doFilter(request, response);
 ```
 
 #### 실제로 해보기 — 로그인 → 토큰 → 보호 API (curl 왕복)
+
+> **전제**: 이 왕복은 **인증 API(`/api/auth/login`)와 JWT 필터가 이미 구현된 프로젝트** 기준입니다. ch06 6.1의 빈 `demo`에는 아직 이 API가 없으므로, 위 참고 코드 수준의 SecurityConfig·로그인 엔드포인트·JWT 필터를 먼저 구현해야 그대로 재현됩니다. 여기서 익힐 것은 **절차 자체** — 로그인 → 토큰 추출 → 보호 API 호출 → 실패 케이스 확인 — 입니다.
 
 먼저 서버를 띄웁니다(`./mvnw spring-boot:run`, Windows는 `mvnw.cmd spring-boot:run`). curl은 새 터미널에서 실행합니다.
 
