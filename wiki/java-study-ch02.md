@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch02]
 sources: [java-study/java-study-ch02-Java문법과객체.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -20,6 +20,8 @@ updated: 2026-06-30
 **단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch01]] · **다음 장**: [[java-study-ch03]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 각 절의 코드를 직접 쳐보고, 끝의 2.9 실전문제를 풀어본다. 막히면 [[concept-oop]].
+
+> **실습 프로젝트**: 이 장의 실습 예제 파일(2.4·2.5)은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/com/example/ch02/` 아래에 만듭니다(패키지 `com.example.ch02`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
 
 ---
 
@@ -241,7 +243,7 @@ switch (day) {
 여러 개의 범위 조건이나 복잡한 비교식은 보통 `if-else`가 더 자연스럽고, 고정된 값 비교는 `switch`가 더 읽기 쉽습니다.
 
 ### 3. 반복문은 같은 작업을 여러 번 수행하는 구조다
-반복문의 핵심은 “몇 번 도는가”보다, **언제 시작하고 언제 멈추는가**를 분명히 하는 것입니다.
+반복문의 핵심은 "몇 번 도는가"보다, **언제 시작하고 언제 멈추는가**를 분명히 하는 것입니다.
 
 #### `for`
 반복 횟수가 비교적 분명할 때 적합합니다.
@@ -511,9 +513,9 @@ public class Account {
 예를 들어 계좌의 잔액 변경 규칙은 외부 코드가 직접 계산하기보다, `Account` 객체가 스스로 처리하는 편이 자연스럽습니다.
 
 ### 3. 캡슐화는 getter/setter 자동 생성과 다르다
-캡슐화의 목적은 필드를 숨기는 행위 자체가 아니라, **잘못된 상태 변경을 막는 것**입니다.
+캡슐화의 목적은 필드를 숨기는 행위 자체가 아니라, **잘못된 상태 변경을 막는 것**입니다. (참고 코드 — 위 `Account`와 구분하려고 이름을 `SafeAccount`로 두었습니다.)
 ```java
-public class Account {
+public class SafeAccount {
     private int balance;
 
     public void withdraw(int amount) {
@@ -563,7 +565,7 @@ public class RateDiscountPolicy implements DiscountPolicy {
 다만 인터페이스를 많이 만드는 것 자체가 좋은 설계는 아닙니다. **실제로 교체 가능성이 있는 지점**에만 추상화를 두는 편이 낫습니다.
 
 ### 7. 생성자는 객체의 시작 상태를 보장해야 한다
-좋은 생성자는 “이 객체가 유효한 상태로 시작한다”는 약속을 만듭니다.
+좋은 생성자는 "이 객체가 유효한 상태로 시작한다"는 약속을 만듭니다.
 - 필수 값은 생성자에서 받기
 - 불완전한 객체를 만들지 않기
 - 생성 이후 거의 바뀌지 않는 값은 `final`로 고정하기
@@ -592,8 +594,12 @@ Spring에서도 객체지향 원칙은 그대로 이어집니다. DI, 전략 패
 
 객체지향 원칙은 정의를 외우는 순간보다, **같은 메시지를 보내도 객체 타입에 따라 다른 동작이 나온다**는 장면을 직접 볼 때 훨씬 빨리 잡힙니다. 아래 예시는 `day-by-java`의 게임 예제 흐름을 단순화한 것으로, 다형성과 오버라이딩을 가장 짧게 보여줍니다.
 
+**파일**: src/main/java/com/example/ch02/EnemyAttackDemo.java
+
 ```java
-public class Enemy {
+package com.example.ch02;
+
+class Enemy {
     public String name;
 
     public Enemy(String name) {
@@ -627,7 +633,7 @@ class Troll extends Enemy {
     }
 }
 
-class Main {
+public class EnemyAttackDemo {
     public static void main(String[] args) {
         Enemy goblin = new Goblin("고블린");
         Enemy troll = new Troll("트롤");
@@ -635,6 +641,13 @@ class Main {
         troll.attack();
     }
 }
+```
+
+프로젝트 루트에서 아래 한 줄로 실행합니다. 이 절(2.4)의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch02.EnemyAttackDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch02.EnemyAttackDemo
 ```
 
 ```text
@@ -649,8 +662,12 @@ class Main {
 
 ##### 예제 1: Private 필드와 Public 메서드 사용
 
+**파일**: src/main/java/com/example/ch02/EncapsulationDemo.java
+
 ```java
-public class Person {
+package com.example.ch02;
+
+class Person {
     // Private 필드
     private String name;
     private int age;
@@ -675,6 +692,22 @@ public class Person {
     }
 }
 
+// 사용 예시
+public class EncapsulationDemo {
+    public static void main(String[] args) {
+        Person person = new Person();
+        person.setName("김자바");
+        person.setAge(20);
+        person.setAge(-5); // 유효성 검사에 걸려 무시됩니다.
+        System.out.println(person.getName() + " : " + person.getAge());
+    }
+}
+
+```
+
+```text
+예상 결과
+김자바 : 20
 ```
 
 **설명:** 
@@ -685,8 +718,12 @@ public class Person {
 
 ##### 예제 2: 은행 계좌 클래스
 
+**파일**: src/main/java/com/example/ch02/BankAccountDemo.java
+
 ```java
-public class BankAccount {
+package com.example.ch02;
+
+class BankAccount {
     private double balance;
 
     // 생성자
@@ -714,6 +751,21 @@ public class BankAccount {
     }
 }
 
+// 사용 예시
+public class BankAccountDemo {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount(10000);
+        account.deposit(5000);
+        account.withdraw(3000);
+        System.out.println("잔액: " + account.getBalance());
+    }
+}
+
+```
+
+```text
+예상 결과
+잔액: 12000.0
 ```
 
 **설명:** 
@@ -724,23 +776,27 @@ public class BankAccount {
 
 ##### 예제 1: 동물과 개 클래스
 
+**파일**: src/main/java/com/example/ch02/InheritanceDemo.java
+
 ```java
+package com.example.ch02;
+
 // 부모 클래스
-public class Animal {
+class Animal {
     public void eat() {
         System.out.println("동물이 먹습니다.");
     }
 }
 
 // 자식 클래스
-public class Dog extends Animal {
+class Dog extends Animal {
     public void bark() {
         System.out.println("개가 짖습니다.");
     }
 }
 
 // 사용 예시
-public class Main {
+public class InheritanceDemo {
     public static void main(String[] args) {
         Dog dog = new Dog();
         dog.eat();  // 부모 클래스로부터 상속된 메서드
@@ -756,9 +812,13 @@ public class Main {
 
 ##### 예제 2: 차량과 자동차 클래스
 
+**파일**: src/main/java/com/example/ch02/Car.java
+
 ```java
+package com.example.ch02;
+
 // 부모 클래스
-public class Vehicle {
+class Vehicle {
     protected String brand = "현대";
 
     public void honk() {
@@ -785,14 +845,18 @@ public class Car extends Vehicle {
 
 ##### 예제 3: 직원과 매니저 클래스
 
+**파일**: src/main/java/com/example/ch02/ManagerDemo.java
+
 ```java
-public class Employee {
+package com.example.ch02;
+
+class Staff {
     public void work() {
         System.out.println("직원이 일합니다.");
     }
 }
 
-public class Manager extends Employee {
+class Manager extends Staff {
     @Override
     public void work() {
         System.out.println("매니저가 일하고 있습니다.");
@@ -803,9 +867,9 @@ public class Manager extends Employee {
     }
 }
 
-public class Main {
+public class ManagerDemo {
     public static void main(String[] args) {
-        Employee emp = new Employee();
+        Staff emp = new Staff();
         emp.work(); // 출력: 직원이 일합니다.
 
         Manager mgr = new Manager();
@@ -818,14 +882,18 @@ public class Main {
 
 **설명:** 
 
-`Manager` 클래스는 `Employee` 클래스를 상속받아 `work()` 메서드를 재정의하고, 추가로 `manage()` 메서드를 제공합니다.
+`Manager` 클래스는 `Staff` 클래스를 상속받아 `work()` 메서드를 재정의하고, 추가로 `manage()` 메서드를 제공합니다. (직원 클래스 이름은 2.5의 `Employee` 예제와 겹치지 않게 `Staff`로 두었습니다.)
 
 #### 3. 다형성(Polymorphism)
 
 ##### 예제 1: 메서드 오버로딩 (Overloading)
 
+**파일**: src/main/java/com/example/ch02/OverloadingDemo.java
+
 ```java
-public class Calculator {
+package com.example.ch02;
+
+class Calculator {
     // 두 개의 정수 합
     public int add(int a, int b) {
         return a + b;
@@ -843,7 +911,7 @@ public class Calculator {
 }
 
 // 사용 예시
-public class Main {
+public class OverloadingDemo {
     public static void main(String[] args) {
         Calculator calc = new Calculator();
         System.out.println(calc.add(2, 3)); // 출력: 5
@@ -860,32 +928,36 @@ public class Main {
 
 ##### 예제 2: 메서드 오버라이딩 (Overriding)과 다형성
 
+**파일**: src/main/java/com/example/ch02/OverridingDemo.java
+
 ```java
-public class Animal {
+package com.example.ch02;
+
+class Pet {
     public void makeSound() {
         System.out.println("동물이 소리를 냅니다.");
     }
 }
 
-public class Cat extends Animal {
+class Cat extends Pet {
     @Override
     public void makeSound() {
         System.out.println("고양이가 야옹합니다.");
     }
 }
 
-public class Dog extends Animal {
+class Puppy extends Pet {
     @Override
     public void makeSound() {
         System.out.println("개가 멍멍합니다.");
     }
 }
 
-public class Main {
+public class OverridingDemo {
     public static void main(String[] args) {
-        Animal myAnimal = new Animal();
-        Animal myCat = new Cat();
-        Animal myDog = new Dog();
+        Pet myAnimal = new Pet();
+        Pet myCat = new Cat();
+        Pet myDog = new Puppy();
 
         myAnimal.makeSound(); // 출력: 동물이 소리를 냅니다.
         myCat.makeSound();    // 출력: 고양이가 야옹합니다.
@@ -897,14 +969,20 @@ public class Main {
 
 **설명:**
 
+부모 타입 `Pet` 변수에 담아도 실제 객체(`Cat`, `Puppy`)의 오버라이딩된 메서드가 실행됩니다. (상속 절의 `Animal`/`Dog`와 겹치지 않게 `Pet`/`Puppy`로 두었습니다.)
+
 ##### 예제 3: 인터페이스와 다형성
 
+**파일**: src/main/java/com/example/ch02/PolymorphismDemo.java
+
 ```java
-public interface Shape {
+package com.example.ch02;
+
+interface Shape {
     public double getArea();
 }
 
-public class Circle implements Shape {
+class Circle implements Shape {
     private double radius;
 
     public Circle(double radius) {
@@ -917,7 +995,7 @@ public class Circle implements Shape {
     }
 }
 
-public class Rectangle implements Shape {
+class Rectangle implements Shape {
     private double width, height;
 
     public Rectangle(double width, double height) {
@@ -931,7 +1009,7 @@ public class Rectangle implements Shape {
     }
 }
 
-public class Main {
+public class PolymorphismDemo {
     public static void main(String[] args) {
         Shape s1 = new Circle(5);
         Shape s2 = new Rectangle(4, 6);
@@ -951,8 +1029,12 @@ public class Main {
 
 ##### 예제 1: 추상 클래스 사용
 
+**파일**: src/main/java/com/example/ch02/AbstractionDemo.java
+
 ```java
-public abstract class Animal {
+package com.example.ch02;
+
+abstract class AbstractAnimal {
     public abstract void makeSound();
 
     public void sleep() {
@@ -960,16 +1042,16 @@ public abstract class Animal {
     }
 }
 
-public class Dog extends Animal {
+class Beagle extends AbstractAnimal {
     @Override
     public void makeSound() {
         System.out.println("개가 멍멍합니다.");
     }
 }
 
-public class Main {
+public class AbstractionDemo {
     public static void main(String[] args) {
-        Animal dog = new Dog();
+        AbstractAnimal dog = new Beagle();
         dog.makeSound(); // 출력: 개가 멍멍합니다.
         dog.sleep();     // 출력: 동물이 잠을 잡니다.
     }
@@ -979,17 +1061,21 @@ public class Main {
 
 **설명:** 
 
-`Animal` 추상 클래스는 `makeSound()` 추상 메서드를 선언하여 하위 클래스에서 구현하도록 합니다. `Dog` 클래스는 이를 구현하여 구체적인 동작을 정의합니다.
+`AbstractAnimal` 추상 클래스는 `makeSound()` 추상 메서드를 선언하여 하위 클래스에서 구현하도록 합니다. `Beagle` 클래스는 이를 구현하여 구체적인 동작을 정의합니다. (상속 절의 `Animal`/`Dog`와 겹치지 않게 이름을 바꿔 두었습니다.)
 
 ##### 예제 2: 인터페이스 사용
 
+**파일**: src/main/java/com/example/ch02/RemoteControlDemo.java
+
 ```java
-public interface RemoteControl {
+package com.example.ch02;
+
+interface RemoteControl {
     void turnOn();
     void turnOff();
 }
 
-public class Television implements RemoteControl {
+class Television implements RemoteControl {
     @Override
     public void turnOn() {
         System.out.println("TV를 켭니다.");
@@ -1001,7 +1087,7 @@ public class Television implements RemoteControl {
     }
 }
 
-public class Main {
+public class RemoteControlDemo {
     public static void main(String[] args) {
         RemoteControl tv = new Television();
         tv.turnOn();  // 출력: TV를 켭니다.
@@ -1017,8 +1103,12 @@ public class Main {
 
 ##### 예제 3: 추상 클래스를 이용한 템플릿 메서드 패턴
 
+**파일**: src/main/java/com/example/ch02/TemplateMethodDemo.java
+
 ```java
-public abstract class Game {
+package com.example.ch02;
+
+abstract class Game {
     abstract void initialize();
     abstract void startPlay();
     abstract void endPlay();
@@ -1031,7 +1121,7 @@ public abstract class Game {
     }
 }
 
-public class Football extends Game {
+class Football extends Game {
     @Override
     void initialize() {
         System.out.println("축구 게임 초기화!");
@@ -1048,7 +1138,7 @@ public class Football extends Game {
     }
 }
 
-public class Main {
+public class TemplateMethodDemo {
     public static void main(String[] args) {
         Game game = new Football();
         game.play();
@@ -1083,8 +1173,12 @@ public class Main {
 
 `day-by-java`의 템플릿 메서드 예제를 단순화하면 아래처럼 읽을 수 있습니다.
 
+**파일**: src/main/java/com/example/ch02/CsvProcessorDemo.java
+
 ```java
-public abstract class AbstractDataProcessor {
+package com.example.ch02;
+
+abstract class AbstractDataProcessor {
     public final void process() {
         System.out.println("--- " + getClass().getSimpleName() + " 실행 ---");
         String data = selectData();
@@ -1106,7 +1200,7 @@ public abstract class AbstractDataProcessor {
     protected abstract String getFileName();
 }
 
-public class CsvDataProcessor extends AbstractDataProcessor {
+class CsvDataProcessor extends AbstractDataProcessor {
     @Override
     protected String transformData(String data) {
         System.out.println("[CSV] 데이터를 쉼표(,)로 구분된 형식으로 변환합니다.");
@@ -1118,6 +1212,21 @@ public class CsvDataProcessor extends AbstractDataProcessor {
         return "data.csv";
     }
 }
+
+// 사용 예시
+public class CsvProcessorDemo {
+    public static void main(String[] args) {
+        AbstractDataProcessor processor = new CsvDataProcessor();
+        processor.process();
+    }
+}
+```
+
+프로젝트 루트에서 아래 한 줄로 실행합니다. 이 절(2.5)의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch02.CsvProcessorDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch02.CsvProcessorDemo
 ```
 
 ```text
@@ -1135,9 +1244,13 @@ public class CsvDataProcessor extends AbstractDataProcessor {
 
 ##### 추상 클래스와 구체 클래스
 
+**파일**: src/main/java/com/example/ch02/EmployeeSalaryDemo.java
+
 ```java
+package com.example.ch02;
+
 // 추상 클래스
-public abstract class Employee {
+abstract class Employee {
     protected String name;
     protected int id;
 
@@ -1157,7 +1270,7 @@ public abstract class Employee {
 }
 
 // 정규직 직원 클래스
-public class FullTimeEmployee extends Employee {
+class FullTimeEmployee extends Employee {
     private double annualSalary;
 
     public FullTimeEmployee(String name, int id, double annualSalary) {
@@ -1172,7 +1285,7 @@ public class FullTimeEmployee extends Employee {
 }
 
 // 계약직 직원 클래스
-public class ContractEmployee extends Employee {
+class ContractEmployee extends Employee {
     private double hourlyRate;
     private int hoursWorked;
 
@@ -1189,7 +1302,7 @@ public class ContractEmployee extends Employee {
 }
 
 // 사용 예시
-public class Main {
+public class EmployeeSalaryDemo {
     public static void main(String[] args) {
         Employee emp1 = new FullTimeEmployee("홍길동", 101, 60000000);
         Employee emp2 = new ContractEmployee("김영희", 102, 20000, 160);
@@ -1214,9 +1327,13 @@ public class Main {
 
 ##### 추상 클래스와 다형성의 결합
 
+**파일**: src/main/java/com/example/ch02/GraphicDemo.java
+
 ```java
+package com.example.ch02;
+
 // 추상 클래스
-public abstract class Graphic {
+abstract class Graphic {
     // 추상 메서드
     public abstract void draw();
 
@@ -1227,10 +1344,10 @@ public abstract class Graphic {
 }
 
 // 구체적인 그래픽 요소 클래스
-public class Circle extends Graphic {
+class GraphicCircle extends Graphic {
     private int radius;
 
-    public Circle(int radius) {
+    public GraphicCircle(int radius) {
         this.radius = radius;
     }
 
@@ -1240,10 +1357,10 @@ public class Circle extends Graphic {
     }
 }
 
-public class Rectangle extends Graphic {
+class GraphicRectangle extends Graphic {
     private int width, height;
 
-    public Rectangle(int width, int height) {
+    public GraphicRectangle(int width, int height) {
         this.width = width;
         this.height = height;
     }
@@ -1255,10 +1372,10 @@ public class Rectangle extends Graphic {
 }
 
 // 사용 예시
-public class Main {
+public class GraphicDemo {
     public static void main(String[] args) {
-        Graphic circle = new Circle(5);
-        Graphic rectangle = new Rectangle(4, 6);
+        Graphic circle = new GraphicCircle(5);
+        Graphic rectangle = new GraphicRectangle(4, 6);
 
         circle.draw();
         circle.move(10, 20);
@@ -1272,7 +1389,7 @@ public class Main {
 
 **설명:** 
 
-`Graphic` 추상 클래스는 그래픽 요소의 공통 동작을 정의하며, `Circle`과 `Rectangle` 클래스는 이를 상속받아 구체적인 `draw()` 메서드를 구현.
+`Graphic` 추상 클래스는 그래픽 요소의 공통 동작을 정의하며, `GraphicCircle`과 `GraphicRectangle` 클래스는 이를 상속받아 구체적인 `draw()` 메서드를 구현. (2.4 다형성 절의 `Circle`/`Rectangle`과 겹치지 않게 이름을 바꿔 두었습니다.)
 
 ---
 
@@ -1280,8 +1397,12 @@ public class Main {
 
 ##### 데이터 처리 과정의 추상화
 
+**파일**: src/main/java/com/example/ch02/DataProcessorDemo.java
+
 ```java
-public abstract class DataProcessor {
+package com.example.ch02;
+
+abstract class DataProcessor {
     // 템플릿 메서드
     public final void process() {
         readData();
@@ -1304,7 +1425,7 @@ public abstract class DataProcessor {
 }
 
 // CSV 데이터 처리 클래스
-public class CSVDataProcessor extends DataProcessor {
+class CSVDataProcessor extends DataProcessor {
     @Override
     public void processData() {
         System.out.println("CSV 데이터를 처리합니다.");
@@ -1312,7 +1433,7 @@ public class CSVDataProcessor extends DataProcessor {
 }
 
 // XML 데이터 처리 클래스
-public class XMLDataProcessor extends DataProcessor {
+class XMLDataProcessor extends DataProcessor {
     @Override
     public void processData() {
         System.out.println("XML 데이터를 처리합니다.");
@@ -1320,7 +1441,7 @@ public class XMLDataProcessor extends DataProcessor {
 }
 
 // 사용 예시
-public class Main {
+public class DataProcessorDemo {
     public static void main(String[] args) {
         DataProcessor csvProcessor = new CSVDataProcessor();
         csvProcessor.process();
@@ -1354,9 +1475,13 @@ public class Main {
 
 ##### 추상 클래스와 인터페이스의 조합
 
+**파일**: src/main/java/com/example/ch02/GameCharacterDemo.java
+
 ```java
+package com.example.ch02;
+
 // 추상 클래스
-public abstract class Character {
+abstract class Character {
     protected String name;
 
     public Character(String name) {
@@ -1373,12 +1498,12 @@ public abstract class Character {
 }
 
 // 인터페이스
-public interface Magic {
+interface Magic {
     void castSpell();
 }
 
 // 전사 클래스
-public class Warrior extends Character {
+class Warrior extends Character {
     public Warrior(String name) {
         super(name);
     }
@@ -1390,7 +1515,7 @@ public class Warrior extends Character {
 }
 
 // 마법사 클래스
-public class Wizard extends Character implements Magic {
+class Wizard extends Character implements Magic {
     public Wizard(String name) {
         super(name);
     }
@@ -1407,7 +1532,7 @@ public class Wizard extends Character implements Magic {
 }
 
 // 사용 예시
-public class Main {
+public class GameCharacterDemo {
     public static void main(String[] args) {
         Character warrior = new Warrior("아서");
         warrior.move();
@@ -1430,8 +1555,12 @@ public class Main {
 
 ##### 추상 클래스의 기본 구현 제공
 
+**파일**: src/main/java/com/example/ch02/ApplianceDemo.java
+
 ```java
-public abstract class Appliance {
+package com.example.ch02;
+
+abstract class Appliance {
     protected boolean isOn = false;
 
     // 전원 켜기
@@ -1451,7 +1580,7 @@ public abstract class Appliance {
 }
 
 // 냉장고 클래스
-public class Refrigerator extends Appliance {
+class Refrigerator extends Appliance {
     @Override
     public void performFunction() {
         if(isOn) {
@@ -1463,7 +1592,7 @@ public class Refrigerator extends Appliance {
 }
 
 // 세탁기 클래스
-public class WashingMachine extends Appliance {
+class WashingMachine extends Appliance {
     @Override
     public void performFunction() {
         if(isOn) {
@@ -1475,7 +1604,7 @@ public class WashingMachine extends Appliance {
 }
 
 // 사용 예시
-public class Main {
+public class ApplianceDemo {
     public static void main(String[] args) {
         Appliance fridge = new Refrigerator();
         fridge.turnOn();
@@ -1498,8 +1627,12 @@ public class Main {
 
 ##### 추상 클래스의 부분 구현 활용
 
+**파일**: src/main/java/com/example/ch02/OrderProcessorDemo.java
+
 ```java
-public abstract class OrderProcessor {
+package com.example.ch02;
+
+abstract class OrderProcessor {
     // 주문 처리 전체 흐름
     public void processOrder() {
         selectItem();
@@ -1535,7 +1668,7 @@ public abstract class OrderProcessor {
 }
 
 // 신용카드 결제 클래스
-public class CreditCardOrder extends OrderProcessor {
+class CreditCardOrder extends OrderProcessor {
     @Override
     public void makePayment() {
         System.out.println("신용카드로 결제합니다.");
@@ -1543,7 +1676,7 @@ public class CreditCardOrder extends OrderProcessor {
 }
 
 // 페이팔 결제 클래스
-public class PayPalOrder extends OrderProcessor {
+class PayPalOrder extends OrderProcessor {
     @Override
     public void makePayment() {
         System.out.println("PayPal로 결제합니다.");
@@ -1556,7 +1689,7 @@ public class PayPalOrder extends OrderProcessor {
 }
 
 // 사용 예시
-public class Main {
+public class OrderProcessorDemo {
     public static void main(String[] args) {
         OrderProcessor order1 = new CreditCardOrder();
         order1.processOrder();
@@ -1589,8 +1722,12 @@ public class Main {
 
 ##### 추상 클래스에서 공통 동작과 추상화된 동작 정의
 
+**파일**: src/main/java/com/example/ch02/CourseDemo.java
+
 ```java
-public abstract class Course {
+package com.example.ch02;
+
+abstract class Course {
     public void takeCourse() {
         enroll();
         attendLectures();
@@ -1622,7 +1759,7 @@ public abstract class Course {
 }
 
 // 온라인 과정 클래스
-public class OnlineCourse extends Course {
+class OnlineCourse extends Course {
     @Override
     public void takeExams() {
         System.out.println("온라인 시험을 봅니다.");
@@ -1630,7 +1767,7 @@ public class OnlineCourse extends Course {
 }
 
 // 오프라인 과정 클래스
-public class OfflineCourse extends Course {
+class OfflineCourse extends Course {
     @Override
     public void takeExams() {
         System.out.println("오프라인 시험을 봅니다.");
@@ -1638,7 +1775,7 @@ public class OfflineCourse extends Course {
 }
 
 // 사용 예시
-public class Main {
+public class CourseDemo {
     public static void main(String[] args) {
         Course onlineCourse = new OnlineCourse();
         onlineCourse.takeCourse();
@@ -1674,8 +1811,15 @@ public class Main {
 
 ##### 추상 클래스와 재귀적 구조 표현
 
+**파일**: src/main/java/com/example/ch02/FileSystemDemo.java
+
 ```java
-public abstract class FileSystemComponent {
+package com.example.ch02;
+
+import java.util.ArrayList;
+import java.util.List;
+
+abstract class FileSystemComponent {
     protected String name;
 
     public FileSystemComponent(String name) {
@@ -1687,7 +1831,7 @@ public abstract class FileSystemComponent {
 }
 
 // 파일 클래스
-public class File extends FileSystemComponent {
+class File extends FileSystemComponent {
     public File(String name) {
         super(name);
     }
@@ -1699,10 +1843,7 @@ public class File extends FileSystemComponent {
 }
 
 // 디렉토리 클래스
-import java.util.ArrayList;
-import java.util.List;
-
-public class Directory extends FileSystemComponent {
+class Directory extends FileSystemComponent {
     private List<FileSystemComponent> components = new ArrayList<>();
 
     public Directory(String name) {
@@ -1723,7 +1864,7 @@ public class Directory extends FileSystemComponent {
 }
 
 // 사용 예시
-public class Main {
+public class FileSystemDemo {
     public static void main(String[] args) {
         Directory root = new Directory("루트");
         File file1 = new File("파일1.txt");
@@ -1752,7 +1893,7 @@ public class Main {
 
 ```
 
-**설명:** `FileSystemComponent` 추상 클래스는 파일과 디렉토리의 공통 동작을 정의하며, 재귀적인 구조를 표현하기 위해 디렉토리 내에 구성 요소를 추가.
+**설명:** `FileSystemComponent` 추상 클래스는 파일과 디렉터리의 공통 동작을 정의하며, 재귀적인 구조를 표현하기 위해 디렉터리 내에 구성 요소를 추가. import 문은 한 파일 규칙에 맞게 맨 위로 올렸습니다.
 
 ---
 
@@ -1760,8 +1901,12 @@ public class Main {
 
 ##### 추상 클래스의 계층 구조 확장
 
+**파일**: src/main/java/com/example/ch02/MessageSenderDemo.java
+
 ```java
-public abstract class MessageSender {
+package com.example.ch02;
+
+abstract class MessageSender {
     protected String sender;
     protected String receiver;
 
@@ -1775,7 +1920,7 @@ public abstract class MessageSender {
 }
 
 // 이메일 전송 클래스
-public class EmailSender extends MessageSender {
+class EmailSender extends MessageSender {
     public EmailSender(String sender, String receiver) {
         super(sender, receiver);
     }
@@ -1790,7 +1935,7 @@ public class EmailSender extends MessageSender {
 }
 
 // SMS 전송 클래스
-public class SMSSender extends MessageSender {
+class SMSSender extends MessageSender {
     public SMSSender(String sender, String receiver) {
         super(sender, receiver);
     }
@@ -1805,7 +1950,7 @@ public class SMSSender extends MessageSender {
 }
 
 // 사용 예시
-public class Main {
+public class MessageSenderDemo {
     public static void main(String[] args) {
         MessageSender email = new EmailSender("admin@example.com", "user@example.com");
         email.sendMessage("안녕하세요, 이메일입니다.");
@@ -1825,19 +1970,23 @@ public class Main {
 
 ##### 추상 클래스의 계층적 설계
 
+**파일**: src/main/java/com/example/ch02/MultiLevelInheritanceDemo.java
+
 ```java
+package com.example.ch02;
+
 // 최상위 추상 클래스
-public abstract class Vehicle {
+abstract class Transport {
     public abstract void move();
 }
 
 // 중간 추상 클래스
-public abstract class AirVehicle extends Vehicle {
+abstract class AirTransport extends Transport {
     public abstract void fly();
 }
 
 // 구체 클래스
-public class Airplane extends AirVehicle {
+class Airplane extends AirTransport {
     @Override
     public void move() {
         System.out.println("비행기가 활주로를 이동합니다.");
@@ -1850,7 +1999,7 @@ public class Airplane extends AirVehicle {
 }
 
 // 사용 예시
-public class Main {
+public class MultiLevelInheritanceDemo {
     public static void main(String[] args) {
         Airplane airplane = new Airplane();
         airplane.move();
@@ -1860,7 +2009,7 @@ public class Main {
 
 ```
 
-**설명:** `Vehicle` 추상 클래스를 상속한 `AirVehicle` 추상 클래스는 추가적인 추상 메서드를 정의하며, `Airplane` 클래스는 이를 모두 구현.
+**설명:** `Transport` 추상 클래스를 상속한 `AirTransport` 추상 클래스는 추가적인 추상 메서드를 정의하며, `Airplane` 클래스는 이를 모두 구현. (2.4 상속 절의 `Vehicle`과 겹치지 않게 이름을 바꿔 두었습니다.)
 
 ---
 
@@ -1869,6 +2018,16 @@ public class Main {
 추상 클래스는 공통된 동작과 인터페이스를 정의하면서도, 하위 클래스에서의 구체적인 구현을 **강제함으로써 **코드의 유연성과 재사용성 향상시킴. 
 
 ---
+
+#### 자주 나는 에러 → 원인 (2.4·2.5 실습 공통)
+
+| 에러 메시지 | 원인 → 확인할 것 |
+|------------|----------------|
+| `class XxxDemo is public, should be declared in a file named XxxDemo.java` | 파일명과 public 클래스명이 다름 → 파일명을 리드인의 클래스명과 똑같이 |
+| `duplicate class: com.example.ch02.Animal` | 앞 예제와 같은 클래스명이 패키지에 이미 있음 → 이 장의 예제 클래스명은 서로 겹치지 않게 지어져 있으니, 임의로 이름을 바꿨다면 원래 이름으로 |
+| `Could not find or load main class com.example.ch02...` | `-Dexec.mainClass` 오타 또는 `com.example.ch02.` 접두 누락 → 리드인의 파일명(= 클래스명)과 대조 |
+| `error: class, interface, or enum expected` (파일 첫머리) | `package com.example.ch02;`가 첫 줄이 아니거나 import가 클래스 선언 뒤에 있음 → 코드블록 순서 그대로 복사 |
+| 컴파일은 되는데 실행 시 `ClassNotFoundException` | 파일을 `src/main/java/com/example/ch02/`가 아닌 곳에 만듦 → 디렉터리 경로와 package 선언 일치 확인 |
 
 ### ✏️ 직접 해보기
 
@@ -1946,14 +2105,14 @@ class Wallet {
 
 #### 문제 2. 다형성을 이용한 급여 계산
 ```java
-abstract class Employee {
+abstract class Worker {
     abstract int calculatePay();
 }
 
-class FullTimeEmployee extends Employee {
+class FullTimeWorker extends Worker {
     private final int monthlySalary;
 
-    FullTimeEmployee(int monthlySalary) {
+    FullTimeWorker(int monthlySalary) {
         this.monthlySalary = monthlySalary;
     }
 
@@ -1963,11 +2122,11 @@ class FullTimeEmployee extends Employee {
     }
 }
 
-class PartTimeEmployee extends Employee {
+class PartTimeWorker extends Worker {
     private final int hourlyRate;
     private final int hours;
 
-    PartTimeEmployee(int hourlyRate, int hours) {
+    PartTimeWorker(int hourlyRate, int hours) {
         this.hourlyRate = hourlyRate;
         this.hours = hours;
     }
