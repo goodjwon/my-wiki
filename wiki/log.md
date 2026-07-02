@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-03] plan | 실습 스캐폴드 계획 신설 (예제마다 경로·패키지·실행명령)
+- 사용자 피드백: "실제로 따라 해보니 클래스명부터 고민 — 어느 프로젝트 어느 경로에 어떤 파일, 패키지 구분, 실행 명령까지 딱 제공해야 실습하기 좋다."
+- 에이전트 2병렬 진단(ch01~05/ch06~11): 완결 실습 예제 약 76개 중 **경로·package·실행명령 3요소를 모두 갖춘 것 3~4개(ch05 소켓·JDBC)뿐**. ch02는 드라이버 19개 전부 `Main`(충돌)+한 블록 다중 public(컴파일 불가), ch05는 따라 하면 컴파일 실패하는 버그(파일명↔클래스명·package 불일치), ch06은 6.1 demo↔day_by_spring 프로젝트 가정 단절, ch07은 넣을 프로젝트 자체 불명. 모범: ch11 §11.23·ch09 §9.2.
+- 사용자 결정 4건: ① Spring 실습 자족형(6.1 demo 승격, day_by_spring은 private라 참고 격하 — 공개 시 URL 한 줄 추가로 전환 가능) ② ch07 실습 가능화(Querydsl 환경 절 신설) ③ ch03 전면 실행형화 ④ Core는 ch01 1.2 프로젝트 승계+`com.example.chNN`.
+- [[plan-practice-scaffold]] 신설: §7-7 표준안(스니펫/실습 예제 구분, 4요소, 프로젝트 매핑, Main 금지→`<주제>Demo`) + scripts/scaffold-lint.sh 설계 + 프롬프트 A~D(구축/챕터 루프/컴파일 스모크/적대적 검수) + 배치 계획. nav·index 등록. 메모리(wiki-editing-preferences)에도 기록.
+
 ## [2026-07-02] feat | §7 문체 표준 개정 — guide-*/concept-*/entity-* 58개 파일 합니다체 통일 + 배포
 - 사용자 지적: `guide-java-learning-path` 등 guide-* 페이지가 §7 기준(한다체)대로 쓰였는데도 "군대식"으로 딱딱하게 읽힘. 짧게 끊어지는 문장("다진다. 끝낸다.")과 지시조 표현("건너뛰지 말고 따라간다")이 브리핑체처럼 느껴진다는 지적이 정확했음.
 - **§7-1 개정**: guide-*뿐 아니라 concept-*·entity-*(독자가 읽는 콘텐츠 페이지 전체)도 합니다체로 통일(기존엔 챕터만 합니다체, 나머지는 한다체). `backlog.md`·`plan-tone-consistency.md` 같은 저자 전용 운영 메모(type: synthesis)는 예외로 명시. 표준 문서 자체(guide-wiki-authoring-standards.md)도 전면 정합.
