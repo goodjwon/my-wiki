@@ -159,6 +159,7 @@ frontmatter → 정의/개요 → 핵심 본문(표 위주) → 같은 인사이
 - [ ] index.md 추가
 - [ ] log.md 작업 기록
 - [ ] `bash scripts/style-lint.sh <파일>` 통과 (챕터 페이지: 종결어미·용어·성공확인 문구 §7 문체 표준 검사)
+- [ ] 실습 예제가 있으면 `bash scripts/scaffold-lint.sh <파일>` 통과 (§7-7: 파일 리드인↔package↔클래스명 정합·Main 금지)
 - [ ] `bash scripts/build-site.sh` 통과
 
 ## 현재 작업 상태·백로그

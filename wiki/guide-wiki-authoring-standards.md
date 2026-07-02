@@ -4,7 +4,7 @@ type: synthesis
 tags: [wiki, standards, authoring, diagram, mermaid, html]
 sources: []
 created: 2026-06-07
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # 위키 작성 표준
@@ -365,6 +365,39 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 - 행은 컬럼입니다. 인덱스·제약 조건은 표 아래 한 줄 부기로 두고, 별도 행으로 표 안에 섞지 않습니다.
 - 따옴표는 곧은따옴표(`"`)만 사용합니다. 곡선따옴표(" ")는 렌더 시 원본 잔재로 보고 정정합니다.
 
+### 7-7. 실습 스캐폴드 (코드 예제)
+
+> 배경: 2026-07-03 진단 — 완결 실습 예제 약 76개 중 경로·패키지·실행명령 3요소를 모두 갖춘 것이 3~4개뿐이었습니다. "실제로 따라 해보니 클래스명을 어떻게 지을지부터 고민하게 된다"는 피드백으로 고정. 상세 진단·계획: [[plan-practice-scaffold]].
+
+**구분 원칙**: 모든 코드블록은 둘 중 하나입니다.
+
+- **스니펫** (발췌·비교·퀴즈): 스캐폴드가 필요 없습니다. 단, 완결 클래스 외형인데 실습용이 아니면 **"참고 코드"** 라벨로 구분합니다.
+- **실습 예제** (파일로 만들어 실행하는 단위): 아래 4요소가 필수입니다.
+
+**실습 예제 4요소**:
+
+1. **파일 리드인** — 코드블록 바로 위에 둡니다: `**파일**: src/main/java/com/example/ch02/AnimalDemo.java`
+2. **package 선언** — 코드 첫 줄, 리드인 경로와 일치해야 합니다. 경로가 파일명뿐인 단일 파일 실습은 package 없이 씁니다.
+3. **한 블록 = 한 파일** — 파일명 = public 클래스명. 보조 클래스는 non-public으로 같은 파일에 허용하고, public이 여러 개면 블록을 파일별로 분리합니다.
+4. **실행 명령 + 예상 결과** — 예제(묶음) 끝에 bash 실행 명령과 `예상 결과` 펜스를 둡니다.
+
+**챕터 → 프로젝트 매핑**:
+
+| 챕터 | 기준 프로젝트 | 패키지 |
+|------|-------------|--------|
+| ch01~05, ch09 §9.2 | ch01 1.2에서 만든 Maven/Gradle 프로젝트 | `com.example.chNN` |
+| ch05 소켓·JDBC | 단일 파일 javac 병행 허용 (작업 디렉터리 명시) | default 허용 |
+| ch06~08·10 (Spring) | ch06 6.1 start.spring.io `demo` (자족형) | `com.example.demo.*` |
+| ch11 미니프로젝트 | 예제별 자체 프로젝트 (트리 제시, §11.23 모델) | 예제 자체 규칙 |
+
+**클래스명 규칙**: 챕터 안에서 고유해야 합니다. 드라이버 클래스 `public class Main`은 금지합니다 → `<주제>Demo` (예: `InheritanceDemo`). 퀴즈 스니펫은 non-public `class Main`까지 허용합니다.
+
+**실행 명령 표준형**: 프로젝트는 Maven 우선(`./mvnw compile exec:java -Dexec.mainClass="..."`, 테스트는 `./mvnw test -Dtest=...`) + Gradle 대안 병기, 단일 파일은 `javac`/`java`.
+
+**막혔을 때 참고 (자족성)**: 긴 실습 절 끝에는 "자주 나는 에러 → 원인 확인" 부기를 둡니다. 외부 저장소(완성본) 없이 **문서만으로 막힘에서 복구**할 수 있어야 합니다.
+
+**게이트**: `bash scripts/scaffold-lint.sh <파일>` — 파일 리드인↔package↔클래스명 정합, 리드인 블록의 다중 public 타입, `public class Main`을 기계 검사합니다.
+
 ---
 
 ## 8. 표준 적용 점검 (페이지 작성 후 셀프 체크)
@@ -378,6 +411,7 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 - [ ] index.md에 추가했나?
 - [ ] log.md에 작업 기록했나?
 - [ ] §7 문체 표준(종결어미·성공확인·OS분기·용어)을 지켰나?
+- [ ] 실습 예제가 있다면 §7-7 스캐폴드 4요소를 갖췄나? (`bash scripts/scaffold-lint.sh <파일>` 통과)
 - [ ] `bash scripts/style-lint.sh <파일>` 통과하나?
 - [ ] `bash scripts/build-site.sh` 통과하나?
 

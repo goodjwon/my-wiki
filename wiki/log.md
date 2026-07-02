@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-03] feat | 실습 스캐폴드 Phase B — §7-7 명문화 + scaffold-lint.sh 게이트
+- [[plan-practice-scaffold]] 프롬프트 A 실행. guide-wiki-authoring-standards에 **§7-7 실습 스캐폴드** 신설: 스니펫/실습 예제 구분 원칙, 4요소(파일 리드인·package·한 블록=한 파일·실행 명령+예상 결과), 챕터→프로젝트 매핑 표, `public class Main` 금지(→`<주제>Demo`), 실행 명령 표준형(Maven 우선), **자족성 규칙**(실습 절 끝 "자주 나는 에러→원인" 부기 — 사용자: "GitHub 안 보더라도 문서만으로 막힘 복구").
+- `scripts/scaffold-lint.sh` 신작(bash+python3) — ① 파일 리드인(`**파일**:`·`**파일명 N:**`·`파일명:` 3형식)↔package↔public 클래스명 정합 ② 리드인 블록의 다중 public 타입 ③ `public class Main` 전역 검사.
+- 캘리브레이션: ch02 Main 18건·ch05 파일명/package 불일치 3건(L1448·L1830) 정확 검출, ch06·ch09 오탐 0. ch01·ch11의 Main 각 1건은 Phase C 수정 대상.
+- CLAUDE.md 셀프체크에 scaffold-lint 항목 추가. **day_by_spring 공개는 보류**(사용자 결정) — 시크릿 스캔 결과(실유출 0, Supabase 호스트 1건 플레이스홀더 교체 필요)는 계획 페이지에 기록, 공개 시 커밋 1개+URL 1줄이면 전환 가능.
+- 다음: Phase C 배치 1 (ch02·ch04·ch09).
+
 ## [2026-07-03] plan | 실습 스캐폴드 계획 신설 (예제마다 경로·패키지·실행명령)
 - 사용자 피드백: "실제로 따라 해보니 클래스명부터 고민 — 어느 프로젝트 어느 경로에 어떤 파일, 패키지 구분, 실행 명령까지 딱 제공해야 실습하기 좋다."
 - 에이전트 2병렬 진단(ch01~05/ch06~11): 완결 실습 예제 약 76개 중 **경로·package·실행명령 3요소를 모두 갖춘 것 3~4개(ch05 소켓·JDBC)뿐**. ch02는 드라이버 19개 전부 `Main`(충돌)+한 블록 다중 public(컴파일 불가), ch05는 따라 하면 컴파일 실패하는 버그(파일명↔클래스명·package 불일치), ch06은 6.1 demo↔day_by_spring 프로젝트 가정 단절, ch07은 넣을 프로젝트 자체 불명. 모범: ch11 §11.23·ch09 §9.2.
