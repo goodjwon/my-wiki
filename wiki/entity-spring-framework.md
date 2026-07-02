@@ -7,12 +7,12 @@ external:
   - https://spring.io/projects/spring-framework
   - https://docs.spring.io/spring-framework/reference/
 created: 2026-04-18
-updated: 2026-06-07
+updated: 2026-07-02
 ---
 
 # Spring Framework
 
-Java/Kotlin 기반 엔터프라이즈 애플리케이션의 사실상 표준 프레임워크. **IoC/DI 컨테이너 + AOP + 데이터 접근 + 웹**을 통합 제공. [[entity-spring-boot|Spring Boot]]의 기반.
+Java/Kotlin 기반 엔터프라이즈 애플리케이션의 사실상 표준 프레임워크입니다. **IoC/DI 컨테이너 + AOP + 데이터 접근 + 웹**을 통합 제공합니다. [[entity-spring-boot|Spring Boot]]의 기반이 됩니다.
 
 - **공식**: https://spring.io/projects/spring-framework
 - **레퍼런스**: https://docs.spring.io/spring-framework/reference/
@@ -23,7 +23,7 @@ Java/Kotlin 기반 엔터프라이즈 애플리케이션의 사실상 표준 프
 
 ## 모듈 구조
 
-Spring Framework는 단일 거대 라이브러리가 아니라 **모듈 묶음**:
+Spring Framework는 단일 거대 라이브러리가 아니라 **모듈 묶음**입니다:
 
 | 모듈 | 역할 |
 |------|------|
@@ -42,11 +42,11 @@ Spring Framework는 단일 거대 라이브러리가 아니라 **모듈 묶음**
 | `spring-messaging` | JMS, AMQP, WebSocket |
 | `spring-r2dbc` | 리액티브 RDB |
 
-→ Spring Boot의 starter가 이들 중 필요한 것을 묶어준다.
+→ Spring Boot의 starter가 이들 중 필요한 것을 묶어줍니다.
 
 ## 최신 메이저: 7.0 (2025)
 
-Spring Framework 7.0은 **Jakarta EE 11 베이스라인** + 대규모 레거시 정리.
+Spring Framework 7.0은 **Jakarta EE 11 베이스라인** + 대규모 레거시 정리입니다.
 
 ### 7.0 주요 변화
 
@@ -123,7 +123,7 @@ User user = restClient
 | 시작 시간 | 길다 | 짧다 |
 | 운영 도구 | 직접 추가 | Actuator 기본 |
 
-→ **Spring Boot = Spring Framework + 자동 설정 + 내장 서버 + 운영 도구.** 새 프로젝트는 거의 100% Spring Boot.
+→ **Spring Boot = Spring Framework + 자동 설정 + 내장 서버 + 운영 도구.** 새 프로젝트는 거의 100%가 Spring Boot입니다.
 
 ## Spring 생태계 (Boot 외 주요 프로젝트)
 

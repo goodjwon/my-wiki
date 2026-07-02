@@ -7,12 +7,12 @@ external:
   - https://spring.io/projects/spring-boot
   - https://docs.spring.io/spring-boot/reference/
 created: 2026-04-18
-updated: 2026-06-07
+updated: 2026-07-02
 ---
 
 # Spring Boot
 
-[[entity-spring-framework|Spring Framework]] 기반 독립 실행형 프로덕션급 애플리케이션을 **최소 설정으로** 만들 수 있는 자바 프레임워크. 새 Spring 프로젝트의 사실상 100%.
+[[entity-spring-framework|Spring Framework]] 기반 독립 실행형 프로덕션급 애플리케이션을 **최소 설정으로** 만들 수 있는 자바 프레임워크입니다. 새 Spring 프로젝트의 사실상 100%를 차지합니다.
 
 - **공식**: https://spring.io/projects/spring-boot
 - **레퍼런스**: https://docs.spring.io/spring-boot/reference/
@@ -64,12 +64,12 @@ public class App {
    - `@ConditionalOnProperty` — 특정 프로퍼티가 켜져 있으면
 4. 사용자 Bean이 항상 우선
 
-→ "왜 내가 한 줄도 안 짰는데 H2가 동작하지?"의 답.
+→ "왜 내가 한 줄도 안 짰는데 H2가 동작하지?"의 답입니다.
 
 ## 외부 설정
 
 우선순위 (높을수록 우선):
-1. 커맨드라인 인자 (`--server.port=8081`)
+1. 명령줄 인자 (`--server.port=8081`)
 2. 환경 변수 (`SERVER_PORT=8081`)
 3. `application-{profile}.yml`
 4. `application.yml`
@@ -134,7 +134,7 @@ management:
 | `/actuator/env` | 환경 변수 (보안 주의) |
 | `/actuator/beans` | 등록된 Bean 목록 |
 
-> 운영에서 `/env`·`/configprops`는 시크릿 노출 위험 — Security로 보호.
+> 운영에서 `/env`·`/configprops`는 시크릿 노출 위험이 있습니다 — Security로 보호합니다.
 
 ## 프로젝트 구조 (관용)
 

@@ -7,14 +7,14 @@ external:
   - https://docs.oracle.com/en/java/javase/21/vm/java-virtual-machine-technology-overview.html
   - https://docs.oracle.com/en/java/javase/21/gctuning/
 created: 2026-04-18
-updated: 2026-06-07
+updated: 2026-07-02
 ---
 
 # JVM (Java Virtual Machine)
 
 ## 정의
 
-Java 바이트코드(`.class`)를 실행하는 가상 머신. "Write Once, Run Anywhere"의 핵심. 같은 바이트코드를 Windows/Linux/macOS 어디서나 실행 가능하게 만든다.
+Java 바이트코드(`.class`)를 실행하는 가상 머신입니다. "Write Once, Run Anywhere"의 핵심이며, 같은 바이트코드를 Windows/Linux/macOS 어디서나 실행 가능하게 만듭니다.
 
 JVM은 **명세(JVM Specification)** 이며, 실제 구현체는 여러 가지:
 
@@ -52,7 +52,7 @@ JVM은 **명세(JVM Specification)** 이며, 실제 구현체는 여러 가지:
 | **PC Register** | 다음 명령 위치 | ❌ |
 | **Native Method Stack** | JNI 네이티브 호출 | ❌ |
 
-> **Java 8 이전의 PermGen → Metaspace로 교체**. 기본적으로 OS 메모리만큼 자동 확장 가능 (이전엔 OOM의 흔한 원인).
+> **Java 8 이전의 PermGen을 Metaspace로 교체했습니다**. 기본적으로 OS 메모리만큼 자동 확장이 가능합니다 (이전엔 OOM의 흔한 원인이었습니다).
 
 ### Heap 세부 구조
 
@@ -67,9 +67,9 @@ Old Generation (Tenured) — Survivor 왕복 후 Promotion
 
 ### 세대별 GC 전제
 
-> "대부분의 객체는 금방 죽는다(Weak Generational Hypothesis)."
+> "대부분의 객체는 금방 죽습니다(Weak Generational Hypothesis)."
 
-→ **Young**(짧은 수명) 자주 작게 수집 / **Old**(긴 수명) 가끔 크게 수집.
+→ **Young**(짧은 수명)은 자주 작게 수집하고, **Old**(긴 수명)는 가끔 크게 수집합니다.
 
 ### Young → Old 흐름
 
@@ -104,7 +104,7 @@ java -XX:+UseParallelGC ...     # Parallel (throughput)
 
 ## JIT (Just-In-Time) 컴파일러
 
-처음에는 **인터프리터**가 바이트코드를 한 줄씩 해석. 자주 호출되는 메서드(Hot Spot)를 감지하면 **JIT이 네이티브 코드로 컴파일** → 이후엔 빠른 네이티브로 실행.
+처음에는 **인터프리터**가 바이트코드를 한 줄씩 해석합니다. 자주 호출되는 메서드(Hot Spot)를 감지하면 **JIT이 네이티브 코드로 컴파일**하고, 이후엔 빠른 네이티브로 실행합니다.
 
 HotSpot JVM의 2단계 JIT:
 
@@ -113,9 +113,9 @@ HotSpot JVM의 2단계 JIT:
 | C1 | Client Compiler | 빠른 컴파일, 적당한 최적화 |
 | C2 | Server Compiler | 느린 컴파일, 깊은 최적화 |
 
-Java 7+ 기본 = **Tiered Compilation** (C1로 빠르게 시작 → 핫 메서드는 C2로 재컴파일).
+Java 7+ 기본은 **Tiered Compilation**입니다 (C1로 빠르게 시작해서 핫 메서드는 C2로 재컴파일합니다).
 
-대안: **AOT (Ahead-of-Time)** — GraalVM Native Image는 빌드 시 모든 코드를 네이티브로 컴파일. 기동 시간 매우 짧음(서버리스 친화), 단 리플렉션·동적 코드는 제약.
+대안: **AOT (Ahead-of-Time)** — GraalVM Native Image는 빌드 시 모든 코드를 네이티브로 컴파일합니다. 기동 시간이 매우 짧아(서버리스 친화) 유리하지만, 리플렉션·동적 코드는 제약됩니다.
 
 ## 튜닝 핵심 옵션
 
@@ -171,7 +171,7 @@ management:
         include: health, metrics, prometheus, heapdump, threaddump
 ```
 
-→ `/actuator/heapdump` 호출 시 `.hprof` 다운로드, Eclipse MAT으로 분석.
+→ `/actuator/heapdump`를 호출하면 `.hprof` 파일이 다운로드되며, Eclipse MAT으로 분석할 수 있습니다.
 
 ## 자주 마주치는 OOM 종류
 

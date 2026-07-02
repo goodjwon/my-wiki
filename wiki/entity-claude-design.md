@@ -4,12 +4,12 @@ type: entity
 tags: [anthropic, claude, 디자인, 프로토타이핑, AI-디자인]
 sources: [클로드 디자인! 디자인 스타트업 폐업시켜 버리기~.ko-orig.srt]
 created: 2026-04-18
-updated: 2026-04-18
+updated: 2026-07-02
 ---
 
 # Claude Design
 
-Anthropic이 출시한 AI 디자인 도구. 디자인 시스템 생성, 와이어프레이밍, 프로토타이핑, 슬라이드덱 제작을 하나의 환경에서 수행할 수 있다.
+Anthropic이 출시한 AI 디자인 도구. 디자인 시스템 생성, 와이어프레이밍, 프로토타이핑, 슬라이드덱 제작을 하나의 환경에서 수행할 수 있습니다.
 
 ## 주요 특징
 

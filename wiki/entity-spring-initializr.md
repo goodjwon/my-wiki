@@ -5,12 +5,12 @@ tags: [Java, Spring, 도구, 스캐폴딩]
 sources: [spring/Spring Boot.md]
 external: [https://start.spring.io, https://github.com/spring-io/initializr]
 created: 2026-04-18
-updated: 2026-05-31
+updated: 2026-07-02
 ---
 
 # Spring Initializr
 
-[[entity-spring-boot|Spring Boot]] 프로젝트를 빠르게 부트스트랩하는 웹 도구 + REST API + 확장 가능한 프레임워크. 의존성·빌드 도구·언어·버전을 선택하면 즉시 실행 가능한 프로젝트 스캐폴딩(ZIP)을 생성한다.
+[[entity-spring-boot|Spring Boot]] 프로젝트를 빠르게 부트스트랩하는 웹 도구 + REST API + 확장 가능한 프레임워크입니다. 의존성·빌드 도구·언어·버전을 선택하면 즉시 실행 가능한 프로젝트 스캐폴딩(ZIP)을 생성합니다.
 
 - **공식**: https://start.spring.io
 - **소스**: https://github.com/spring-io/initializr (Apache 2.0)
@@ -46,7 +46,7 @@ updated: 2026-05-31
 
 ## 셀프 호스팅·확장
 
-Initializr는 **Spring Boot 기반 라이브러리**(`initializr-web` 모듈)로 제공되어 조직 내부에 자체 인스턴스로 배포 가능. 사내 BOM/사내 스타터를 카탈로그에 등록하면 팀 표준 프로젝트 생성기로 사용할 수 있다. 공식 `start.spring.io`도 이 라이브러리의 한 인스턴스에 불과.
+Initializr는 **Spring Boot 기반 라이브러리**(`initializr-web` 모듈)로 제공되어 조직 내부에 자체 인스턴스로 배포할 수 있습니다. 사내 BOM/사내 스타터를 카탈로그에 등록하면 팀 표준 프로젝트 생성기로 사용할 수 있습니다. 공식 `start.spring.io`도 이 라이브러리의 한 인스턴스에 불과합니다.
 
 확장 지점:
 - **메타데이터**: 사용 가능한 의존성 카탈로그, Java/Boot 버전, 패키징, 컨벤션 정의

@@ -5,12 +5,12 @@ tags: [도구, Obsidian, 플러그인, 쿼리]
 sources: [llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://blacksmithgu.github.io/obsidian-dataview/]
 created: 2026-04-18
-updated: 2026-05-31
+updated: 2026-07-02
 ---
 
 # Dataview
 
-[[entity-obsidian|Obsidian]] 노트를 **라이브 인덱스 + 쿼리 엔진**으로 다루는 플러그인. YAML frontmatter와 인라인 필드에 메타데이터를 달아두면, 페이지 내에서 동적으로 갱신되는 테이블/리스트/태스크 뷰를 만들 수 있다.
+[[entity-obsidian|Obsidian]] 노트를 **라이브 인덱스 + 쿼리 엔진**으로 다루는 플러그인입니다. YAML frontmatter와 인라인 필드에 메타데이터를 달아두면, 페이지 내에서 동적으로 갱신되는 테이블/리스트/태스크 뷰를 만들 수 있습니다.
 
 - **공식 문서**: https://blacksmithgu.github.io/obsidian-dataview/
 - **GitHub**: https://github.com/blacksmithgu/obsidian-dataview
@@ -70,7 +70,7 @@ LIST FROM #poems WHERE author = "Edgar Allan Poe"
 - 최근 업데이트된 페이지 (`updated` 필드 기반)
 - 소스별 관련 페이지
 
-이 위키의 frontmatter 컨벤션(`type`, `tags`, `sources`, `created`, `updated`)도 Dataview 친화적으로 설계됨.
+이 위키의 frontmatter 컨벤션(`type`, `tags`, `sources`, `created`, `updated`)도 Dataview 친화적으로 설계되었습니다.
 
 > 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "Dataview is an Obsidian plugin that runs queries over page frontmatter. If your LLM adds YAML frontmatter to wiki pages (tags, dates, source counts), Dataview can generate dynamic tables and lists."

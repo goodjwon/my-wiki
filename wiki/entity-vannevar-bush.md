@@ -5,12 +5,12 @@ tags: [인물, 역사, 컴퓨터과학, 하이퍼텍스트]
 sources: [llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://en.wikipedia.org/wiki/Vannevar_Bush, https://en.wikipedia.org/wiki/As_We_May_Think]
 created: 2026-04-18
-updated: 2026-05-31
+updated: 2026-07-02
 ---
 
 # Vannevar Bush
 
-미국의 공학자·과학 행정가 (1890.3.11 ~ 1974.6.28). 1945년 에세이 **"As We May Think"** 에서 [[concept-memex|Memex]]를 제안하여 개인 지식 관리와 하이퍼텍스트의 사상적 기초를 놓았다.
+미국의 공학자·과학 행정가 (1890.3.11 ~ 1974.6.28). 1945년 에세이 **"As We May Think"** 에서 [[concept-memex|Memex]]를 제안하여 개인 지식 관리와 하이퍼텍스트의 사상적 기초를 놓았습니다.
 
 ## 생애·주요 업적
 
@@ -25,29 +25,29 @@ updated: 2026-05-31
 
 ## "As We May Think" (1945)
 
-전후, 과학자들이 파괴에서 **지식 접근성 향상**으로 방향을 돌려야 한다는 호소문. 핵심 진단:
+전후, 과학자들이 파괴에서 **지식 접근성 향상**으로 방향을 돌려야 한다는 호소문입니다. 핵심 진단:
 
 > "When data of any sort are placed in storage, they are filed alphabetically or numerically, and information is found (when it is) by tracing it down from subclass to subclass."
 
-→ 알파벳·계층적 인덱싱은 인간 사고 방식과 맞지 않는다. **연상적(associative) 연결**이 필요하다.
+→ 알파벳·계층적 인덱싱은 인간 사고 방식과 맞지 않습니다. **연상적(associative) 연결**이 필요합니다.
 
 ## Memex 구상
 
-마이크로필름 기반 책상 크기 장치. 두 개의 뷰어 화면, 마이크로필름 상에 부호화된 점으로 항목을 연결. 사용자는 임의의 두 항목 사이에 **trail(연상의 길)** 을 만들고 나중에 이름을 붙여 다시 호출할 수 있다 — 이것이 **하이퍼링크의 직접적 선조**.
+마이크로필름 기반 책상 크기 장치입니다. 두 개의 뷰어 화면, 마이크로필름 상에 부호화된 점으로 항목을 연결합니다. 사용자는 임의의 두 항목 사이에 **trail(연상의 길)** 을 만들고 나중에 이름을 붙여 다시 호출할 수 있습니다 — 이것이 **하이퍼링크의 직접적 선조**입니다.
 
 자세한 개념 분리: [[concept-memex]]
 
 ## 후세에 미친 영향
 
-- **Douglas Engelbart** — 1945년 직후 에세이를 읽고 Memex를 염두에 두며 마우스·워드프로세서·하이퍼링크 개념 발전.
-- **Ted Nelson** — Xanadu 프로젝트 / "hypertext" 용어의 출발점으로 As We May Think를 명시 인용.
-- **Tim Berners-Lee** — WWW 설계의 사상적 배경 중 하나.
+- **Douglas Engelbart** — 1945년 직후 에세이를 읽고 Memex를 염두에 두며 마우스·워드프로세서·하이퍼링크 개념을 발전시켰습니다.
+- **Ted Nelson** — Xanadu 프로젝트 / "hypertext" 용어의 출발점으로 As We May Think를 명시 인용했습니다.
+- **Tim Berners-Lee** — WWW 설계의 사상적 배경 중 하나입니다.
 
-→ 개인 컴퓨터·인터넷·위키피디아 자체를 예언한 글로 평가된다.
+→ 개인 컴퓨터·인터넷·위키피디아 자체를 예언한 글로 평가됩니다.
 
 ## LLM Wiki와의 관계
 
-[[src-llm-wiki-pattern|LLM Wiki 패턴]]은 Bush의 Memex 비전 — 개인이 큐레이팅하는 지식 저장소, 문서 간 연상적 연결 — 을 LLM으로 실용적으로 구현한 것으로 위치시킨다. **Bush가 해결하지 못한 유지보수 문제를 LLM이 담당한다.**
+[[src-llm-wiki-pattern|LLM Wiki 패턴]]은 Bush의 Memex 비전 — 개인이 큐레이팅하는 지식 저장소, 문서 간 연상적 연결 — 을 LLM으로 실용적으로 구현한 것으로 위치시킵니다. **Bush가 해결하지 못한 유지보수 문제를 LLM이 담당합니다.**
 
 > 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "The part he couldn't solve was who does the maintenance. The LLM handles that."

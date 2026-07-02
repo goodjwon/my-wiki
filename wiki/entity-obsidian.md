@@ -5,12 +5,12 @@ tags: [도구, PKM, 에디터, 마크다운]
 sources: [llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://obsidian.md]
 created: 2026-04-18
-updated: 2026-05-31
+updated: 2026-07-02
 ---
 
 # Obsidian
 
-로컬 마크다운 파일 기반의 개인 지식 관리(PKM) 앱. "Your thoughts are yours" — 모든 데이터를 사용자 디스크에 평문 .md로 저장.
+로컬 마크다운 파일 기반의 개인 지식 관리(PKM) 앱입니다. "Your thoughts are yours" — 모든 데이터를 사용자 디스크에 평문 .md로 저장합니다.
 
 - **공식**: https://obsidian.md
 - **개발**: Dynalist 팀
@@ -23,7 +23,7 @@ Windows · macOS · Linux · iOS · Android (전 플랫폼 동일 vault 사용 �
 
 | 기능 | 설명 |
 |------|------|
-| **로컬 평문 저장** | vault = 로컬 폴더. 모든 노트는 `.md` 파일. 앱이 없어도 다른 에디터에서 열림 |
+| **로컬 평문 저장** | vault = 로컬 디렉터리. 모든 노트는 `.md` 파일. 앱이 없어도 다른 에디터에서 열림 |
 | **Wikilinks** `[[]]` | 페이지명만으로 연결. 페이지 이동/이름 변경 시 링크 자동 갱신 |
 | **Backlinks** | 어떤 페이지가 현재 페이지를 가리키는지 자동 추적 |
 | **Graph View** | 위키 전체 연결 구조 시각화. 허브·고아 페이지 식별 |
@@ -45,7 +45,7 @@ Windows · macOS · Linux · iOS · Android (전 플랫폼 동일 vault 사용 �
 > "Obsidian is the IDE; the LLM is the programmer; the wiki is the codebase."
 > — `raw/llm-wiki-pattern/llm-wiki-pattern.md`
 
-LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서 실시간으로 결과를 본다 — 링크 따라가기, 그래프 뷰 확인, 페이지 읽기.
+LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서 실시간으로 결과를 봅니다 — 링크 따라가기, 그래프 뷰 확인, 페이지 읽기.
 
 ## 위키 운영에 유용한 기능
 
@@ -59,7 +59,7 @@ LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서
 
 - **첨부파일 경로 고정**: Settings → Files and links → "Attachment folder path" = `raw/assets/`
 - **이미지 일괄 다운로드 핫키**: Settings → Hotkeys → "Download" 검색 → 핫키 바인딩 (예: `Ctrl+Shift+D`)
-- → 클리핑 후 핫키 한 번으로 이미지가 로컬에 저장됨. LLM이 직접 이미지를 참조할 수 있음.
+- → 클리핑 후 핫키 한 번으로 이미지가 로컬에 저장됩니다. LLM이 직접 이미지를 참조할 수 있습니다.
 - **파일 명령 제약**: 한글 파일명/공백 포함 파일명은 OS·도구별 호환성에 주의
 
 ## 철학
