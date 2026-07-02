@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch05]
 sources: [java-study/java-study-ch05-입출력과네트워크.md]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -995,7 +995,7 @@ socket.receive(packet);
 
 소켓 실습의 핵심은 **서버를 먼저 띄우고, 클라이언트를 별도 터미널에서 실행**하는 것입니다. 아래 두 파일을 만들어 그대로 실행해 봅니다.
 
-`EchoServer.java`:
+**파일**: EchoServer.java
 
 ```java
 import java.io.*;
@@ -1018,7 +1018,7 @@ public class EchoServer {
 }
 ```
 
-`EchoClient.java`:
+**파일**: EchoClient.java
 
 ```java
 import java.io.*;
@@ -1335,7 +1335,7 @@ implementation 'com.h2database:h2:2.2.224'
 
 빌드 도구 없이 단일 파일로 실습하려면 [H2 jar](https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar)를 내려받아 같은 디렉터리에 둡니다.
 
-`JdbcExample.java`:
+**파일**: JdbcExample.java
 
 ```java
 import java.sql.*;
@@ -1396,11 +1396,29 @@ JDBC로 연결해 SELECT 결과를 출력해 보라.
 
 > 아래 파일은 유틸리티 클래스를 만들어 여러 형태로 처리 하는 연습을 해 봅니다. 한번에 다하지 말고 메소드 하나 하고 결과 보고 하는 식으로 진행 바랍니다.
 
+이 실습은 1장 1.2에서 만든 Maven/Gradle 프로젝트에 `com.example.ch05.files` 패키지로 추가합니다. JSON 처리에 Gson을 사용하므로 의존성을 먼저 추가합니다.
+
+```xml
+<!-- pom.xml -->
+<dependency>
+  <groupId>com.google.code.gson</groupId>
+  <artifactId>gson</artifactId>
+  <version>2.10.1</version>
+</dependency>
+```
+
+```groovy
+// build.gradle
+implementation 'com.google.code.gson:gson:2.10.1'
+```
+
 ---
 
-**파일명 1: Person.java**
+**파일**: src/main/java/com/example/ch05/files/Person.java
 
 ```java
+package com.example.ch05.files;
+
 import java.io.Serializable;
 
 public class Person implements Serializable {
@@ -1445,13 +1463,13 @@ public class Person implements Serializable {
 
 ---
 
-**파일명 2: FileIOHandler.java**
+**파일**: src/main/java/com/example/ch05/files/FileIOHandler.java
 
 실제로는 필요한 라이브러리 추가 후 예외처리 등을 상세히 구현해야 함
 
 ```java
 
-package com.example.ch4.files;
+package com.example.ch05.files;
 
 import java.io.*;
 import java.util.*;
@@ -1827,10 +1845,10 @@ public class FileIOHandler {
 
 ---
 
-**파일명 3: Main.java**
+**파일**: src/main/java/com/example/ch05/files/FileIOHandlerMain.java
 
 ```java
-package com.example.ch4.files;
+package com.example.ch05.files;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1945,7 +1963,15 @@ public class FileIOHandlerMain {
 **데이터**
 
 - `Person` 객체 리스트
+
 ---
+
+세 파일을 모두 저장한 뒤 프로젝트 루트에서 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.FileIOHandlerMain"
+# Gradle 프로젝트: build.gradle에 application { mainClass = 'com.example.ch05.files.FileIOHandlerMain' } 지정 후 ./gradlew run
+```
 
 **출력 예시 (일부)**
 
@@ -2061,8 +2087,11 @@ CSV 파일을 읽고 다음의 작업을 수행해야 합니다:
 ### 개요
 이 풀이는 한 클래스 안에서 빠르게 통계를 계산하는 직진형 해설입니다.
 처음 문제를 풀 때는 이 방식이 이해하기 쉽고, 두 번째 풀이와 비교하면 구조화의 필요성이 더 잘 보입니다.
+
+**파일**: src/main/java/com/example/ch05/files/csv/LargeFileProcessing.java
+
 ```java
-package com.example.ch4.files.csv;
+package com.example.ch05.files.csv;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -2145,6 +2174,13 @@ public class LargeFileProcessing {
 
 ```
 
+데이터 파일 `sample_data.csv`는 `src/main/resources/`에 둡니다(클래스패스에서 읽기 때문). 프로젝트 루트에서 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.csv.LargeFileProcessing"
+# Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
+```
+
 ## 5.8-2 파일 처리 실전문제 1 풀이 2
 
 **🎯 목표**: 파일 처리 실전문제 풀이(2)를 확인한다.
@@ -2152,8 +2188,11 @@ public class LargeFileProcessing {
 ### 개요
 이 풀이는 CSV 읽기, 통계 집계, 결과 표현을 역할별로 나눈 구조화된 해설입니다.
 같은 문제라도 도메인 모델과 리포지토리, 분석 서비스로 분리할 수 있다는 점을 보여주기 위해 남깁니다.
+
+**파일**: src/main/java/com/example/ch05/csv/BigFileProcessingDomain.java
+
 ```java
-package com.example.ch4.csv;
+package com.example.ch05.csv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -2404,6 +2443,13 @@ public class BigFileProcessingDomain {
 
 ```
 
+풀이 1과 같이 `sample_data.csv`를 `src/main/resources/`에 두고 프로젝트 루트에서 실행합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.BigFileProcessingDomain"
+# Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
+```
+
 ## 5.9 형식별 파일 처리 실전문제
 
 **🎯 목표**: 형식별 파일 처리를 실전 문제로 적용한다.
@@ -2513,13 +2559,52 @@ organization.json
 
 아래 코드는 단일 책임 원칙을 기준으로 각 작업의 책임을 독립적인 클래스로 나눠 구조화한 예시입니다.
 
+이 풀이도 1장 1.2에서 만든 Maven/Gradle 프로젝트를 그대로 사용하고, 형식별로 `com.example.ch05.csv` / `com.example.ch05.excel` / `com.example.ch05.json` 패키지에 나눠 담습니다. 엑셀은 Apache POI, JSON은 Jackson, 차트 문제(엑셀 7번·JSON 8번)는 JFreeChart를 사용하므로 의존성을 먼저 추가합니다.
+
+```xml
+<!-- pom.xml -->
+<dependency>
+  <groupId>org.apache.poi</groupId>
+  <artifactId>poi-ooxml</artifactId>
+  <version>5.2.5</version>
+</dependency>
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
+  <version>2.17.1</version>
+</dependency>
+<dependency>
+  <groupId>org.jfree</groupId>
+  <artifactId>jfreechart</artifactId>
+  <version>1.5.4</version>
+</dependency>
+```
+
+```groovy
+// build.gradle
+implementation 'org.apache.poi:poi-ooxml:5.2.5'
+implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+implementation 'org.jfree:jfreechart:1.5.4'
+```
+
+데이터 파일(`data.csv`, `sales_data.xlsx`, `products.json` 등)은 프로젝트 루트(명령을 실행하는 디렉터리)에 둡니다. 실행 명령은 아래 한 가지 꼴이고, `-Dexec.mainClass` 값만 각 풀이의 public 클래스로 바꾸면 됩니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.CsvProcessor"
+# Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
+```
+
 ---
 
 ##### CSV 파일 문제 풀이
 
 1. 부서별 CSV 필터링과 정렬
 
+**파일**: src/main/java/com/example/ch05/csv/CsvProcessor.java
+
 ```java
+package com.example.ch05.csv;
+
 import java.io.*;
 import java.util.*;
 
@@ -2582,7 +2667,11 @@ CSV 문제의 핵심은 포맷이 단순하다는 이유로 검증을 빼먹지 
 
 ##### 1. 엑셀 데이터 합산
 
+**파일**: src/main/java/com/example/ch05/excel/ExcelSumProcessor.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -2591,13 +2680,13 @@ import java.io.IOException;
 
 public class ExcelSumProcessor {
     public static void main(String[] args) {
-        SalesDataReader reader = new SalesDataReader();
+        ExcelSalesDataReader reader = new ExcelSalesDataReader();
         double totalSales = reader.calculateTotal("sales_data.xlsx");
         System.out.println("월별 매출 합계: " + totalSales);
     }
 }
 
-class SalesDataReader {
+class ExcelSalesDataReader {
     public double calculateTotal(String filePath) {
         try (FileInputStream fis = new FileInputStream(filePath);
              Workbook workbook = new XSSFWorkbook(fis)) {
@@ -2621,7 +2710,11 @@ class SalesDataReader {
 
 ##### 2. 특정 열의 데이터 필터링
 
+**파일**: src/main/java/com/example/ch05/excel/EmployeeFilterProcessor.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -2666,7 +2759,11 @@ class EmployeeDataReader {
 
 ##### 3. 엑셀 데이터 정렬
 
+**파일**: src/main/java/com/example/ch05/excel/StudentScoreProcessor.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -2735,7 +2832,11 @@ class StudentScoreReader {
 
 ##### 4. 특정 셀 값 변경
 
+**파일**: src/main/java/com/example/ch05/excel/InventoryUpdater.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -2785,7 +2886,11 @@ class InventoryDataModifier {
 
 ##### 5. 엑셀 데이터 통합
 
+**파일**: src/main/java/com/example/ch05/excel/ExcelDataMerger.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -2856,7 +2961,11 @@ class ExcelMerger {
 
 ##### 6. 조건에 맞는 셀 색상 변경
 
+**파일**: src/main/java/com/example/ch05/excel/GradeHighlighter.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -2905,7 +3014,11 @@ class GradeCellModifier {
 
 ##### 7. 엑셀 데이터 시각화
 
+**파일**: src/main/java/com/example/ch05/excel/SalesVisualizer.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -2964,7 +3077,11 @@ class SalesChartGenerator {
 
 ##### 8. 빈 셀 채우기
 
+**파일**: src/main/java/com/example/ch05/excel/SurveyDataCleaner.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -3007,8 +3124,14 @@ class SurveyCleaner {
         }
     }
 }
+```
 
+같은 문제의 변형으로, "없음"으로 적힌 셀을 "n/a"로 대체하는 풀이는 별도 파일로 둡니다.
 
+**파일**: src/main/java/com/example/ch05/excel/SurveyDataReplacer.java
+
+```java
+package com.example.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3061,7 +3184,11 @@ class SurveyReplacer {
 
 ##### 9. 다중 시트 데이터 처리
 
+**파일**: src/main/java/com/example/ch05/excel/MultiSheetMerger.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -3129,7 +3256,11 @@ class MultiSheetProcessor {
 
 ##### 10. 엑셀 데이터 통계 분석
 
+**파일**: src/main/java/com/example/ch05/excel/TestScoresAnalyzer.java
+
 ```java
+package com.example.ch05.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -3185,7 +3316,11 @@ class TestScoreProcessor {
 
 ##### 1. JSON 데이터 키 검색
 
+**파일**: src/main/java/com/example/ch05/json/ProductKeySearcher.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3238,7 +3373,11 @@ class Product {
 
 ##### 2. 특정 값 추출
 
+**파일**: src/main/java/com/example/ch05/json/UserFilter.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3259,12 +3398,12 @@ class UserReader {
     public void filterByAge(String filePath, int minAge) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            List<User> users = mapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<JsonUser> users = mapper.readValue(new File(filePath), new TypeReference<>() {});
 
             System.out.println("나이 " + minAge + " 이상 사용자의 이메일:");
             users.stream()
                     .filter(user -> user.getAge() >= minAge)
-                    .map(User::getEmail)
+                    .map(JsonUser::getEmail)
                     .forEach(System.out::println);
         } catch (IOException e) {
             throw new RuntimeException("JSON 읽기 오류: " + e.getMessage());
@@ -3272,7 +3411,7 @@ class UserReader {
     }
 }
 
-class User {
+class JsonUser {
     private String name;
     private int age;
     private String email;
@@ -3292,7 +3431,11 @@ class User {
 
 ##### 3. JSON 데이터 합산
 
+**파일**: src/main/java/com/example/ch05/json/SalesSumCalculator.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3304,14 +3447,14 @@ public class SalesSumCalculator {
     public static void main(String[] args) {
         String filePath = "sales.json";
 
-        SalesDataReader reader = new SalesDataReader();
+        JsonSalesDataReader reader = new JsonSalesDataReader();
         double totalSales = reader.calculateTotalSales(filePath);
 
         System.out.println("총 매출액: " + totalSales);
     }
 }
 
-class SalesDataReader {
+class JsonSalesDataReader {
     public double calculateTotalSales(String filePath) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -3349,7 +3492,11 @@ class MonthlySale {
 
 ##### 4. 중첩 JSON 데이터 탐색
 
+**파일**: src/main/java/com/example/ch05/json/DepartmentEmployeeFinder.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3375,7 +3522,7 @@ class OrganizationReader {
             organization.getDepartments().stream()
                     .filter(department -> department.getName().equals(departmentName))
                     .flatMap(department -> department.getEmployees().stream())
-                    .map(Employee::getName)
+                    .map(OrgEmployee::getName)
                     .forEach(System.out::println);
         } catch (IOException e) {
             throw new RuntimeException("JSON 읽기 오류: " + e.getMessage());
@@ -3393,18 +3540,18 @@ class Organization {
 
 class Department {
     private String name;
-    private List<Employee> employees;
+    private List<OrgEmployee> employees;
 
     public String getName() {
         return name;
     }
 
-    public List<Employee> getEmployees() {
+    public List<OrgEmployee> getEmployees() {
         return employees;
     }
 }
 
-class Employee {
+class OrgEmployee {
     private String name;
 
     public String getName() {
@@ -3418,7 +3565,11 @@ class Employee {
 
 ##### 5. JSON 데이터 수정
 
+**파일**: src/main/java/com/example/ch05/json/InventoryPriceUpdater.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3441,7 +3592,7 @@ class InventoryModifier {
     public void updatePrice(String filePath, String productName, double newPrice) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            List<Product> inventory = mapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<InventoryProduct> inventory = mapper.readValue(new File(filePath), new TypeReference<>() {});
 
             inventory.stream()
                     .filter(product -> product.getProduct().equals(productName))
@@ -3454,7 +3605,7 @@ class InventoryModifier {
     }
 }
 
-class Product {
+class InventoryProduct {
     private String product;
     private int quantity;
     private double price;
@@ -3474,7 +3625,11 @@ class Product {
 
 ##### 6. JSON 데이터 병합
 
+**파일**: src/main/java/com/example/ch05/json/JsonMerger.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3519,7 +3674,11 @@ class JsonDataMerger {
 
 ##### 7. JSON 데이터 정렬
 
+**파일**: src/main/java/com/example/ch05/json/MovieSorter.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3579,7 +3738,11 @@ class Movie {
 
 ##### 8. JSON 데이터 시각화
 
+**파일**: src/main/java/com/example/ch05/json/PopulationVisualizer.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jfree.chart.ChartFactory;
@@ -3648,7 +3811,11 @@ class Country {
 
 ##### 9. 특정 조건의 데이터 삭제
 
+**파일**: src/main/java/com/example/ch05/json/CustomerDataCleaner.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3707,7 +3874,11 @@ class Customer {
 
 ##### 10. JSON 데이터에서 중복 제거
 
+**파일**: src/main/java/com/example/ch05/json/OrderDeduplicator.java
+
 ```java
+package com.example.ch05.json;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -3772,5 +3943,18 @@ class Order {
 1. **단일 책임 원칙 (SRP)**:
 1. **확장성**:
 1. **재사용성**:
+
+---
+
+##### 자주 나는 에러 → 원인
+
+실습 중 막히면 아래부터 확인합니다.
+
+| 증상 | 원인 확인 |
+|------|----------|
+| `NoClassDefFoundError: org/apache/poi/...` · `com/fasterxml/jackson/...` · `org/jfree/...` | POI·Jackson·JFreeChart 의존성을 pom.xml/build.gradle에 추가했는지, 추가 후 다시 빌드(`mvn compile`)했는지 확인합니다. |
+| `FileNotFoundException: data.csv` 등 데이터 파일을 못 찾음 | 명령을 실행하는 작업 디렉터리가 프로젝트 루트인지, 데이터 파일을 그 위치에 두었는지 확인합니다. 5.8 풀이의 `sample_data.csv`만 예외로 `src/main/resources/`에 둡니다. |
+| 출력에서 한글이 깨짐 | 터미널·소스 파일 인코딩이 UTF-8인지 확인하고, 필요하면 `MAVEN_OPTS=-Dfile.encoding=UTF-8`을 지정해 실행합니다. |
+| `mvn exec:java`에서 `ClassNotFoundException` | `compile` 없이 실행하지 않았는지(`mvn compile exec:java`), `-Dexec.mainClass`의 패키지 경로(`com.example.ch05.csv/excel/json`)에 오타가 없는지 확인합니다. |
 
 ---
