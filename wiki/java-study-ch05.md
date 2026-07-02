@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch05]
 sources: [java-study/java-study-ch05-입출력과네트워크.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-02
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -259,9 +259,9 @@ try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
 - `day_by_spring`: 예외 의미를 도메인과 API 응답으로 번역하는 실전 구조
 #### 6. 빠른 판단 기준
 
-- 파일, 네트워크, JDBC와 직접 맞닿아 있다: 체크 예외 또는 그 래핑 예외를 먼저 의심한다.
-- 입력값이나 상태가 잘못되었다: `IllegalArgumentException`, `IllegalStateException`, 도메인 런타임 예외를 먼저 의심한다.
-- 컨트롤러 응답이 실패했다: 예외 자체보다 전역 예외 처리기에서 어떤 HTTP 응답으로 번역했는지 함께 본다.
+- 파일, 네트워크, JDBC와 직접 맞닿아 있습니다: 체크 예외 또는 그 래핑 예외를 먼저 의심합니다.
+- 입력값이나 상태가 잘못되었습니다: `IllegalArgumentException`, `IllegalStateException`, 도메인 런타임 예외를 먼저 의심합니다.
+- 컨트롤러 응답이 실패했습니다: 예외 자체보다 전역 예외 처리기에서 어떤 HTTP 응답으로 번역했는지 함께 봅니다.
 
 ### ✏️ 직접 해보기
 
@@ -549,7 +549,7 @@ try (FileChannel channel = FileChannel.open(Paths.get("data.bin"), StandardOpenO
 
 #### 8. 파일 검색과 경로 작업
 
-파일 처리는 읽기와 쓰기에서 끝나지 않습니다. 실제로는 파일을 찾고, 디렉토리를 만들고, 안전하게 삭제하는 작업도 자주 섞입니다.
+파일 처리는 읽기와 쓰기에서 끝나지 않습니다. 실제로는 파일을 찾고, 디렉터리를 만들고, 안전하게 삭제하는 작업도 자주 섞입니다.
 
 ```java
 try (Stream<Path> paths = Files.walk(Paths.get("logs"))) {
@@ -558,7 +558,7 @@ try (Stream<Path> paths = Files.walk(Paths.get("logs"))) {
 }
 ```
 
-디렉토리 생성은 `Files.createDirectories`, 삭제는 `Files.deleteIfExists`처럼 NIO API를 쓰는 편이 예외 처리와 의도가 더 분명합니다.
+디렉터리 생성은 `Files.createDirectories`, 삭제는 `Files.deleteIfExists`처럼 NIO API를 쓰는 편이 예외 처리와 의도가 더 분명합니다.
 
 #### 9. 대용량 파일은 어떻게 다를까
 
@@ -598,8 +598,8 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 - 복사: `Files.copy`
 - 병합: 여러 입력 파일을 순서대로 읽어 하나의 출력 파일에 쓰기
 - 필터링: CSV나 로그에서 조건에 맞는 줄만 통과시키기
-- 검색: 특정 디렉토리에서 파일명이나 확장자 기준으로 찾기
-- 정리: 오래된 파일 삭제, 이름 변경, 다른 폴더로 이동
+- 검색: 특정 디렉터리에서 파일명이나 확장자 기준으로 찾기
+- 정리: 오래된 파일 삭제, 이름 변경, 다른 디렉터리로 이동
 즉, API를 많이 외우는 것보다 `읽기 → 변환/필터링 → 쓰기` 흐름을 익히는 것이 더 중요합니다.
 
 #### 11. 자주 하는 실수
@@ -616,7 +616,7 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 - 설정 파일 로드
 - CSV 내보내기
 - 업로드 파일 저장
-- 디렉토리 스캔과 파일 검색
+- 디렉터리 스캔과 파일 검색
 - 임시 파일 생성과 정리
 - 대용량 CSV/로그 통계 계산
 - 여러 파일 병합과 이동 자동화
@@ -716,7 +716,7 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 - Properties: 소수의 설정 값 저장처럼 키-값 구조가 단순할 때
 - ZIP: 데이터 자체보다 묶음과 전달이 중요할 때
 - Java 직렬화(`ObjectOutputStream`): 학습용으로는 볼 수 있지만, 장기 저장 포맷의 기본값으로 삼기에는 주의가 필요할 때
-핵심은 “무슨 데이터를 저장하느냐”보다 **누가 읽고, 얼마나 오래 유지하며, 어떤 도구로 다시 처리할지**를 먼저 보는 것입니다.
+핵심은 "무슨 데이터를 저장하느냐"보다 **누가 읽고, 얼마나 오래 유지하며, 어떤 도구로 다시 처리할지**를 먼저 보는 것입니다.
 
 #### 6. Java 직렬화와 구조화 포맷을 어떻게 구분할까
 
@@ -751,7 +751,7 @@ class Person implements Serializable {
 - YAML: 설정 파일로는 유용하지만, 임의 문자열 파싱보다 전용 라이브러리 사용이 안전합니다.
 - HTML: 파일 포맷이라기보다 문서 포맷에 가깝고, 읽을 때는 보통 Jsoup 같은 파서를 씁니다.
 - Markdown: 사람이 읽는 문서를 만들 때는 좋지만 데이터 저장 포맷 기본값은 아닙니다.
-즉, 이런 형식의 실습은 “문자열 다루기 연습”보다 **포맷마다 적합한 도구와 목적이 다르다**는 감각을 익히는 쪽으로 읽어야 합니다.
+즉, 이런 형식의 실습은 "문자열 다루기 연습"보다 **포맷마다 적합한 도구와 목적이 다르다**는 감각을 익히는 쪽으로 읽어야 합니다.
 
 #### 8. 이미지와 압축 파일
 
@@ -929,11 +929,11 @@ System.out.println("서버 응답: " + in.readLine());
 
 이 예제는 단순하지만 네트워크 통신의 핵심이 다 들어 있습니다.
 
-- 서버는 포트를 열고 대기한다.
-- 클라이언트는 접속한다.
-- 양쪽은 스트림으로 데이터를 주고받는다.
-- 읽기와 쓰기 규칙이 맞아야 한다.
-- 자원은 반드시 닫혀야 한다.
+- 서버는 포트를 열고 대기합니다.
+- 클라이언트는 접속합니다.
+- 양쪽은 스트림으로 데이터를 주고받습니다.
+- 읽기와 쓰기 규칙이 맞아야 합니다.
+- 자원은 반드시 닫혀야 합니다.
 #### 6. 블로킹을 이해하지 못하면 통신 코드가 자주 멈춘다
 
 네트워크 코드 초보 단계에서 가장 흔한 혼란은 "왜 프로그램이 멈춘 것처럼 보이는가"입니다. 실제로는 멈춘 것이 아니라 읽기나 연결 대기에서 블로킹 중인 경우가 많습니다.
@@ -973,9 +973,9 @@ socket.receive(packet);
 
 입문 단계에서 기억할 기준은 아래입니다.
 
-- TCP는 스트림 기반이라 메시지 경계를 직접 정해야 한다.
-- UDP는 데이터그램 단위라 한 번의 송신이 한 메시지처럼 보이기 쉽다.
-- 대신 UDP는 도착과 순서를 보장하지 않는다.
+- TCP는 스트림 기반이라 메시지 경계를 직접 정해야 합니다.
+- UDP는 데이터그램 단위라 한 번의 송신이 한 메시지처럼 보이기 쉽습니다.
+- 대신 UDP는 도착과 순서를 보장하지 않습니다.
 즉, UDP는 빠르지만 애플리케이션이 더 많은 가정을 직접 다뤄야 합니다.
 
 #### 9. 프로토콜이 없으면 통신은 금방 꼬인다
@@ -993,7 +993,7 @@ socket.receive(packet);
 
 #### 실제로 띄워 보기 — 서버 먼저, 클라이언트는 다른 터미널
 
-소켓 실습의 핵심은 **서버를 먼저 띄우고, 클라이언트를 별도 터미널에서 실행**하는 것이다. 아래 두 파일을 만들어 그대로 돌려 본다.
+소켓 실습의 핵심은 **서버를 먼저 띄우고, 클라이언트를 별도 터미널에서 실행**하는 것입니다. 아래 두 파일을 만들어 그대로 실행해 봅니다.
 
 `EchoServer.java`:
 
@@ -1051,7 +1051,7 @@ java EchoClient
 #   서버 창:   "클라이언트 연결됨: /127.0.0.1", "받음: hello"
 ```
 
-> ⚠️ **서버가 멈춘 듯 보이는 건 오류가 아니다.** `accept()`가 연결을 기다리는 정상 상태다. 그래서 클라이언트는 **반드시 다른 터미널**에서 실행한다(같은 터미널은 서버가 점유 중).
+> ⚠️ **서버가 멈춘 듯 보이는 건 오류가 아닙니다.** `accept()`가 연결을 기다리는 정상 상태입니다. 그래서 클라이언트는 **반드시 다른 터미널**에서 실행합니다(같은 터미널은 서버가 점유 중).
 
 ```bash
 # 클라이언트 코드 없이 서버만 빠르게 확인 (한 줄 입력 후 Enter)
@@ -1059,8 +1059,8 @@ nc 127.0.0.1 8888          # Mac/Linux
 # Windows: ncat 127.0.0.1 8888   (telnet은 기본 비활성일 수 있음)
 ```
 
-- `javac`/`java`는 Mac·Windows 공통. 빠른 확인 도구만 `nc`(Mac/Linux) ↔ `ncat`(Windows) 다르다.
-- `Address already in use` → 8888을 이미 다른 프로세스가 사용 중. 포트를 바꾸거나 기존 프로세스를 종료한다.
+- `javac`/`java`는 Mac·Windows 공통입니다. 빠른 확인 도구만 `nc`(Mac/Linux) ↔ `ncat`(Windows)로 다릅니다.
+- `Address already in use` → 8888을 이미 다른 프로세스가 사용 중입니다. 포트를 바꾸거나 기존 프로세스를 종료합니다.
 
 ---
 
@@ -1315,9 +1315,9 @@ JPA는 엔티티 중심으로 더 높은 추상화를 제공하고, MyBatis는 S
 
 #### 실제로 연결해 보기 — 설치 없이 H2로
 
-DB를 설치하지 않고 바로 실습하려면 **H2 인메모리 DB**가 가장 쉽다. 드라이버 jar 하나만 있으면 된다.
+DB를 설치하지 않고 바로 실습하려면 **H2 인메모리 DB**가 가장 쉽습니다. 드라이버 jar 하나만 있으면 됩니다.
 
-빌드 도구를 쓰면 의존성 한 줄로 드라이버가 잡힌다:
+빌드 도구를 쓰면 의존성 한 줄로 드라이버가 잡힙니다.
 
 ```groovy
 // build.gradle
@@ -1333,7 +1333,7 @@ implementation 'com.h2database:h2:2.2.224'
 </dependency>
 ```
 
-빌드 도구 없이 단일 파일로 실습하려면 [H2 jar](https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar)를 내려받아 같은 폴더에 둔다.
+빌드 도구 없이 단일 파일로 실습하려면 [H2 jar](https://repo1.maven.org/maven2/com/h2database/h2/2.2.224/h2-2.2.224.jar)를 내려받아 같은 디렉터리에 둡니다.
 
 `JdbcExample.java`:
 
@@ -1359,7 +1359,7 @@ public class JdbcExample {
 }
 ```
 
-실행 — 드라이버 jar를 classpath에 포함한다. **classpath 구분자가 OS마다 다르다**:
+실행 — 드라이버 jar를 classpath에 포함합니다. **classpath 구분자가 OS마다 다릅니다.**
 
 ```bash
 # Mac / Linux — 구분자 :
@@ -1373,10 +1373,14 @@ javac -cp h2-2.2.224.jar JdbcExample.java
 java  -cp ".;h2-2.2.224.jar" JdbcExample
 ```
 
-- 성공 출력: `1 : alice : alice@example.com`
-- `No suitable driver found` → 드라이버 jar가 classpath에 없다. `-cp`에 h2 jar를 포함했는지 확인.
-- Gradle/Maven 프로젝트라면 `./gradlew run` / `./mvnw exec:java`로 실행하면 classpath는 자동으로 잡힌다.
-- MySQL로 하려면 `jdbc:mysql://localhost:3306/DB이름` + `com.mysql:mysql-connector-j` 드라이버로 바꾸고, DB를 먼저 띄운다(`docker run -e MYSQL_ROOT_PASSWORD=pw -p 3306:3306 mysql`).
+```text
+예상 결과
+1 : alice : alice@example.com
+```
+
+- `No suitable driver found` → 드라이버 jar가 classpath에 없습니다. `-cp`에 h2 jar를 포함했는지 확인합니다.
+- Gradle/Maven 프로젝트라면 `./gradlew run` / `./mvnw exec:java`로 실행하면 classpath는 자동으로 잡힙니다.
+- MySQL로 하려면 `jdbc:mysql://localhost:3306/DB이름` + `com.mysql:mysql-connector-j` 드라이버로 바꾸고, DB를 먼저 띄웁니다(`docker run -e MYSQL_ROOT_PASSWORD=pw -p 3306:3306 mysql`).
 
 ---
 
