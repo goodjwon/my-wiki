@@ -8,14 +8,14 @@ external:
   - https://www.youtube.com/watch?v=LBWefG5zjxk
   - https://martinfowler.com/bliki/TolerantReader.html
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-02
 ---
 
 # API 하위 호환성과 JSON Tolerant Reader 계약
 
 ## 정의
 
-API 응답에 **새 필드를 추가**하는 것은 서버 개발자에겐 "안전한 변경"으로 느껴지지만, **클라이언트 JSON 라이브러리의 미지(unknown) 필드 처리 정책에 따라 Breaking Change**가 된다. 가장 엄격한 클라이언트가 기준.
+API 응답에 **새 필드를 추가**하는 것은 서버 개발자에겐 "안전한 변경"으로 느껴지지만, **클라이언트 JSON 라이브러리의 미지(unknown) 필드 처리 정책에 따라 Breaking Change**가 됩니다. 가장 엄격한 클라이언트가 기준이 됩니다.
 
 > "응답에 정의되지 않은 필드가 와도 클라이언트는 무시한다"는 **Tolerant Reader 계약**을 명시적으로 약속해야 한다 (Martin Fowler).
 
@@ -33,7 +33,7 @@ API 응답에 **새 필드를 추가**하는 것은 서버 개발자에겐 "안�
                                        → API 호출 전부 실패
 ```
 
-원인은 같은 안드로이드 안에서도 **JSON 라이브러리 기본 설정 차이**.
+원인은 같은 안드로이드 안에서도 **JSON 라이브러리 기본 설정 차이**에 있습니다.
 
 ## 주요 JSON 라이브러리의 기본 동작
 
@@ -48,13 +48,13 @@ API 응답에 **새 필드를 추가**하는 것은 서버 개발자에겐 "안�
 | Rust | `serde_json` | **실패** ❌ (`#[serde(deny_unknown_fields)]` 가능) | 옵션 |
 | Go | `encoding/json` | 무시 (기본) | `DisallowUnknownFields()` |
 
-→ **클라이언트 JSON 라이브러리의 기본값이 천차만별**. 서버가 컨트롤 불가능.
+→ **클라이언트 JSON 라이브러리의 기본값이 천차만별입니다**. 서버가 컨트롤할 수 없습니다.
 
 ## Tolerant Reader 패턴 (Martin Fowler, 2011)
 
 > "Be conservative in what you send, be liberal in what you accept."
 
-API 클라이언트는 **응답에서 본인이 필요한 필드만 꺼내 쓰고, 모르는 필드는 무시**해야 한다는 패턴. 이게 지켜져야 서버는 안전하게 새 필드를 추가할 수 있다.
+API 클라이언트는 **응답에서 본인이 필요한 필드만 꺼내 쓰고, 모르는 필드는 무시**해야 한다는 패턴입니다. 이게 지켜져야 서버는 안전하게 새 필드를 추가할 수 있습니다.
 
 ### 서버 측 추가가 안전한 변경 (Tolerant Reader 전제 하에)
 
@@ -125,7 +125,7 @@ fun `nickname 필드가 추가되어도 기존 클라이언트는 파싱 성공�
 }
 ```
 
-CI에 자동 포함.
+CI에 자동으로 포함합니다.
 
 ### 4. 버전 관리 (`/v1`, `/v2`) — 마지막 카드
 
@@ -144,7 +144,7 @@ CI에 자동 포함.
 `v1`을 만들면:
 - 비즈니스 로직 변경 시마다 **v1·v2 양쪽 반영 + 양쪽 테스트** (2배 비용)
 - 결국 v3, v4... 누적 → 유지보수 지옥
-- **deprecation 정책 + sunset 시점 합의가 함께** 가야 함
+- **deprecation 정책 + sunset 시점 합의가 함께** 가야 합니다
 
 ## 빠른 진단 — 우리 응답은 미지 필드 안전한가
 
@@ -169,7 +169,7 @@ grep -rn "ignoreUnknownKeys\s*=\s*false\|FAIL_ON_UNKNOWN_PROPERTIES.*true\|deny_
 | [[concept-db-connection-pool]] | 무한 수명 커넥션 |
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` |
 
-→ **"가장 엄격한 구현이 사실상의 표준이 된다"** — 서버 개발자가 자기 기준으로만 "안전한 변경"을 판단하면 안 됨.
+→ **"가장 엄격한 구현이 사실상의 표준이 됩니다"** — 서버 개발자가 자기 기준으로만 "안전한 변경"을 판단하면 안 됩니다.
 
 ## 원본 출처
 

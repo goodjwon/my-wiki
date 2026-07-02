@@ -8,16 +8,16 @@ external:
   - https://www.youtube.com/watch?v=JhBiSdXpvk4
   - https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-02
 ---
 
 # 크론잡 중복 실행과 Forbid 함정
 
 ## 정의
 
-스케줄된 배치 작업(Cron / Kubernetes CronJob)이 **이전 실행이 끝나기 전에 다음 스케줄이 도래**할 때 발생하는 동시 실행 문제와, 이를 단순히 차단(`Forbid`)했을 때 생기는 **Hang 무한 스킵** 함정. 둘 다 막으려면 **`Forbid` + `activeDeadlineSeconds`** 조합이 필수.
+스케줄된 배치 작업(Cron / Kubernetes CronJob)이 **이전 실행이 끝나기 전에 다음 스케줄이 도래**할 때 발생하는 동시 실행 문제와, 이를 단순히 차단(`Forbid`)했을 때 생기는 **Hang 무한 스킵** 함정입니다. 둘 다 막으려면 **`Forbid` + `activeDeadlineSeconds`** 조합이 필수입니다.
 
-> 핵심 인사이트: 단일 안전장치는 또 다른 사고를 부른다. **두 가지 방어선이 함께** 필요.
+> 핵심 인사이트: 단일 안전장치는 또 다른 사고를 부릅니다. **두 가지 방어선이 함께** 필요합니다.
 
 ## 사고 시나리오
 
@@ -33,7 +33,7 @@ updated: 2026-06-06
        → 정산 금액 2배 사고 💥
 ```
 
-코드엔 버그 없음. **인프라 기본값이 사고의 원인.**
+코드엔 버그가 없습니다. **인프라 기본값이 사고의 원인입니다.**
 
 ## 환경별 기본 동작
 
@@ -147,7 +147,7 @@ spec:
 
 ## 모니터링 — 사고가 났는지 어떻게 아는가
 
-`Forbid`로 스킵된 경우 **알람**이 없으면 12시간 손실 같은 함정에 빠진다.
+`Forbid`로 스킵된 경우 **알람**이 없으면 12시간 손실 같은 함정에 빠집니다.
 
 - **Pod 이벤트 감시**: `JobAlreadyActive` (스킵 발생 시 이 reason)
 - **Prometheus 메트릭**:
@@ -167,7 +167,7 @@ spec:
 | **[[concept-keepalive-timeout-race|LB-서버]]** | Keep-Alive 사용 | 타임아웃 불일치 → 502 | 서버 timeout > LB |
 | **[[concept-varchar-length-prefix|VARCHAR(255) 관습]]** | 255로 통일 | utf8mb4 → 2-byte prefix | 도메인 + 63 경계 인지 |
 
-→ **공통 원리**: 어떤 자동화·캐시·차단·관습도 **반드시 부작용을 동반**한다. 단일 안전장치를 절대시하지 말고 **그 자체의 실패 모드까지 방어**해야 한다.
+→ **공통 원리**: 어떤 자동화·캐시·차단·관습도 **반드시 부작용을 동반**합니다. 단일 안전장치를 절대시하지 말고 **그 자체의 실패 모드까지 방어**해야 합니다.
 
 ## 진단 체크리스트 — 우리 배치는 안전한가
 

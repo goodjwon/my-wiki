@@ -6,16 +6,16 @@ sources: [java-study/java-study-ch04-객체지향설계와패턴.md]
 external:
   - https://refactoring.guru/design-patterns
 created: 2026-04-18
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # 디자인 패턴
 
 ## 정의
 
-**반복되는 설계 문제에 대한 검증된 해법 카탈로그.** GoF(Gang of Four)의 _Design Patterns_(1994) 책에서 23개 패턴을 정리한 것이 시초이며, Spring·Java 표준 라이브러리에 깊게 녹아 있다.
+**반복되는 설계 문제에 대한 검증된 해법 카탈로그입니다.** GoF(Gang of Four)의 _Design Patterns_(1994) 책에서 23개 패턴을 정리한 것이 시초이며, Spring·Java 표준 라이브러리에 깊게 녹아 있습니다.
 
-> 패턴을 외우는 것보다, **언제 패턴이 필요한 신호를 알아보는 것**이 더 중요.
+> 패턴을 외우는 것보다, **언제 패턴이 필요한 신호를 알아보는 것**이 더 중요합니다.
 
 ## GoF 23패턴 분류
 
@@ -25,11 +25,11 @@ updated: 2026-06-20
 | **구조 (Structural)** | ★Adapter, Bridge, Composite, Decorator, ★Façade, Flyweight, ★Proxy |
 | **행위 (Behavioral)** | Chain of Responsibility, Command, Iterator, Mediator, Memento, ★Observer, State, ★Strategy, ★Template Method, Visitor, Interpreter |
 
-이 페이지에서는 Java·Spring 실무에서 가장 자주 쓰는 **8개**를 깊이 다룬다.
+이 페이지에서는 Java·Spring 실무에서 가장 자주 쓰는 **8개**를 깊이 다룹니다.
 
 ## 1. 전략 (Strategy)
 
-**핵심**: 동일한 작업의 **여러 알고리즘을 객체로 분리**, 런타임에 교체 가능.
+**핵심**: 동일한 작업의 **여러 알고리즘을 객체로 분리**하고, 런타임에 교체할 수 있습니다.
 
 ```java
 // Before: 분기로 알고리즘 선택
@@ -55,7 +55,7 @@ public class OrderService {
 
 ## 2. 템플릿 메서드 (Template Method)
 
-**핵심**: **전체 흐름은 고정**, 일부 단계만 하위 클래스가 채운다.
+**핵심**: **전체 흐름은 고정**되고, 일부 단계만 하위 클래스가 채웁니다.
 
 ```java
 abstract class ReportGenerator {
@@ -77,7 +77,7 @@ abstract class ReportGenerator {
 
 ## 3. 팩토리 메서드 (Factory Method)
 
-**핵심**: 객체 생성 자체를 **별도 메서드/클래스**로 분리. 호출자는 어떤 구체 타입이 만들어지는지 모른다.
+**핵심**: 객체 생성 자체를 **별도 메서드/클래스**로 분리합니다. 호출자는 어떤 구체 타입이 만들어지는지 모릅니다.
 
 ```java
 class NotificationFactory {
@@ -98,7 +98,7 @@ class NotificationFactory {
 
 ## 4. 싱글톤 (Singleton)
 
-**핵심**: 앱 전체에서 **인스턴스가 단 하나**.
+**핵심**: 앱 전체에서 **인스턴스가 단 하나**입니다.
 
 ```java
 // enum 싱글톤 (Joshua Bloch 권장)
@@ -117,7 +117,7 @@ public enum Cache {
 
 ## 5. 옵저버 (Observer)
 
-**핵심**: **상태 변화를 관심 있는 객체들에게 자동 통보**.
+**핵심**: **상태 변화를 관심 있는 객체들에게 자동 통보**합니다.
 
 ```java
 @Component
@@ -144,7 +144,7 @@ public class OrderEventPublisher {
 
 ## 6. 프록시 (Proxy)
 
-**핵심**: **원본 객체를 대신하는 대리자**를 두어, 호출 전/후에 부가 동작.
+**핵심**: **원본 객체를 대신하는 대리자**를 두어, 호출 전후에 부가 동작을 수행합니다.
 
 ```java
 interface UserService { User findById(long id); }
@@ -171,7 +171,7 @@ class LoggingProxy implements UserService {  // 프록시
 
 ## 7. 어댑터 (Adapter)
 
-**핵심**: **호환되지 않는 두 인터페이스를 연결**.
+**핵심**: **호환되지 않는 두 인터페이스를 연결**합니다.
 
 ```java
 interface SmsGateway { void sendSms(String phone, String text); }
@@ -192,7 +192,7 @@ class SmsNotificationAdapter implements NotificationSender {
 
 ## 8. 파사드 (Façade)
 
-**핵심**: **복잡한 서브시스템에 단순한 진입점**.
+**핵심**: **복잡한 서브시스템에 단순한 진입점**을 제공합니다.
 
 ```java
 @Service

@@ -8,16 +8,16 @@ external:
   - https://www.youtube.com/watch?v=L3IFezsV5VI
   - https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-02
 ---
 
 # `@Transactional` 롤백 정책 — 왜 RuntimeException에만 롤백할까
 
 ## 정의
 
-Spring의 `@Transactional` 기본 동작은 **`RuntimeException`(언체크 예외)과 `Error`에서만 자동 롤백**한다. `IOException`·`SQLException`같은 **체크 예외에서는 트랜잭션이 그대로 commit**된다. 이는 버그가 아니라 1990년대 Java 예외 철학을 충실히 반영한 설계.
+Spring의 `@Transactional` 기본 동작은 **`RuntimeException`(언체크 예외)과 `Error`에서만 자동 롤백**합니다. `IOException`·`SQLException`같은 **체크 예외에서는 트랜잭션이 그대로 commit**됩니다. 이는 버그가 아니라 1990년대 Java 예외 철학을 충실히 반영한 설계입니다.
 
-> 어노테이션 한 줄로 우리는 매일 **30년 전 Java 설계자의 결정을 제어**하고 있다.
+> 어노테이션 한 줄로 우리는 매일 **30년 전 Java 설계자의 결정을 제어**하고 있습니다.
 
 ## 함정 케이스
 
@@ -30,8 +30,8 @@ public void saveAndUpload(Order order) throws IOException {
 }
 ```
 
-기대: 예외가 났으니 `order`도 롤백되겠지.
-실제: **`order`는 그대로 DB에 남아있음.** `IOException`은 체크 예외라 Spring이 commit 진행.
+기대: 예외가 났으니 `order`도 롤백될 것입니다.
+실제: **`order`는 그대로 DB에 남아있습니다.** `IOException`은 체크 예외라 Spring이 commit을 진행합니다.
 
 ## 자바의 예외 2분류 철학
 
@@ -50,7 +50,7 @@ Spring은 이 철학을 그대로 수용:
 
 ## 실무와의 괴리
 
-현대 실무에서는 이 가정이 거의 안 맞는다:
+현대 실무에서는 이 가정이 거의 맞지 않습니다:
 
 | 상황 | Java 철학상 | 실무 기대 |
 |------|-----------|----------|
@@ -58,7 +58,7 @@ Spring은 이 철학을 그대로 수용:
 | `SQLException` (DB 통신 실패) | 복구 가능 → commit | **롤백 원함** |
 | 외부 API `IOException` | 복구 가능 → commit | **롤백 원함** |
 
-→ **99%의 경우 모든 예외에서 롤백이 정답.**
+→ **99%의 경우 모든 예외에서 롤백이 정답입니다.**
 
 ## 해결책 — `rollbackFor`
 
@@ -72,7 +72,7 @@ public void saveAndUpload(Order order) throws IOException {
 }
 ```
 
-`rollbackFor = Exception.class`는 "체크·언체크 가리지 않고 모든 `Exception`에서 롤백". 실무 표준 패턴.
+`rollbackFor = Exception.class`는 "체크·언체크 가리지 않고 모든 `Exception`에서 롤백"을 의미하며, 실무 표준 패턴입니다.
 
 ### 방법 2: 메타 어노테이션 (프로젝트 전역 표준)
 
@@ -93,7 +93,7 @@ public void saveAndUpload(Order order) throws IOException { ... }
 
 ### 방법 3: AspectJ로 클래스/패키지 단위 적용
 
-대규모 프로젝트에서는 AOP로 일괄 적용. CLAUDE.md 같은 코딩 헌법에 표준 명시.
+대규모 프로젝트에서는 AOP로 일괄 적용합니다. CLAUDE.md 같은 코딩 헌법에 표준을 명시합니다.
 
 ### `noRollbackFor` — 반대 옵션
 
@@ -106,7 +106,7 @@ public void saveAndUpload(Order order) throws IOException { ... }
 )
 ```
 
-예: "재고 부족 알림은 던지지만, 이 알림 자체는 트랜잭션과 무관" 같은 케이스.
+예: "재고 부족 알림은 던지지만, 이 알림 자체는 트랜잭션과 무관" 같은 케이스입니다.
 
 ## 현대 트렌드 — 체크 예외 회의
 
@@ -119,7 +119,7 @@ public void saveAndUpload(Order order) throws IOException { ... }
 | **Scala** | 체크 예외 무력화 |
 | **모던 Java 코드** | 체크 예외를 `RuntimeException`으로 wrap 후 throw가 관행 |
 
-→ **Java 자체도 체크 예외에서 멀어지는 중.** Spring 트랜잭션의 디폴트는 시대에 뒤처진 측면이 있다.
+→ **Java 자체도 체크 예외에서 멀어지는 중입니다.** Spring 트랜잭션의 디폴트는 시대에 뒤처진 측면이 있습니다.
 
 ## CLAUDE.md STOP 트리거 후보
 
@@ -130,7 +130,7 @@ STOP: @Transactional을 rollbackFor 없이 사용 (체크 예외 그냥 commit �
   → @Transactional(rollbackFor = Exception.class) 또는 사내 @Tx 사용
 ```
 
-또는 lint-fix.sh / Checkstyle 룰로 강제 가능 (커스텀 규칙).
+또는 lint-fix.sh / Checkstyle 룰로 강제할 수도 있습니다 (커스텀 규칙).
 
 ## 같은 인사이트 패턴 — "프레임워크 기본값은 절대값이 아니다"
 
@@ -142,7 +142,7 @@ STOP: @Transactional을 rollbackFor 없이 사용 (체크 예외 그냥 commit �
 | [[concept-db-connection-pool]] | 무한 수명 커넥션 | `maxLifetime` < DB `wait_timeout` |
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` | utf8mb4에선 `VARCHAR(63)` 또는 도메인 |
 
-→ 공통 원리: **"프레임워크·인프라의 기본값은 그 시대 설계자가 정답이라 믿었던 값일 뿐이다."** 시간이 지나면 시대 가정이 깨진다. 매번 의심하라.
+→ 공통 원리: **"프레임워크·인프라의 기본값은 그 시대 설계자가 정답이라 믿었던 값일 뿐입니다."** 시간이 지나면 시대 가정이 깨집니다. 매번 의심해야 합니다.
 
 ## 빠른 진단 — 우리 프로젝트는 안전한가
 
@@ -154,7 +154,7 @@ grep -rn "@Transactional" src/main/java/ \
   | grep -v "noRollbackFor"
 ```
 
-결과가 많다면 메타 어노테이션(`@Tx`) 도입 후 일괄 치환 검토.
+결과가 많다면 메타 어노테이션(`@Tx`) 도입 후 일괄 치환을 검토합니다.
 
 ## 원본 출처
 

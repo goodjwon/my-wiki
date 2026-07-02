@@ -8,18 +8,18 @@ external:
   - https://docs.spring.io/spring-framework/reference/core/aop/proxying.html
   - https://docs.spring.io/spring-framework/reference/web/webmvc.html
 created: 2026-04-18
-updated: 2026-06-06
+updated: 2026-07-02
 ---
 
 # Spring 핵심 개념
 
-Spring Framework의 다섯 기둥 — **IoC · DI · Bean · AOP · MVC**. 이 다섯 개를 이해하면 Spring/Spring Boot의 거의 모든 동작이 설명된다.
+Spring Framework의 다섯 기둥은 **IoC · DI · Bean · AOP · MVC**입니다. 이 다섯 개를 이해하면 Spring/Spring Boot의 거의 모든 동작을 설명할 수 있습니다.
 
 ## 1. IoC (Inversion of Control)
 
 ### 정의
 
-객체 생성·결합·생명주기 관리의 **제어권을 코드 바깥(컨테이너)으로 넘기는 것**. 직접 `new`로 의존 객체를 만드는 대신, 컨테이너가 만들어 주입해준다.
+객체 생성·결합·생명주기 관리의 **제어권을 코드 바깥(컨테이너)으로 넘기는 것**입니다. 직접 `new`로 의존 객체를 만드는 대신, 컨테이너가 만들어 주입해줍니다.
 
 ### Before / After
 
@@ -48,13 +48,13 @@ public class OrderService {
 | **BeanFactory** | 가장 기본. DI + 생명주기만 | 메모리 제약 환경 (드묾) |
 | **ApplicationContext** | BeanFactory 확장. 이벤트, i18n, 어노테이션 기반 설정 | **사실상 모든 Spring 앱** |
 
-Spring Boot는 내부적으로 `AnnotationConfigApplicationContext` (또는 웹의 경우 `AnnotationConfigServletWebServerApplicationContext`)를 사용한다.
+Spring Boot는 내부적으로 `AnnotationConfigApplicationContext` (또는 웹의 경우 `AnnotationConfigServletWebServerApplicationContext`)를 사용합니다.
 
 ## 2. DI (Dependency Injection)
 
 ### 정의
 
-IoC를 **실현하는 가장 일반적인 방법**. 의존 객체를 어떻게 받느냐의 패턴.
+IoC를 **실현하는 가장 일반적인 방법**입니다. 의존 객체를 어떻게 받느냐에 따른 패턴을 가리킵니다.
 
 ### 세 가지 주입 방식
 
@@ -66,12 +66,12 @@ IoC를 **실현하는 가장 일반적인 방법**. 의존 객체를 어떻게 �
 
 ### 생성자 주입이 권장되는 이유
 
-1. **의존성이 시그니처에 드러난다** — 클래스를 보면 무엇이 필요한지 즉시 보임
-2. **`final` 키워드로 불변성 보장** — 객체 생성 후 의존성이 절대 안 바뀜
-3. **테스트가 쉽다** — `new OrderService(mockRepo)` 한 줄로 생성, Spring 없이 단위 테스트 가능
-4. **순환 참조 컴파일 시 발견** — Spring이 시작 시 즉시 에러 (필드 주입은 런타임 NPE)
+1. **의존성이 시그니처에 드러난다** — 클래스를 보면 무엇이 필요한지 즉시 보입니다.
+2. **`final` 키워드로 불변성 보장** — 객체 생성 후 의존성이 절대 안 바뀝니다.
+3. **테스트가 쉽다** — `new OrderService(mockRepo)` 한 줄로 생성하면 Spring 없이 단위 테스트가 가능합니다.
+4. **순환 참조 컴파일 시 발견** — Spring이 시작 시 즉시 에러가 발생합니다 (필드 주입은 런타임 NPE).
 
-Spring 4.3+ 부터는 **생성자가 1개면 `@Autowired` 자동 적용** — 생략 가능.
+Spring 4.3+ 부터는 **생성자가 1개면 `@Autowired`가 자동 적용**되어 생략할 수 있습니다.
 
 ```java
 @Service
@@ -87,13 +87,13 @@ public class OrderService {
 }
 ```
 
-→ [[concept-claude-md|CLAUDE.md]]의 STOP 트리거에 "`@Autowired` 필드 주입 금지" 항목이 있는 이유.
+→ [[concept-claude-md|CLAUDE.md]]의 STOP 트리거에 "`@Autowired` 필드 주입 금지" 항목이 있는 이유입니다.
 
 ## 3. Bean
 
 ### 정의
 
-**Spring 컨테이너가 생성·관리하는 객체**. 거의 모든 Spring 애플리케이션의 구성 요소.
+**Spring 컨테이너가 생성·관리하는 객체**입니다. 거의 모든 Spring 애플리케이션의 구성 요소에 해당합니다.
 
 ### Bean 등록 방법 3가지
 
@@ -114,7 +114,7 @@ public class OrderService {
 | `@Repository` | **데이터 접근** 레이어 (DAO) | DB 예외 → Spring `DataAccessException`으로 자동 변환 |
 | `@Controller` / `@RestController` | **HTTP 핸들러** | DispatcherServlet 매핑, @RequestMapping 인식 |
 
-→ 자동 동작이 가장 큰 것은 `@Repository`. 나머지는 의미 표시.
+→ 자동 동작이 가장 큰 것은 `@Repository`입니다. 나머지는 의미 표시 목적입니다.
 
 ### Bean 스코프
 
@@ -165,7 +165,7 @@ public class CacheLoader {
 
 ### 정의
 
-**관심사 분리(Cross-cutting Concerns)** — 로깅·트랜잭션·보안처럼 여러 클래스에 흩어지는 공통 동작을 한 곳에서 처리. Spring은 **프록시 기반 AOP**.
+**관심사 분리(Cross-cutting Concerns)** — 로깅·트랜잭션·보안처럼 여러 클래스에 흩어지는 공통 동작을 한 곳에서 처리합니다. Spring은 **프록시 기반 AOP**를 사용합니다.
 
 ### Spring AOP가 적용되는 어노테이션들
 
@@ -185,11 +185,11 @@ public class CacheLoader {
 | **JDK Dynamic Proxy** | 대상이 **인터페이스 구현** | `java.lang.reflect.Proxy` 사용, 인터페이스 메서드만 가능 |
 | **CGLIB Proxy** | 대상이 **인터페이스 없는 클래스** | 대상 클래스를 **상속**해서 서브클래스 생성, `final` 메서드 프록시 불가 |
 
-**Spring Boot 2.x+ 기본 = CGLIB** (인터페이스 유무 무관). 이전엔 인터페이스 있으면 JDK Proxy였음.
+**Spring Boot 2.x+ 기본 = CGLIB** (인터페이스 유무 무관)입니다. 이전에는 인터페이스가 있으면 JDK Proxy를 사용했습니다.
 
 ### 🚨 핵심 함정: Self-Invocation
 
-같은 클래스 안에서 다른 메서드를 직접 호출하면 **프록시를 우회** — `@Transactional` · `@Async` · `@Cacheable` 등이 작동 안 한다.
+같은 클래스 안에서 다른 메서드를 직접 호출하면 **프록시를 우회**하여 `@Transactional` · `@Async` · `@Cacheable` 등이 작동하지 않습니다.
 
 ```java
 @Service
@@ -209,7 +209,7 @@ public class OrderService {
 }
 ```
 
-**원인**: `placeOrder` 안의 `sendNotification(o)`는 `this.sendNotification(o)`인데, `this`는 **프록시가 아닌 실제 객체**. 프록시는 외부에서 들어오는 호출만 가로챈다.
+**원인**: `placeOrder` 안의 `sendNotification(o)`는 `this.sendNotification(o)`인데, `this`는 **프록시가 아닌 실제 객체**입니다. 프록시는 외부에서 들어오는 호출만 가로챕니다.
 
 ### 해결책 3가지
 
@@ -237,9 +237,9 @@ public class OrderService {
 }
 ```
 
-**3) `AopContext.currentProxy()`** — `@EnableAspectJAutoProxy(exposeProxy = true)` 필요. 코드가 지저분해짐.
+**3) `AopContext.currentProxy()`** — `@EnableAspectJAutoProxy(exposeProxy = true)`가 필요합니다. 코드가 지저분해집니다.
 
-→ 1번이 정답. [[concept-transactional-rollback-policy|@Transactional 롤백 정책]]과 함께 알아야 할 두 가지 함정.
+→ 1번이 정답입니다. [[concept-transactional-rollback-policy|@Transactional 롤백 정책]]과 함께 알아야 할 두 가지 함정입니다.
 
 ## 5. MVC (Spring Web MVC)
 
@@ -294,7 +294,7 @@ public class OrderService {
 DataSource / JPA      (실제 SQL)
 ```
 
-→ DTO는 Controller ↔ Service 경계에서 변환. Entity를 Controller에 직접 노출하지 않는 것이 [[concept-api-backward-compatibility|API 안정성]]에도 좋다.
+→ DTO는 Controller ↔ Service 경계에서 변환합니다. Entity를 Controller에 직접 노출하지 않는 것이 [[concept-api-backward-compatibility|API 안정성]]에도 좋습니다.
 
 ## 6. 같은 인사이트 패턴
 
@@ -305,7 +305,7 @@ DataSource / JPA      (실제 SQL)
 | [[concept-transactional-rollback-policy]] | `@Transactional` 체크 예외 commit | `rollbackFor = Exception.class` |
 | [[concept-api-backward-compatibility]] | 클라이언트 JSON 라이브러리 기본값 | Tolerant Reader 명세 |
 
-→ 공통 원리: **"프레임워크가 제공하는 마법(`@어노테이션`)에는 항상 작동 조건이 있다."** 무작정 어노테이션 붙이지 말고 그 동작 모델을 이해해야 한다.
+→ 공통 원리: **"프레임워크가 제공하는 마법(`@어노테이션`)에는 항상 작동 조건이 있습니다."** 무작정 어노테이션을 붙이지 말고 그 동작 모델을 이해해야 합니다.
 
 ## 7. 빠른 진단 명령어
 

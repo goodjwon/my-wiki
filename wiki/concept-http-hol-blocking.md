@@ -9,18 +9,18 @@ external:
   - https://www.rfc-editor.org/rfc/rfc9114.html
   - https://www.rfc-editor.org/rfc/rfc9000.html
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-02
 ---
 
 # HTTP 진화와 HOL 블로킹 — 1.1 → 2 → 3/QUIC
 
 ## 한 줄 요약
 
-HTTP의 세 차례 재설계는 모두 **같은 문제(HOL 블로킹)** 를 해결하기 위해 **네트워크 계층을 한 단계씩 내려간** 역사다. 애플리케이션 → 전송 계층 → 결국 UDP 위에 QUIC을 새로 쌓아 올렸다.
+HTTP의 세 차례 재설계는 모두 **같은 문제(HOL 블로킹)** 를 해결하기 위해 **네트워크 계층을 한 단계씩 내려간** 역사입니다. 애플리케이션 → 전송 계층 → 결국 UDP 위에 QUIC을 새로 쌓아 올렸습니다.
 
 ## HOL 블로킹이란
 
-**H**ead-**o**f-**L**ine Blocking — 줄(line)의 **맨 앞(head)** 요청이 늦어지면 그 뒤가 전부 대기하는 현상. 큐 형태 처리의 본질적 함정.
+**H**ead-**o**f-**L**ine Blocking — 줄(line)의 **맨 앞(head)** 요청이 늦어지면 그 뒤가 전부 대기하는 현상입니다. 큐 형태 처리의 본질적 함정입니다.
 
 ## 3세대 비교표
 
@@ -69,7 +69,7 @@ TCP: "순서 보장. 재전송될 때까지 P3 이후 패킷 사용자에게 전
 → stream 1, 2, 3 모두 멈춤 (실제로는 stream 1의 패킷만 유실됐는데도)
 ```
 
-**원인**: TCP는 신뢰성 + 순서 보장이 본질이라, 한 패킷 유실이 **그 커넥션 전체**를 멈추게 한다. HTTP/2가 한 커넥션에 stream을 묶었기 때문에 더 아프다.
+**원인**: TCP는 신뢰성 + 순서 보장이 본질이라, 한 패킷 유실이 **그 커넥션 전체**를 멈추게 합니다. HTTP/2가 한 커넥션에 stream을 묶었기 때문에 더 아픕니다.
 
 → **HTTP는 다중화했지만 TCP가 못 따라옴.**
 
@@ -115,7 +115,7 @@ Cloudflare에서 활성화: 대시보드 → Network → HTTP/3 (with QUIC) → 
 | ORM 풀 | TCP 핸드셰이크 비용 | 좀비 커넥션 ([[concept-db-connection-pool]]) | maxLifetime |
 | Keep-Alive ([[concept-keepalive-timeout-race]]) | 커넥션 재사용 | 타임아웃 불일치 → 502 | 서버 > LB |
 
-→ **추상화는 한 층 위의 문제를 풀지만, 한 층 아래의 가정도 함께 바꿔야 진짜 해결**된다.
+→ **추상화는 한 층 위의 문제를 풀지만, 한 층 아래의 가정도 함께 바꿔야 진짜 해결**됩니다.
 
 ## Spring Boot에서 HTTP/2·HTTP/3
 

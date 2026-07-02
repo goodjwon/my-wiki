@@ -8,14 +8,14 @@ external:
   - https://www.youtube.com/shorts/El5lOXM1r5E
   - https://github.com/brettwooldridge/HikariCP
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-02
 ---
 
 # DB 커넥션 풀 (Connection Pool)
 
 ## 정의
 
-데이터베이스 연결(TCP + 인증)을 매 요청마다 새로 만들지 않고, **미리 만들어둔 연결을 풀에 두고 빌려·돌려쓰는** 구조. JDBC에서 `DataSource.getConnection()`이 빠른 핵심 이유.
+데이터베이스 연결(TCP + 인증)을 매 요청마다 새로 만들지 않고, **미리 만들어둔 연결을 풀에 두고 빌려·돌려쓰는** 구조입니다. JDBC에서 `DataSource.getConnection()`이 빠른 핵심 이유입니다.
 
 ## 왜 필요한가
 
@@ -31,11 +31,11 @@ updated: 2026-06-06
 앱 → conn.close()          // 진짜 close가 아니라 풀로 "반납"
 ```
 
-**핵심 오해**: `Connection.close()`는 실제 TCP 종료가 아니다. HikariCP 같은 풀은 `Connection`을 **프록시**로 감싸서, `close()` 호출 시 `pool.returnObject()`로 라우팅한다. 그래서 다음 요청이 3-way handshake 없이 즉시 재사용 가능.
+**핵심 오해**: `Connection.close()`는 실제 TCP 종료가 아닙니다. HikariCP 같은 풀은 `Connection`을 **프록시**로 감싸서, `close()` 호출 시 `pool.returnObject()`로 라우팅합니다. 그래서 다음 요청이 3-way handshake 없이 즉시 재사용할 수 있습니다.
 
 ## HikariCP의 3가지 타이머
 
-풀 안의 커넥션을 무한정 유지하면 **DB가 먼저 끊어버린 좀비 커넥션**을 풀이 살아있다고 오판해 빌려주는 장애가 발생한다. 이를 막는 3개 설정:
+풀 안의 커넥션을 무한정 유지하면 **DB가 먼저 끊어버린 좀비 커넥션**을 풀이 살아있다고 오판해 빌려주는 장애가 발생합니다. 이를 막는 3개 설정:
 
 | 설정 | 역할 | 권장 |
 |------|------|------|
@@ -64,7 +64,7 @@ spring.datasource.hikari.leak-detection-threshold=10000  # 10초
 
 ## Spring Boot 설정 예시 (HikariCP)
 
-Spring Boot 2.x+는 HikariCP가 **기본 풀**. `application.yml`:
+Spring Boot 2.x+는 HikariCP가 **기본 풀**입니다. `application.yml`:
 
 ```yaml
 spring:
@@ -85,7 +85,7 @@ spring:
 
 ## 풀 크기 vs 타이머 — 우선순위
 
-흔한 오해: "풀 크기를 키우면 성능이 좋아진다."
+흔한 오해: "풀 크기를 키우면 성능이 좋아집니다."
 
 실제 운영에서 시스템 장애의 더 큰 원인은:
 
@@ -95,7 +95,7 @@ spring:
 | 커넥션 누수 (close() 누락) | 🟠 잦음 | ❌ 임시 완화일 뿐 |
 | 실제 동시성 부족 (풀 크기) | 🟢 가끔 | ✅ 도움 |
 
-→ **타이머·누수 설정이 풀 크기보다 우선**. (영상 핵심 메시지)
+→ **타이머·누수 설정이 풀 크기보다 우선**입니다. (영상 핵심 메시지)
 
 ## 핵심 요약 (영상 인용)
 

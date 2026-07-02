@@ -7,16 +7,16 @@ external:
   - https://spring.io/blog/2025/09/16/api-versioning-in-spring
   - https://docs.spring.io/spring-framework/reference/web/webmvc-versioning.html
 created: 2026-04-18
-updated: 2026-06-07
+updated: 2026-07-02
 ---
 
 # API Versioning (Spring 7.0)
 
 ## 정의
 
-Spring Framework 7.0에서 도입된 **API 버전 관리 1급 지원**. 이전엔 직접 분기·라우팅을 구현해야 했지만, 7.0부터 어노테이션 한 줄 또는 컨트롤러 설정으로 가능.
+Spring Framework 7.0에서 도입된 **API 버전 관리 1급 지원**입니다. 이전엔 직접 분기·라우팅을 구현해야 했지만, 7.0부터 어노테이션 한 줄 또는 컨트롤러 설정으로 가능합니다.
 
-> 참고: [[concept-api-backward-compatibility]]에서 본 것처럼, **버전 분리는 마지막 카드**. 그 전에 Tolerant Reader 계약으로 해결할 수 있는 변경이 더 많다.
+> 참고: [[concept-api-backward-compatibility]]에서 본 것처럼, **버전 분리는 마지막 카드**입니다. 그 전에 Tolerant Reader 계약으로 해결할 수 있는 변경이 더 많습니다.
 
 ## 왜 필요한가
 
@@ -27,7 +27,7 @@ Spring Framework 7.0에서 도입된 **API 버전 관리 1급 지원**. 이전�
 - 기존 필드 **의미 변경** (단위 KRW → USD 등 silent change)
 - 인증 방식 변경 (쿠키 → JWT 등)
 
-→ 새 필드 추가만 한다면 버전 분리는 과한 대응. 자세히는 [[concept-api-backward-compatibility|Tolerant Reader]].
+→ 새 필드 추가만 한다면 버전 분리는 과한 대응입니다. 자세히는 [[concept-api-backward-compatibility|Tolerant Reader]] 참고.
 
 ## 4가지 버전 전달 방식
 
@@ -38,7 +38,7 @@ Spring Framework 7.0에서 도입된 **API 버전 관리 1급 지원**. 이전�
 | **미디어 타입** | `Accept: application/vnd.app.v2+json` | RESTful 원리주의 | 매우 깐깐, 학습 비용 |
 | **쿼리 파라미터** | `?version=2` | 쉬움 | 권장 안 함 (캐싱 깨짐) |
 
-→ 실무는 **URL 경로 (`/v1/`, `/v2/`)** 가 압도적으로 많다.
+→ 실무는 **URL 경로 (`/v1/`, `/v2/`)** 가 압도적으로 많습니다.
 
 ## Spring 7.0의 1급 지원
 
@@ -60,7 +60,7 @@ public class UserControllerV2 {
 }
 ```
 
-7.0 이전엔 직접 URL 분리(`/v1/users`)나 `@RequestMapping` 헤더 매칭으로 처리.
+7.0 이전엔 직접 URL 분리(`/v1/users`)나 `@RequestMapping` 헤더 매칭으로 처리했습니다.
 
 ### 버전 해석 (Resolution) 설정
 
@@ -102,7 +102,7 @@ public RouterFunction<ServerResponse> routes() {
 public class UserControllerV1 { ... }
 ```
 
-응답 헤더에 자동으로 `Deprecation`, `Sunset` 헤더 추가 → 클라이언트가 인식.
+응답 헤더에 자동으로 `Deprecation`, `Sunset` 헤더가 추가되어 → 클라이언트가 인식합니다.
 
 ### 클라이언트 측 (`RestClient`, `WebClient`)
 
@@ -193,18 +193,18 @@ class UserControllerV2 {
 }
 ```
 
-→ **버전은 Controller·DTO에만**, Service·Domain은 단일 유지. 버전 폭증 방지.
+→ **버전은 Controller·DTO에만**, Service·Domain은 단일 유지합니다. 버전 폭증을 방지합니다.
 
 ## 함정 — 버전 분리의 영원한 부담
 
 > "강제 업데이트 불가능한 환경(B2B 고객사 앱)에서는 v1 사용자가 앱을 업데이트하지 않는 한, 서버는 과거 버전 코드를 영원히 유지해야 한다."
 
-— [[src-copilot-token-pricing|2분코딩 영상 인사이트]] 와 같은 패턴.
+— [[src-copilot-token-pricing|2분코딩 영상 인사이트]] 와 같은 패턴입니다.
 
 `v1`을 만들면:
 - 비즈니스 로직 변경 시마다 **v1·v2 양쪽 반영 + 양쪽 테스트** (2배 비용)
-- 결국 v3, v4... 누적 → 유지보수 지옥
-- **deprecation 정책 + sunset 시점 합의가 함께** 가야 함
+- 결국 v3, v4... 누적 → 유지보수 지옥이 됩니다
+- **deprecation 정책 + sunset 시점 합의가 함께** 가야 합니다
 
 ## 같은 인사이트 패턴
 
@@ -214,7 +214,7 @@ class UserControllerV2 {
 | [[concept-api-backward-compatibility]] | Tolerant Reader 명세 없으면 silent 사고 |
 | [[concept-transactional-rollback-policy]] | `@Transactional` 체크 예외 commit |
 
-→ 공통: **"단순 변경의 부담을 미래의 누군가에게 전가하는 결정"** — 신중히.
+→ 공통: **"단순 변경의 부담을 미래의 누군가에게 전가하는 결정"** — 신중히 판단해야 합니다.
 
 ## 원본 출처
 

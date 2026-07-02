@@ -4,14 +4,14 @@ type: concept
 tags: [claude-code, hooks, harness, automation]
 sources: [harness-engineering/harness-kit/module3/, harness-engineering/harness_engineering.md, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-06-13
+updated: 2026-07-02
 ---
 
 # Claude Code Hooks — 시스템 레벨 강제
 
 ## 정의
 
-Claude Code의 에이전트 라이프사이클 이벤트에 **셸 스크립트를 주입**하여 위험한 행동을 차단하거나 자동 검증을 트리거하는 메커니즘. 프롬프트(부탁)를 시스템 구조(강제)로 전환하는 핵심 도구.
+Claude Code의 에이전트 라이프사이클 이벤트에 **셸 스크립트를 주입**하여 위험한 행동을 차단하거나 자동 검증을 트리거하는 메커니즘입니다. 프롬프트(부탁)를 시스템 구조(강제)로 전환하는 핵심 도구입니다.
 
 공식 문서: https://docs.anthropic.com/claude-code/hooks
 
@@ -59,7 +59,7 @@ Claude Code의 에이전트 라이프사이클 이벤트에 **셸 스크립트�
 
 ## guard.sh — 위험 명령 차단
 
-Bash 실행 전 명령어를 검사해 차단/경고하는 스크립트. 종료 코드 1로 종료하면 실행이 막힌다.
+Bash 실행 전 명령어를 검사해 차단하거나 경고하는 스크립트입니다. 종료 코드 1로 종료하면 실행이 막힙니다.
 
 핵심 패턴:
 
@@ -107,11 +107,11 @@ fi
 exit 0
 ```
 
-전체 구현은 `raw/harness-engineering/harness-kit/module3/guard.sh` 참조.
+전체 구현은 `raw/harness-engineering/harness-kit/module3/guard.sh`를 참조하십시오.
 
 ## lint-fix.sh — Post-Tool Hook
 
-파일 수정 후 자동으로 포맷/린트를 돌려 스타일 규칙 위반을 잡는다.
+파일 수정 후 자동으로 포맷/린트를 돌려 스타일 규칙 위반을 잡습니다.
 
 ```bash
 # 예시: Java 프로젝트
@@ -122,17 +122,17 @@ npx prettier --write . && npx eslint --fix .
 
 ## Back-pressure 메커니즘
 
-타입체크, 테스트, 커버리지 결과를 에이전트의 **자기검증 도구**로 연결한다. PostToolUse에서 `./gradlew test`를 돌리고 실패 시 에이전트가 스스로 수정하는 루프 완성.
+타입체크, 테스트, 커버리지 결과를 에이전트의 **자기검증 도구**로 연결합니다. PostToolUse에서 `./gradlew test`를 돌리고 실패 시 에이전트가 스스로 수정하는 루프가 완성됩니다.
 
 ```
 Edit 파일 → PostToolUse → ./gradlew test → 실패 → 에이전트가 stderr 보고 재수정
 ```
 
-> **Loop 엔지니어링 관점**: back-pressure는 [[concept-loop-engineering]]에서 말하는 **"루프 안에 거부할 수 있는 무언가"** 의 가장 구체적인 구현이다. 테스트 실패라는 거부 신호가 없으면, 에이전트는 자기 출력에 동의하는 메아리방이 된다. Hooks가 "사이클 안의 reject"를 코드로 보장한다.
+> **Loop 엔지니어링 관점**: back-pressure는 [[concept-loop-engineering]]에서 말하는 **"루프 안에 거부할 수 있는 무언가"** 의 가장 구체적인 구현입니다. 테스트 실패라는 거부 신호가 없으면, 에이전트는 자기 출력에 동의하는 메아리방이 됩니다. Hooks가 "사이클 안의 reject"를 코드로 보장합니다.
 
 ## CLAUDE.md와의 역할 분담
 
-[[concept-claude-md]]는 **선언** (무엇을 기대하는가), Hooks는 **강제** (위반 시 막는다).
+[[concept-claude-md]]는 **선언** (무엇을 기대하는가), Hooks는 **강제** (위반 시 막습니다).
 
 | STOP 규칙 (CLAUDE.md) | guard.sh로 강제 가능? |
 |----------------------|----------------------|
@@ -141,7 +141,7 @@ Edit 파일 → PostToolUse → ./gradlew test → 실패 → 에이전트가 st
 | @Autowired 필드 주입 | ❌ 코드 검사 필요 (lint-fix.sh에서 checkstyle 룰로) |
 | Entity Controller 노출 | ❌ 정적 분석 필요 (ArchUnit 테스트로) |
 
-→ CLAUDE.md에는 모든 규칙을 적되, Hook으로 강제 가능한 것은 우선 자동화한다.
+→ CLAUDE.md에는 모든 규칙을 적되, Hook으로 강제 가능한 것은 우선 자동화합니다.
 
 ## Hooks 진화 패턴
 
@@ -154,7 +154,7 @@ if echo "$COMMAND" | grep -qE "\.env\.production"; then
 fi
 ```
 
-"다음엔 잘 해줘" 대신 → 구조적 방지로 전환 ([[concept-harness-engineering]] 원칙 #2).
+"다음엔 잘 해줘" 대신 → 구조적 방지로 전환합니다 ([[concept-harness-engineering]] 원칙 #2).
 
 ## 관련 페이지
 

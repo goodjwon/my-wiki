@@ -4,7 +4,7 @@ type: concept
 tags: [워크플로, 위키운영, 질의응답]
 sources: [llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
-updated: 2026-05-31
+updated: 2026-07-02
 ---
 
 # Query (질의)
@@ -13,15 +13,15 @@ updated: 2026-05-31
 
 ## RAG와의 차이
 
-전통 RAG는 매 질의마다 raw 문서에서 청크를 검색·재합성한다. **누적되는 것이 없다.**
+전통 RAG는 매 질의마다 raw 문서에서 청크를 검색·재합성합니다. **누적되는 것이 없습니다.**
 
-Query는 다르다 — 이미 [[concept-ingest|Ingest]]를 통해 위키에 구조화·교차참조된 페이지가 존재한다. LLM은:
+Query는 다릅니다 — 이미 [[concept-ingest|Ingest]]를 통해 위키에 구조화·교차참조된 페이지가 존재합니다. LLM은 다음 순서로 동작합니다:
 
 1. `wiki/index.md` 를 읽어 관련 페이지 식별
 2. 해당 페이지들을 로드, 답변 합성
 3. 출처(`[[페이지명]]`)와 함께 인용
 
-→ 합성 자체가 빠르고, 같은 질문을 다시 받아도 추가 비용 없이 일관된 답이 나온다.
+→ 합성 자체가 빠르고, 같은 질문을 다시 받아도 추가 비용 없이 일관된 답이 나옵니다.
 
 ## 답변 출력 형식
 
@@ -38,7 +38,7 @@ Query는 다르다 — 이미 [[concept-ingest|Ingest]]를 통해 위키에 구�
 > 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "**good answers can be filed back into the wiki as new pages.** A comparison you asked for, an analysis, a connection you discovered — these are valuable and shouldn't disappear into chat history."
 
-가치 있는 Query 응답은 채팅 히스토리에서 사라지지 않게 **synthesis / comparison 페이지로 다시 위키에 저장**한다. 이 과정에서 탐구 자체가 [[concept-compounding-knowledge|복리 지식]]에 기여한다.
+가치 있는 Query 응답은 채팅 히스토리에서 사라지지 않게 **synthesis / comparison 페이지로 다시 위키에 저장**합니다. 이 과정에서 탐구 자체가 [[concept-compounding-knowledge|복리 지식]]에 기여합니다.
 
 이 위키의 예: [[guide-project-docs-setup]] (synthesis 페이지로 저장된 Query 결과)
 
