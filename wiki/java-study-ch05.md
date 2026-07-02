@@ -1362,15 +1362,9 @@ public class JdbcExample {
 실행 — 드라이버 jar를 classpath에 포함합니다. **classpath 구분자가 OS마다 다릅니다.**
 
 ```bash
-# Mac / Linux — 구분자 :
 javac -cp h2-2.2.224.jar JdbcExample.java
-java  -cp .:h2-2.2.224.jar JdbcExample
-```
-
-```bash
-# Windows — 구분자 ;
-javac -cp h2-2.2.224.jar JdbcExample.java
-java  -cp ".;h2-2.2.224.jar" JdbcExample
+java  -cp .:h2-2.2.224.jar JdbcExample        # Mac/Linux — 구분자 :
+java  -cp ".;h2-2.2.224.jar" JdbcExample      # Windows — 구분자 ;
 ```
 
 ```text

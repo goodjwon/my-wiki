@@ -171,14 +171,10 @@ class LoanRepositoryTest {
 테스트는 IDE의 ▶ 버튼으로도 실행할 수 있지만, 빌드 도구 명령으로 실행해 결과를 직접 확인하는 습관을 들입니다.
 
 ```bash
-# Maven — Mac/Linux (Windows는 mvnw.cmd)
-./mvnw test
+./mvnw test                                   # 전체 (Windows: mvnw.cmd)
 ./mvnw test -Dtest=LoanControllerTest         # 특정 클래스만
-```
-
-```bash
-# Gradle — Mac/Linux (Windows는 gradlew.bat)
-./gradlew test                                # 전체
+# 또는 Gradle
+./gradlew test                                # 전체 (Windows: gradlew.bat)
 ./gradlew test --tests "*LoanControllerTest"  # 특정 클래스만
 ```
 
@@ -187,7 +183,7 @@ class LoanRepositoryTest {
 
 ### ✏️ 직접 해보기
 
-`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. 위 `./gradlew test --tests`로 그 클래스만 돌려 초록불을 확인하라.
+`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. 위 `./mvnw test -Dtest`(또는 `./gradlew test --tests`)로 그 클래스만 실행해 통과 여부를 확인하라.
 
 #### 정리
 
