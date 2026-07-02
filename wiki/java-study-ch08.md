@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch08]
 sources: [java-study/java-study-ch08-서버와인증.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-02
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -94,8 +94,8 @@ Spring Boot의 서블릿 웹 애플리케이션은 보통 내장 톰캣으로 �
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=h2   # Windows: mvnw.cmd spring-boot:run ...
 ```
 
-- 이 명령은 **포그라운드로 서버를 붙잡는다** — 종료는 `Ctrl+C`. curl 등은 새 터미널에서.
-- 성공 판정: 로그에 `Tomcat started on port(s): 8080` / `Started ...Application in N seconds` 가 뜨면 준비 완료. 확인:
+- 이 명령은 **포그라운드로 서버를 붙잡습니다** — 종료는 `Ctrl+C`입니다. curl 등은 새 터미널에서 실행합니다.
+- 로그에 `Tomcat started on port(s): 8080` / `Started ...Application in N seconds` 가 출력되면 서버가 준비된 것입니다. 아래 명령으로 확인합니다:
 
 ```bash
 # 새 터미널에서
@@ -211,9 +211,9 @@ server:
 
 이 흐름에서 핵심은 아래입니다.
 
-- 실행 주체가 `java -jar`가 아니라 외장 Tomcat이다.
-- 애플리케이션은 독립 실행형 JAR이 아니라 배포 대상 WAR이다.
-- 컨테이너가 애플리케이션을 로딩하고 시작한다.
+- 실행 주체는 `java -jar`가 아니라 외장 Tomcat입니다.
+- 애플리케이션은 독립 실행형 JAR이 아니라 배포 대상 WAR입니다.
+- 컨테이너가 애플리케이션을 로딩하고 시작합니다.
 이 차이를 이해하면 내장 톰캣 기반 프로젝트와 전통적인 엔터프라이즈 배포 구조를 비교하기 쉬워집니다.
 
 #### 10. 자주 만나는 문제와 해석 방법
@@ -802,11 +802,11 @@ chain.doFilter(request, response);
 
 #### 실제로 해보기 — 로그인 → 토큰 → 보호 API (curl 왕복)
 
-먼저 서버를 띄운다(`./mvnw spring-boot:run`, Windows는 `mvnw.cmd spring-boot:run`). curl은 새 터미널에서 친다.
+먼저 서버를 띄웁니다(`./mvnw spring-boot:run`, Windows는 `mvnw.cmd spring-boot:run`). curl은 새 터미널에서 실행합니다.
 
 > **전제**: `io.jsonwebtoken:jjwt-api`(+`jjwt-impl`,`jjwt-jackson`) 의존성과 `application.yml`의 `jwt.secret`(HS256이면 32바이트 이상)·`jwt.expiration` 설정이 있어야 토큰이 발급·검증된다.
 
-**1) 로그인해서 토큰을 받는다:**
+**1) 로그인해서 토큰을 받습니다:**
 
 ```bash
 curl -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@test.com","password":"pw"}'
@@ -818,7 +818,7 @@ curl -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: applicati
 {"accessToken":"eyJhbGciOiJIUzI1NiJ9...","tokenType":"Bearer","expiresIn":3600000}
 ```
 
-**2) 받은 토큰을 변수에 담아 보호 API를 호출한다** (`jq`로 추출):
+**2) 받은 토큰을 변수에 담아 보호 API를 호출합니다** (`jq`로 추출):
 
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@test.com","password":"pw"}' | jq -r .accessToken)
@@ -826,7 +826,7 @@ TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: a
 curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" -H "Authorization: Bearer $TOKEN"
 ```
 
-**3) 실패 케이스도 눈으로 확인한다:**
+**3) 실패 케이스도 눈으로 확인합니다:**
 
 ```bash
 # 토큰 없이 → 401 Unauthorized
