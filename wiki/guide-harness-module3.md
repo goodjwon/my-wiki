@@ -9,12 +9,12 @@ sources:
   - harness-engineering/harness-kit/module3/01_hooks_setup_prompt.md
   - harness-engineering/harness-kit/module3/02_self_verify_prompt.md
 created: 2026-05-31
-updated: 2026-06-29
+updated: 2026-07-02
 ---
 
 # 하네스 Module 03 — Hooks 시스템 강제
 
-> **이 가이드 보기 전에**: [[guide-harness-module2]] 까지 완료. CLAUDE.md 섹션 7 STOP 트리거가 있어야 합니다 (hooks가 강제할 대상).
+> **이 가이드 보기 전에**: [[guide-harness-module2]] 까지 완료합니다. CLAUDE.md 섹션 7 STOP 트리거가 있어야 합니다 (hooks가 강제할 대상).
 
 **이 모듈에서 얻을 것**:
 1. `.claude/hooks/guard.sh` — 위험 명령 차단 (PreToolUse)
@@ -29,9 +29,9 @@ updated: 2026-06-29
 
 ---
 
-## Step 1 — `.claude/hooks/` 폴더 + jq 준비 — 5분
+## Step 1 — `.claude/hooks/` 디렉터리 + jq 준비 — 5분
 
-guard.sh / lint-fix.sh는 Claude Code가 stdin으로 보내는 **JSON 입력을 `jq`로 파싱**한다. jq부터 설치한다:
+guard.sh / lint-fix.sh는 Claude Code가 stdin으로 보내는 **JSON 입력을 `jq`로 파싱**합니다. jq부터 설치합니다:
 
 ```bash
 # jq 설치 (Claude Code hook 입력 JSON 파싱용)
@@ -140,7 +140,7 @@ EOF
 chmod +x .claude/hooks/guard.sh
 ```
 
-> 본인 baseline의 시스템 문제 중 정규식으로 잡을 수 있는 것을 **추가**한다. 잡기 어려운 것 (예: "DB 모델 노출")은 lint-fix.sh의 ESLint 규칙으로 위임.
+> 본인 baseline의 시스템 문제 중 정규식으로 잡을 수 있는 것을 **추가**합니다. 잡기 어려운 것 (예: "DB 모델 노출")은 lint-fix.sh의 ESLint 규칙으로 위임합니다.
 
 ---
 
@@ -198,7 +198,7 @@ chmod +x .claude/hooks/lint-fix.sh
 > npm install --save-dev eslint prettier
 > ```
 >
-> 그다음 ESLint 설정 마법사를 **따로** 실행한다 (모듈 종류·프레임워크 등 질문에 직접 답해야 하는 대화형):
+> 그다음 ESLint 설정 마법사를 **따로** 실행합니다 (모듈 종류·프레임워크 등 질문에 직접 답해야 하는 대화형):
 >
 > ```bash
 > npx eslint --init
@@ -208,7 +208,7 @@ chmod +x .claude/hooks/lint-fix.sh
 
 ## Step 4 — `.claude/settings.json`에 hooks 등록 — 5분
 
-실습 playground는 `.claude/settings.json`이 아직 없으므로 아래처럼 **새로 만들면 된다**. (이미 다른 설정이 있는 본인 프로젝트라면 아래 명령으로 통째 덮어쓰지 말고, `hooks` 블록만 머지한다 — jq 또는 수동. 머지 방법은 코드블록 아래 참조.)
+실습 playground는 `.claude/settings.json`이 아직 없으므로 아래처럼 **새로 만들면 됩니다**. (이미 다른 설정이 있는 본인 프로젝트라면 아래 명령으로 통째 덮어쓰지 말고, `hooks` 블록만 머지합니다 — jq 또는 수동. 머지 방법은 코드블록 아래 참조.)
 
 ```bash
 # 신규 생성 케이스: settings.json을 새로 만든다
@@ -236,13 +236,13 @@ cat > .claude/settings.json << 'EOF'
 EOF
 ```
 
-**기존 프로젝트 머지**: 이미 `.claude/settings.json`에 다른 설정이 있으면 위 명령으로 덮어쓰지 말고 `hooks` 블록만 추가한다. jq로 머지하거나, 에디터로 `hooks` 키만 직접 붙여 넣는다.
+**기존 프로젝트 머지**: 이미 `.claude/settings.json`에 다른 설정이 있으면 위 명령으로 덮어쓰지 말고 `hooks` 블록만 추가합니다. jq로 머지하거나, 에디터로 `hooks` 키만 직접 붙여 넣습니다.
 
 ---
 
 ## Step 5 — 차단 검증 — 15분
 
-본인이 직접 명령을 실행해서 차단되는지 확인. **Claude Code 안에서가 아니라 일반 터미널에서**. Claude Code가 실제로 보내는 것과 동일하게 **stdin JSON**으로 넣어 테스트한다 (argv가 아니라 stdin이 진짜 hook 경로):
+본인이 직접 명령을 실행해서 차단되는지 확인합니다. **Claude Code 안에서가 아니라 일반 터미널에서**. Claude Code가 실제로 보내는 것과 동일하게 **stdin JSON**으로 넣어 테스트합니다 (argv가 아니라 stdin이 진짜 hook 경로):
 
 ```bash
 # 차단되어야 하는 명령 (exit 2)
@@ -273,19 +273,19 @@ echo '{"tool_input":{"command":"npm install zod"}}'             | bash .claude/h
 | `git checkout -b feature/x` | exit 0 | __ |
 | `npm install zod` | exit 0 | __ |
 
-전부 일치하면 통과. (`exit 2`가 Claude Code에서 명령 차단을 의미. `exit 1`은 차단이 아니라 "비차단 오류"라 명령이 그대로 실행됨 — 그래서 차단 hook은 반드시 2로 끝내야 한다.)
+전부 일치하면 통과합니다. (`exit 2`가 Claude Code에서 명령 차단을 의미합니다. `exit 1`은 차단이 아니라 "비차단 오류"라 명령이 그대로 실행됩니다 — 그래서 차단 hook은 반드시 2로 끝내야 합니다.)
 
 ---
 
 ## Step 6 — Claude Code 안에서 실제 차단 테스트 — 10분
 
-Step 5에서 검증한 guard.sh를 이번엔 Claude Code가 실제로 호출하는지 확인한다. settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)한다. 그다음:
+Step 5에서 검증한 guard.sh를 이번엔 Claude Code가 실제로 호출하는지 확인합니다. settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)합니다. 그다음:
 
 ```
 git push origin main 명령을 실행해봐.
 ```
 
-Claude가 실행을 시도하면 guard.sh가 차단해서 BLOCKED 메시지가 보여야 한다. 만약 Claude가 그냥 통과하거나 hook이 안 걸리면:
+Claude가 실행을 시도하면 guard.sh가 차단해서 BLOCKED 메시지가 보여야 합니다. 만약 Claude가 그냥 통과하거나 hook이 안 걸리면:
 
 ```bash
 # 디버그
@@ -293,7 +293,7 @@ cat .claude/settings.json | jq .
 ls -la .claude/hooks/
 ```
 
-settings.json의 `"matcher": "Bash"`와 권한(`x`) 확인.
+settings.json의 `"matcher": "Bash"`와 권한(`x`)을 확인합니다.
 
 ---
 
@@ -301,7 +301,7 @@ settings.json의 `"matcher": "Bash"`와 권한(`x`) 확인.
 
 > 원본: `raw/harness-engineering/harness-kit/module3/02_self_verify_prompt.md`
 
-**목적**: Claude가 코드 작성 후 "완료" 선언하기 전에 **자동으로 npm test를 돌리고, 실패 시 스스로 수정**.
+**목적**: Claude가 코드 작성 후 "완료" 선언하기 전에 **자동으로 npm test를 돌리고, 실패 시 스스로 수정**합니다.
 
 ### Step 7-1: CLAUDE.md 섹션 5에 자기검증 규칙 추가
 
@@ -340,7 +340,7 @@ CLAUDE.md 섹션 5 (Goal-Driven Execution) 끝에:
 
 ### Step 7-2: 첫 실험
 
-CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드된다. 실행 중인 Claude Code를 종료하고 새 세션을 시작한 뒤, 아래 작업을 시켜 규칙이 실제로 적용되는지 확인한다.
+CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드됩니다. 실행 중인 Claude Code를 종료하고 새 세션을 시작한 뒤, 아래 작업을 시켜 규칙이 실제로 적용되는지 확인합니다.
 
 ```
 새 라우트 GET /health 를 추가해줘.
@@ -355,7 +355,7 @@ CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드된다. 실
 3. **스스로** `npm test` 실행
 4. **검증 완료 보고** 형식으로 결과 출력
 
-만약 4번이 안 나오면 → "검증 완료 보고 형식으로 마무리해줘" 한 번 더 지시. 두 번째 세션부터는 보통 알아서 한다.
+만약 4번이 안 나오면 → "검증 완료 보고 형식으로 마무리해줘" 한 번 더 지시합니다. 두 번째 세션부터는 보통 알아서 합니다.
 
 ---
 
@@ -366,7 +366,7 @@ git add .claude/hooks/ .claude/settings.json CLAUDE.md
 git commit -m "harness(M3): guard.sh + lint-fix.sh + 자기검증 루프 설치"
 ```
 
-> `.claude/settings.json`을 팀과 공유하려면 git 추적, 개인 설정이면 `.gitignore` 추가.
+> `.claude/settings.json`을 팀과 공유하려면 git으로 추적하고, 개인 설정이면 `.gitignore`에 추가합니다.
 
 ---
 
@@ -379,19 +379,19 @@ git commit -m "harness(M3): guard.sh + lint-fix.sh + 자기검증 루프 설치"
 4. `claude --debug` 로 hook 호출 로그 확인
 
 ### Q. lint-fix.sh가 ESLint 오류로 자꾸 멈춰요
-처음에는 의도된 동작 — `exit 2`라 Claude에게 오류가 전달돼 스스로 고치게 한다. ESLint 규칙이 너무 엄격하면 `.eslintrc`에서 일부 규칙을 warning으로 낮추거나, lint-fix.sh의 `exit 2`를 `exit 0`(경고만, 차단 안 함)으로 바꿈.
+처음에는 의도된 동작입니다 — `exit 2`라 Claude에게 오류가 전달돼 스스로 고치게 합니다. ESLint 규칙이 너무 엄격하면 `.eslintrc`에서 일부 규칙을 warning으로 낮추거나, lint-fix.sh의 `exit 2`를 `exit 0`(경고만, 차단 안 함)으로 바꿉니다.
 
-### Q. lint-fix.sh가 파일 경로를 못 잡아요 (린트가 안 돔)
+### Q. lint-fix.sh가 파일 경로를 못 잡아요 (린트가 안 됩니다)
 파일 경로는 **stdin JSON의 `.tool_input.file_path`**에서 온다 (예전 `CLAUDE_TOOL_OUTPUT_FILE` 환경변수가 아님). jq가 설치돼 있는지(`jq --version`), `claude --debug`로 PostToolUse가 받는 JSON에 `tool_input.file_path`가 있는지 확인. 직접 테스트:
 ```bash
 echo '{"tool_input":{"file_path":"src/app.js"}}' | bash .claude/hooks/lint-fix.sh
 ```
 
 ### Q. 자기검증 루프가 무한 반복돼요
-3단계까지 실패하면 멈추도록 CLAUDE.md에 명시. "각 단계 3회 시도 후 사용자에게 보고" 같은 한계 규칙 추가.
+3단계까지 실패하면 멈추도록 CLAUDE.md에 명시합니다. "각 단계 3회 시도 후 사용자에게 보고" 같은 한계 규칙을 추가합니다.
 
 ### Q. hooks 때문에 단순 작업이 너무 느려요
-PostToolUse의 lint-fix가 매 Edit마다 실행되면 답답할 수 있다. `matcher`를 `"Write"`로만 좁히거나 (Edit는 제외), lint-fix를 비동기로 (`&` 백그라운드).
+PostToolUse의 lint-fix가 매 Edit마다 실행되면 답답할 수 있습니다. `matcher`를 `"Write"`로만 좁히거나 (Edit는 제외), lint-fix를 비동기로 실행합니다 (`&` 백그라운드).
 
 ---
 

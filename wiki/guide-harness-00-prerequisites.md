@@ -6,7 +6,7 @@ sources:
   - harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
   - harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-06-28
+updated: 2026-07-02
 ---
 
 # 하네스 실습 사전 안내 (Module 00 — Prerequisites)
@@ -37,7 +37,7 @@ updated: 2026-06-28
          · 본인 프로젝트만의 STOP 트리거를 발견하면서 진짜 하네스가 됨
 ```
 
-핵심: **실습은 임시 프로젝트로, 실전은 본인 프로젝트로.** 처음부터 본인 프로젝트에서 하면 실수·롤백이 부담스럽다.
+핵심: **실습은 임시 프로젝트로, 실전은 본인 프로젝트로.** 처음부터 본인 프로젝트에서 하면 실수·롤백이 부담스럽습니다.
 
 ## 시간 예상
 
@@ -449,7 +449,7 @@ git log --oneline
 - **Cloud Run** (컨테이너 기반)
 - **App Engine** (PaaS)
 
-→ 하네스의 STOP 트리거에 "프로덕션 환경변수 노출 금지", "`gcloud deploy` 직접 실행 금지" 같은 GCP 친화 규칙을 추가하게 된다 (module5).
+→ 하네스의 STOP 트리거에 "프로덕션 환경변수 노출 금지", "`gcloud deploy` 직접 실행 금지" 같은 GCP 친화 규칙을 추가하게 됩니다 (module5).
 
 ## 5분 요약: 하네스 엔지니어링이 뭔가
 
@@ -504,7 +504,7 @@ Module 1 (실패 패턴 찾기)
 | **Hook(훅)** | 에이전트 라이프사이클의 특정 시점에 **자동 실행되는 사용자 스크립트**. |
 | **PreToolUse / PostToolUse** | 각각 "도구 실행 직전 / 직후"에 발동. 차단은 주로 PreToolUse. |
 | **`.claude/settings.json`** | 프로젝트의 Claude Code 설정 파일. hooks 등록 위치. (없으면 만든다) |
-| **`.claude/hooks/`** | 사용자가 만든 hook 스크립트(`*.sh`)를 두는 폴더. |
+| **`.claude/hooks/`** | 사용자가 만든 hook 스크립트(`*.sh`)를 두는 디렉터리. |
 | **exit code** | 스크립트의 종료 코드. **0이 아니면** Claude Code가 도구 실행을 막음. |
 | **Back-pressure** | 테스트 실패 같은 하류 결과가 상류 에이전트로 되돌아와 다음 행동을 압박. |
 
@@ -606,7 +606,7 @@ git commit -m "harness: playground에서 하네스 자산 가져오기"
 ## 막힐 때 (공통 FAQ)
 
 ### Q. `.claude/settings.json`이 없는데요
-없으면 만들면 된다. 빈 JSON `{}`으로 시작해서 hooks 블록만 추가:
+없으면 만들면 됩니다. 빈 JSON `{}`으로 시작해서 hooks 블록만 추가합니다:
 ```bash
 mkdir -p .claude
 echo '{}' > .claude/settings.json
@@ -631,7 +631,7 @@ git commit -m "chore: 초기 커밋"
 ```
 CLAUDE.md 섹션 7의 STOP 트리거 첫 두 항목을 그대로 인용해줘.
 ```
-인용해주면 읽은 것. 못 하면 위치(프로젝트 루트인지)나 권한 확인.
+인용해주면 읽은 것입니다. 못 하면 위치(프로젝트 루트인지)나 권한을 확인합니다.
 
 ### Q. 자기검증 루프에서 `npm test`가 환경 문제로 실패해요
 환경 문제 vs 코드 문제를 먼저 분리:
@@ -643,10 +643,10 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 두 항목을 그대로 인용해줘.
 한 프로젝트에서 한 모델(Claude만)만 쓴다면 **CLAUDE.md만** 필요. 여러 모델(Claude + Codex 등)을 섞으면 AGENTS.md 추가.
 
 ### Q. 본인 프로젝트가 작아서(개인 프로젝트) DDD 같은 게 부담스러워요
-**무시해도 된다.** 원본 템플릿의 DDD 섹션은 module2에서 본인 Node 패턴(컨트롤러/서비스/리포지토리, 또는 hooks/api/lib)으로 교체. 핵심은 4원칙 + STOP 트리거 + 누적 실패 패턴.
+**무시해도 됩니다.** 원본 템플릿의 DDD 섹션은 module2에서 본인 Node 패턴(컨트롤러/서비스/리포지토리, 또는 hooks/api/lib)으로 교체합니다. 핵심은 4원칙 + STOP 트리거 + 누적 실패 패턴입니다.
 
 ### Q. 나중에 GCP/Cloud Functions 배포할 건데 지금 뭘 미리 해두면 좋아요
-module2 CLAUDE.md 작성 시 다음을 STOP 트리거에 미리 적어두면 좋다:
+module2 CLAUDE.md 작성 시 다음을 STOP 트리거에 미리 적어두면 좋습니다:
 ```
 STOP: .env*, *credentials.json, *service-account.json 커밋 시도
 STOP: gcloud deploy / gcloud functions deploy 직접 실행

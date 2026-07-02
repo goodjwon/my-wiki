@@ -7,12 +7,12 @@ sources:
   - harness-engineering/harness-kit/module1/02_baseline_prompt.md
   - harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-06-29
+updated: 2026-07-02
 ---
 
 # 하네스 Module 01 — 베이스라인 측정 + 실패 패턴 감사
 
-> **이 가이드 보기 전에**: [[guide-harness-00-prerequisites]] 의 [실습용 미니 프로젝트 만들기](guide-harness-00-prerequisites.md#실습용-미니-프로젝트-만들기-react--express-풀스택)를 끝내세요. `~/harness-playground` 폴더에 api/ + web/ 가 만들어져 있고, `git log`로 3~4개 커밋이 보여야 합니다.
+> **이 가이드 보기 전에**: [[guide-harness-00-prerequisites]] 의 [실습용 미니 프로젝트 만들기](guide-harness-00-prerequisites.md#실습용-미니-프로젝트-만들기-react--express-풀스택)를 끝내세요. `~/harness-playground` 디렉터리에 api/ + web/ 가 만들어져 있고, `git log`로 3~4개 커밋이 보여야 합니다.
 
 **이 모듈에서 얻을 것**:
 1. `.claude/baseline.md` — 하네스 적용 **전** 성능 기록 (Module 05에서 After와 비교)
@@ -20,7 +20,7 @@ updated: 2026-06-29
 
 **시간**: 약 1시간 (Failure Audit 20분 + 베이스라인 태스크 3개 30분 + 정리 10분)
 
-**실습 대상**: `~/harness-playground` (prerequisites에서 만든 React + Express 풀스택). **본인 기존 프로젝트는 이 시점에 쓰지 않는다** — 5모듈 종료 후 이식.
+**실습 대상**: `~/harness-playground` (prerequisites에서 만든 React + Express 풀스택). **본인 기존 프로젝트는 이 시점에 쓰지 않습니다** — 5모듈 종료 후 이식합니다.
 
 이론 배경: [[concept-harness-engineering]]
 
@@ -50,7 +50,7 @@ npm test
 
 확인 통과하면 다음 Step.
 
-> **git log가 짧다고 걱정 No**: Step 2의 Failure Audit이 빈약해지지만, 그건 정상. 패턴은 Step 3 베이스라인 태스크에서 **만들어진다**. 신규 프로젝트의 정상 흐름.
+> **git log가 짧다고 걱정 No**: Step 2의 Failure Audit이 빈약해지지만, 그건 정상입니다. 패턴은 Step 3 베이스라인 태스크에서 **만들어집니다**. 신규 프로젝트의 정상 흐름입니다.
 
 ---
 
@@ -58,7 +58,7 @@ npm test
 
 > 원본: `raw/harness-engineering/harness-kit/module1/01_failure_audit_prompt.md`
 
-**목적**: AI와 작업하면서 반복된 실수를 git log에서 찾고, **프롬프트 문제** vs **시스템 문제**로 분류해 Module 02에서 막을 재료를 모은다.
+**목적**: AI와 작업하면서 반복된 실수를 git log에서 찾고, **프롬프트 문제** vs **시스템 문제**로 분류해 Module 02에서 막을 재료를 모읍니다.
 
 > **먼저 알아둘 것 — 이 감사의 진짜 대상은 "본인이 AI와 오래 작업해 온 실제 프로젝트"입니다.** 거기엔 반복된 revert·재발한 버그·쌓인 TODO가 git 이력에 남아 분석거리가 풍부합니다. 반면 지금 실습하는 `~/harness-playground`는 방금 만든 신규라 커밋이 3~4개뿐이고 그런 이력이 없습니다. **그래서 아래 분석을 실습 프로젝트에 돌리면 표가 거의 비는 게 정상입니다.** 여기서는 "claude 실행 → 분석 프롬프트 → 표"라는 흐름과 도구 사용법만 익히세요. 진짜 반복 패턴은 Step 3에서 직접 만들어 냅니다. 이 프롬프트를 나중에 본인 실제 프로젝트에 그대로 옮겨 돌리면 그때 진가가 드러납니다.
 
@@ -130,7 +130,7 @@ EOF
 - [ ] `.claude/failure-audit.md`에 저장했는가?
 - [ ] (선택·본인 실제 프로젝트에 적용 시) 시스템 문제 3개 이상을 CLAUDE.md 규칙·guard.sh 후보로 뽑았는가?
 
-> **빈 표가 나와도 정상**: playground는 커밋이 3~4개뿐이라 감사 결과가 빈약할 수밖에 없다. 진짜 반복 패턴은 Step 3에서 일부러 모호한 요청을 던져 **직접 만들어 낸다**.
+> **빈 표가 나와도 정상**: playground는 커밋이 3~4개뿐이라 감사 결과가 빈약할 수밖에 없습니다. 진짜 반복 패턴은 Step 3에서 일부러 모호한 요청을 던져 **직접 만들어 냅니다**.
 
 ```bash
 git add .claude/failure-audit.md
@@ -143,13 +143,13 @@ git commit -m "harness(M1): 초기 실패 패턴 감사"
 
 > 원본: `raw/harness-engineering/harness-kit/module1/02_baseline_prompt.md` (Node 친화로 치환)
 
-**목적**: 하네스 적용 **전** 에이전트 성능을 수치로 기록. Module 05에서 After와 비교해서 효과 확인.
+**목적**: 하네스 적용 **전** 에이전트 성능을 수치로 기록합니다. Module 05에서 After와 비교해서 효과를 확인합니다.
 
-**중요**: 이 Step은 `CLAUDE.md`도 hooks도 **없는 상태**에서 진행. Claude의 "맨몸 성능"을 본다.
+**중요**: 이 Step은 `CLAUDE.md`도 hooks도 **없는 상태**에서 진행합니다. Claude의 "맨몸 성능"을 봅니다.
 
-실습 대상: 이미 만들어진 `~/harness-playground` (api/ + web/). 별도 셋업 불필요.
+실습 대상: 이미 만들어진 `~/harness-playground` (api/ + web/). 별도 셋업은 불필요합니다.
 
-각 태스크 후 결과를 `git commit`으로 남겨 Module 5에서 diff 비교 가능하게 한다.
+각 태스크 후 결과를 `git commit`으로 남겨 Module 5에서 diff 비교 가능하게 합니다.
 
 ### 태스크 A — 모델에 필드 추가 (10분)
 
@@ -246,7 +246,7 @@ git commit -m "baseline(M1-C): 빈 phone 검증 버그 수정 (하네스 없이)
 
 ## Step 4 — baseline.md 저장 — 5분
 
-위 측정 결과를 `.claude/baseline.md` 한 파일로 합쳐서 저장한다.
+위 측정 결과를 `.claude/baseline.md` 한 파일로 합쳐서 저장합니다.
 
 ```bash
 cat > .claude/baseline.md << 'EOF'
@@ -310,7 +310,7 @@ git commit -m "harness(M1): 베이스라인 측정 결과 저장"
 
 ## Step 5 — 회고 + Module 02 입력 정리 — 5분
 
-발견한 시스템 문제 중 **상위 3~5개**를 다음 표로 골라낸다. Module 02에서 CLAUDE.md STOP 트리거로 옮길 후보:
+발견한 시스템 문제 중 **상위 3~5개**를 다음 표로 골라냅니다. Module 02에서 CLAUDE.md STOP 트리거로 옮길 후보:
 
 | 우선순위 | 시스템 문제 | Module 02에서 옮길 곳 | 향후 module 03 hook 가능? |
 |---------|------------|---------------------|--------------------------|
@@ -320,7 +320,7 @@ git commit -m "harness(M1): 베이스라인 측정 결과 저장"
 | 4 | 시크릿 로깅 | STOP: `console.log(process.env.SECRET)` | ✅ guard.sh + eslint |
 | 5 | silent try/catch | STOP: 빈 catch 블록 | ✅ eslint 규칙 |
 
-위 표를 본인 결과에 맞게 채웠으면, Step 4에서 만든 `.claude/baseline.md` 맨 아래에 이어 붙인다. (`>>`는 기존 내용을 지우지 않고 뒤에 덧붙인다.)
+위 표를 본인 결과에 맞게 채웠으면, Step 4에서 만든 `.claude/baseline.md` 맨 아래에 이어 붙입니다. (`>>`는 기존 내용을 지우지 않고 뒤에 덧붙입니다.)
 
 ```bash
 cat >> .claude/baseline.md << 'EOF'
@@ -351,15 +351,15 @@ git commit -m "harness(M1): Module 02 입력용 시스템 문제 우선순위 �
 ## 막힐 때 (Module 1 전용 FAQ)
 
 ### Q. Failure Audit에서 시스템 문제가 1~2개밖에 안 나와요
-신규 프로젝트면 정상. **Step 3 (베이스라인 측정)**에서 일부러 잘못 동작하게 만든 다음, 거기서 나온 패턴을 시스템 문제로 분류하면 된다.
+신규 프로젝트면 정상입니다. **Step 3 (베이스라인 측정)**에서 일부러 잘못 동작하게 만든 다음, 거기서 나온 패턴을 시스템 문제로 분류하면 됩니다.
 
 ### Q. 베이스라인 측정 중 Claude가 너무 잘 해서 "문제"가 안 나와요
-모델이 좋아서 그렇다. 그러면 **태스크를 더 모호하게** 다시 던진다:
+모델이 좋아서 그렇습니다. 그러면 **태스크를 더 모호하게** 다시 던집니다:
 - "phone 필드 추가해줘" → "사용자 정보 보강해줘" (모호한 표현)
 - 또는 태스크 범위를 더 크게 ("페이징 + 정렬 + 검색 + 통계 같이")
-- 이렇게 해야 에이전트가 자유롭게 행동하면서 어떤 기본 습관을 갖는지 보임
+- 이렇게 해야 에이전트가 자유롭게 행동하면서 어떤 기본 습관을 갖는지 보입니다
 
-### Q. `.claude/` 폴더를 git에 커밋해도 되나요
+### Q. `.claude/` 디렉터리를 git에 커밋해도 되나요
 **baseline.md, failure-audit.md는 커밋 권장** (시간이 지나면서 비교용). `.claude/settings.json`도 커밋 (팀 공유). 단 `claude-progress.txt` (Module 4에서 등장)는 개인용이면 `.gitignore` 추가.
 
 ### Q. 이미 큰 프로젝트라 git log가 너무 많아요
@@ -382,7 +382,7 @@ git log --oneline --since="1 month ago" | head -30
 
 ## 다음 단계
 
-▶ [[guide-harness-module2]] — CLAUDE.md 작성. Step 5에서 골라낸 시스템 문제들을 **STOP 트리거**로 옮긴다.
+▶ [[guide-harness-module2]] — CLAUDE.md 작성. Step 5에서 골라낸 시스템 문제들을 **STOP 트리거**로 옮깁니다.
 
 ## 관련 페이지
 

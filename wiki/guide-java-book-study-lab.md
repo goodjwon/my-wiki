@@ -4,14 +4,14 @@ type: guide
 tags: [java, book, lecture, study, lab, beginner]
 sources: [object/, effective_java/, refactoring/, clean-code/, tdd/]
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-07-02
 ---
 
 # Java 도서 실습 환경 가이드
 
 ## 목적
 
-오브젝트·Effective Java·리팩터링·Clean Code·TDD 강의 교재를 **읽고 끝내지 않고 직접 손으로 확인**하기 위한 공통 실습 환경이다. 각 장은 책이 달라도 같은 루틴으로 진행한다.
+오브젝트·Effective Java·리팩터링·Clean Code·TDD 강의 교재를 **읽고 끝내지 않고 직접 손으로 확인**하기 위한 공통 실습 환경입니다. 각 장은 책이 달라도 같은 루틴으로 진행합니다.
 
 ```
 [읽기] 문제 상황 파악
@@ -44,7 +44,7 @@ book-lab/
 └── src/test/java/study/BookLabTest.java
 ```
 
-`pom.xml` 예시. 이미 팀 표준 BOM이나 Spring Boot 프로젝트가 있으면 그 버전을 우선한다.
+`pom.xml` 예시입니다. 이미 팀 표준 BOM이나 Spring Boot 프로젝트가 있으면 그 버전을 우선합니다.
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -93,7 +93,7 @@ book-lab/
 ./mvnw test
 ```
 
-Maven Wrapper가 없다면 `mvn test`로 시작해도 된다.
+Maven Wrapper가 없다면 `mvn test`로 시작해도 됩니다.
 
 ## 도서별 실습 방식
 
@@ -107,12 +107,12 @@ Maven Wrapper가 없다면 `mvn test`로 시작해도 된다.
 
 ## 장별 셀프 체크
 
-- [ ] 이 장의 “문제 코드”를 직접 타이핑했다.
-- [ ] 실패하는 테스트나 불편한 실행 결과를 먼저 확인했다.
-- [ ] 한 번에 하나의 변경만 했다.
-- [ ] 변경 후 테스트 또는 실행 결과를 확인했다.
-- [ ] 왜 이 설계가 나아졌는지 한 문장으로 적었다.
-- [ ] 현업 코드에서 같은 냄새가 나는 예를 하나 찾았다.
+- [ ] 이 장의 "문제 코드"를 직접 타이핑했는가
+- [ ] 실패하는 테스트나 불편한 실행 결과를 먼저 확인했는가
+- [ ] 한 번에 하나의 변경만 했는가
+- [ ] 변경 후 테스트 또는 실행 결과를 확인했는가
+- [ ] 왜 이 설계가 나아졌는지 한 문장으로 적었는가
+- [ ] 현업 코드에서 같은 냄새가 나는 예를 하나 찾았는가
 
 ## 막힐 때
 

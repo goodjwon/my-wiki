@@ -8,7 +8,7 @@ sources:
   - harness-engineering/harness-kit/module4/claude-progress.txt
   - harness-engineering/harness-kit/module4/01_threettier_workflow_prompt.md
 created: 2026-05-31
-updated: 2026-06-29
+updated: 2026-07-02
 ---
 
 # 하네스 Module 04 — 멀티 에이전트 + 컨텍스트
@@ -23,7 +23,7 @@ updated: 2026-06-29
 
 **시간**: 약 2시간 (파일 설치 30분 + Planner 30분 + Coder 30분 + Critic 30분)
 
-**핵심 개념**: 여러 에이전트는 **분업**이 아니라 **컨텍스트 윈도우 오염 방지**가 목적. 한 에이전트가 탐색·실패·재시도를 반복하면 "잡음"이 쌓여 중요 지시가 밀린다. 역할 분리는 그 잡음을 격리하는 방화벽.
+**핵심 개념**: 여러 에이전트는 **분업**이 아니라 **컨텍스트 윈도우 오염 방지**가 목적. 한 에이전트가 탐색·실패·재시도를 반복하면 "잡음"이 쌓여 중요 지시가 밀립니다. 역할 분리는 그 잡음을 격리하는 방화벽.
 
 이론 배경: [[concept-multi-agent-pattern]]
 
@@ -31,9 +31,9 @@ updated: 2026-06-29
 
 ## Step 1 — `AGENTS.md` 만들기 — 15분
 
-`AGENTS.md`는 CLAUDE.md의 모델 불가지론적(model-agnostic) 버전 — Planner/Coder/Critic 역할 정의를 한 곳에 모은다.
+`AGENTS.md`는 CLAUDE.md의 모델 불가지론적(model-agnostic) 버전 — Planner/Coder/Critic 역할 정의를 한 곳에 모읍니다.
 
-> ⚠️ **Claude Code는 AGENTS.md를 자동으로 읽지 않는다** (자동 로드 대상은 CLAUDE.md뿐). 이 실습은 각 역할 프롬프트에서 "AGENTS.md를 먼저 읽어줘"라고 **명시**해 Read 도구로 직접 읽게 만든다 — 그래서 워크플로는 정상 동작한다. 매번 명시가 번거로우면 ① CLAUDE.md 맨 위에 `@AGENTS.md` 한 줄로 import(자동 포함됨), ② `ln -s CLAUDE.md AGENTS.md` 심링크, ③ `/init`이 AGENTS.md를 CLAUDE.md로 흡수 — 셋 중 하나를 쓴다.
+> ⚠️ **Claude Code는 AGENTS.md를 자동으로 읽지 않습니다** (자동 로드 대상은 CLAUDE.md뿐). 이 실습은 각 역할 프롬프트에서 "AGENTS.md를 먼저 읽어줘"라고 **명시**해 Read 도구로 직접 읽게 만듭니다 — 그래서 워크플로는 정상 동작합니다. 매번 명시가 번거로우면 ① CLAUDE.md 맨 위에 `@AGENTS.md` 한 줄로 import(자동 포함됨), ② `ln -s CLAUDE.md AGENTS.md` 심링크, ③ `/init`이 AGENTS.md를 CLAUDE.md로 흡수 — 셋 중 하나를 씁니다.
 
 ```bash
 cd ~/harness-playground
@@ -247,11 +247,11 @@ chmod +x .claude/hooks/update-progress.sh
 
 ## Step 4 — Planner Agent 시연 — 30분
 
-본인 프로젝트에서 실제로 만들 작은 기능을 골라 Planner로 시킨다.
+본인 프로젝트에서 실제로 만들 작은 기능을 골라 Planner로 시킵니다.
 
 ### Step 4-1: 새 세션에서 Planner 호출
 
-새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣는다.
+새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다.
 
 ```
 너는 지금부터 Planner Agent로만 동작해.
@@ -301,11 +301,11 @@ git commit -m "plan(M4): 인증 기능 태스크 분해"
 
 ## Step 5 — Coder Agent 시연 (TASK-001만) — 30분
 
-Step 4에서 만든 `task-list.md`의 첫 태스크(TASK-001)를 Coder에게 입력으로 넘긴다.
+Step 4에서 만든 `task-list.md`의 첫 태스크(TASK-001)를 Coder에게 입력으로 넘깁니다.
 
 ### Step 5-1: 새 세션에서 Coder 호출
 
-새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣는다.
+새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다.
 
 ```
 너는 지금부터 Coder Agent로만 동작해.
@@ -346,11 +346,11 @@ git commit -m "feat(M4): TASK-001 User 스키마 + 리포지토리"
 
 ## Step 6 — Critic Agent 시연 — 30분
 
-Step 5에서 Coder가 구현한 TASK-001 결과(코드 + 커밋)를 Critic이 독립적으로 검증한다.
+Step 5에서 Coder가 구현한 TASK-001 결과(코드 + 커밋)를 Critic이 독립적으로 검증합니다.
 
 ### Step 6-1: 새 세션에서 Critic 호출
 
-세션을 새로 시작하는 이유: Coder의 컨텍스트(시도·실패·중간 출력)에서 격리하기 위해. 새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣는다.
+세션을 새로 시작하는 이유: Coder의 컨텍스트(시도·실패·중간 출력)에서 격리하기 위해서입니다. 새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다.
 
 ```
 너는 지금부터 Critic Agent로만 동작해.
@@ -397,19 +397,19 @@ git commit -m "review(M4): TASK-001 APPROVE"
 
 ## Step 7 — 사이클 반복 정착 — (시간 외)
 
-TASK-002 → Coder → Critic → TASK-003 → ... 반복. 처음에는 세션 전환이 번거롭지만, 한 사이클이 익숙해지면 컨텍스트가 깨끗해서 오히려 빠름.
+TASK-002 → Coder → Critic → TASK-003 → ... 반복. 처음에는 세션 전환이 번거롭지만, 한 사이클이 익숙해지면 컨텍스트가 깨끗해서 오히려 빠릅니다.
 
-**한 세션에서 다 하지 마라**. Planner도 Coder도 Critic도 같은 컨텍스트면 잡음으로 서로 영향.
+**한 세션에서 다 하지 않습니다**. Planner도 Coder도 Critic도 같은 컨텍스트면 잡음으로 서로 영향을 줍니다.
 
 ---
 
 ## 막힐 때 (Module 4 전용 FAQ)
 
 ### Q. 매번 세션 전환이 귀찮아요
-초기에는 그렇다. **TASK가 작아질수록** 한 세션 안에서 전환해도 큰 문제 없음 — 다만 Critic은 가능한 새 세션. 완전 재시작 대신 세션 안에서 `/clear`로 컨텍스트만 비우면 더 가볍다.
+초기에는 그렇습니다. **TASK가 작아질수록** 한 세션 안에서 전환해도 큰 문제는 없습니다 — 다만 Critic은 가능한 새 세션을 씁니다. 완전 재시작 대신 세션 안에서 `/clear`로 컨텍스트만 비우면 더 가볍습니다.
 
 ### Q. Claude Code 네이티브 서브에이전트로 역할을 나눌 수 있나요
-가능하고, 수동 세션 전환보다 깔끔하다. `.claude/agents/` 디렉터리에 역할별 정의 파일(시스템 프롬프트·허용 도구)을 두고 `/agents`로 관리하면 Planner/Coder/Critic을 **독립 컨텍스트로 격리** 실행할 수 있다 (서브에이전트는 결과만 본체로 반환 → 잡음 차단이라는 이 모듈의 목적과 정확히 일치). 이 실습은 개념 이해를 위해 수동 전환으로 진행하지만, 익숙해지면 네이티브 서브에이전트로 옮기는 걸 권한다.
+가능하고, 수동 세션 전환보다 깔끔합니다. `.claude/agents/` 디렉터리에 역할별 정의 파일(시스템 프롬프트·허용 도구)을 두고 `/agents`로 관리하면 Planner/Coder/Critic을 **독립 컨텍스트로 격리** 실행할 수 있습니다 (서브에이전트는 결과만 본체로 반환 → 잡음 차단이라는 이 모듈의 목적과 정확히 일치합니다). 이 실습은 개념 이해를 위해 수동 전환으로 진행하지만, 익숙해지면 네이티브 서브에이전트로 옮기는 걸 권합니다.
 
 ### Q. Critic이 자꾸 APPROVE만 해요
 - 체크리스트가 너무 추상적일 수 있음 → 본인 프로젝트 특화 항목 추가

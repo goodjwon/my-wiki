@@ -4,14 +4,14 @@ type: synthesis
 tags: [가이드, 문서화, CLAUDE.md, 템플릿]
 sources: []
 created: 2026-04-25
-updated: 2026-04-25
+updated: 2026-07-02
 ---
 
 # 프로젝트 문서 시스템 셋업 가이드
 
 ## 개요
 
-my-wiki에서 검증된 LLM 기반 문서 관리 패턴을 다른 프로젝트에 적용하기 위한 가이드. 프로젝트 저장소에 `CLAUDE.md`와 `docs/` 구조를 넣으면 Claude Code가 문서를 자동 생성·유지한다.
+my-wiki에서 검증된 LLM 기반 문서 관리 패턴을 다른 프로젝트에 적용하기 위한 가이드입니다. 프로젝트 저장소에 `CLAUDE.md`와 `docs/` 구조를 넣으면 Claude Code가 문서를 자동 생성·유지합니다.
 
 ## 구조 비교
 
@@ -30,7 +30,7 @@ my-wiki/ (개인 Second Brain)        project-x/ (프로젝트 문서)
 
 ## Step 1: CLAUDE.md 템플릿
 
-프로젝트 루트에 아래 내용으로 `CLAUDE.md`를 생성한다.
+프로젝트 루트에 아래 내용으로 `CLAUDE.md`를 생성합니다.
 
 ```markdown
 # [프로젝트명] — 문서 스키마
@@ -117,7 +117,7 @@ updated: YYYY-MM-DD
 
 ## Step 2: 초기 문서 생성
 
-프로젝트 루트에서 `claude`를 실행한 뒤, REPL 안에서 아래 프롬프트를 차례로 입력한다 (`>`는 Claude Code 프롬프트 표시, 직접 타이핑하지 않는다).
+프로젝트 루트에서 `claude`를 실행한 뒤, REPL 안에서 아래 프롬프트를 차례로 입력합니다 (`>`는 Claude Code 프롬프트 표시이며, 직접 타이핑하지 않습니다).
 
 ```text
 # 1. docs 구조 생성
@@ -144,7 +144,7 @@ updated: YYYY-MM-DD
 
 ## Step 4: 개인 위키와 연결
 
-프로젝트에서 범용적인 지식이 나오면 개인 위키(my-wiki)로 옮긴다.
+프로젝트에서 범용적인 지식이 나오면 개인 위키(my-wiki)로 옮깁니다.
 
 ```
 project-x/docs/guide-ddd-적용기.md

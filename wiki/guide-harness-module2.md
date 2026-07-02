@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
   - harness-engineering/harness-kit/module2/02_before_after_prompt.md
 created: 2026-05-31
-updated: 2026-06-29
+updated: 2026-07-02
 ---
 
 # 하네스 Module 02 — CLAUDE.md 작성
@@ -119,7 +119,7 @@ git commit -m "docs(M2): CLAUDE.md 기본 골격 추가"
 
 ## Step 2 — STOP 트리거 채우기 (Module 01 결과 이전) — 20분
 
-`.claude/baseline.md`의 시스템 문제 우선순위 표를 STOP 트리거로 옮긴다.
+`.claude/baseline.md`의 시스템 문제 우선순위 표를 STOP 트리거로 옮깁니다.
 
 ### 변환 공식
 
@@ -154,13 +154,13 @@ STOP: package-lock.json 임의 삭제 (의존성 잠금 파괴)
 STOP: 외부 패키지를 사용자 확인 없이 추가 (npm install ___ 전에 옵션 제시)
 ```
 
-본인 `.claude/baseline.md`의 시스템 문제로 **추가 항목**을 직접 적는다. 8개 항목으로 시작하면 적당.
+본인 `.claude/baseline.md`의 시스템 문제로 **추가 항목**을 직접 적습니다. 8개 항목으로 시작하면 적당합니다.
 
 ---
 
 ## Step 3 — 프로젝트 구조 섹션 채우기 — 10분
 
-본인 프로젝트 구조에 맞춰 섹션 6을 채운다. Claude에게 시키면 빠름:
+본인 프로젝트 구조에 맞춰 섹션 6을 채웁니다. Claude에게 시키면 빠릅니다:
 
 ```
 프로젝트 구조를 파악해서 CLAUDE.md 섹션 6에 넣을 디렉터리 트리와
@@ -190,7 +190,7 @@ src/
 - API 응답은 schemas의 변환 거침 (모델 직접 X)
 ```
 
-받은 결과를 CLAUDE.md 섹션 6에 붙여넣기.
+받은 결과를 CLAUDE.md 섹션 6에 붙여넣습니다.
 
 ---
 
@@ -210,25 +210,25 @@ git commit -m "docs(M2): baseline 시스템 문제를 STOP 트리거로 이전"
 
 ## Step 5 — Before/After 비교 — 30분
 
-Step 4까지 만든 CLAUDE.md가 실제로 에이전트 행동을 바꿨는지 검증할 차례다. 가장 확실한 방법은 **Module 01에서 했던 태스크 A·B·C를 CLAUDE.md가 있는 상태에서 다시** 실행해, Module 01의 Before 측정치와 나란히 비교하는 것이다.
+Step 4까지 만든 CLAUDE.md가 실제로 에이전트 행동을 바꿨는지 검증할 차례입니다. 가장 확실한 방법은 **Module 01에서 했던 태스크 A·B·C를 CLAUDE.md가 있는 상태에서 다시** 실행해, Module 01의 Before 측정치와 나란히 비교하는 것입니다.
 
 ### Step 5-1: Claude Code 새 세션 시작
 
-기존 세션을 종료하고 다시 `claude` 실행. CLAUDE.md를 새로 읽도록.
+기존 세션을 종료하고 다시 `claude`를 실행합니다. CLAUDE.md를 새로 읽도록 합니다.
 
 ### Step 5-2: CLAUDE.md가 실제 로드됐는지 확인
 
-새 세션이 떴으면, 본 태스크를 던지기 전에 CLAUDE.md가 실제로 로드됐는지부터 확인한다:
+새 세션이 떴으면, 본 태스크를 던지기 전에 CLAUDE.md가 실제로 로드됐는지부터 확인합니다:
 
 ```
 CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 ```
 
-3개를 정확히 인용해주면 통과. 못 하면 CLAUDE.md 위치(프로젝트 루트인지) 다시 확인.
+3개를 정확히 인용해주면 통과입니다. 못 하면 CLAUDE.md 위치(프로젝트 루트인지)를 다시 확인합니다.
 
 ### Step 5-3: 태스크 A 재실행 (Module 1과 같은 표현)
 
-로드를 확인했으면, 이제 Module 01의 태스크 A 본문을 **표현 하나 바꾸지 않고** 그대로 다시 던진다. 유일한 차이는 끝의 CLAUDE.md 확인 지시 — Before(M1)와 동일한 작업·표현이어야 비교가 유효하다:
+로드를 확인했으면, 이제 Module 01의 태스크 A 본문을 **표현 하나 바꾸지 않고** 그대로 다시 던집니다. 유일한 차이는 끝의 CLAUDE.md 확인 지시 — Before(M1)와 동일한 작업·표현이어야 비교가 유효합니다:
 
 ```
 이 모노레포에 User에 'phone' 필드를 추가해줘.
@@ -257,7 +257,7 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 
 ### Step 5-4: 비교 표 작성
 
-Step 5-3에서 측정한 After 값과 Module 01의 Before 값을 한 표에 모은다. 아래 블록을 그대로 실행한 뒤, `__` 칸에 **본인이 측정한 Before/After 숫자를 직접 채운다**:
+Step 5-3에서 측정한 After 값과 Module 01의 Before 값을 한 표에 모읍니다. 아래 블록을 그대로 실행한 뒤, `__` 칸에 **본인이 측정한 Before/After 숫자를 직접 채웁니다**:
 
 ```bash
 cat >> .claude/baseline.md << 'EOF'
@@ -287,7 +287,7 @@ cat >> .claude/baseline.md << 'EOF'
 EOF
 ```
 
-태스크 B·C도 동일하게 반복하면 더 좋지만, 시간이 빠듯하면 A 하나만 해도 효과 확인 가능.
+태스크 B·C도 동일하게 반복하면 더 좋지만, 시간이 빠듯하면 A 하나만 해도 효과를 확인할 수 있습니다.
 
 ---
 
@@ -316,19 +316,19 @@ git commit -m "harness(M2): Before/After 비교 + 첫 누적 실패 패턴"
 ## 막힐 때 (Module 2 전용 FAQ)
 
 ### Q. CLAUDE.md를 500줄 이하로 줄이기 힘들어요
-원본 템플릿의 DDD 섹션, 네이밍 컨벤션의 모든 케이스, 빌드 명령어 전체를 다 옮길 필요 없음. **본인 프로젝트 고유의 STOP과 작업 전 체크리스트에 집중**.
+원본 템플릿의 DDD 섹션, 네이밍 컨벤션의 모든 케이스, 빌드 명령어 전체를 다 옮길 필요는 없습니다. **본인 프로젝트 고유의 STOP과 작업 전 체크리스트에 집중합니다**.
 
 ### Q. 섹션 6 (프로젝트 구조)에 뭘 적어야 할지 모르겠어요
-처음엔 비워둬도 된다. 작업하면서 "라우트는 controller만 호출" 같은 원칙이 자연스럽게 보일 때 추가. CLAUDE.md는 살아있는 문서.
+처음엔 비워둬도 됩니다. 작업하면서 "라우트는 controller만 호출" 같은 원칙이 자연스럽게 보일 때 추가합니다. CLAUDE.md는 살아있는 문서입니다.
 
 ### Q. Before/After가 별 차이 안 나요
-모델이 좋아서 기본 동작이 이미 잘 됐을 가능성. 그러면 **태스크를 더 모호하게** 던지거나, **STOP 트리거가 정말 작동했는지** 확인 — 작동했다면 보이지 않는 차이.
+모델이 좋아서 기본 동작이 이미 잘 됐을 가능성이 있습니다. 그러면 **태스크를 더 모호하게** 던지거나, **STOP 트리거가 정말 작동했는지** 확인합니다 — 작동했다면 보이지 않는 차이입니다.
 
 ### Q. CLAUDE.md 섹션 7 STOP 트리거가 실제로 막아주나요
-**아니다.** CLAUDE.md는 선언일 뿐. **Module 03의 hooks**가 진짜 강제. CLAUDE.md는 "에이전트가 자발적으로 따르려는 규칙" 정도.
+**아닙니다.** CLAUDE.md는 선언일 뿐입니다. **Module 03의 hooks**가 진짜 강제입니다. CLAUDE.md는 "에이전트가 자발적으로 따르려는 규칙" 정도입니다.
 
 ### Q. AGENTS.md도 같이 만들까요
-Claude Code만 쓰면 CLAUDE.md만. 나중에 Codex나 다른 에이전트를 섞을 때 Module 04에서 AGENTS.md 추가.
+Claude Code만 쓰면 CLAUDE.md만 있으면 됩니다. 나중에 Codex나 다른 에이전트를 섞을 때 Module 04에서 AGENTS.md를 추가합니다.
 
 ---
 
@@ -344,7 +344,7 @@ Claude Code만 쓰면 CLAUDE.md만. 나중에 Codex나 다른 에이전트를 �
 
 ## 다음 단계
 
-▶ [[guide-harness-module3]] — CLAUDE.md의 STOP 트리거 중 **자동화 가능한 것**을 hooks로 끌어내린다.
+▶ [[guide-harness-module3]] — CLAUDE.md의 STOP 트리거 중 **자동화 가능한 것**을 hooks로 끌어내립니다.
 
 ## 관련 페이지
 

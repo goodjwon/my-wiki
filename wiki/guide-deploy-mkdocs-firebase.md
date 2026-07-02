@@ -8,7 +8,7 @@ external:
   - https://www.mkdocs.org/
   - https://firebase.google.com/docs/hosting
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-07-02
 ---
 
 # 위키 배포 가이드 — MkDocs Material + Firebase Hosting
@@ -65,21 +65,21 @@ updated: 2026-05-31
 
 **1단계 — 로컬 머신 (편집 · 빌드)**
 
-1. **`wiki/*.md` 편집** — Obsidian에서 마크다운 파일을 평소처럼 편집한다. `[[wikilink]]`, frontmatter, 이미지 모두 그대로 작성.
-2. **`build-site.sh`** — 셸 스크립트가 `wiki/`를 `docs/`로 복사하면서 `log.md` 같은 비공개 파일을 제외하고, `[[wikilink]]`를 표준 마크다운 링크로 변환한다.
+1. **`wiki/*.md` 편집** — Obsidian에서 마크다운 파일을 평소처럼 편집합니다. `[[wikilink]]`, frontmatter, 이미지 모두 그대로 작성.
+2. **`build-site.sh`** — 셸 스크립트가 `wiki/`를 `docs/`로 복사하면서 `log.md` 같은 비공개 파일을 제외하고, `[[wikilink]]`를 표준 마크다운 링크로 변환합니다.
 3. **`mkdocs build`** — `docs/` 안의 마크다운을 Material 테마로 정적 HTML로 변환. 검색 인덱스, 내비게이션, 다크 모드 토글까지 자동 생성.
-4. **`site/` 산출물** — 완성된 정적 사이트가 `site/` 디렉터리에 생성된다. 이때까지는 아무도 못 본다.
+4. **`site/` 산출물** — 완성된 정적 사이트가 `site/` 디렉터리에 생성됩니다. 이때까지는 아무도 못 봅니다.
 
 **2단계 — 배포**
 
-5. **`firebase deploy --only hosting`** — `site/` 디렉터리를 Firebase Hosting에 업로드. 한 번의 명령으로 변경된 파일만 차등 업로드되어 빠르다.
+5. **`firebase deploy --only hosting`** — `site/` 디렉터리를 Firebase Hosting에 업로드. 한 번의 명령으로 변경된 파일만 차등 업로드되어 빠릅니다.
 
 **3단계 — Firebase Hosting (글로벌 공개)**
 
 6. **전 세계 CDN edge 캐시** — Firebase가 업로드된 파일을 전 세계 edge 서버에 자동 배포·캐싱. SSL 인증서도 무료로 자동 적용.
-7. **`wons-wiki.web.app`** — 사용자가 이 URL로 접속하면 가장 가까운 edge에서 콘텐츠가 즉시 응답된다. 한국·미국·유럽 모두 빠르게.
+7. **`wons-wiki.web.app`** — 사용자가 이 URL로 접속하면 가장 가까운 edge에서 콘텐츠가 즉시 응답됩니다. 한국·미국·유럽 모두 빠르게.
 
-> **핵심 분리**: `wiki/` 편집(개인) → `docs/`·`site/` 빌드(자동 변환) → Firebase Hosting(글로벌 공개). 각 단계는 명확히 분리되어 있어 디버깅이 쉽다.
+> **핵심 분리**: `wiki/` 편집(개인) → `docs/`·`site/` 빌드(자동 변환) → Firebase Hosting(글로벌 공개). 각 단계는 명확히 분리되어 있어 디버깅이 쉽습니다.
 
 ## 사전 결정 포인트
 
@@ -121,9 +121,9 @@ __pycache__/
 
 ## Step 2 — 디렉터리 매핑 (wiki/ → docs/)
 
-MkDocs는 기본적으로 `docs/` 를 소스로 본다. `wiki/` 를 그대로 쓰지 않는 이유:
+MkDocs는 기본적으로 `docs/` 를 소스로 봅니다. `wiki/` 를 그대로 쓰지 않는 이유:
 - `wiki/log.md`, `wiki/index.md` 등 위키 전용 메타 파일을 공개에서 제외 가능
-- 빌드 시점에 변환·필터링 단계를 끼울 수 있음
+- 빌드 시점에 변환·필터링 단계를 끼울 수 있습니다
 
 방법 A — **빌드 스크립트로 복사** (권장)
 
@@ -316,7 +316,7 @@ mkdocs serve --dirtyreload
 
 ## Step 7 — Firebase CLI 설치 및 초기화
 
-> ⚠️ 아래는 대화형 명령(`firebase login`은 브라우저, `firebase init`은 프롬프트)이라 **한 번에 붙여넣지 말고 블록 단위로** 실행한다.
+> ⚠️ 아래는 대화형 명령(`firebase login`은 브라우저, `firebase init`은 프롬프트)이라 **한 번에 붙여넣지 말고 블록 단위로** 실행합니다.
 
 ```bash
 # ① CLI 설치 (글로벌 1회)
