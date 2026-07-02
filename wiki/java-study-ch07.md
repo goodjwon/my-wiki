@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch07]
 sources: [java-study/java-study-ch07-데이터접근과SQL.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-02
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -195,9 +195,9 @@ CREATE INDEX idx_orders_member_id_ordered_at
 
 이 예시에서 중요한 포인트는 세 가지입니다.
 
-- 다대다 관계를 `order_items`로 풀었다.
-- 애플리케이션 규칙 일부를 `CHECK`, `UNIQUE`, `FK`로 DB에 반영했다.
-- 조회 패턴을 고려해 인덱스를 함께 설계했다.
+- 다대다 관계를 `order_items`로 풀었습니다.
+- 애플리케이션 규칙 일부를 `CHECK`, `UNIQUE`, `FK`로 DB에 반영했습니다.
+- 조회 패턴을 고려해 인덱스를 함께 설계했습니다.
 #### 8. JPA를 쓰더라도 DB 설계 감각은 따로 필요하다
 
 JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워집니다. 하지만 JPA가 설계를 대신해 주지는 않습니다.
@@ -509,16 +509,13 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 
 정기적인 건강 체크를 위해 사용자는 체중, 체지방률, 근육량 등의 신체 측정치를 기록할 수 있어야 하며, 이러한 데이터를 기반으로 한 진행 상황 그래프와 분석 정보를 제공해야 합니다."
 
-게시판.
+### 추가로 설계해볼 수 있는 시나리오 아이디어
 
-블로그.
-
-sns.
-
-cal ai. ⇒ 칼로리 계산.
-
-rpg ⇒ 던전게임 (도스 커맨드)  ⇒ 유니티 ⇒ json 
-
+- 게시판 애플리케이션을 설계해 봅니다.
+- 블로그 플랫폼을 설계해 봅니다.
+- SNS(소셜 네트워크 서비스)를 설계해 봅니다.
+- 칼로리 계산 앱을 설계해 봅니다.
+- RPG 던전 게임을 설계해 봅니다 (예: 도스 명령 기반 프로토타입 → Unity로 포팅, JSON으로 데이터 저장).
 
 ---
 
@@ -1122,7 +1119,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long>, JpaSpecificat
 현재 저장소에서는 이런 조회 구조를 Querydsl 체인이 아니라 Spring Data JPA + JPQL 문자열로 표현하고 있다.
 ```
 
-Querydsl을 도입하면 같은 의도를 `selectFrom`, `where`, `orderBy` 체인으로 옮겨 적는다고 이해하면 된다.
+Querydsl을 도입하면 같은 의도를 `selectFrom`, `where`, `orderBy` 체인으로 옮겨 적는다고 이해하면 됩니다.
 
 #### 1. JPQL과 Querydsl 비교
 
@@ -1297,7 +1294,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 현재 저장소는 이런 스칼라 조회를 Spring Data JPA + JPQL로 처리하고 있다.
 ```
 
-Querydsl 프로젝션은 조회 모델이 더 복잡해질 때 선택하는 확장 카드로 이해하는 편이 정확하다.
+Querydsl 프로젝션은 조회 모델이 더 복잡해질 때 선택하는 확장 카드로 이해하는 편이 정확합니다.
 
 #### 1. 단일 필드 조회
 
@@ -1461,7 +1458,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 제목, 저자, 가격, 대출 가능 여부처럼 선택적으로 들어오는 조건이 많아지면 Specification 또는 별도 조회 리포지토리로 확장할 수 있다.
 현재 저장소는 Querydsl 조건 메서드 조합까지는 가지 않았고, 동적 조회의 1차 선택지는 Spring Data JPA Specification이다.
 ```
-그래서 이 문서는 **현재 구현 설명**보다는 **Querydsl 도입 시 조건 조합을 어떻게 설계할지**를 미리 배우는 장으로 읽는 편이 정확하다.
+그래서 이 문서는 **현재 구현 설명**보다는 **Querydsl 도입 시 조건 조합을 어떻게 설계할지**를 미리 배우는 장으로 읽는 편이 정확합니다.
 
 ### 1. `BooleanBuilder` 방식
 ```java
@@ -1537,8 +1534,8 @@ public List<Member> search(MemberSearchCondition condition) {
 - 조건이 많고 재사용해야 할 때: `BooleanExpression` 분리 방식
 초중급 개발자 기준으로는 결국 **조건 메서드 분리 방식**에 익숙해지는 것이 더 중요합니다.
 이때 기준을 하나 더 두면 좋습니다.
-- 서비스 계층은 검색 조건 DTO를 넘긴다.
-- Querydsl 전용 `BooleanExpression` 조합은 조회 리포지토리 안에 둔다.
+- 서비스 계층은 검색 조건 DTO를 넘깁니다.
+- Querydsl 전용 `BooleanExpression` 조합은 조회 리포지토리 안에 둡니다.
 이렇게 나누면 서비스는 비즈니스 흐름에 집중하고, 조회 기술 세부사항은 리포지토리에 가둘 수 있습니다.
 
 ### 자주 하는 실수
@@ -1655,9 +1652,9 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 
 서비스 계층의 역할은 다음 쪽에 더 가깝습니다.
 
-- 유스케이스를 조합한다.
-- 트랜잭션 경계를 관리한다.
-- 입력 조건을 검증하고 조회 리포지토리에 전달한다.
+- 유스케이스를 조합합니다.
+- 트랜잭션 경계를 관리합니다.
+- 입력 조건을 검증하고 조회 리포지토리에 전달합니다.
 반대로 아래 작업은 조회 전용 리포지토리 쪽으로 보내는 편이 낫습니다.
 
 - 어떤 조인을 사용할지 결정
@@ -1722,7 +1719,7 @@ application/
 
 #### 정리
 
-Spring Data JPA와 Querydsl을 함께 쓸 때 핵심은 “둘 다 쓴다”가 아니라 **무엇을 어느 계층에 맡길지 먼저 결정하는 것**입니다. CRUD는 기본 리포지토리에 남기고, 검색과 목록은 조회 전용 Querydsl fragment로 분리하는 편이 가장 오래 버팁니다.
+Spring Data JPA와 Querydsl을 함께 쓸 때 핵심은 "둘 다 쓴다"가 아니라 **무엇을 어느 계층에 맡길지 먼저 결정하는 것**입니다. CRUD는 기본 리포지토리에 남기고, 검색과 목록은 조회 전용 Querydsl fragment로 분리하는 편이 가장 오래 버팁니다.
 
 #### 한 줄 정리
 
@@ -1759,7 +1756,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 현재 저장소는 조회 전용 리포지토리를 따로 나누기 전 단계이며, 이 문서는 조회 복잡도가 더 커졌을 때의 다음 구조를 설명한다.
 ```
 
-검색, 목록, 통계 API가 더 늘어나면 그때 Querydsl fragment 또는 조회 전용 리포지토리 분리가 자연스러운 다음 단계가 된다.
+검색, 목록, 통계 API가 더 늘어나면 그때 Querydsl fragment 또는 조회 전용 리포지토리 분리가 자연스러운 다음 단계가 됩니다.
 
 #### 1. 조회 전용 리포지토리를 두는 이유
 
@@ -1865,7 +1862,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
 }
 ```
 
-핵심은 “Querydsl을 썼다”가 아니라 **목록 API가 필요로 하는 응답 모양과 페이징 규칙을 리포지토리 구현 안에서 완결**하는 것입니다.
+핵심은 "Querydsl을 썼다"가 아니라 **목록 API가 필요로 하는 응답 모양과 페이징 규칙을 리포지토리 구현 안에서 완결**하는 것입니다.
 
 #### 5. 컨트롤러와 서비스는 얇게 유지합니다
 
@@ -2028,7 +2025,7 @@ content 쿼리는 화면에 필요한 데이터를 읽는 데 집중하고, coun
 - DTO projection
 - `fetch join`
 - 복잡한 `order by`
-즉, count 쿼리는 “같은 쿼리의 축약판”이 아니라 **전체 개수 계산 전용 쿼리**로 다시 보는 편이 맞습니다.
+즉, count 쿼리는 "같은 쿼리의 축약판"이 아니라 **전체 개수 계산 전용 쿼리**로 다시 보는 편이 맞습니다.
 
 #### 3. `fetchResults()`에 의존하지 않습니다
 
@@ -2083,7 +2080,7 @@ List<MemberListItem> content = queryFactory
 - 불필요한 연관 엔티티 로딩을 줄이기 좋습니다.
 #### 7. `Page`가 꼭 필요하지 않다면 `Slice`도 고려합니다
 
-무한 스크롤이나 “다음 페이지가 있는지만” 알면 되는 화면이라면 전체 count가 꼭 필요하지 않을 수 있습니다. 이 경우 `Page` 대신 `Slice`를 고려하면 count 쿼리 자체를 생략할 수 있습니다.
+무한 스크롤이나 "다음 페이지가 있는지만" 알면 되는 화면이라면 전체 count가 꼭 필요하지 않을 수 있습니다. 이 경우 `Page` 대신 `Slice`를 고려하면 count 쿼리 자체를 생략할 수 있습니다.
 
 기준은 단순합니다.
 
