@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch07]
 sources: [java-study/java-study-ch07-데이터접근과SQL.md]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -999,17 +999,15 @@ Querydsl은 이 지점에서 장점이 드러납니다. 핵심은 SQL을 숨기�
 - 화면/API 전용 조회 DTO: Querydsl
 즉, Querydsl은 JPA를 대체하는 기술이라기보다 **복잡한 조회를 분리하는 도구**로 보는 편이 맞습니다.
 
-#### 현재 저장소 기준에서 먼저 확인할 것
+#### 참고 — 실무 프로젝트는 어디에 서 있는가
 
-이 책은 Querydsl을 설명하지만, **현재 `day_by_spring` 저장소 자체가 아직 Querydsl을 사용하고 있지는 않습니다.**
-
-현재 저장소에서 확인되는 기준은 아래와 같습니다.
+이 책이 참고 사례로 드는 실무 저장소(`day_by_spring`)도 아직 Querydsl을 사용하고 있지는 않습니다.
 
 - `pom.xml`에 Querydsl 의존성이 없습니다.
 - Q 타입 생성 설정이 없습니다.
 - 리포지토리는 `JpaRepository`, `JpaSpecificationExecutor`, `@Query` 중심입니다.
 - 예를 들어 `BookRepository`, `MemberRepository`, `LoanRepository`는 Spring Data JPA 방식으로 조회를 구성합니다.
-즉, 이 묶음은 "현재 프로젝트가 이미 이렇게 구현돼 있다"는 설명이 아니라, **복잡한 조회가 더 커질 때 어떤 방향으로 확장할 수 있는가**를 설명하는 참고 축으로 읽어야 합니다.
+즉, 이 묶음은 "이미 이렇게 구현돼 있다"는 설명이 아니라, **복잡한 조회가 더 커질 때 어떤 방향으로 확장할 수 있는가**를 설명하는 축입니다. 실습 자체는 바로 다음 7.4-1에서 `demo` 프로젝트에 직접 구성합니다.
 
 #### 이 묶음에서 먼저 잡아야 할 세 가지
 
@@ -1046,7 +1044,7 @@ Spring Boot 3.x와 Jakarta 환경에서는 Querydsl 의존성도 그 기준에 �
 </dependency>
 ```
 
-이 설정은 "Querydsl을 도입하려는 프로젝트" 기준 예시입니다. 현재 `day_by_spring`에 이미 들어 있는 설정이 아니라, **추가 도입 시 검토해야 하는 방향**으로 읽어야 합니다.
+이 설정은 "Querydsl을 도입하려는 프로젝트" 기준 예시입니다. 바로 다음 7.4-1에서 `demo` 프로젝트의 `pom.xml`에 실제로 추가하며 확인합니다.
 
 도입 초기에 가장 많이 막히는 부분도 설정 자체보다 아래입니다.
 
@@ -1087,13 +1085,313 @@ Querydsl 입문의 핵심은 `문법`보다, **복잡한 조회를 어떤 구조
 
 ---
 
+## 7.4-1 Querydsl 실습 환경 만들기
+
+**🎯 목표**: `demo` 프로젝트에 Querydsl 의존성·실습 엔티티·Q타입 생성까지 실습 환경을 완성한다.
+
+> **실습 프로젝트**: 7.4~7.10의 Querydsl 실습은 [[java-study-ch06]] **6.1에서 start.spring.io로 만든 `demo` 프로젝트**를 이어서 사용합니다. 아직 없다면 6.1의 생성 명령 한 줄로 먼저 만들고 옵니다(`data-jpa`, `h2` 의존성 포함). 이 절부터 만드는 파일은 모두 `com.example.demo.ch07` 패키지에 둡니다.
+
+#### 1. 의존성 추가 — pom.xml
+
+Spring Boot 3.x는 `javax`가 아니라 `jakarta` 네임스페이스를 쓰므로, Querydsl 좌표에도 **`jakarta` classifier가 필수**입니다. `demo`의 `pom.xml`에서 `<properties>`에 버전 프로퍼티를, `<dependencies>`에 두 좌표를 추가합니다.
+
+**파일**: pom.xml (기존 내용에 추가)
+
+```xml
+<properties>
+    <!-- 기존 <java.version> 아래에 추가 -->
+    <querydsl.version>5.1.0</querydsl.version>
+</properties>
+
+<dependencies>
+    <!-- 기존 의존성 아래에 추가 -->
+    <dependency>
+        <groupId>com.querydsl</groupId>
+        <artifactId>querydsl-jpa</artifactId>
+        <version>${querydsl.version}</version>
+        <classifier>jakarta</classifier>
+    </dependency>
+    <dependency>
+        <groupId>com.querydsl</groupId>
+        <artifactId>querydsl-apt</artifactId>
+        <version>${querydsl.version}</version>
+        <classifier>jakarta</classifier>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+```
+
+`querydsl-apt`의 `jakarta` classifier jar는 JPA 애너테이션 프로세서가 서비스 파일로 등록된 단일 jar라서, 별도 플러그인 설정 없이 `compile` 단계에서 Q타입이 생성됩니다. Gradle 프로젝트라면 아래처럼 씁니다.
+
+```groovy
+// build.gradle — Gradle 대안
+dependencies {
+    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+}
+```
+
+#### 2. 실습용 엔티티 다섯 개
+
+7.5~7.10의 예제가 참조하는 엔티티는 팀(Team)·회원(Member)·도서(Book)·대출(Loan)·주문(Order)입니다. 실습에 필요한 최소 필드만 갖춘 형태로 만듭니다.
+
+**파일**: src/main/java/com/example/demo/ch07/Team.java
+
+```java
+package com.example.demo.ch07;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Team {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    protected Team() {
+    }
+
+    public Team(String name) {
+        this.name = name;
+    }
+
+    public Long getId() { return id; }
+    public String getName() { return name; }
+}
+```
+
+**파일**: src/main/java/com/example/demo/ch07/Member.java
+
+```java
+package com.example.demo.ch07;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Member {
+
+    public enum MembershipType { REGULAR, PREMIUM }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+
+    private int age;
+
+    @Enumerated(EnumType.STRING)
+    private MembershipType membershipType = MembershipType.REGULAR;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
+
+    protected Member() {
+    }
+
+    public Member(String username, int age, Team team) {
+        this.username = username;
+        this.age = age;
+        this.team = team;
+    }
+
+    public Long getId() { return id; }
+    public String getUsername() { return username; }
+    public int getAge() { return age; }
+    public MembershipType getMembershipType() { return membershipType; }
+    public Team getTeam() { return team; }
+}
+```
+
+**파일**: src/main/java/com/example/demo/ch07/Book.java
+
+```java
+package com.example.demo.ch07;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+    protected Book() {
+    }
+
+    public Book(String title) {
+        this.title = title;
+    }
+
+    public Long getId() { return id; }
+    public String getTitle() { return title; }
+}
+```
+
+**파일**: src/main/java/com/example/demo/ch07/Loan.java
+
+```java
+package com.example.demo.ch07;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import java.time.LocalDate;
+
+@Entity
+public class Loan {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    private LocalDate loanDate;
+
+    private LocalDate returnDate; // null이면 미반납
+
+    protected Loan() {
+    }
+
+    public Loan(Member member, Book book, LocalDate loanDate) {
+        this.member = member;
+        this.book = book;
+        this.loanDate = loanDate;
+    }
+
+    public Long getId() { return id; }
+    public Member getMember() { return member; }
+    public Book getBook() { return book; }
+    public LocalDate getLoanDate() { return loanDate; }
+    public LocalDate getReturnDate() { return returnDate; }
+}
+```
+
+**파일**: src/main/java/com/example/demo/ch07/Order.java
+
+```java
+package com.example.demo.ch07;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "orders") // ORDER는 SQL 예약어라 테이블명을 따로 지정합니다
+public class Order {
+
+    public enum OrderStatus { CREATED, PAID, CANCELLED }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    protected Order() {
+    }
+
+    public Order(OrderStatus status) {
+        this.status = status;
+    }
+
+    public Long getId() { return id; }
+    public OrderStatus getStatus() { return status; }
+}
+```
+
+#### 3. JPAQueryFactory 빈 설정
+
+Querydsl 쿼리의 중심 객체인 `JPAQueryFactory`를 빈으로 등록합니다. 조회 리포지토리들은 이 빈을 주입받아 사용합니다.
+
+**파일**: src/main/java/com/example/demo/ch07/QuerydslConfig.java
+
+```java
+package com.example.demo.ch07;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class QuerydslConfig {
+
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager em) {
+        return new JPAQueryFactory(em);
+    }
+}
+```
+
+#### 4. Q타입 생성 확인
+
+컴파일을 돌리면 `@Entity`마다 Q타입이 생성됩니다.
+
+```bash
+cd demo
+./mvnw compile
+ls target/generated-sources/annotations/com/example/demo/ch07
+```
+
+```text
+예상 결과
+QBook.java  QLoan.java  QMember.java  QOrder.java  QTeam.java
+마지막에 BUILD SUCCESS가 출력된다.
+```
+
+IntelliJ에서 Q타입에 빨간 줄이 뜨면 Maven 새로고침 후 `target/generated-sources/annotations`가 소스 루트로 잡혔는지 확인합니다. Q타입이 아예 안 생기면 7.10 끝의 "자주 나는 에러 → 원인 확인" 표를 참고합니다.
+
+> **체인 예시 실행법**: 7.5~7.10에 나오는 `queryFactory.selectFrom(...)` 체인 예시들은 그 자체로 실행하는 파일이 아니라 **발췌 스니펫**입니다. 위 실습 환경의 조회 리포지토리 메서드 안에 넣어 실행합니다 — 완성형 틀은 7.9의 `MemberQueryRepositoryImpl`입니다.
+
+---
+
 ## 7.5 Querydsl 기본 문법
 
 **🎯 목표**: Querydsl 기본 문법으로 타입 안전 쿼리를 짠다.
 
 #### 개요
 
-이 문서는 Querydsl을 처음 접하는 개발자를 위해 **가장 자주 쓰는 기본 문법**을 정리한 자료입니다. 여기서 중요한 것은 문법을 외우는 것이 아니라, JPQL과 비교했을 때 Querydsl이 왜 읽기 쉬운지 체감하는 것입니다.
+이 문서는 Querydsl을 처음 접하는 개발자를 위해 **가장 자주 쓰는 기본 문법**을 정리한 자료입니다. 여기서 중요한 것은 문법을 외우는 것이 아니라, JPQL과 비교했을 때 Querydsl이 왜 읽기 쉬운지 체감하는 것입니다. 이 절부터 나오는 `queryFactory` 체인 예시는 발췌 스니펫이라, 7.4-1 실습 환경의 조회 리포지토리 메서드 안에 넣어 실행합니다.
 
 #### 왜 중요한가
 
@@ -1101,25 +1399,42 @@ Querydsl은 문법이 어렵다기보다, 처음에 Q 타입과 메서드 체인
 
 중요한 점은 Querydsl이 SQL을 없애는 도구가 아니라, **조회 구조를 타입 안전한 코드로 표현하는 도구**라는 점입니다. 그래서 기본 문법 단계에서는 `select`, `where`, `join`, `orderBy`, `offset`, `limit`이 SQL과 어떻게 대응되는지만 정확히 잡아도 충분합니다.
 
-#### 현재 저장소 기준에서 먼저 확인할 것
+#### 실습 기준: Querydsl 도입 전의 조회 코드
 
-현재 `day_by_spring` 저장소는 Querydsl을 아직 도입하지 않았습니다. 실제 리포지토리는 Spring Data JPA 메서드 쿼리, `@Query`, `JpaSpecificationExecutor`를 사용합니다. 따라서 이 문서는 **현재 구현 설명**이 아니라 **도입 시 읽는 기본 문법**으로 받아들이는 편이 정확합니다.
+Querydsl 문법을 배우기 전에, 같은 조회가 Spring Data JPA + JPQL 문자열로는 어떤 모습인지 비교 기준을 `demo`에 만들어 둡니다(7.4-1 실습 환경이 먼저 필요합니다). 참고로 실무 저장소(`day_by_spring`)도 아직 Querydsl 없이 이 방식이 중심입니다.
+
+**파일**: src/main/java/com/example/demo/ch07/LoanRepository.java
 
 ```java
+package com.example.demo.ch07;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 public interface LoanRepository extends JpaRepository<Loan, Long>, JpaSpecificationExecutor<Loan> {
 
+    // 특정 회원의 미반납 대출 — Querydsl 도입 전의 JPQL 문자열 방식
     @Query("SELECT l FROM Loan l WHERE l.member.id = :memberId AND l.returnDate IS NULL ORDER BY l.loanDate DESC")
     List<Loan> findByMemberIdAndReturnDateIsNull(@Param("memberId") Long memberId);
+
+    // 회원·도서를 한 번에 읽는 fetch join — 7.10 페이징과 성능에서 다시 씁니다
+    @Query("SELECT l FROM Loan l JOIN FETCH l.member JOIN FETCH l.book")
+    List<Loan> findAllWithMemberAndBook();
 }
+```
+
+```bash
+./mvnw compile
 ```
 
 ```text
 예상 결과
-특정 회원의 미반납 대출 목록이 대출일 역순으로 반환된다.
-현재 저장소에서는 이런 조회 구조를 Querydsl 체인이 아니라 Spring Data JPA + JPQL 문자열로 표현하고 있다.
+BUILD SUCCESS와 함께 특정 회원의 미반납 대출을 대출일 역순으로 돌려주는 조회가 demo에 생긴다.
+Querydsl을 도입하면 같은 의도를 selectFrom, where, orderBy 체인으로 옮겨 적는다고 이해하면 된다.
 ```
-
-Querydsl을 도입하면 같은 의도를 `selectFrom`, `where`, `orderBy` 체인으로 옮겨 적는다고 이해하면 됩니다.
 
 #### 1. JPQL과 Querydsl 비교
 
@@ -1278,7 +1593,9 @@ Querydsl 기본 문법은 **SQL의 핵심 구조를 코드 기반으로 옮긴 �
 
 Spring Data JPA 공식 문서만으로도 인터페이스 기반 프로젝션, DTO 생성자 프로젝션, 동적 프로젝션, `Page`/`Slice` 조회가 가능합니다. 따라서 **DTO 조회 = 반드시 Querydsl**은 아닙니다.
 
-현재 `day_by_spring` 저장소는 Querydsl DTO 프로젝션을 사용하지 않고, 리포지토리에서 엔티티와 스칼라 값을 조회하는 구조가 중심입니다.
+참고로 실무 저장소(`day_by_spring`)는 Querydsl DTO 프로젝션 없이, 리포지토리에서 엔티티와 스칼라 값을 조회하는 구조가 중심입니다.
+
+**참고 코드** — 실무 저장소의 스칼라 조회 예시입니다. `totalAmount` 같은 임베디드 금액 타입에 기대는 코드라 `demo`에 만드는 실습 파일은 아닙니다.
 
 ```java
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -1291,7 +1608,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 ```text
 예상 결과
 주문 엔티티 목록이 아니라 취소 상태를 제외한 총 매출 합계 한 값이 반환된다.
-현재 저장소는 이런 스칼라 조회를 Spring Data JPA + JPQL로 처리하고 있다.
+실무 저장소는 이런 스칼라 조회를 Spring Data JPA + JPQL로 처리하고 있다.
 ```
 
 Querydsl 프로젝션은 조회 모델이 더 복잡해질 때 선택하는 확장 카드로 이해하는 편이 정확합니다.
@@ -1447,8 +1764,10 @@ Querydsl 프로젝션은 **필요한 데이터만 안전하게 조회해 DTO로 
 단순 조회는 JPA 메서드 쿼리로도 충분할 때가 많습니다. 하지만 조건이 늘어나고, 일부 조건만 선택적으로 들어오는 순간 코드가 급격히 복잡해집니다. 이때 Querydsl은 구조를 정리하는 데 매우 유용합니다.
 실무에서 진짜 어려운 것은 문법보다도, 조건을 어디까지 메서드로 나눌지, 어떤 조건을 검색 DTO에 묶을지, Querydsl 타입을 어느 계층까지 노출할지 판단하는 일입니다.
 
-### 현재 저장소에서 먼저 보는 축
-현재 `day_by_spring` 저장소는 Querydsl 기반 동적 조건 조합을 아직 쓰지 않지만, `BookRepository`, `MemberRepository`, `LoanRepository`가 `JpaSpecificationExecutor`를 확장하고 있습니다. 즉 동적 검색을 받아들일 진입점은 이미 Spring Data JPA 쪽에 열려 있습니다.
+### 실습 기준에서 먼저 보는 축
+`demo`에 만든 `LoanRepository`(7.5)와 곧 만들 `MemberRepository`(7.9)는 `JpaSpecificationExecutor`를 확장합니다. 즉 동적 검색을 받아들일 진입점은 이미 Spring Data JPA 쪽에 열려 있습니다. 참고로 실무 저장소(`day_by_spring`)의 `BookRepository`도 같은 모양입니다.
+
+**참고 코드** — 실무 저장소의 진입점 예시입니다.
 ```java
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 }
@@ -1456,7 +1775,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 ```text
 예상 결과
 제목, 저자, 가격, 대출 가능 여부처럼 선택적으로 들어오는 조건이 많아지면 Specification 또는 별도 조회 리포지토리로 확장할 수 있다.
-현재 저장소는 Querydsl 조건 메서드 조합까지는 가지 않았고, 동적 조회의 1차 선택지는 Spring Data JPA Specification이다.
+Querydsl 조건 메서드 조합으로 가기 전, 동적 조회의 1차 선택지는 Spring Data JPA Specification이다.
 ```
 그래서 이 문서는 **현재 구현 설명**보다는 **Querydsl 도입 시 조건 조합을 어떻게 설계할지**를 미리 배우는 장으로 읽는 편이 정확합니다.
 
@@ -1580,9 +1899,9 @@ Spring Data JPA와 Querydsl은 경쟁 관계가 아니라 역할 분담 관계�
 - Querydsl: 동적 검색, 여러 엔티티 조인, 목록 API, DTO 프로젝션, 복잡한 정렬과 페이지 조회
 기준은 단순합니다. **애그리거트의 생애주기를 다루는 작업**은 JPA 리포지토리가 맡고, **읽기 모델을 조립하는 작업**은 Querydsl 쿼리 쪽으로 보냅니다.
 
-#### 현재 저장소는 어디까지 와 있는가
+#### 참고 — 실무 저장소는 어디까지 와 있는가
 
-현재 `day_by_spring` 저장소는 이미 Spring Data JPA 구조를 적극적으로 사용하고 있습니다.
+실무 저장소(`day_by_spring`)는 이미 Spring Data JPA 구조를 적극적으로 사용하고 있습니다.
 
 - `BookRepository`, `MemberRepository`, `LoanRepository` 등이 `JpaRepository`를 확장합니다.
 - 일부 리포지토리는 `JpaSpecificationExecutor`도 함께 사용합니다.
@@ -1592,6 +1911,8 @@ Spring Data JPA와 Querydsl은 경쟁 관계가 아니라 역할 분담 관계�
 #### 2. 기본 리포지토리와 조회 전용 Fragment를 함께 둡니다
 
 Spring Data JPA 공식 문서와 실무 관점에서 보면, Querydsl을 붙일 때는 기본 리포지토리와 조회 전용 fragment를 분리하는 편이 읽기 쉽습니다.
+
+**참고 코드** — 구조 미리보기입니다. 세 타입을 실제 파일로 나눠 만드는 실습은 7.9에서 진행합니다.
 
 ```java
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberQueryRepository {
@@ -1618,7 +1939,9 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
 }
 ```
 
-이 구조는 **도입 이후의 권장 방향**입니다. 현재 저장소의 실제 구조는 아직 여기에 도달해 있지 않고, 아래에 더 가깝습니다.
+이 구조는 **도입 이후의 권장 방향**입니다. 실무 저장소의 실제 구조는 아직 여기에 도달해 있지 않고, 아래에 더 가깝습니다.
+
+**참고 코드** — 실무 저장소의 현재 단계 예시입니다.
 
 ```java
 public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecificationExecutor<Member> {
@@ -1627,7 +1950,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 }
 ```
 
-즉, 현재 저장소는 Spring Data JPA 기본 리포지토리와 메서드 쿼리, `@Query`, Specification 기반 동적 조건 쪽에 서 있고, Querydsl fragment 구조는 이후 확장안으로 보는 편이 정확합니다.
+즉, 실무 저장소는 Spring Data JPA 기본 리포지토리와 메서드 쿼리, `@Query`, Specification 기반 동적 조건 쪽에 서 있고, Querydsl fragment 구조는 이후 확장안으로 보는 편이 정확합니다.
 
 이 구조의 장점은 세 가지입니다.
 
@@ -1739,24 +2062,32 @@ Spring Data JPA와 Querydsl은 **기본 저장 작업과 복잡한 조회를 분
 
 앞 문서에서 Spring Data JPA와 Querydsl의 역할 분담을 정했다면, 이제는 그 결정을 실제 메서드와 DTO 형태로 드러내야 합니다. 책 기준으로 이 문서는 `통합 전략` 다음, `페이징과 성능` 직전의 설계 문서입니다.
 
-#### 현재 저장소 기준에서 읽는 법
+#### 실습 기준에서 읽는 법
 
-현재 `day_by_spring` 저장소는 `MemberQueryRepository` 같은 Querydsl 전용 조회 리포지토리를 아직 두지 않았습니다. 대신 Spring Data JPA 리포지토리 인터페이스 안에서 메서드 쿼리, `@Query`, `JpaSpecificationExecutor`를 섞어 사용합니다.
+먼저 조회 전용 리포지토리를 나누기 **전 단계**를 `demo`에 만듭니다. 메서드 쿼리와 `JpaSpecificationExecutor`를 한 인터페이스에 섞어 쓰는 Spring Data JPA 리포지토리입니다. (실무 저장소 `day_by_spring`도 아직 이 단계에 서 있습니다.)
+
+**파일**: src/main/java/com/example/demo/ch07/MemberRepository.java
 
 ```java
+package com.example.demo.ch07;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
 public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecificationExecutor<Member> {
 
-    List<Member> findByMembershipTypeAndNameContainingIgnoreCase(MembershipType membershipType, String name);
+    List<Member> findByMembershipTypeAndUsernameContainingIgnoreCase(Member.MembershipType membershipType, String username);
 }
 ```
 
 ```text
 예상 결과
 회원 유형과 이름 조건을 조합한 조회가 Spring Data JPA 리포지토리 한 곳에서 처리된다.
-현재 저장소는 조회 전용 리포지토리를 따로 나누기 전 단계이며, 이 문서는 조회 복잡도가 더 커졌을 때의 다음 구조를 설명한다.
+이 문서의 나머지는 조회 복잡도가 더 커졌을 때의 다음 구조를 설명한다.
 ```
 
-검색, 목록, 통계 API가 더 늘어나면 그때 Querydsl fragment 또는 조회 전용 리포지토리 분리가 자연스러운 다음 단계가 됩니다.
+검색, 목록, 통계 API가 더 늘어나면 그때 Querydsl fragment 또는 조회 전용 리포지토리 분리가 자연스러운 다음 단계가 됩니다. 아래에서 그 다음 단계를 실제 파일로 만들어 봅니다.
 
 #### 1. 조회 전용 리포지토리를 두는 이유
 
@@ -1771,7 +2102,11 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 
 조회 API 설계에서 가장 먼저 정리해야 할 것은 메서드 이름보다 데이터 형태입니다.
 
+**파일**: src/main/java/com/example/demo/ch07/MemberSearchCondition.java
+
 ```java
+package com.example.demo.ch07;
+
 public record MemberSearchCondition(
         String username,
         String teamName,
@@ -1779,6 +2114,12 @@ public record MemberSearchCondition(
         Integer ageLoe
 ) {
 }
+```
+
+**파일**: src/main/java/com/example/demo/ch07/MemberListItem.java
+
+```java
+package com.example.demo.ch07;
 
 public record MemberListItem(
         Long memberId,
@@ -1798,11 +2139,17 @@ public record MemberListItem(
 
 조회 전용 리포지토리는 `BooleanBuilder`, `JPAQuery`, `Tuple` 같은 구현 세부를 바깥으로 새기지 않는 편이 좋습니다.
 
-```java
-public interface MemberQueryRepository {
-    Page<MemberListItem> search(MemberSearchCondition condition, Pageable pageable);
+**파일**: src/main/java/com/example/demo/ch07/MemberQueryRepository.java
 
-    Optional<MemberDetailItem> findDetail(Long memberId);
+```java
+package com.example.demo.ch07;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+public interface MemberQueryRepository {
+
+    Page<MemberListItem> search(MemberSearchCondition condition, Pageable pageable);
 }
 ```
 
@@ -1811,11 +2158,30 @@ public interface MemberQueryRepository {
 - 입력은 조건 객체와 페이징 정보
 - 출력은 DTO, `Page`, `Slice`, `Optional`
 - Querydsl 타입은 구현 내부에만 존재
-이 원칙을 지키면 나중에 조회 전략이 바뀌어도 서비스와 컨트롤러 수정 범위를 줄일 수 있습니다.
+상세 조회가 필요해지면 `Optional<MemberDetailItem> findDetail(Long memberId)`처럼 응답 목적별 메서드를 추가합니다(응답 DTO도 목적별로 따로 둡니다). 이 원칙을 지키면 나중에 조회 전략이 바뀌어도 서비스와 컨트롤러 수정 범위를 줄일 수 있습니다.
 
 #### 4. 구현은 목록 API 목적에 맞게 작성합니다
 
+Q타입은 정적 필드를 static import로 가져오면 체인이 짧아집니다. 조건 메서드는 7.7에서 다룬 `BooleanExpression` 분리 방식 그대로입니다 — null을 돌려주면 `where`가 그 조건을 무시합니다.
+
+**파일**: src/main/java/com/example/demo/ch07/MemberQueryRepositoryImpl.java
+
 ```java
+package com.example.demo.ch07;
+
+import static com.example.demo.ch07.QMember.member;
+import static com.example.demo.ch07.QTeam.team;
+
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
 @Repository
 public class MemberQueryRepositoryImpl implements MemberQueryRepository {
 
@@ -1859,12 +2225,30 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
 
         return new PageImpl<>(content, pageable, total == null ? 0L : total);
     }
+
+    private BooleanExpression usernameEq(String username) {
+        return StringUtils.hasText(username) ? member.username.eq(username) : null;
+    }
+
+    private BooleanExpression teamNameEq(String teamName) {
+        return StringUtils.hasText(teamName) ? team.name.eq(teamName) : null;
+    }
+
+    private BooleanExpression ageGoe(Integer ageGoe) {
+        return ageGoe != null ? member.age.goe(ageGoe) : null;
+    }
+
+    private BooleanExpression ageLoe(Integer ageLoe) {
+        return ageLoe != null ? member.age.loe(ageLoe) : null;
+    }
 }
 ```
 
 핵심은 "Querydsl을 썼다"가 아니라 **목록 API가 필요로 하는 응답 모양과 페이징 규칙을 리포지토리 구현 안에서 완결**하는 것입니다.
 
 #### 5. 컨트롤러와 서비스는 얇게 유지합니다
+
+**참고 코드** — 컨트롤러·서비스까지 `demo`에 이어 만들어도 됩니다(Lombok은 6.1 의존성에 이미 포함). 실행 확인은 아래 테스트로 대신합니다.
 
 ```java
 @RestController
@@ -1895,6 +2279,61 @@ public class MemberQueryService {
 ```
 
 여기서 서비스는 쿼리 문장을 조립하지 않습니다. 조회 리포지토리가 읽기 모델을 담당하고, 서비스는 유스케이스 경계만 유지합니다.
+
+#### 실습: 테스트로 실행해 봅니다
+
+위에서 만든 검색 리포지토리를 `@DataJpaTest`로 돌려 봅니다. `@DataJpaTest`는 JPA 계층만 띄우는 슬라이스 테스트라 커스텀 `@Repository` 구현체를 자동으로 올리지 않으므로, `EntityManager`로 직접 조립합니다.
+
+**파일**: src/test/java/com/example/demo/ch07/MemberQueryRepositoryTest.java
+
+```java
+package com.example.demo.ch07;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+@DataJpaTest
+class MemberQueryRepositoryTest {
+
+    @Autowired
+    EntityManager em;
+
+    @Test
+    void 팀과_나이_조건으로_회원을_검색한다() {
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+        em.persist(new Member("member1", 25, teamA));
+        em.persist(new Member("member2", 40, teamA));
+
+        MemberQueryRepository repository = new MemberQueryRepositoryImpl(new JPAQueryFactory(em));
+
+        Page<MemberListItem> result = repository.search(
+                new MemberSearchCondition(null, "teamA", 20, 30),
+                PageRequest.of(0, 10));
+
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent().get(0).username()).isEqualTo("member1");
+    }
+}
+```
+
+```bash
+./mvnw test -Dtest=MemberQueryRepositoryTest
+```
+
+```text
+예상 결과
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+나이 20~30 조건에 걸리는 member1 한 명만 검색된다.
+```
 
 #### 6. 목록, 상세, 통계는 같은 방식으로 다루지 않습니다
 
@@ -1955,29 +2394,37 @@ Querydsl 조회 리포지토리 설계의 핵심은 **Querydsl을 노출하지 �
 
 앞선 문서에서 조회 문법과 리포지토리 구조를 정리했다면, 이제는 같은 조회를 **어떻게 더 적게 읽고, 더 안정적으로 페이지로 나눌지**를 결정해야 합니다. 이 문서는 `5장`의 마무리이자, 이후 API 설계를 현실로 끌어내리는 문서입니다.
 
-#### 현재 저장소에서 먼저 확인할 것
+#### 실습 기준에서 먼저 확인할 것
 
-현재 `day_by_spring` 저장소는 Querydsl 페이징을 쓰지 않고, Spring Data JPA `Pageable`과 JPQL `JOIN FETCH`를 함께 사용합니다. 따라서 이 문서는 **현재 구현 설명**이 아니라 **향후 목록 API를 Querydsl로 옮기거나 확장할 때 지켜야 할 성능 기준**으로 읽는 편이 정확합니다.
+Querydsl 페이징으로 가기 전에, 같은 페이징을 Spring Data JPA 메서드 쿼리로 표현한 비교 기준을 `demo`에 만들어 둡니다. (실무 저장소 `day_by_spring`도 아직 Querydsl 페이징 없이 `Pageable`과 JPQL `JOIN FETCH`를 함께 쓰는 단계입니다.) 따라서 이 문서는 **향후 목록 API를 Querydsl로 옮기거나 확장할 때 지켜야 할 성능 기준**으로 읽는 편이 정확합니다.
+
+**파일**: src/main/java/com/example/demo/ch07/OrderRepository.java
 
 ```java
+package com.example.demo.ch07;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
+    Page<Order> findByStatus(Order.OrderStatus status, Pageable pageable);
 }
 ```
 
 ```text
 예상 결과
 주문 상태별 목록이 페이지 단위로 조회된다.
-현재 저장소는 이 페이징을 Querydsl이 아니라 Spring Data JPA 메서드 쿼리로 처리하고 있다.
+Querydsl 도입 전에는 이 페이징을 Spring Data JPA 메서드 쿼리로 처리한다.
 ```
 
-```java
-public interface LoanRepository extends JpaRepository<Loan, Long>, JpaSpecificationExecutor<Loan> {
+fetch join 쪽 비교 기준은 7.5에서 `LoanRepository`에 이미 넣어 둔 메서드입니다.
 
-    @Query("SELECT l FROM Loan l JOIN FETCH l.member JOIN FETCH l.book")
-    List<Loan> findAllWithMemberAndBook();
-}
+```java
+// LoanRepository(7.5에서 demo에 만든 파일)에 들어 있는 fetch join 메서드
+@Query("SELECT l FROM Loan l JOIN FETCH l.member JOIN FETCH l.book")
+List<Loan> findAllWithMemberAndBook();
 ```
 
 ```text
@@ -1999,6 +2446,7 @@ List<MemberListItem> content = queryFactory
         .select(Projections.constructor(MemberListItem.class,
                 member.id,
                 member.username,
+                member.age,
                 team.name))
         .from(member)
         .leftJoin(member.team, team)
@@ -2067,6 +2515,7 @@ List<MemberListItem> content = queryFactory
         .select(Projections.constructor(MemberListItem.class,
                 member.id,
                 member.username,
+                member.age,
                 team.name))
         .from(member)
         .leftJoin(member.team, team)
@@ -2103,6 +2552,16 @@ N+1은 Querydsl 자체의 문제가 아니라 **조회 전략 문제**입니다.
 - DTO 대신 엔티티를 그대로 응답에 노출하는 것
 - `Page`가 꼭 필요하지 않은데도 습관적으로 count를 계산하는 것
 - 성능 문제를 Querydsl 문법 부족으로 오해하는 것
+#### 자주 나는 에러 → 원인 확인 (7.4-1~7.10 실습 공통)
+
+| 증상 | 원인 → 확인 |
+|------|------------|
+| 컴파일 에러 `cannot find symbol: class QMember` | Q타입 미생성 — `./mvnw compile`을 먼저 실행하고 `target/generated-sources/annotations`를 확인. IDE에서만 빨간 줄이면 이 디렉터리가 소스 루트로 잡혔는지 확인 |
+| Q타입이 `javax.persistence` 기준으로 생성되거나 엔티티를 못 찾음 | `querydsl-jpa`·`querydsl-apt` 좌표의 `jakarta` classifier 누락 — Spring Boot 3.x는 jakarta가 필수 |
+| `./mvnw compile` 후에도 annotations 디렉터리가 비어 있음 | annotation processor 미동작 — `querydsl-apt`(jakarta, provided)가 pom에 있는지 확인. 그래도 안 되면 maven-compiler-plugin의 `annotationProcessorPaths`에 `querydsl-apt`를 등록(Lombok을 쓰면 `lombok`도 함께 등록해야 함) |
+| 기동 시 `No qualifying bean of type 'JPAQueryFactory'` | `QuerydslConfig` 미작성이거나 `com.example.demo` 컴포넌트 스캔 범위 밖에 있음 |
+| 기동 시 H2 `Syntax error ... "ORDER"` | 엔티티 `Order`가 SQL 예약어와 같은 이름의 테이블로 생성됨 — `@Table(name = "orders")` 지정 확인 |
+
 #### 공식 문서
 
 - [Spring Data Commons - PageableExecutionUtils](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/support/PageableExecutionUtils.html)
