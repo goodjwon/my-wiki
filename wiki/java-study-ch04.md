@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch04]
 sources: [java-study/java-study-ch04-객체지향설계와패턴.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-03
 ---
 
 > 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
@@ -20,6 +20,8 @@ updated: 2026-06-30
 **단계**: 1단계 — Java Core · **앞 장**: [[java-study-ch03]] · **다음 장**: [[java-study-ch05]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 패턴마다 Before/After 코드를 비교하고, 4.9 실전문제로 OCP를 코드로 확인한다. 깊이: [[concept-design-patterns]].
+
+> **실습 준비** — 이 장의 실습은 [[java-study-ch01]] 1.2에서 만든 Maven/Gradle 프로젝트를 그대로 사용하고, 패턴마다 패키지 `com.example.ch04.<패턴>`을 새로 만든다. 각 절의 **Before는 참고 코드**(문제 상황 비교용)라 파일로 만들지 않고, **After만 실습 파일**로 만든다. 단, 싱글톤·옵저버·프록시(4.3~4.5)의 After는 Spring 기반이라 [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트가 필요하다 — 아직 6장 전이라면 읽기만 하고, 6장을 마친 뒤 돌아와 실행해도 된다.
 
 ---
 
@@ -41,6 +43,8 @@ updated: 2026-06-30
 
 #### Before
 
+**참고 코드** — 문제 상황 비교용입니다. 파일로 만들지 않습니다.
+
 ```java
 public class PaymentService {
     public void processPayment(String paymentMethod, int amount) {
@@ -59,28 +63,32 @@ public class PaymentService {
 
 #### After
 
+인터페이스·전략 구현체·컨텍스트를 non-public으로 한 파일에 모으고, 드라이버 `StrategyDemo`만 public으로 둡니다.
+
+**파일**: src/main/java/com/example/ch04/strategy/StrategyDemo.java
+
 ```java
-public interface PaymentStrategy {
+package com.example.ch04.strategy;
+
+interface PaymentStrategy {
     void pay(int amount);
 }
 
-public class CreditCardStrategy implements PaymentStrategy {
+class CreditCardStrategy implements PaymentStrategy {
     @Override
     public void pay(int amount) {
         System.out.println("신용카드로 " + amount + "원 결제를 처리합니다.");
     }
 }
 
-public class BankTransferStrategy implements PaymentStrategy {
+class BankTransferStrategy implements PaymentStrategy {
     @Override
     public void pay(int amount) {
         System.out.println("계좌이체로 " + amount + "원 결제를 처리합니다.");
     }
 }
-```
 
-```java
-public class PaymentContext {
+class PaymentContext {
     public void processPayment(PaymentStrategy strategy, int amount) {
         System.out.println("결제 전략: " + strategy.getClass().getSimpleName());
         System.out.println("결제를 시작합니다...");
@@ -88,9 +96,29 @@ public class PaymentContext {
     }
 }
 
-PaymentContext context = new PaymentContext();
-context.processPayment(new CreditCardStrategy(), 10000);
-context.processPayment(new BankTransferStrategy(), 20000);
+public class StrategyDemo {
+    public static void main(String[] args) {
+        PaymentContext context = new PaymentContext();
+        context.processPayment(new CreditCardStrategy(), 10000);
+        context.processPayment(new BankTransferStrategy(), 20000);
+    }
+}
+```
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch04.strategy.StrategyDemo"
+```
+
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.strategy.StrategyDemo`로 실행합니다.
+
+```text
+예상 결과
+결제 전략: CreditCardStrategy
+결제를 시작합니다...
+신용카드로 10000원 결제를 처리합니다.
+결제 전략: BankTransferStrategy
+결제를 시작합니다...
+계좌이체로 20000원 결제를 처리합니다.
 ```
 
 이제 컨텍스트는 구체 구현이 아니라 `PaymentStrategy` 인터페이스에만 의존합니다. 정책 추가는 새로운 구현 클래스를 만드는 일로 바뀝니다.
@@ -140,6 +168,9 @@ Spring에서는 DI를 통해 전략 패턴을 매우 자연스럽게 구현합�
 - 하위 클래스가 전체 흐름을 임의로 깨지 못하게 하고 싶을 때
 
 ### Before
+
+**참고 코드** — 문제 상황 비교용입니다. 파일로 만들지 않습니다 (After의 같은 이름 클래스와 겹칩니다).
+
 ```java
 public class CsvDataProcessor {
     public void process() {
@@ -162,8 +193,15 @@ public class TxtDataProcessor {
 공통 로직이 중복되므로, 조회나 저장 방식이 바뀌면 모든 구현체를 함께 수정해야 합니다.
 
 ### After
+
+골격(추상 클래스)과 하위 구현을 non-public으로 한 파일에 모으고, 드라이버 `TemplateMethodDemo`만 public으로 둡니다.
+
+**파일**: src/main/java/com/example/ch04/template/TemplateMethodDemo.java
+
 ```java
-public abstract class AbstractDataProcessor {
+package com.example.ch04.template;
+
+abstract class AbstractDataProcessor {
 
     public final void process() {
         String data = loadData();
@@ -182,21 +220,41 @@ public abstract class AbstractDataProcessor {
 
     protected abstract String transformData(String data);
 }
-```
-```java
-public class CsvDataProcessor extends AbstractDataProcessor {
+
+class CsvDataProcessor extends AbstractDataProcessor {
     @Override
     protected String transformData(String data) {
         return data.replace(",", ", ");
     }
 }
 
-public class TxtDataProcessor extends AbstractDataProcessor {
+class TxtDataProcessor extends AbstractDataProcessor {
     @Override
     protected String transformData(String data) {
         return data.replace(",", " ");
     }
 }
+
+public class TemplateMethodDemo {
+    public static void main(String[] args) {
+        new CsvDataProcessor().process();
+        new TxtDataProcessor().process();
+    }
+}
+```
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch04.template.TemplateMethodDemo"
+```
+
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.template.TemplateMethodDemo`로 실행합니다.
+
+```text
+예상 결과
+[공통] 데이터를 조회합니다.
+[저장] id, name, role
+[공통] 데이터를 조회합니다.
+[저장] id name role
 ```
 
 ### 핵심 포인트
@@ -214,7 +272,7 @@ public class TxtDataProcessor extends AbstractDataProcessor {
 - 변경 지점이 많다면 템플릿 메서드보다 전략 패턴이 더 적합할 수 있습니다.
 
 ### 실무 연결 포인트
-`JdbcTemplate`, 테스트 템플릿, 공통 배치 처리 구조처럼 “흐름은 고정하되 세부 구현만 바꾸는” 지점에서 이 패턴을 자주 볼 수 있습니다.
+`JdbcTemplate`, 테스트 템플릿, 공통 배치 처리 구조처럼 "흐름은 고정하되 세부 구현만 바꾸는" 지점에서 이 패턴을 자주 볼 수 있습니다.
 
 ### 한 줄 정리
 템플릿 메서드 패턴은 **공통 흐름은 재사용하고, 세부 단계만 교체하고 싶을 때** 사용하는 패턴입니다.
@@ -237,6 +295,9 @@ public class TxtDataProcessor extends AbstractDataProcessor {
 - 생성 규칙을 한곳에 모으고 싶을 때
 
 ### Before
+
+**참고 코드** — 문제 상황 비교용입니다. 파일로 만들지 않습니다.
+
 ```java
 public class NotificationService {
     public void sendNotification(String type, String message) {
@@ -255,42 +316,72 @@ public class NotificationService {
 생성과 사용이 한곳에 섞여 있어 새로운 타입이 추가될 때마다 기존 코드를 수정하게 됩니다.
 
 ### After
+
+인터페이스·팩토리·클라이언트를 non-public으로 한 파일에 모으고, 드라이버 `FactoryMethodDemo`만 public으로 둡니다. Before에서 쓰던 `EmailNotifier`·`SmsNotifier` 구현도 함께 넣어 실행 가능하게 만듭니다.
+
+**파일**: src/main/java/com/example/ch04/factory/FactoryMethodDemo.java
+
 ```java
-public interface Notifier {
+package com.example.ch04.factory;
+
+interface Notifier {
     void send(String message);
 }
 
-public interface NotifierFactory {
+class EmailNotifier implements Notifier {
+    @Override
+    public void send(String message) {
+        System.out.println("이메일로 " + message + " 메시지를 전송합니다.");
+    }
+}
+
+class SmsNotifier implements Notifier {
+    @Override
+    public void send(String message) {
+        System.out.println("SMS로 " + message + " 메시지를 전송합니다.");
+    }
+}
+
+interface NotifierFactory {
     Notifier createNotifier();
 }
-```
-```java
-public class EmailNotifierFactory implements NotifierFactory {
+
+class EmailNotifierFactory implements NotifierFactory {
     @Override
     public Notifier createNotifier() {
         return new EmailNotifier();
     }
 }
 
-public class SmsNotifierFactory implements NotifierFactory {
+class SmsNotifierFactory implements NotifierFactory {
     @Override
     public Notifier createNotifier() {
         return new SmsNotifier();
     }
 }
-```
-```java
-public class Client {
+
+class Client {
     public void send(NotifierFactory factory, String message) {
         Notifier notifier = factory.createNotifier();
         notifier.send(message);
     }
 }
 
-Client client = new Client();
-client.send(new EmailNotifierFactory(), "주문이 완료되었습니다.");
-client.send(new SmsNotifierFactory(), "인증번호는 1234입니다.");
+public class FactoryMethodDemo {
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.send(new EmailNotifierFactory(), "주문이 완료되었습니다.");
+        client.send(new SmsNotifierFactory(), "인증번호는 1234입니다.");
+    }
+}
 ```
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch04.factory.FactoryMethodDemo"
+```
+
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.factory.FactoryMethodDemo`로 실행합니다.
+
 ```text
 예상 결과
 이메일로 주문이 완료되었습니다. 메시지를 전송합니다.
@@ -312,7 +403,7 @@ SMS로 인증번호는 1234입니다. 메시지를 전송합니다.
 - 생성 규칙이 거의 바뀌지 않는다면 이 패턴이 불필요할 수 있습니다.
 
 ### 실무 연결 포인트
-Spring Bean 생성, 메시지 발송기 선택, 결제 클라이언트 생성, 파일 파서 선택처럼 “무엇을 생성할지”가 자주 달라지는 구간에서 유용합니다.
+Spring Bean 생성, 메시지 발송기 선택, 결제 클라이언트 생성, 파일 파서 선택처럼 "무엇을 생성할지"가 자주 달라지는 구간에서 유용합니다.
 
 ### 한 줄 정리
 팩토리 메서드 패턴은 **객체를 직접 만들지 않고 생성 책임을 분리해 결합도를 낮추는 구조**입니다.
@@ -335,6 +426,9 @@ Spring Bean 생성, 메시지 발송기 선택, 결제 클라이언트 생성, �
 - 상태를 중앙에서 관리해야 할 때
 
 ### Before
+
+**참고 코드** — 전통적인 싱글톤 구현의 원리 비교용입니다. 파일로 만들지 않습니다.
+
 ```java
 public class AppConfig {
     private static final AppConfig INSTANCE = new AppConfig();
@@ -350,7 +444,14 @@ public class AppConfig {
 원리는 단순하지만 전역 상태와 테스트 어려움이 함께 따라오기 쉽습니다.
 
 ### After
+
+Spring 기반 실습입니다 — [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트에 파일을 만들고 테스트로 확인합니다.
+
+**파일**: src/main/java/com/example/demo/ch04/singleton/SpringAppConfig.java
+
 ```java
+package com.example.demo.ch04.singleton;
+
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
@@ -363,7 +464,19 @@ public class SpringAppConfig {
     }
 }
 ```
+
+**파일**: src/test/java/com/example/demo/ch04/singleton/SpringSingletonTest.java
+
 ```java
+package com.example.demo.ch04.singleton;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+
 @SpringBootTest(classes = SpringAppConfig.class)
 class SpringSingletonTest {
 
@@ -379,6 +492,13 @@ class SpringSingletonTest {
     }
 }
 ```
+
+```bash
+./mvnw test -Dtest=SpringSingletonTest
+```
+
+Gradle이라면 `./gradlew test --tests SpringSingletonTest`로 실행합니다.
+
 ```text
 예상 결과
 SpringAppConfig Bean 초기화 완료
@@ -401,7 +521,7 @@ SpringAppConfig Bean 초기화 완료
 - 싱글톤 패턴과 Spring 싱글톤 Bean은 비슷하지만 관리 주체가 다릅니다.
 
 ### 실무 연결 포인트
-`@Service`, `@Component`, `@Repository`로 등록한 대부분의 Bean은 기본적으로 싱글톤입니다. 그래서 실무에서는 “싱글톤 패턴을 직접 짜는 법”보다 “싱글톤 Bean에서 상태를 어떻게 다뤄야 하는가”가 더 중요합니다.
+`@Service`, `@Component`, `@Repository`로 등록한 대부분의 Bean은 기본적으로 싱글톤입니다. 그래서 실무에서는 "싱글톤 패턴을 직접 짜는 법"보다 "싱글톤 Bean에서 상태를 어떻게 다뤄야 하는가"가 더 중요합니다.
 
 ### 한 줄 정리
 싱글톤 패턴은 **하나의 인스턴스를 공유하는 구조**이고, Spring은 이 개념을 컨테이너 차원에서 기본 제공한다고 이해하면 됩니다.
@@ -424,6 +544,9 @@ Spring에서는 `ApplicationEventPublisher`와 `@EventListener`를 통해 이 �
 - 기능 확장이 잦아 결합도를 낮춰야 할 때
 
 ### Before
+
+**참고 코드** — 문제 상황 비교용입니다. 파일로 만들지 않습니다.
+
 ```java
 public class OrderService {
     private final InventoryService inventoryService = new InventoryService();
@@ -439,7 +562,14 @@ public class OrderService {
 주문 후 처리 로직이 늘어날수록 `OrderService`는 점점 더 비대해지고 결합도도 높아집니다.
 
 ### After
+
+Spring 기반 실습입니다 — [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트에 파일 4개(이벤트·발행자·리스너 2개)를 만들고 테스트로 발행-구독 흐름을 확인합니다.
+
+**파일**: src/main/java/com/example/demo/ch04/observer/OrderPlacedEvent.java
+
 ```java
+package com.example.demo.ch04.observer;
+
 public class OrderPlacedEvent {
     private final String productId;
     private final String address;
@@ -458,7 +588,15 @@ public class OrderPlacedEvent {
     }
 }
 ```
+
+**파일**: src/main/java/com/example/demo/ch04/observer/OrderService.java
+
 ```java
+package com.example.demo.ch04.observer;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+
 @Service
 public class OrderService {
     private final ApplicationEventPublisher eventPublisher;
@@ -473,7 +611,15 @@ public class OrderService {
     }
 }
 ```
+
+**파일**: src/main/java/com/example/demo/ch04/observer/InventoryService.java
+
 ```java
+package com.example.demo.ch04.observer;
+
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+
 @Service
 public class InventoryService {
     @EventListener
@@ -481,6 +627,15 @@ public class InventoryService {
         System.out.println("재고 차감: " + event.getProductId());
     }
 }
+```
+
+**파일**: src/main/java/com/example/demo/ch04/observer/ShippingService.java
+
+```java
+package com.example.demo.ch04.observer;
+
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ShippingService {
@@ -490,16 +645,43 @@ public class ShippingService {
     }
 }
 ```
+
+**파일**: src/test/java/com/example/demo/ch04/observer/OrderEventTest.java
+
+```java
+package com.example.demo.ch04.observer;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class OrderEventTest {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Test
+    void orderPlacedEventTest() {
+        orderService.placeOrder("P-1001", "서울시 강남구");
+    }
+}
+```
+
+```bash
+./mvnw test -Dtest=OrderEventTest
+```
+
+Gradle이라면 `./gradlew test --tests OrderEventTest`로 실행합니다.
+
 ```text
 예상 결과
---- 주문 처리를 시작합니다 ---
-주문이 성공적으로 완료되었습니다.
->> 'OrderPlacedEvent'를 발행합니다...
-[재고] OrderPlacedEvent 수신 -> 상품 재고 차감
-[배송] OrderPlacedEvent 수신 -> 배송 준비
-[쿠폰] OrderPlacedEvent 수신 -> 후속 보상 처리
+주문 완료
+재고 차감: P-1001
+배송 준비: 서울시 강남구
 ```
-이 순서에서 중요한 점은 주문 서비스가 후속 작업을 직접 호출하지 않아도, 이벤트 발행 뒤에 여러 처리기가 느슨하게 반응할 수 있다는 점입니다.
+
+이 순서에서 중요한 점은 주문 서비스가 후속 작업을 직접 호출하지 않아도, 이벤트 발행 뒤에 여러 처리기가 느슨하게 반응할 수 있다는 점입니다. 리스너를 하나 더 추가해도(예: 쿠폰 발급) `OrderService`는 그대로입니다.
 
 ### 핵심 포인트
 - 발행자는 이벤트만 발행합니다.
@@ -517,7 +699,7 @@ public class ShippingService {
 - 모든 후처리를 이벤트로 빼면 디버깅이 어려워질 수 있습니다.
 
 ### 실무 연결 포인트
-주문 완료 후 알림, 재고 차감, 포인트 적립, 감사 로그 저장처럼 “한 사건 뒤에 여러 후속 작업이 이어지는” 상황에서 효과적입니다. 회원가입 이후 이메일 발송, SMS 발송, 추천인 처리, 슬랙 알림이 차례로 붙는 구조도 같은 문제이며, 이 경우에도 서비스 본문은 이벤트 발행에만 집중하고 후처리는 개별 리스너로 분리하는 편이 훨씬 안정적입니다.
+주문 완료 후 알림, 재고 차감, 포인트 적립, 감사 로그 저장처럼 "한 사건 뒤에 여러 후속 작업이 이어지는" 상황에서 효과적입니다. 회원가입 이후 이메일 발송, SMS 발송, 추천인 처리, 슬랙 알림이 차례로 붙는 구조도 같은 문제이며, 이 경우에도 서비스 본문은 이벤트 발행에만 집중하고 후처리는 개별 리스너로 분리하는 편이 훨씬 안정적입니다.
 
 ### 한 줄 정리
 옵저버 패턴은 **상태 변화를 여러 처리로 느슨하게 연결하는 구조**이며, Spring 이벤트 모델은 이를 구현하는 좋은 도구입니다.
@@ -540,6 +722,9 @@ Spring AOP, 트랜잭션, 보안, 지연 로딩은 모두 이 프록시 개념�
 - 실제 객체 생성을 지연하고 싶을 때
 
 ### Before
+
+**참고 코드** — 문제 상황 비교용입니다. 파일로 만들지 않습니다 (After의 `EventService`와 겹칩니다).
+
 ```java
 public class EventService {
     public void processEvent(String eventName) {
@@ -561,12 +746,33 @@ public class EventService {
 공통 관심사인 실행 시간 측정이 비즈니스 코드 안에 직접 들어가 있습니다.
 
 ### After
+
+Spring 기반 실습입니다 — [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트를 사용합니다. 먼저 pom.xml의 `<dependencies>`에 AOP 스타터를 추가합니다:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+```
+
+포인트컷은 실습 패키지를 가리켜야 어드바이스가 적용됩니다 (`@Aspect` 빈 자신은 프록시 대상에서 제외됩니다).
+
+**파일**: src/main/java/com/example/demo/ch04/proxy/PerformanceAspect.java
+
 ```java
+package com.example.demo.ch04.proxy;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
 @Aspect
 @Component
 public class PerformanceAspect {
 
-    @Around("execution(* com.example.service..*(..))")
+    @Around("execution(* com.example.demo.ch04.proxy..*(..))")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         try {
@@ -579,7 +785,14 @@ public class PerformanceAspect {
     }
 }
 ```
+
+**파일**: src/main/java/com/example/demo/ch04/proxy/EventService.java
+
 ```java
+package com.example.demo.ch04.proxy;
+
+import org.springframework.stereotype.Service;
+
 @Service
 public class EventService {
     public void processEvent(String eventName) {
@@ -593,6 +806,35 @@ public class EventService {
     }
 }
 ```
+
+**파일**: src/test/java/com/example/demo/ch04/proxy/ProxyAspectTest.java
+
+```java
+package com.example.demo.ch04.proxy;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ProxyAspectTest {
+
+    @Autowired
+    private EventService eventService;
+
+    @Test
+    void measureExecutionTime() {
+        eventService.processEvent("order-created");
+    }
+}
+```
+
+```bash
+./mvnw test -Dtest=ProxyAspectTest
+```
+
+Gradle이라면 `./gradlew test --tests ProxyAspectTest`로 실행합니다.
+
 ```text
 예상 결과
 이벤트 처리 시작: order-created
@@ -639,6 +881,9 @@ EventService.processEvent(..) 실행 시간: 약 1000ms
 - 기존 코드를 최대한 바꾸지 않고 확장하고 싶을 때
 
 ### Before
+
+**참고 코드** — 문제 상황 비교용입니다. 파일로 만들지 않습니다 (필요한 클래스는 After 실습 파일에 포함됩니다).
+
 ```java
 interface DataProcessor {
     void processData();
@@ -670,8 +915,25 @@ public class DataService {
 클라이언트가 구체 타입을 모두 알아야 하므로 구조가 쉽게 경직됩니다.
 
 ### After
+
+Before의 표준 인터페이스 `DataProcessor`와 외부 라이브러리 역할인 `NewJsonLibrary`를 non-public으로 함께 담고, 드라이버 `AdapterDemo`만 public으로 둡니다.
+
+**파일**: src/main/java/com/example/ch04/adapter/AdapterDemo.java
+
 ```java
-public class JsonAdapter implements DataProcessor {
+package com.example.ch04.adapter;
+
+interface DataProcessor {
+    void processData();
+}
+
+class NewJsonLibrary {
+    public void parseAndRunJson(String jsonData) {
+        System.out.println("JSON 데이터를 처리합니다: " + jsonData);
+    }
+}
+
+class JsonAdapter implements DataProcessor {
     private final NewJsonLibrary newJsonLibrary;
     private final String jsonData;
 
@@ -685,22 +947,33 @@ public class JsonAdapter implements DataProcessor {
         newJsonLibrary.parseAndRunJson(jsonData);
     }
 }
-```
-```java
-public class DataService {
+
+class DataService {
     public void process(DataProcessor processor) {
         processor.processData();
     }
 }
 
-DataService service = new DataService();
-service.process(new JsonAdapter(new NewJsonLibrary(), "{\"name\":\"Kim\"}"));
+public class AdapterDemo {
+    public static void main(String[] args) {
+        DataService service = new DataService();
+        service.process(new JsonAdapter(new NewJsonLibrary(), "{\"name\":\"Kim\"}"));
+    }
+}
 ```
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch04.adapter.AdapterDemo"
+```
+
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.adapter.AdapterDemo`로 실행합니다.
+
 ```text
 예상 결과
-[어댑터 작동] 표준 processData() 호출을 -> newJsonLibrary.parseAndRunJson()으로 변환합니다.
-새로운 라이브러리로 JSON 데이터를 처리합니다: {"name":"Kim"}
+JSON 데이터를 처리합니다: {"name":"Kim"}
 ```
+
+클라이언트(`DataService`)는 표준 `processData()`만 호출했지만, 어댑터가 이를 `parseAndRunJson()` 호출로 변환해 외부 라이브러리가 실행됩니다.
 
 ### 핵심 포인트
 - 기존 표준 인터페이스는 그대로 유지합니다.
@@ -740,6 +1013,9 @@ Spring MVC의 `HandlerAdapter`, 외부 API 클라이언트를 감싸는 래퍼, 
 - 복잡한 호출 절차를 단순한 진입점으로 감싸고 싶을 때
 
 ### Before
+
+**참고 코드** — 문제 상황 비교용입니다. 파일로 만들지 않습니다 (After의 `OrderClient`와 겹칩니다).
+
 ```java
 public class OrderClient {
     private final InventoryService inventoryService = new InventoryService();
@@ -758,8 +1034,39 @@ public class OrderClient {
 클라이언트가 서브시스템의 세부 절차를 모두 알아야 하므로 변경 영향이 커집니다.
 
 ### After
+
+서브시스템 4개(재고·결제·배송·알림)와 파사드·클라이언트를 non-public으로 한 파일에 모으고, 드라이버 `FacadeDemo`만 public으로 둡니다. 예상 결과의 출력을 내도록 서브시스템 구현을 최소로 채웠습니다.
+
+**파일**: src/main/java/com/example/ch04/facade/FacadeDemo.java
+
 ```java
-public class OrderFacade {
+package com.example.ch04.facade;
+
+class InventoryService {
+    public void checkStock(String item) {
+        System.out.println("재고 확인: " + item);
+    }
+}
+
+class PaymentService {
+    public void processPayment(String user) {
+        System.out.println("결제 처리: " + user);
+    }
+}
+
+class ShippingService {
+    public void arrangeShipping(String address) {
+        System.out.println("배송 준비: " + address);
+    }
+}
+
+class NotificationService {
+    public void sendNotification(String user) {
+        System.out.println("알림 발송: " + user);
+    }
+}
+
+class OrderFacade {
     private final InventoryService inventoryService = new InventoryService();
     private final PaymentService paymentService = new PaymentService();
     private final ShippingService shippingService = new ShippingService();
@@ -772,16 +1079,28 @@ public class OrderFacade {
         notificationService.sendNotification(user);
     }
 }
-```
-```java
-public class OrderClient {
+
+class OrderClient {
     private final OrderFacade orderFacade = new OrderFacade();
 
     public void placeOrder() {
         orderFacade.placeOrder("노트북", "홍길동", "서울시 강남구");
     }
 }
+
+public class FacadeDemo {
+    public static void main(String[] args) {
+        new OrderClient().placeOrder();
+    }
+}
 ```
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch04.facade.FacadeDemo"
+```
+
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.facade.FacadeDemo`로 실행합니다.
+
 ```text
 예상 결과
 재고 확인: 노트북
@@ -806,7 +1125,7 @@ public class OrderClient {
 - 모든 조합 로직을 무조건 파사드로 모으는 것은 좋은 설계가 아닙니다.
 
 ### 실무 연결 포인트
-복합 서비스 조합, 외부 시스템 연계 흐름, 결제-재고-배송 묶음 처리처럼 “단일 진입점이 있으면 더 읽기 쉬워지는” 영역에서 효과적입니다.
+복합 서비스 조합, 외부 시스템 연계 흐름, 결제-재고-배송 묶음 처리처럼 "단일 진입점이 있으면 더 읽기 쉬워지는" 영역에서 효과적입니다.
 
 ### 한 줄 정리
 파사드 패턴은 **복잡한 내부 구조를 감추고, 바깥에는 단순한 사용 지점을 제공하는 구조**입니다.
@@ -932,3 +1251,17 @@ public class NotificationService {
 
 ### 한 줄 정리
 전략 패턴 연습 문제의 핵심은 분기문을 줄이는 것이 아니라, 바뀌는 행위를 독립된 객체로 분리하는 판단력을 기르는 데 있습니다.
+
+---
+
+## 자주 나는 에러 → 원인
+
+실습 중 막히면 아래부터 확인합니다.
+
+| 증상 | 원인 확인 |
+|------|----------|
+| `mvn exec:java`에서 `ClassNotFoundException` | `compile` 없이 실행하지 않았는지 (`mvn compile exec:java`), `-Dexec.mainClass`의 패키지 경로 오타가 없는지 확인합니다. |
+| `duplicate class` / 클래스 중복 컴파일 에러 | Before 참고 코드까지 파일로 만들지 않았는지, 패턴마다 패키지(`com.example.ch04.<패턴>`)를 분리했는지 확인합니다. |
+| `package com.example.ch04... does not exist` | 파일 위치가 리드인 경로와 일치하는지 (`src/main/java` 아래 패키지 디렉터리 구조) 확인합니다. |
+| Spring 실습(4.3~4.5)에서 `NoSuchBeanDefinitionException` | 파일을 `demo` 프로젝트의 `com.example.demo` 하위 패키지에 두었는지 확인합니다 — 밖에 두면 컴포넌트 스캔에서 빠집니다. |
+| 4.5에서 실행 시간 로그가 안 찍힘 | `spring-boot-starter-aop` 의존성을 추가했는지, `@Around` 포인트컷 패키지가 실제 패키지와 일치하는지 확인합니다. |
