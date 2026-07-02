@@ -132,7 +132,8 @@ updated: 2026-07-02
 
 ### 다음 세션 최우선 (Pending)
 
-- [x] ~~**톤앤매너 정합 실행**~~ (2026-07-02 완료) — [[plan-tone-consistency]] 프롬프트 A→B×6→C→후속 3파일까지 전 단계 실행. §7 문체 표준 명문화 + scripts/style-lint.sh 게이트 신작. ch01·05·06·07·08·09 **전체 6개 파일 style-lint 위반 0건** 달성(커밋 13개). 적대적 검수 REJECT 4건 전부 반영(범위 내 2건 즉시 수정 + 범위 밖 4건도 후속 배치로 이어서 처리). ch07 원노트 파편은 사용자 결정("완결 문장 목록으로 정리")에 따라 "추가로 설계해볼 수 있는 시나리오 아이디어" 불릿 목록으로 재작성. **배포 미실행**(사용자 결정 대기).
+- [x] ~~**톤앤매너 정합 실행**~~ (2026-07-02 완료, 배포 완료) — [[plan-tone-consistency]] 프롬프트 A→B×6→C→후속 3파일까지 전 단계 실행. §7 문체 표준 명문화 + scripts/style-lint.sh 게이트 신작. ch01·05·06·07·08·09 **전체 6개 파일 style-lint 위반 0건** 달성. 적대적 검수 REJECT 4건 전부 반영. ch07 원노트 파편은 사용자 결정("완결 문장 목록으로 정리")에 따라 재작성.
+  - **후속 확장 (2026-07-02 완료)**: 사용자가 guide-java-learning-path를 "군대식"이라 지적 → §7-1 재검토 후 **guide-*·concept-*·entity-*도 한다체→합니다체로 통일**(기존엔 챕터만 합니다체). 58개 파일(guide 15+concept 17+entity 15+표준문서 1) 8개씩 병렬 배치로 전환, 전부 style-lint 통과. 챕터 6개+이 58개 총 64개 파일 위반 0건. **커밋 8개 + push + Firebase 배포 완료**(`wiki.wonslab.dev` 라이브 확인).
 - [x] ~~**위키 본문 글쓰기 스타일 1차 일괄 점검·개선**~~ (2026-06-27 완료) — 비유 괄호 매핑·명사구 단편을 자연어 완결 문장 + 매핑 분리 문단으로 재작성. 규칙: 메모리 `feedback-wiki-writing-style`.
   - **1차 13편 완료** (에이전트 13병렬, ch6은 직전 세션 시연 완료): lecture-object ch4·ch5·ch7·ch9·ch12·ch13·ch15·appendixA·appendixC + lecture-clean-code ch4·ch6 + lecture-tdd ch4·ch11. 각 1건씩.
   - **2차 확장 후보 (남음)**: 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring-and-review 의 도입·비유 산문 부분. 다음 세션에 같은 방식(에이전트 병렬)으로 진행 가능.
