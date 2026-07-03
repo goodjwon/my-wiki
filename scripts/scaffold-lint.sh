@@ -7,6 +7,8 @@
 #      java 펜스의 package 선언·public 클래스명 정합
 #   ② 리드인이 붙은 java 펜스 안에 public 최상위 타입이 2개 이상이면 위반
 #   ③ 어디서든 `public class Main` 이면 위반 (드라이버 Main 금지 — 퀴즈는 non-public 허용)
+#   ④ java 파일 리드인이 있는 h2 절(## N.M)에는 실행 명령 bash 블록과 `예상 결과` 펜스가
+#      최소 1개씩 있어야 함 (절 대표 1회 방식 허용 — 예제마다 요구하지 않음)
 #
 # 사용법: bash scripts/scaffold-lint.sh <wiki/파일.md> [...]
 set -uo pipefail
@@ -112,6 +114,42 @@ for fname in sys.argv[1:]:
             print(f"  [한 블록에 public 타입 {len(publics)}개] L{fence_at+1} ({names}) — 블록 분리 필요")
             violations += 1
         i = end + 1
+
+    # ④ h2 절 단위 — java 리드인 있는 절에 실행 명령 bash + 예상 결과 존재 검사
+    RUN_CMD_RE = re.compile(r'(^|\s)(mvn|\./mvnw|mvnw\.cmd|\./gradlew|gradlew\.bat|gradle|javac|java)(\s|$)')
+    sections = []   # (제목, 시작, 끝)
+    starts = [(idx, l) for idx, l in enumerate(lines) if l.startswith('## ')]
+    for si, (idx, title) in enumerate(starts):
+        end_idx = starts[si + 1][0] if si + 1 < len(starts) else len(lines)
+        sections.append((title.strip('# ').strip(), idx, end_idx))
+    for title, s, e in sections:
+        has_java_leadin = False
+        has_run = False
+        has_expected = False
+        j = s
+        while j < e:
+            st = lines[j].strip()
+            for pat in LEADIN_PATTERNS:
+                lm = pat.match(st)
+                if lm and lm.group(1).strip().endswith('.java'):
+                    has_java_leadin = True
+            if st.startswith('```bash'):
+                b, endb = parse_fence(lines, j)
+                if any(RUN_CMD_RE.search(x) for x in b):
+                    has_run = True
+                j = endb
+            elif st.startswith('```text'):
+                b, endb = parse_fence(lines, j)
+                if b and b[0].strip() == '예상 결과':
+                    has_expected = True
+                j = endb
+            j += 1
+        if has_java_leadin and not has_run:
+            print(f"  [절에 실행 명령 없음] '{title}' — java 실습 예제가 있는데 실행 bash 블록이 없음")
+            violations += 1
+        if has_java_leadin and not has_expected:
+            print(f"  [절에 예상 결과 없음] '{title}' — java 실습 예제가 있는데 예상 결과 펜스가 없음")
+            violations += 1
 
     # ③ public class Main 전역 검사 (java 펜스 안)
     i = 0
