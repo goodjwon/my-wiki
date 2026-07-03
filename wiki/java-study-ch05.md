@@ -281,8 +281,8 @@ Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 �
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -452,8 +452,8 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 ## 5.3 파일 읽기와 쓰기 기초
@@ -682,8 +682,8 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력과 `output.txt` 생성 여부를 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"` — 추가할 때마다 다시 실행해 출력과 `output.txt` 생성 여부를 확인합니다.
 
 
 #### 정리
@@ -850,8 +850,8 @@ CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라.
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 파싱 결과를 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"` — 추가할 때마다 다시 실행해 파싱 결과를 확인합니다.
 
 
 #### 정리

@@ -229,8 +229,8 @@ Spring Boot 프로젝트를 실행하면 아래 현상이 모두 JVM과 연결�
             }
         }
         ```
-    3. **실행** — `javac HelloJvmDemo.java && java HelloJvmDemo`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `javac HelloJvmDemo.java && java HelloJvmDemo` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -720,6 +720,6 @@ java -XX:MaxGCPauseMillis=200 \
             }
         }
         ```
-    3. **실행** — `javac GcLogDemo.java && java -Xmx64m -verbose:gc GcLogDemo`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 GC 로그가 어떻게 달라지는지 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `javac GcLogDemo.java && java -Xmx64m -verbose:gc GcLogDemo` — 추가할 때마다 다시 실행해 GC 로그가 어떻게 달라지는지 확인합니다.
 

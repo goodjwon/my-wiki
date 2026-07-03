@@ -302,8 +302,8 @@ Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/ja
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch04.template.practice.BeverageDemo"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch04.template.practice.BeverageDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 ## 4.2 팩토리 메서드 패턴
@@ -453,8 +453,8 @@ Spring Bean 생성, 메시지 발송기 선택, 결제 클라이언트 생성, �
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch04.factory.practice.ShapeFactoryDemo"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch04.factory.practice.ShapeFactoryDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 ## 4.3 싱글톤 패턴
@@ -609,8 +609,8 @@ SpringAppConfig Bean 초기화 완료
             }
         }
         ```
-    3. **실행** — `./mvnw test -Dtest=AppSettingsTest`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 결과를 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `./mvnw test -Dtest=AppSettingsTest` — 추가할 때마다 다시 실행해 결과를 확인합니다.
 
 
 ## 4.4 옵저버 패턴
@@ -811,8 +811,8 @@ Gradle이라면 `./gradlew test --tests OrderEventTest`로 실행합니다.
             }
         }
         ```
-    3. **실행** — `./mvnw test -Dtest=OrderEventTest`
-    4. **하나씩 추가** — 주석의 과제를 구현하고 다시 실행해, 세 구독자 출력이 모두 나오는지 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 구현합니다.
+    4. **실행·확인** — `./mvnw test -Dtest=OrderEventTest` — 다시 실행해, 세 구독자 출력이 모두 나오는지 확인합니다.
 
 
 ## 4.5 프록시 패턴
@@ -995,8 +995,8 @@ EventService.processEvent(..) 실행 시간: 약 1000ms
             // 2) proceed() 호출 전에 "호출 시작: " + 시그니처, 호출 후에 "호출 종료" 로그 출력
         }
         ```
-    3. **실행** — `./mvnw test -Dtest=ProxyAspectTest`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 로그가 찍히는지 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `./mvnw test -Dtest=ProxyAspectTest` — 추가할 때마다 다시 실행해 로그가 찍히는지 확인합니다.
 
 
 ## 4.6 어댑터 패턴

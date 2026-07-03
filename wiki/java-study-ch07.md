@@ -1642,8 +1642,8 @@ List<Member> result = queryFactory
             }
         }
         ```
-    3. **실행** — `./mvnw test -Dtest=LoanQuerydslTest`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 테스트 통과를 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `./mvnw test -Dtest=LoanQuerydslTest` — 추가할 때마다 다시 실행해 테스트 통과를 확인합니다.
 
 
 #### 정리
@@ -2520,8 +2520,8 @@ class MemberQueryRepositoryTest {
             // 2) 인터페이스 메서드 구현 — 위 MemberQueryRepositoryImpl 처럼 selectFrom-where 체인으로
         }
         ```
-    3. **실행** — `./mvnw compile` — BUILD SUCCESS를 확인합니다.
-    4. **하나씩 추가** — 주석의 과제 1)·2)를 함께 구현한 뒤 다시 컴파일해 통과를 확인합니다.
+    3. **하나씩 구현** — 주석의 과제 1)·2)를 함께 구현합니다.
+    4. **실행·확인** — `./mvnw compile` — BUILD SUCCESS를 확인합니다. — 다시 컴파일해 통과를 확인합니다.
 
 
 #### 정리

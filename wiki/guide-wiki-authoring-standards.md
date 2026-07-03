@@ -414,8 +414,8 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
         }
         ```
 
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 ````
 
 수정형 과제는 뼈대 없이 단계만 씁니다: `1. **파일 열기** — 위 \`EncapsulationDemo.java\`(2.4)` / `2. **수정** — …` / `3. **재실행** — 위 절의 실행 명령 재사용`. 박스 단계 문장은 합니다체입니다(직접 해보기 과제 문장의 하라체 예외는 박스 밖 과제 문장에만 적용).

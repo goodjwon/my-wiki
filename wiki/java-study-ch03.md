@@ -355,8 +355,8 @@ public static void printNumbers(List<? extends Number> numbers) {
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -604,8 +604,8 @@ Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -864,8 +864,8 @@ class FileNode {
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -1038,8 +1038,8 @@ List<String> result = names.stream()
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리

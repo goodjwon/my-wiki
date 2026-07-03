@@ -189,8 +189,8 @@ int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -502,8 +502,8 @@ String result = builder.toString();
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.ArrayStatsPractice"`
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.ArrayStatsPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리

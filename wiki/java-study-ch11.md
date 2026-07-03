@@ -834,8 +834,8 @@ try {
             }
         }
         ```
-    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch11.RaceConditionDemo"` (이 프로젝트에는 mvnw 래퍼가 없습니다)
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 최종 값을 비교합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch11.RaceConditionDemo"` (이 프로젝트에는 mvnw 래퍼가 없습니다) — 추가할 때마다 다시 실행해 최종 값을 비교합니다.
 
 
 ## 11.17 포트폴리오 예제

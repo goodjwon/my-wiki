@@ -236,8 +236,8 @@ class LoanRepositoryTest {
             }
         }
         ```
-    3. **실행** — `./mvnw test -Dtest=PingControllerTest` (Gradle이라면 `./gradlew test --tests "*PingControllerTest"`) — 테스트 1개가 통과하는지 확인합니다.
-    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 통과 여부를 확인합니다.
+    3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
+    4. **실행·확인** — `./mvnw test -Dtest=PingControllerTest` (Gradle이라면 `./gradlew test --tests "*PingControllerTest"`) — 테스트 1개가 통과하는지 확인합니다. — 추가할 때마다 다시 실행해 통과 여부를 확인합니다.
 
 
 #### 정리
