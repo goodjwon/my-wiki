@@ -33,7 +33,7 @@ updated: 2026-07-03
 이 문서는 Java와 객체지향 기초를 마친 독자가 Spring 프로젝트로 넘어가기 전에 잡아야 할 공통 개념을 정리한 본문 가이드입니다. 뒤 장에서 환경 구성, 데이터 접근, 보안, 테스트를 각각 다루기 전에, 여기서 IoC, DI, Bean, MVC, 프록시 같은 핵심 축을 먼저 연결합니다.
 
 ### 1. IoC와 DI는 무엇이 다른가
-`IoC`는 객체 생성과 연결의 제어권을 코드 바깥으로 넘기는 관점이고, `DI`는 그 제어를 실제 코드에서 구현하는 대표적인 방법입니다.
+`IoC`는 객체 생성과 연결의 제어권을 코드 바깥으로 넘기는 관점이고, `DI`는 그 제어를 실제 코드에서 구현하는 대표적인 방법입니다. (참고 코드 — 생성자 주입 형태를 보여주는 개념 예시입니다.)
 ```java
 @Service
 public class OrderService {
@@ -56,7 +56,7 @@ Spring에서는 필드 주입도 가능하지만, 기본값은 생성자 주입�
 즉 Spring을 배우는 핵심은 어노테이션을 많이 외우는 것이 아니라, **객체 그래프를 명시적으로 설계하는 감각**을 익히는 데 있습니다.
 
 ### 3. Bean과 컨테이너는 어떻게 보나
-`@Component`, `@Service`, `@Repository`, `@Controller`로 등록된 객체는 보통 Spring 컨테이너가 관리하는 `Bean`입니다.
+`@Component`, `@Service`, `@Repository`, `@Controller`로 등록된 객체는 보통 Spring 컨테이너가 관리하는 `Bean`입니다. (참고 코드 — Bean 등록을 보여주는 개념 예시입니다.)
 ```java
 @Service
 public class BookService {

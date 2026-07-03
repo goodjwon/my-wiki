@@ -1025,7 +1025,7 @@ Querydsl은 단순 문법보다, **어디에 조회 로직을 둘 것인가**와
 
 #### 프로젝트 구성에서 먼저 확인할 것
 
-Spring Boot 3.x와 Jakarta 환경에서는 Querydsl 의존성도 그 기준에 맞춰야 합니다.
+Spring Boot 3.x 이상의 Jakarta 환경에서는 Querydsl 의존성도 그 기준에 맞춰야 합니다.
 
 ```xml
 <dependency>
@@ -1093,7 +1093,7 @@ Querydsl 입문의 핵심은 `문법`보다, **복잡한 조회를 어떤 구조
 
 #### 1. 의존성 추가 — pom.xml
 
-Spring Boot 3.x는 `javax`가 아니라 `jakarta` 네임스페이스를 쓰므로, Querydsl 좌표에도 **`jakarta` classifier가 필수**입니다. `demo`의 `pom.xml`에서 `<properties>`에 버전 프로퍼티를, `<dependencies>`에 두 좌표를 추가합니다.
+Spring Boot 3.x 이상(현재 start.spring.io 생성물은 4.x)은 `javax`가 아니라 `jakarta` 네임스페이스를 쓰므로, Querydsl 좌표에도 **`jakarta` classifier가 필수**입니다. `demo`의 `pom.xml`에서 `<properties>`에 버전 프로퍼티를, `<dependencies>`에 두 좌표를 추가합니다.
 
 **파일**: pom.xml (기존 내용에 추가)
 
@@ -1121,7 +1121,29 @@ Spring Boot 3.x는 `javax`가 아니라 `jakarta` 네임스페이스를 쓰므�
 </dependencies>
 ```
 
-`querydsl-apt`의 `jakarta` classifier jar는 JPA 애너테이션 프로세서가 서비스 파일로 등록된 단일 jar라서, 별도 플러그인 설정 없이 `compile` 단계에서 Q타입이 생성됩니다. Gradle 프로젝트라면 아래처럼 씁니다.
+의존성만으로는 끝나지 않습니다. 현재 start.spring.io 생성물은 Lombok을 포함하면 `maven-compiler-plugin`에 `annotationProcessorPaths`가 이미 명시되어 있는데, **이 설정이 있으면 classpath의 애너테이션 프로세서 자동 발견이 꺼져서** `querydsl-apt`가 실행되지 않고 Q타입이 생성되지 않습니다. 그래서 `annotationProcessorPaths`에 `querydsl-apt`를 함께 등록하는 것이 **필수 단계**입니다. `<build>`의 `maven-compiler-plugin` 설정에서 기존 Lombok 경로 옆에 추가합니다.
+
+**파일**: pom.xml (`<build>` → `maven-compiler-plugin`의 기존 `annotationProcessorPaths`에 추가)
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+        <annotationProcessorPaths>
+            <!-- 기존 lombok path는 그대로 두고 아래를 추가 -->
+            <path>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-apt</artifactId>
+                <version>${querydsl.version}</version>
+                <classifier>jakarta</classifier>
+            </path>
+        </annotationProcessorPaths>
+    </configuration>
+</plugin>
+```
+
+Lombok 없이 생성해서 `annotationProcessorPaths` 자체가 없는 pom이라면 자동 발견이 살아 있어 이 단계를 건너뛸 수 있지만, 나중에 Lombok을 추가하는 순간 Q타입 생성이 조용히 멈추므로 처음부터 명시해 두는 편이 안전합니다. Gradle 프로젝트라면 아래처럼 씁니다.
 
 ```groovy
 // build.gradle — Gradle 대안
@@ -1689,6 +1711,8 @@ List<UserDto> result = queryFactory
 DTO 필드명과 엔티티 필드명이 다르면 `as()`로 맞춰줘야 합니다.
 
 #### 5. `@QueryProjection`
+
+**참고 코드** — `@QueryProjection`을 붙인 DTO의 형태 예시입니다. 실제로 쓰려면 컴파일 후 생성되는 `QMemberDto`까지 필요합니다.
 
 ```java
 public class MemberDto {
@@ -2465,6 +2489,20 @@ Long total = queryFactory
 
 content 쿼리는 화면에 필요한 데이터를 읽는 데 집중하고, count 쿼리는 전체 개수 계산에만 집중해야 합니다.
 
+이 content/count 분리 구조는 7.9에서 `demo`에 만든 `MemberQueryRepositoryImpl.search()`에 이미 들어 있으므로, 같은 테스트로 실행을 확인합니다.
+
+```bash
+cd demo
+./mvnw test -Dtest=MemberQueryRepositoryTest
+```
+
+```text
+예상 결과
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+테스트 로그의 SQL에서 content 조회(select ... offset/limit)와 count 조회(select count(...))가
+각각 별도 쿼리로 실행된 것을 확인할 수 있다.
+```
+
 #### 2. count 쿼리는 복사본이 아니라 별도 설계입니다
 
 실무에서 가장 흔한 실수는 content 쿼리를 거의 그대로 복사해서 count 쿼리를 만드는 것입니다. 하지만 count 쿼리에는 보통 아래가 불필요합니다.
@@ -2557,8 +2595,8 @@ N+1은 Querydsl 자체의 문제가 아니라 **조회 전략 문제**입니다.
 | 증상 | 원인 → 확인 |
 |------|------------|
 | 컴파일 에러 `cannot find symbol: class QMember` | Q타입 미생성 — `./mvnw compile`을 먼저 실행하고 `target/generated-sources/annotations`를 확인. IDE에서만 빨간 줄이면 이 디렉터리가 소스 루트로 잡혔는지 확인 |
-| Q타입이 `javax.persistence` 기준으로 생성되거나 엔티티를 못 찾음 | `querydsl-jpa`·`querydsl-apt` 좌표의 `jakarta` classifier 누락 — Spring Boot 3.x는 jakarta가 필수 |
-| `./mvnw compile` 후에도 annotations 디렉터리가 비어 있음 | annotation processor 미동작 — `querydsl-apt`(jakarta, provided)가 pom에 있는지 확인. 그래도 안 되면 maven-compiler-plugin의 `annotationProcessorPaths`에 `querydsl-apt`를 등록(Lombok을 쓰면 `lombok`도 함께 등록해야 함) |
+| Q타입이 `javax.persistence` 기준으로 생성되거나 엔티티를 못 찾음 | `querydsl-jpa`·`querydsl-apt` 좌표의 `jakarta` classifier 누락 — Spring Boot 3.x 이상은 jakarta가 필수 |
+| `./mvnw compile` 후에도 annotations 디렉터리가 비어 있음 | 7.4-1의 필수 단계인 maven-compiler-plugin `annotationProcessorPaths`의 `querydsl-apt`(jakarta) 등록을 빠뜨림 — Lombok 경로만 있으면 프로세서 자동 발견이 꺼져 querydsl-apt가 실행되지 않음. `querydsl-apt`(jakarta, provided) 의존성 자체가 pom에 있는지도 함께 확인 |
 | 기동 시 `No qualifying bean of type 'JPAQueryFactory'` | `QuerydslConfig` 미작성이거나 `com.example.demo` 컴포넌트 스캔 범위 밖에 있음 |
 | 기동 시 H2 `Syntax error ... "ORDER"` | 엔티티 `Order`가 SQL 예약어와 같은 이름의 테이블로 생성됨 — `@Table(name = "orders")` 지정 확인 |
 
