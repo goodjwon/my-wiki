@@ -394,16 +394,31 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 
 **실행 명령 표준형**: 프로젝트는 Maven 우선(`./mvnw compile exec:java -Dexec.mainClass="..."`, 테스트는 `./mvnw test -Dtest=...`) + Gradle 대안 병기, 단일 파일은 `javac`/`java`.
 
-**✏️ 직접 해보기도 실습 안내 필수**: 과제 한 문장만 던지지 않습니다. 과제 문장(~하라) 뒤에 **`!!! example "실습 위치·실행"` 콜아웃 박스**로 ① 작업 파일(본문 예제 수정이면 그 파일명, 새로 만들면 경로 — 예: `src/main/java/com/example/ch02/practice/…` + 첫 줄 package) ② 실행·확인 명령을 라벨 행으로 안내합니다. 박스 안 코드는 인라인 코드로 씁니다(§2-5 — 들여쓴 코드펜스 금지):
+**✏️ 직접 해보기도 실습 안내 필수**: 과제 한 문장만 던지지 않습니다. 규칙 3가지 — ① 프로젝트는 대명사("1.2에서 만든 프로젝트") 대신 **이름을 명시**합니다(Core는 `hello-java`, Spring은 `demo`). ② **`!!! example "실습 순서"` 콜아웃**에 파일 생성부터 번호 단계로 안내합니다. ③ 신규 파일형 과제는 **main을 포함한 클래스 뼈대 전체**를 "뼈대 입력" 단계 바로 아래 **박스 안 코드블록**(단계 들여쓰기에 맞춰 8칸)으로 제시하고, 과제 항목을 main 안 번호 주석으로 두어 **하나씩 구현→재실행→출력 확인**이 되게 합니다(뼈대만으로도 컴파일·실행돼야 함). 박스 안 코드블록은 admonition 문법상 들여쓰기가 필수이므로 §2-5 top-level 규칙의 **유일한 예외**입니다:
 
-```markdown
-!!! example "실습 위치·실행"
+````markdown
+!!! example "실습 순서"
 
-    - **파일**: `src/main/java/com/example/ch02/practice/TypePractice.java` — 첫 줄 `package com.example.ch02.practice;`
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"`
-```
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch02/practice/TypePractice.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
-수정형 과제는 `- **파일**: 위 \`EncapsulationDemo.java\`(2.4)를 수정` / `- **실행**: 위 절의 실행 명령 재사용` 형태로 씁니다.
+        ```java
+        package com.example.ch02.practice;
+
+        public class TypePractice {
+            public static void main(String[] args) {
+                // 1) int·double·String 변수를 선언하고 출력한다
+                // 2) (int) 형 변환 결과를 출력한다
+                // 3) ==와 equals 비교 결과를 출력한다
+            }
+        }
+        ```
+
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+````
+
+수정형 과제는 뼈대 없이 단계만 씁니다: `1. **파일 열기** — 위 \`EncapsulationDemo.java\`(2.4)` / `2. **수정** — …` / `3. **재실행** — 위 절의 실행 명령 재사용`. 박스 단계 문장은 합니다체입니다(직접 해보기 과제 문장의 하라체 예외는 박스 밖 과제 문장에만 적용).
 
 **막혔을 때 참고 (자족성)**: 긴 실습 절 끝에는 "자주 나는 에러 → 원인 확인" 부기를 둡니다. 외부 저장소(완성본) 없이 **문서만으로 막힘에서 복구**할 수 있어야 합니다.
 

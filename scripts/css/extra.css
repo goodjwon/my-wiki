@@ -19,3 +19,9 @@
 .md-sidebar--secondary {
   display: none !important;
 }
+
+/* admonition(콜아웃 박스) 글자 크기 — Material 기본(.64rem)이 본문보다 작아 확대 */
+.md-typeset .admonition,
+.md-typeset details {
+  font-size: .8rem;
+}

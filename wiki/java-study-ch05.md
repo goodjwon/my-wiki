@@ -265,10 +265,25 @@ try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
 
 Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/exceptions/ExceptionKindsDemo.java`로 새로 작성
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"`
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/exceptions/ExceptionKindsDemo.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch05.exceptions;
+
+        public class ExceptionKindsDemo {
+            public static void main(String[] args) {
+                // 1) Checked — new FileReader("없는파일.txt") 를 try-catch로 감싸 IOException 처리 (컴파일러가 처리를 강제)
+                // 2) Unchecked — Integer.parseInt("abc") 로 NumberFormatException을 발생시키고 try-catch로 처리
+                // 3) 2)의 try-catch를 지우고 컴파일해 보기 — Unchecked는 처리하지 않아도 컴파일이 되는지 확인
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+
 
 #### 정리
 
@@ -421,10 +436,25 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
 
 도메인 규칙 위반을 표현하는 사용자 정의 예외를 만들어 던져 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/exceptions/CustomExceptionDemo.java`로 새로 작성 — 예외 클래스는 non-public으로 같은 파일에
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"`
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/exceptions/CustomExceptionDemo.java`를 만듭니다. 예외 클래스는 non-public으로 같은 파일에 둡니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch05.exceptions;
+
+        public class CustomExceptionDemo {
+            public static void main(String[] args) {
+                // 1) non-public class InsufficientBalanceException extends RuntimeException — 메시지를 받는 생성자 추가
+                // 2) withdraw(int balance, int amount) — 잔액보다 큰 금액이면 위 예외를 던지는 메서드 작성
+                // 3) 잔액 초과 출금을 try-catch로 잡아 예외 메시지 출력
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+
 
 ## 5.3 파일 읽기와 쓰기 기초
 
@@ -636,10 +666,25 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 
 텍스트 파일을 한 줄씩 읽어 출력하고 새 파일에 써 보라(자원 자동 닫기).
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/fileio/FileReadWriteDemo.java`로 새로 작성 — 읽을 텍스트 파일은 프로젝트 루트에
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"` — 새 파일이 생기는지 확인
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/fileio/FileReadWriteDemo.java`를 만들고, 읽을 `input.txt`(아무 텍스트 몇 줄)를 프로젝트 루트에 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch05.fileio;
+
+        public class FileReadWriteDemo {
+            public static void main(String[] args) {
+                // 1) try-with-resources + BufferedReader 로 input.txt 를 한 줄씩 읽어 출력
+                // 2) try-with-resources + BufferedWriter 로 읽은 줄을 output.txt 에 쓰기
+                // 3) input.txt 를 지우고 실행해 IOException 이 어떻게 나는지 확인
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력과 `output.txt` 생성 여부를 확인합니다.
+
 
 #### 정리
 
@@ -788,10 +833,26 @@ class Person implements Serializable {
 
 CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/formats/CsvLineParseDemo.java`로 새로 작성
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"` — 파싱 결과 확인
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/formats/CsvLineParseDemo.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch05.formats;
+
+        public class CsvLineParseDemo {
+            public static void main(String[] args) {
+                String line = "1,alice,alice@example.com";
+                // 1) line.split(",") 으로 세 필드를 분리해 출력
+                // 2) non-public record User(int id, String name, String email) 를 만들어 파싱 결과를 담기
+                // 3) 필드가 3개가 아니면 IllegalArgumentException 을 던지고, 잘못된 줄로 확인
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 파싱 결과를 확인합니다.
+
 
 #### 정리
 
@@ -1088,10 +1149,12 @@ nc 127.0.0.1 8888          # Mac/Linux
 
 에코 서버와 클라이언트를 만들어 한 줄을 주고받은 뒤, 보내는 메시지나 응답 형식을 바꿔 다시 실행해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 위 `EchoServer.java`·`EchoClient.java`를 작업 디렉터리에 단일 파일로 작성
-    - **실행**: 위 절의 실행 명령 재사용 — 터미널 두 개에서 주고받기
+    1. **파일 작성** — 프로젝트 없이, 빈 작업 디렉터리에 위 `EchoServer.java`·`EchoClient.java`(5.5)를 단일 파일로 저장합니다.
+    2. **실행** — 위 절의 명령 재사용: 터미널 1에서 `javac EchoServer.java` 후 `java EchoServer`, 터미널 2에서 `javac EchoClient.java` 후 `java EchoClient`로 한 줄을 주고받습니다.
+    3. **수정** — 클라이언트가 보내는 메시지나 서버 응답 형식(예: `echo:` 대신 대문자 변환)을 바꿉니다.
+    4. **재실행** — 바꾼 파일을 다시 컴파일해 두 터미널에서 실행하고, 달라진 응답을 확인합니다.
 
 ## 5.6 JDBC 기초
 
@@ -1408,10 +1471,12 @@ java  -cp ".;h2-2.2.224.jar" JdbcExample      # Windows — 구분자 ;
 
 JDBC로 연결해 SELECT 결과를 출력한 뒤, INSERT 데이터나 WHERE 조건을 바꿔 다시 실행해 결과가 달라지는지 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 위 `JdbcExample.java`를 작업 디렉터리에 단일 파일로 작성
-    - **실행**: 위 절의 실행 명령 재사용 — `javac -cp h2-2.2.224.jar ...`
+    1. **파일 작성** — 프로젝트 없이, `h2-2.2.224.jar`가 있는 작업 디렉터리에 위 `JdbcExample.java`(5.6)를 단일 파일로 저장합니다.
+    2. **실행** — 위 절의 명령 재사용: `javac -cp h2-2.2.224.jar JdbcExample.java` 후 OS에 맞는 `java -cp` 명령으로 SELECT 결과를 확인합니다.
+    3. **수정** — INSERT 데이터를 한 줄 더 넣거나 SELECT에 WHERE 조건을 추가합니다.
+    4. **재실행** — 다시 컴파일·실행해 출력 행이 달라지는지 확인합니다.
 
 ## 5.7 파일 처리 설계 실습
 

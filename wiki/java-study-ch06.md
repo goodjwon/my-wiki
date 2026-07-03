@@ -107,10 +107,46 @@ Spring 핵심 개념의 핵심은 **어노테이션 이름**보다, **객체 생
 
 두 클래스를 생성자 주입으로 연결한 빈을 만들어 컨테이너가 주입하는지 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 6.1에서 만드는 `demo` 프로젝트 `src/main/java/com/example/demo/ch06/di/` 아래 `@Component` 두 개를 생성자 주입으로 연결해 작성 — 아직 프로젝트가 없으면 6.1을 먼저 진행
-    - **실행**: `./mvnw spring-boot:run` — 생성자 안에 넣은 출력이 시작 로그에 찍히는지 확인
+    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/com/example/demo/ch06/di/MessageProvider.java`와 `src/main/java/com/example/demo/ch06/di/MessageClient.java`를 만듭니다. 아직 `demo` 프로젝트가 없으면 6.1을 먼저 진행합니다.
+    2. **뼈대 입력** — 아래 뼈대 두 개를 그대로 입력합니다.
+
+        **파일**: `src/main/java/com/example/demo/ch06/di/MessageProvider.java`
+
+        ```java
+        package com.example.demo.ch06.di;
+
+        import org.springframework.stereotype.Component;
+
+        @Component
+        public class MessageProvider {
+            // 1) getMessage() — "DI가 연결한 메시지" 문자열을 반환하는 메서드 추가
+        }
+        ```
+
+        **파일**: `src/main/java/com/example/demo/ch06/di/MessageClient.java`
+
+        ```java
+        package com.example.demo.ch06.di;
+
+        import org.springframework.stereotype.Component;
+
+        @Component
+        public class MessageClient {
+
+            private final MessageProvider messageProvider;
+
+            public MessageClient(MessageProvider messageProvider) {
+                this.messageProvider = messageProvider;
+                System.out.println("MessageClient 생성 — 주입 확인");
+                // 2) messageProvider.getMessage() 결과를 출력해 주입된 빈이 동작하는지 확인
+            }
+        }
+        ```
+    3. **실행** — `./mvnw spring-boot:run` — 시작 로그에 "MessageClient 생성 — 주입 확인"이 찍히는지 확인합니다.
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+
 
 ## 6.1 Spring 실습 환경 구성 가이드
 
@@ -300,10 +336,11 @@ curl -i http://localhost:8080/
 
 Spring Initializr로 프로젝트를 만들어 내장 톰캣으로 실행해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 위 6.1 절차대로 start.spring.io에서 `demo` 프로젝트 생성
-    - **실행**: 프로젝트 루트에서 `./mvnw spring-boot:run` — 시작 로그에서 Tomcat이 8080 포트로 뜨는지 확인
+    1. **프로젝트 생성** — 위 6.1 절차대로 start.spring.io에서 `demo` 프로젝트를 만들어 내려받고 압축을 풉니다.
+    2. **실행** — `demo` 프로젝트 루트에서 `./mvnw spring-boot:run`
+    3. **확인** — 시작 로그에서 Tomcat이 8080 포트로 뜨는지 확인합니다.
 
 ## 6.2 Maven 환경 구성과 프로젝트 전환
 
@@ -510,10 +547,11 @@ mvn package
 
 `pom.xml`에 의존성을 하나 추가하고 빌드해 적용되는지 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: `demo` 프로젝트의 `pom.xml`을 수정 — 의존성(예: `spring-boot-starter-validation`) 추가
-    - **실행**: `./mvnw clean compile` — 새 라이브러리가 내려받아지는지 확인
+    1. **파일 열기** — `demo` 프로젝트의 `pom.xml`을 엽니다.
+    2. **수정** — `<dependencies>` 안에 의존성(예: `spring-boot-starter-validation`)을 추가합니다.
+    3. **재실행** — `./mvnw clean compile` — 새 라이브러리가 내려받아지는지 로그에서 확인합니다.
 
 #### 정리
 
@@ -816,10 +854,11 @@ The following 1 profile is active: "<지정한 프로파일>"
 
 프로파일마다 `server.port`를 다르게 지정해(`h2`는 8080, `dev-pg`는 8081) 실행 로그에서 포트가 프로파일에 따라 바뀌는지 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: `demo` 프로젝트의 위 `application-h2.yml`·`application-dev-pg.yml`을 수정 — `server.port` 추가
-    - **실행**: `./mvnw spring-boot:run -Dspring-boot.run.profiles=h2` 등 — 프로파일을 바꿔가며 실행
+    1. **파일 열기** — `demo` 프로젝트의 위 `application-h2.yml`·`application-dev-pg.yml`(6.3)을 엽니다.
+    2. **수정** — `application-h2.yml`에 `server.port: 8080`, `application-dev-pg.yml`에 `server.port: 8081`을 추가합니다.
+    3. **재실행** — `./mvnw spring-boot:run -Dspring-boot.run.profiles=h2` 와 `-Dspring-boot.run.profiles=dev-pg`로 바꿔가며 실행해, 시작 로그의 포트가 프로파일에 따라 바뀌는지 확인합니다.
 
 ### 정리
 프로파일 설정의 핵심은 이름을 외우는 데 있지 않습니다. **내 프로젝트가 어떤 프로파일 파일을 가지고 있고, 그 프로파일이 DB·로그·DDL 전략을 어떻게 바꾸는지**를 정확히 읽는 데 있습니다. 이 절에서 `demo`에 만든 `h2`, `dev-my`, `dev-pg`, `prod`가 그 기준선입니다.

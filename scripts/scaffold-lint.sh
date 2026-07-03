@@ -35,16 +35,19 @@ PUBLIC_MAIN_RE = re.compile(r'^public\s+(?:final\s+|abstract\s+)*class\s+Main\b'
 total = 0
 
 def parse_fence(lines, start):
-    """start = 펜스 여는 줄 인덱스. (내용 줄 리스트, 끝 인덱스) 반환."""
-    open_line = lines[start]
+    """start = 펜스 여는 줄 인덱스. (내용 줄 리스트, 끝 인덱스) 반환.
+    admonition 안 들여쓴 펜스도 지원 — 열고 닫는 줄 strip 판정, 본문은 펜스 들여쓰기만큼 디덴트."""
+    raw_open = lines[start]
+    indent = len(raw_open) - len(raw_open.lstrip(' '))
+    open_line = raw_open.strip()
     ticks = len(open_line) - len(open_line.lstrip('`'))
     body = []
     i = start + 1
     while i < len(lines):
-        stripped = lines[i].rstrip()
+        stripped = lines[i].strip()
         if stripped.startswith('`' * max(ticks, 3)) and set(stripped) <= {'`'}:
             return body, i
-        body.append(lines[i])
+        body.append(lines[i][indent:] if lines[i][:indent].strip() == '' else lines[i])
         i += 1
     return body, i
 
@@ -128,12 +131,15 @@ for fname in sys.argv[1:]:
         has_java_leadin = False
         has_run = False
         has_expected = False
+        in_practice = False   # ✏️ 직접 해보기 블록의 뼈대 리드인은 절 요건(④)에서 제외
         j = s
         while j < e:
             st = lines[j].strip()
+            if st.startswith('#'):
+                in_practice = '✏️' in st
             for pat in LEADIN_PATTERNS:
                 lm = pat.match(st)
-                if lm and lm.group(1).strip().endswith('.java'):
+                if lm and lm.group(1).strip().endswith('.java') and not in_practice:
                     has_java_leadin = True
             if st.startswith('```bash'):
                 b, endb = parse_fence(lines, j)

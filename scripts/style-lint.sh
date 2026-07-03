@@ -20,7 +20,7 @@ strip_noise() {
     NR == 1 && /^---$/ { infm = 1; next }
     infm && /^---$/ { infm = 0; next }
     infm { next }
-    /^`{3,}/ { infence = !infence; next }
+    /^[[:space:]]*`{3,}/ { infence = !infence; next }
     infence { next }
     { print NR ":" $0 }
   ' "$1"

@@ -339,10 +339,25 @@ public static void printNumbers(List<? extends Number> numbers) {
 
 같은 데이터를 List·Set·Map에 각각 담아 중복 처리와 조회 방식의 차이를 출력으로 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionComparePractice.java` 새로 생성 — 첫 줄 `package com.example.ch03.practice;`
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"`
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionComparePractice.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch03.practice;
+
+        public class CollectionComparePractice {
+            public static void main(String[] args) {
+                // 1) 중복이 있는 문자열 데이터를 List에 담아 그대로 출력한다
+                // 2) 같은 데이터를 Set에 담아 중복이 사라지는지 출력한다
+                // 3) 같은 데이터를 Map(값 → 등장 횟수)에 담아 key로 조회해 출력한다
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+
 
 #### 정리
 
@@ -573,10 +588,25 @@ Message 2
 
 Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/WordCountPractice.java` 새로 생성
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"`
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/WordCountPractice.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch03.practice;
+
+        public class WordCountPractice {
+            public static void main(String[] args) {
+                // 1) 공백이 든 문장 문자열을 선언하고 split(" ")으로 단어 배열을 만들어 출력한다
+                // 2) Map<String, Integer>에 단어별 등장 횟수를 누적한다
+                // 3) Map 전체를 출력해 단어별 빈도수를 확인한다
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+
 
 #### 정리
 
@@ -818,10 +848,25 @@ class FileNode {
 
 "순서 유지"·"중복 제거"·"빠른 key 조회" 세 요구에 각각 맞는 컬렉션을 고르고 이유를 적어 보라. 답은 메모로 충분하지만, 코드로 검증하고 싶다면 세 요구를 각각 작은 코드로 확인해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: (코드 검증 시) `src/main/java/com/example/ch03/practice/CollectionChoicePractice.java` 새로 생성
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"`
+    1. **파일 생성** — (코드로 검증하는 경우) `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionChoicePractice.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch03.practice;
+
+        public class CollectionChoicePractice {
+            public static void main(String[] args) {
+                // 1) "순서 유지" — 고른 컬렉션에 데이터를 넣고 넣은 순서대로 나오는지 출력한다
+                // 2) "중복 제거" — 고른 컬렉션에 중복 데이터를 넣고 개수를 출력한다
+                // 3) "빠른 key 조회" — 고른 컬렉션에서 key로 값을 꺼내 출력한다
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+
 
 #### 정리
 
@@ -977,10 +1022,25 @@ List<String> result = names.stream()
 
 정수 리스트에서 짝수만 골라 제곱한 합을 구하는 코드를 for문과 스트림 두 방식으로 짜 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/EvenSquareSumPractice.java` 새로 생성
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"`
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/EvenSquareSumPractice.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch03.practice;
+
+        public class EvenSquareSumPractice {
+            public static void main(String[] args) {
+                // 1) 정수 리스트를 선언한다 (예: 1~10)
+                // 2) for문으로 짝수만 골라 제곱한 합을 구해 출력한다
+                // 3) 스트림(filter·map·sum)으로 같은 결과를 구해 출력한다
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"`
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 출력을 확인합니다.
+
 
 #### 정리
 
@@ -1263,12 +1323,13 @@ while (!queue.isEmpty()) {
 
 ### ✏️ 직접 해보기
 
-선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라. 두 예제에 비교 횟수를 세는 카운터 변수를 추가해 출력하고, 다시 실행해 결과를 비교해 보라.
+선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 위 `LinearSearchDemo.java`와 `BinarySearchDemo.java`를 수정
-    - **실행**: 이 절의 실행 명령 재사용 — `-Dexec.mainClass` 값만 각 Demo 클래스로 변경
+    1. **파일 열기** — 위 `LinearSearchDemo.java`(3.7)와 `BinarySearchDemo.java`(3.7)
+    2. **수정** — 두 예제에 비교 횟수를 세는 카운터 변수를 추가하고, 탐색 결과와 함께 출력하게 고칩니다.
+    3. **재실행** — 이 절(3.7)의 실행 명령 재사용 — `-Dexec.mainClass` 값만 각 Demo 클래스로 변경해 두 결과를 비교합니다.
 
 #### 정리
 

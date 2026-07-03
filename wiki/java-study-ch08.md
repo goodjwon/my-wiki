@@ -257,12 +257,14 @@ chmod +x $CATALINA_HOME/bin/*.sh
 
 ### ✏️ 직접 해보기
 
-내장 톰캣 포트를 9090으로 바꿔 실행해 보라. 로그에 `Tomcat started on port(s): 9090`이 찍히고 `curl -i http://localhost:9090/`이 응답하는지 확인하라.
+내장 톰캣 포트를 9090으로 바꿔 실행해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch06 6.1에서 만든 `demo` 프로젝트의 `src/main/resources/application.properties` — `server.port=9090` 추가
-    - **실행**: 위 4.1의 `./mvnw spring-boot:run`
+    1. **파일 열기** — ch06 6.1에서 만든 `demo` 프로젝트의 `src/main/resources/application.properties`를 엽니다.
+    2. **수정** — `server.port=9090` 한 줄을 추가합니다.
+    3. **재실행** — 위 4.1의 `./mvnw spring-boot:run`으로 다시 실행합니다.
+    4. **확인** — 로그에 `Tomcat started on port(s): 9090`이 찍히는지 보고, 새 터미널에서 `curl -i http://localhost:9090/`이 응답하는지 확인합니다.
 
 ## 8.1 Spring Security 인증 흐름
 
@@ -463,12 +465,36 @@ JWT 기반 요청도 결국 아래 순서로 흘러갑니다.
 
 ### ✏️ 직접 해보기
 
-폼 로그인을 설정해 인증된 사용자만 특정 URL에 접근하게 하라. `formLogin()`과 URL별 인가 규칙을 설정한 뒤, 브라우저에서 보호 URL에 접근했을 때 로그인 페이지로 이동하는지(curl이라면 `curl -i`로 302 응답인지) 확인하라.
+폼 로그인을 설정해 인증된 사용자만 특정 URL에 접근하게 하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch06 6.1의 `demo` 프로젝트 — `pom.xml`에 `spring-boot-starter-security` 의존성 추가, 새 파일 `src/main/java/com/example/demo/config/SecurityConfig.java` (첫 줄 `package com.example.demo.config;`)
-    - **실행**: `./mvnw spring-boot:run`
+    1. **의존성 추가** — ch06 6.1에서 만든 `demo` 프로젝트의 `pom.xml`에 `spring-boot-starter-security` 의존성을 추가합니다.
+    2. **파일 생성** — `src/main/java/com/example/demo/config/SecurityConfig.java`를 만듭니다.
+    3. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.demo.config;
+
+        import org.springframework.context.annotation.Bean;
+        import org.springframework.context.annotation.Configuration;
+        import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+        import org.springframework.security.web.SecurityFilterChain;
+
+        @Configuration
+        public class SecurityConfig {
+
+            @Bean
+            public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                // 1) formLogin() 활성화
+                // 2) URL별 인가 규칙 — 보호 URL은 authenticated(), 나머지는 permitAll()
+                return http.build();
+            }
+        }
+        ```
+    4. **실행** — `./mvnw spring-boot:run` (뼈대만으로도 기동됩니다)
+    5. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 브라우저에서 보호 URL에 접근했을 때 로그인 페이지로 이동하는지(curl이라면 `curl -i`로 302 응답인지) 확인합니다.
+
 
 #### 정리
 
@@ -884,12 +910,41 @@ Spring Security에서도 직접 JWT를 파싱하는 커스텀 필터 구조를 �
 
 ### ✏️ 직접 해보기
 
-로그인 시 JWT를 발급하고, 요청 헤더의 토큰을 검증하는 필터를 만들어 보라. 위 "실제로 해보기"의 전제처럼 인증 API 골격(로그인 엔드포인트·SecurityConfig)이 갖춰진 프로젝트가 있다면 거기에, 없다면 ch06 6.1의 `demo`에 만들어 위 참고 코드를 완성하라.
+로그인 시 JWT를 발급하고, 요청 헤더의 토큰을 검증하는 필터를 만들어 위 참고 코드를 완성해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 새 파일 `src/main/java/com/example/demo/security/JwtAuthenticationFilter.java` (첫 줄 `package com.example.demo.security;`) — `demo`에 새로 시작한다면 jjwt 의존성과 `jwt.secret` 설정(위 전제 박스 참고)을 먼저 추가
-    - **실행**: 완성했다면 위 curl 왕복(로그인 → 토큰 → 보호 API)으로 확인
+    1. **프로젝트 준비** — 위 "실제로 해보기"의 전제처럼 인증 API 골격(로그인 엔드포인트·`SecurityConfig`)이 갖춰진 프로젝트가 있다면 거기서 시작합니다. 없다면 ch06 6.1에서 만든 `demo` 프로젝트에 jjwt 의존성과 `jwt.secret` 설정(위 전제 박스 참고)을 먼저 추가합니다.
+    2. **파일 생성** — `src/main/java/com/example/demo/security/JwtAuthenticationFilter.java`를 만듭니다.
+    3. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다. (뼈대는 검증 없이 통과만 시키므로 컴파일·기동에 지장이 없습니다)
+
+        ```java
+        package com.example.demo.security;
+
+        import jakarta.servlet.FilterChain;
+        import jakarta.servlet.ServletException;
+        import jakarta.servlet.http.HttpServletRequest;
+        import jakarta.servlet.http.HttpServletResponse;
+        import org.springframework.web.filter.OncePerRequestFilter;
+
+        import java.io.IOException;
+
+        public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+            @Override
+            protected void doFilterInternal(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain filterChain) throws ServletException, IOException {
+                // 1) Authorization 헤더에서 "Bearer " 접두사를 떼고 토큰 추출
+                // 2) 토큰 검증 (위 참고 코드의 JwtTokenProvider 활용)
+                // 3) 검증 성공 시 Authentication 생성 → SecurityContextHolder에 저장
+                filterChain.doFilter(request, response);
+            }
+        }
+        ```
+    4. **실행** — `./mvnw spring-boot:run`
+    5. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 완성하면 위 curl 왕복(로그인 → 토큰 → 보호 API)으로 확인합니다.
+
 
 #### 정리
 

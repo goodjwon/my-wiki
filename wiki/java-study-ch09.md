@@ -184,12 +184,61 @@ class LoanRepositoryTest {
 
 ### ✏️ 직접 해보기
 
-`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. 테스트할 컨트롤러가 없다면 간단한 GET 엔드포인트를 먼저 만들고, 테스트를 작성해 통과 여부를 확인하라.
+`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch06 6.1의 `demo` 프로젝트 — 테스트는 `src/test/java/com/example/demo/practice/PingControllerTest.java`(첫 줄 `package com.example.demo.practice;`), 컨트롤러가 없다면 `src/main/java/com/example/demo/practice/PingController.java`를 먼저 생성
-    - **실행**: 위 `./mvnw test -Dtest`(또는 `./gradlew test --tests`)로 그 클래스만 실행
+    1. **파일 생성** — ch06 6.1에서 만든 `demo` 프로젝트에 컨트롤러 `src/main/java/com/example/demo/practice/PingController.java`와 테스트 `src/test/java/com/example/demo/practice/PingControllerTest.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 두 뼈대를 그대로 입력합니다.
+
+        **파일**: `src/main/java/com/example/demo/practice/PingController.java`
+
+        ```java
+        package com.example.demo.practice;
+
+        import org.springframework.web.bind.annotation.GetMapping;
+        import org.springframework.web.bind.annotation.RestController;
+
+        @RestController
+        public class PingController {
+
+            @GetMapping("/ping")
+            public String ping() {
+                return "pong";
+            }
+        }
+        ```
+
+        **파일**: `src/test/java/com/example/demo/practice/PingControllerTest.java`
+
+        ```java
+        package com.example.demo.practice;
+
+        import org.junit.jupiter.api.Test;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+        import org.springframework.test.web.servlet.MockMvc;
+
+        import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+        @WebMvcTest(PingController.class)
+        class PingControllerTest {
+
+            @Autowired
+            MockMvc mockMvc;
+
+            @Test
+            void ping_returns_200() throws Exception {
+                mockMvc.perform(get("/ping")).andExpect(status().isOk());
+                // 1) 응답 바디가 "pong"인지 content().string(...)으로 함께 검증
+                // 2) 없는 경로 GET /nope 가 404인지 새 @Test 메서드로 검증
+            }
+        }
+        ```
+    3. **실행** — `./mvnw test -Dtest=PingControllerTest` (Gradle이라면 `./gradlew test --tests "*PingControllerTest"`) — 테스트 1개가 통과하는지 확인합니다.
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 통과 여부를 확인합니다.
+
 
 #### 정리
 
@@ -661,9 +710,11 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 
 ### ✏️ 직접 해보기
 
-실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라. 위 예시처럼 목적·요청·기대 상태 코드를 함께 기록하며 확인하라.
+실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch06 6.1의 `demo` 프로젝트 — GET·POST를 받을 엔드포인트가 없다면 `src/main/java/com/example/demo/practice/`에 간단한 컨트롤러를 먼저 추가
-    - **실행**: `./mvnw spring-boot:run`으로 띄운 뒤 새 터미널에서 `curl` 요청
+    1. **파일 열기** — ch06 6.1에서 만든 `demo` 프로젝트의 `src/main/java/com/example/demo/practice/PingController.java`(9.1 실습에서 생성)를 엽니다. 없다면 9.1 실습 순서대로 먼저 만듭니다.
+    2. **수정** — POST를 받을 메서드를 추가합니다. 예: `@PostMapping("/echo")` + `@RequestBody String body`를 그대로 반환.
+    3. **실행** — `./mvnw spring-boot:run`으로 서버를 띄웁니다.
+    4. **요청** — 새 터미널에서 `curl -i http://localhost:8080/ping`(GET)과 `curl -i -X POST http://localhost:8080/echo -H "Content-Type: text/plain" -d "hello"`(POST)를 보내고, 위 7번 형식처럼 목적·요청·기대 상태 코드를 함께 기록합니다.

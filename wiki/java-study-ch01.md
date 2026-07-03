@@ -109,10 +109,21 @@ updated: 2026-07-03
 
 JDK를 설치하고 IDE에서 새 프로젝트를 만들어 `main` 메서드를 실행해 보라. 마지막으로 터미널에서 `java -version`·`javac -version`이 정상 출력되는지도 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: IntelliJ의 *New Project*로 아무 작업 디렉터리(예: `~/hello-check`)에 새 프로젝트 생성
-    - **실행**: IDE 실행 버튼 — 콘솔 출력이 찍히는지 확인
+    1. **프로젝트 생성** — IntelliJ의 *New Project*로 아무 작업 디렉터리(예: `~/hello-check`)에 새 프로젝트를 만듭니다.
+    2. **파일 생성** — 프로젝트의 `src` 디렉터리에 `HelloCheck.java`를 만들고 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        public class HelloCheck {
+            public static void main(String[] args) {
+                // 1) 아무 문장이나 출력해 콘솔 출력이 찍히는지 확인한다
+            }
+        }
+        ```
+
+    3. **실행** — IDE 실행 버튼(▶)으로 실행해 콘솔 출력을 확인합니다.
+    4. **마무리 확인** — 터미널에서 `java -version`·`javac -version`이 정상 출력되는지 확인합니다.
 
 ### 정리
 개발 환경과 계정 준비는 단순한 사전 작업이 아니라, 이후 학습과 협업 흐름을 결정하는 기반입니다. 한 번만 정리해두면 다음 문서들을 훨씬 적은 마찰로 따라갈 수 있습니다.
@@ -243,10 +254,11 @@ Hello world!
 
 Hello World를 `javac`로 컴파일하고 `java`로 실행한 뒤, 생성된 `.class` 파일을 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 위 5번에서 만든 `~/hello-first` 디렉터리의 `HelloJava.java`를 그대로 사용
-    - **실행**: 위 실행 명령(`javac`·`java`) 재사용 — `.class` 파일은 같은 디렉터리에서 `ls`(Windows는 `dir`)로 확인
+    1. **파일 준비** — 위 5번에서 만든 `~/hello-first` 디렉터리의 `HelloJava.java`를 그대로 사용합니다.
+    2. **컴파일·실행** — 파일이 있는 디렉터리에서 위 실행 명령(`javac HelloJava.java` → `java HelloJava`)을 재사용합니다.
+    3. **확인** — 같은 디렉터리에서 `ls`(Windows는 `dir`)로 `HelloJava.class` 생성을 확인합니다.
 
 #### 정리
 
@@ -410,10 +422,12 @@ git commit -m "chore: 첫 Java 프로젝트 셋업"
 
 Maven **또는** Gradle 중 하나로 `hello-java` 프로젝트를 만들고, `App.java`가 콘솔에 문장을 출력하도록 고친 뒤 **빌드→실행**을 명령으로 한 바퀴 돌려라. 그다음 `.gitignore`를 만들고 첫 커밋까지 남겨라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 위 2번으로 생성된 `src/main/java/com/example/App.java`를 수정 (Gradle에서 소스가 `app/` 하위에 생겼다면 `app/src/main/java/com/example/App.java`)
-    - **실행**: 위 4번 명령 재사용 — `mvn compile` + `java -cp target/classes com.example.App` 또는 `./gradlew run`
+    1. **파일 열기** — 위 2번으로 생성한 `hello-java` 프로젝트의 `src/main/java/com/example/App.java` (Gradle에서 소스가 `app/` 하위에 생겼다면 `app/src/main/java/com/example/App.java`)
+    2. **수정** — `main`이 원하는 문장을 콘솔에 출력하도록 고칩니다.
+    3. **재실행** — 위 4번 명령 재사용 — `mvn compile` + `java -cp target/classes com.example.App` 또는 `./gradlew run`
+    4. **마무리** — 위 6번대로 `.gitignore`를 만들고 첫 커밋을 남깁니다.
 
 #### 정리
 

@@ -720,12 +720,15 @@ git remote set-url origin git@github.com:your_username/my-first-git-project.git
 
 ### ✏️ 직접 해보기
 
-새 저장소에서 브랜치를 파고 커밋한 뒤 main에 병합해 보라. 병합 후 브랜치 커밋이 main에 합쳐졌는지 확인하라.
+새 저장소에서 브랜치를 파고 커밋한 뒤 main에 병합해 보라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: 아무 위치에나 연습용 디렉터리(예: `git-practice`)를 만들어 `git init`으로 시작
-    - **실행**: 병합 후 `git log --oneline --graph`로 확인
+    1. **저장소 준비** — 아무 위치에 연습용 디렉터리 `git-practice`를 만들고 `git init`으로 시작합니다. `README.md`를 만들어 첫 커밋(`git add . && git commit -m "first commit"`)까지 남깁니다.
+    2. **브랜치 생성** — `git switch -c feature/practice`로 새 브랜치로 이동합니다.
+    3. **커밋** — `README.md`에 한 줄을 추가하고 `git add . && git commit -m "add line"`으로 커밋합니다.
+    4. **병합** — `git switch main`(또는 `master`)으로 돌아와 `git merge feature/practice`를 실행합니다.
+    5. **확인** — `git log --oneline --graph`로 브랜치 커밋이 main에 합쳐졌는지 확인합니다.
 
 ## 11.16 스레드와 동기화 기초
 
@@ -809,12 +812,31 @@ try {
 
 ### ✏️ 직접 해보기
 
-두 스레드가 공유 변수를 증가시킬 때 동기화 유무에 따른 결과 차이를 확인하라. `synchronized` 유무에 따라 최종 값이 달라지는지 비교하라.
+두 스레드가 공유 변수를 증가시킬 때 동기화 유무에 따른 결과 차이를 확인하라.
 
-!!! example "실습 위치·실행"
+!!! example "실습 순서"
 
-    - **파일**: ch01 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch11/RaceConditionDemo.java`를 새로 만들기 — 첫 줄 `package com.example.ch11;`
-    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch11.RaceConditionDemo"` (이 프로젝트에는 mvnw 래퍼가 없다)
+    1. **파일 생성** — `hello-java` 프로젝트(ch01 1.2에서 생성)에 `src/main/java/com/example/ch11/RaceConditionDemo.java`를 만듭니다.
+    2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
+
+        ```java
+        package com.example.ch11;
+
+        public class RaceConditionDemo {
+
+            static int counter = 0;
+
+            public static void main(String[] args) throws InterruptedException {
+                // 1) counter를 10만 번 증가시키는 Runnable을 만들고, 스레드 2개로 동시에 실행한다
+                // 2) 두 스레드를 join()으로 기다린 뒤 counter를 출력한다 — 20만이 안 나오는 실행이 있는지 본다
+                // 3) 증가 부분을 synchronized 메서드로 바꿔 다시 실행한다 — 이번에는 항상 20만이 나오는지 비교한다
+                System.out.println("counter = " + counter);
+            }
+        }
+        ```
+    3. **실행** — `mvn compile exec:java -Dexec.mainClass="com.example.ch11.RaceConditionDemo"` (이 프로젝트에는 mvnw 래퍼가 없습니다)
+    4. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 최종 값을 비교합니다.
+
 
 ## 11.17 포트폴리오 예제
 
