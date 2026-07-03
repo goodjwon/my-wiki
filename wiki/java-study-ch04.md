@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # 객체지향 설계와 패턴
 
 ## 🎯 이 장에서 배우는 것
@@ -146,7 +144,7 @@ Spring에서는 DI를 통해 전략 패턴을 매우 자연스럽게 구현합�
 
 ### ✏️ 직접 해보기
 
-결제 수단(카드·현금·포인트)을 전략 인터페이스로 분리해 새 수단 추가가 기존 코드 수정 없이 되게 하라.
+결제 수단(카드·현금·포인트)을 전략 인터페이스로 분리해 새 수단 추가가 기존 코드 수정 없이 되게 하라. 위 `StrategyDemo.java`에 포인트 결제 전략 클래스를 추가하는 방식으로 작업하고, 위 실행 명령으로 다시 실행해 새 전략 출력이 나오는지 확인하라.
 
 #### 한 줄 정리
 
@@ -279,7 +277,7 @@ Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/ja
 
 ### ✏️ 직접 해보기
 
-음료 제조(끓이기→추출→붓기) 골격을 두고 커피·차로 추출 단계만 다르게 구현하라.
+음료 제조(끓이기→추출→붓기) 골격을 두고 커피·차로 추출 단계만 다르게 구현하라. ch01 프로젝트에 `src/main/java/com/example/ch04/template/practice/BeverageDemo.java`로 새로 만들고, 위 실행 명령에서 mainClass만 `com.example.ch04.template.practice.BeverageDemo`로 바꿔 실행해 보라.
 
 ## 4.2 팩토리 메서드 패턴
 
@@ -410,7 +408,7 @@ Spring Bean 생성, 메시지 발송기 선택, 결제 클라이언트 생성, �
 
 ### ✏️ 직접 해보기
 
-도형 종류 문자열을 받아 알맞은 `Shape` 객체를 만드는 팩토리를 작성하라.
+도형 종류 문자열을 받아 알맞은 `Shape` 객체를 만드는 팩토리를 작성하라. ch01 프로젝트에 `src/main/java/com/example/ch04/factory/practice/ShapeFactoryDemo.java`로 새로 만들고, 위 실행 명령에서 mainClass만 `com.example.ch04.factory.practice.ShapeFactoryDemo`로 바꿔 실행해 보라.
 
 ## 4.3 싱글톤 패턴
 
@@ -528,7 +526,7 @@ SpringAppConfig Bean 초기화 완료
 
 ### ✏️ 직접 해보기
 
-스레드 안전한 싱글톤을 만들고 여러 번 호출해도 같은 인스턴스인지 확인하라.
+스레드 안전한 싱글톤을 만들고 여러 번 호출해도 같은 인스턴스인지 확인하라. `demo` 프로젝트에 `src/main/java/com/example/demo/ch04/singleton/practice/AppSettings.java`를 만들고, 위 `SpringSingletonTest.java`처럼 `assertSame`으로 검증하는 테스트를 `src/test/java/com/example/demo/ch04/singleton/practice/`에 작성해 `./mvnw test -Dtest=AppSettingsTest`로 실행해 보라.
 
 ## 4.4 옵저버 패턴
 
@@ -706,7 +704,7 @@ Gradle이라면 `./gradlew test --tests OrderEventTest`로 실행합니다.
 
 ### ✏️ 직접 해보기
 
-발행자에 구독자 여러 개를 등록해, 발행 시 모두 통지받는지 확인하라.
+발행자에 구독자 여러 개를 등록해, 발행 시 모두 통지받는지 확인하라. `demo` 프로젝트의 `src/main/java/com/example/demo/ch04/observer/`에 위 `InventoryService.java`·`ShippingService.java`와 같은 방식으로 새 구독자(예: 포인트 적립)를 추가하고, 위 실행 명령(`./mvnw test -Dtest=OrderEventTest`)으로 다시 실행해 세 구독자가 모두 출력되는지 확인하라.
 
 ## 4.5 프록시 패턴
 
@@ -865,7 +863,7 @@ EventService.processEvent(..) 실행 시간: 약 1000ms
 
 ### ✏️ 직접 해보기
 
-실제 객체 호출 전후로 로그를 남기는 프록시를 만들어 보라.
+실제 객체 호출 전후로 로그를 남기는 프록시를 만들어 보라. 위 `PerformanceAspect.java`를 참고해 `demo` 프로젝트에 `src/main/java/com/example/demo/ch04/proxy/practice/LoggingAspect.java`를 만들어 `EventService` 호출 전후 로그를 남기게 하고, 위 실행 명령(`./mvnw test -Dtest=ProxyAspectTest`)으로 실행해 로그가 찍히는지 확인하라.
 
 ## 4.6 어댑터 패턴
 
@@ -997,7 +995,7 @@ Spring MVC의 `HandlerAdapter`, 외부 API 클라이언트를 감싸는 래퍼, 
 
 ### ✏️ 직접 해보기
 
-다른 시그니처의 외부 클래스를 어댑터로 감싸 기존 방식으로 호출하게 하라.
+다른 시그니처의 외부 클래스를 어댑터로 감싸 기존 방식으로 호출하게 하라. 위 `AdapterDemo.java`에 시그니처가 다른 외부 클래스(예: `LegacyCsvLibrary`)와 그 어댑터를 하나 더 추가하고, 위 실행 명령으로 다시 실행해 새 어댑터 출력까지 나오는지 확인하라.
 
 ## 4.7 파사드 패턴
 
@@ -1132,7 +1130,7 @@ Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/ja
 
 ### ✏️ 직접 해보기
 
-주문·결제·배송 여러 단계 호출을 파사드 한 메서드로 묶어 보라.
+주문·결제·배송 여러 단계 호출을 파사드 한 메서드로 묶어 보라. 위 `FacadeDemo.java`의 `OrderFacade`에 새 단계(예: 포인트 적립)를 추가하는 방식으로 작업하고, 위 실행 명령으로 다시 실행해 출력 단계가 늘어나는지 확인하라.
 
 ## 4.9 전략 패턴 실전문제
 

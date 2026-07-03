@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # 입출력과 네트워크
 
 ## 🎯 이 장에서 배우는 것
@@ -37,13 +35,13 @@ updated: 2026-07-03
 
 Java 문법과 객체지향, 컬렉션을 학습한 뒤에도 실제 프로그램이 바로 실무 코드처럼 느껴지지 않는 이유가 있습니다. 앞선 장들에서는 주로 메모리 안에서만 동작하는 예제를 다뤘다면, 이 장부터는 프로그램이 파일 시스템, 네트워크, 데이터베이스 같은 외부 세계와 만나기 시작하기 때문입니다.
 
-#### 현재 저장소 기준으로 읽는 법
+#### 두 갈래 기준으로 읽는 법
 
-이 장은 소스 기준이 두 갈래입니다.
+이 장은 코드를 읽는 기준이 두 갈래입니다.
 
-- `day_by_spring`: 실제 프로젝트에서 외부 자원을 Spring 추상화 위에서 다루는 기준
-- `day-by-java`: 파일 처리, 소켓 통신, 순수 JDBC 같은 저수준 예제를 직접 보는 기준
-즉 9장은 `day_by_spring`처럼 고수준 프레임워크 코드만 읽어서는 감이 안 잡히는 부분을 `day-by-java` 예제로 메우는 장입니다.
+- 실무 Spring 프로젝트: 외부 자원을 Spring 추상화 위에서 다루는 기준
+- 이 장의 저수준 예제: 파일 처리, 소켓 통신, 순수 JDBC 같은 바닥 흐름을 직접 보는 기준
+즉 이 장은 고수준 프레임워크 코드만 읽어서는 감이 안 잡히는 부분을 저수준 예제로 메우는 장입니다.
 
 ```text
 예상 결과
@@ -249,14 +247,14 @@ try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
 1. 최초 발생 위치
 1. 외부 자원과의 연결 지점
 1. 원인 예외와 suppressed exception 존재 여부
-#### 5. 현재 저장소에서 어떻게 읽히는가
+#### 5. 실무 프로젝트에서는 어떻게 읽히는가
 
-`day_by_spring`에서는 외부 자원 실패 자체를 세세한 체크 예외로 위로 올리기보다, 서비스 계층에서 도메인 의미가 있는 런타임 예외로 바꾸는 경우가 많습니다. 반면 `day-by-java` 예제는 학습 목적상 `IOException`, `SQLException`, 사용자 정의 체크 예외를 그대로 드러내어 저수준 흐름을 보여줍니다.
+실무 Spring 프로젝트에서는 외부 자원 실패 자체를 세세한 체크 예외로 위로 올리기보다, 서비스 계층에서 도메인 의미가 있는 런타임 예외로 바꾸는 경우가 많습니다. 반면 이 장의 저수준 예제는 학습 목적상 `IOException`, `SQLException`, 사용자 정의 체크 예외를 그대로 드러내어 저수준 흐름을 보여줍니다.
 
 즉 이 장에서는 다음처럼 읽으면 됩니다.
 
-- `day-by-java`: 예외가 어디서 직접 발생하는지 보여주는 입문 예제
-- `day_by_spring`: 예외 의미를 도메인과 API 응답으로 번역하는 실전 구조
+- 이 장의 저수준 예제: 예외가 어디서 직접 발생하는지 보여주는 입문 예제
+- 실무 Spring 프로젝트: 예외 의미를 도메인과 API 응답으로 번역하는 실전 구조
 #### 6. 빠른 판단 기준
 
 - 파일, 네트워크, JDBC와 직접 맞닿아 있습니다: 체크 예외 또는 그 래핑 예외를 먼저 의심합니다.
@@ -265,7 +263,7 @@ try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
 
 ### ✏️ 직접 해보기
 
-Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 확인하라.
+Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 확인하라. ch01 프로젝트에 `src/main/java/com/example/ch05/exceptions/ExceptionKindsDemo.java`로 새로 만들고, `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"`로 실행해 보라.
 
 #### 정리
 
@@ -333,7 +331,7 @@ try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
 - 컨트롤러에서 일관된 에러 코드를 내려야 할 때
 
 ### 4. 체크 예외 기반 사용자 정의 예외
-`day-by-java`의 파일 예제처럼, 외부 자원 실패를 호출자에게 명시적으로 알리고 싶을 때는 체크 예외가 적합할 수 있습니다.
+이 장의 파일 처리 예제처럼, 외부 자원 실패를 호출자에게 명시적으로 알리고 싶을 때는 체크 예외가 적합할 수 있습니다.
 ```java
 class FileProcessingException extends Exception {
     FileProcessingException(String msg) {
@@ -354,7 +352,7 @@ static void processFile(String filename) throws FileProcessingException {
 ```
 
 ### 5. 런타임 예외 기반 사용자 정의 예외
-현재 `day_by_spring`은 도메인 규칙 위반을 `BusinessException` 계열 런타임 예외로 표현합니다.
+실무 프로젝트에서는 도메인 규칙 위반을 `BusinessException` 계열 런타임 예외로 표현하는 경우가 많습니다.
 ```java
 public class BusinessException extends RuntimeException {
     private final String errorCode;
@@ -396,6 +394,7 @@ POST /api/books 요청에서 ISBN이 중복되면 서비스 계층에서 `Duplic
 - 무엇이 잘못됐는지 드러나야 합니다.
 - 가능하면 입력값, 식별자, 상태 같은 재현 단서가 있어야 합니다.
 - 너무 추상적인 메시지는 피하는 편이 좋습니다.
+
 ```java
 throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력값=" + age);
 ```
@@ -415,7 +414,7 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
 
 ### ✏️ 직접 해보기
 
-도메인 규칙 위반을 표현하는 사용자 정의 예외를 만들어 던져 보라.
+도메인 규칙 위반을 표현하는 사용자 정의 예외를 만들어 던져 보라. ch01 프로젝트에 `src/main/java/com/example/ch05/exceptions/CustomExceptionDemo.java`로 새로 만들고(예외 클래스는 non-public으로 같은 파일에), `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"`로 실행해 보라.
 
 ## 5.3 파일 읽기와 쓰기 기초
 
@@ -436,7 +435,7 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
 - 큰 파일은 한 번에 모두 읽기보다 스트림 방식이 유리합니다.
 #### 현재 예제 소스와 먼저 연결하기
 
-`day-by-java` 저장소에는 전통적인 IO와 NIO 예제가 함께 있습니다. 새 코드의 기본값은 `Path` + `Files` + `try-with-resources` 쪽으로 이해하는 편이 좋고, 레거시 코드를 읽을 때는 `BufferedReader`, `FileReader` 흐름을 같이 볼 수 있어야 합니다.
+이 장에는 전통적인 IO와 NIO 예제가 함께 나옵니다. 새 코드의 기본값은 `Path` + `Files` + `try-with-resources` 쪽으로 이해하는 편이 좋고, 레거시 코드를 읽을 때는 `BufferedReader`, `FileReader` 흐름을 같이 볼 수 있어야 합니다.
 
 ```java
 try (BufferedReader br = new BufferedReader(new FileReader("output.txt"))) {
@@ -531,6 +530,7 @@ Files.write(Paths.get("copy.png"), data);
 - `Buffer`는 읽고 쓸 데이터를 잠시 담아 두는 메모리 공간입니다.
 - `Channel`은 파일이나 소켓 같은 외부 자원과 데이터를 주고받는 통로입니다.
 - 작은 학습 예제에서는 `Files.readString`이 더 단순하지만, 큰 파일 복사나 네트워크 처리, Direct Buffer 같은 주제로 넘어가면 `ByteBuffer`, `FileChannel` 개념이 다시 등장합니다.
+
 ```java
 try (FileChannel channel = FileChannel.open(Paths.get("data.bin"), StandardOpenOption.READ)) {
     ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -624,7 +624,7 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 
 ### ✏️ 직접 해보기
 
-텍스트 파일을 한 줄씩 읽어 출력하고 새 파일에 써 보라(자원 자동 닫기).
+텍스트 파일을 한 줄씩 읽어 출력하고 새 파일에 써 보라(자원 자동 닫기). ch01 프로젝트에 `src/main/java/com/example/ch05/fileio/FileReadWriteDemo.java`로 새로 만들고(읽을 텍스트 파일은 프로젝트 루트에), `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"`로 실행해 새 파일이 생기는지 확인하라.
 
 #### 정리
 
@@ -771,7 +771,7 @@ class Person implements Serializable {
 
 ### ✏️ 직접 해보기
 
-CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라.
+CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라. ch01 프로젝트에 `src/main/java/com/example/ch05/formats/CsvLineParseDemo.java`로 새로 만들고, `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"`로 실행해 파싱 결과를 확인하라.
 
 #### 정리
 
@@ -892,7 +892,7 @@ try (Socket socket = new Socket("127.0.0.1", 12345);
 
 #### 5. 아주 작은 TCP 에코 서버 예제로 흐름 보기
 
-`day-by-java` 저장소의 `SimpleTCPServer`, `SimpleTCPClient`는 입문용 네트워크 예제로 바로 연결하기 좋습니다.
+아래 `SimpleTCPServer`, `SimpleTCPClient`는 입문용 네트워크 예제로 바로 실행해 보기 좋습니다.
 
 ##### 서버
 
@@ -1066,7 +1066,7 @@ nc 127.0.0.1 8888          # Mac/Linux
 
 ### ✏️ 직접 해보기
 
-에코 서버와 클라이언트를 만들어 한 줄을 주고받아 보라.
+에코 서버와 클라이언트를 만들어 한 줄을 주고받아 보라. 위 `EchoServer.java`·`EchoClient.java`를 작업 디렉터리에 단일 파일로 만들어 위 실행 명령대로 터미널 두 개에서 주고받은 뒤, 보내는 메시지나 응답 형식을 바꿔 다시 실행해 보라.
 
 ## 5.6 JDBC 기초
 
@@ -1078,9 +1078,9 @@ nc 127.0.0.1 8888          # Mac/Linux
 
 입문 단계에서 JDBC를 배우는 목적은 모든 SQL을 순수 JDBC로 작성하기 위함이 아닙니다. **DB 접근 코드가 어떤 생명주기를 가지는지**, 그리고 자원 해제와 예외 처리가 왜 중요한지 이해하는 데 있습니다.
 
-#### 현재 저장소와 예제 저장소를 구분해서 읽기
+#### 실무 코드와 저수준 예제를 구분해서 읽기
 
-현재 `day_by_spring` 저장소는 JDBC를 직접 노출하지 않고 Spring Data JPA와 트랜잭션 추상화 위에서 데이터 접근을 수행합니다. 반면 `day-by-java` 저장소에는 순수 JDBC 예제(`JDBCBasicExample`)가 있어서, 커넥션 획득부터 `PreparedStatement`, `ResultSet`, `finally` 정리까지 바닥 구조를 직접 볼 수 있습니다.
+실무 Spring 프로젝트는 대개 JDBC를 직접 노출하지 않고 Spring Data JPA와 트랜잭션 추상화 위에서 데이터 접근을 수행합니다. 반면 아래 순수 JDBC 예제(`JDBCBasicExample`)에서는 커넥션 획득부터 `PreparedStatement`, `ResultSet`, `finally` 정리까지 바닥 구조를 직접 볼 수 있습니다.
 
 ```java
 Connection conn = DriverManager.getConnection(url, user, password);
@@ -1173,6 +1173,7 @@ Connection connection = DriverManager.getConnection(url, username, password);
 - 파라미터 바인딩이 분명합니다.
 - SQL 인젝션 위험을 줄일 수 있습니다.
 - 같은 형태의 쿼리를 다루기 쉽습니다.
+
 ```java
 String sql = "SELECT id, name, email FROM users WHERE email = ?";
 
@@ -1380,7 +1381,7 @@ java  -cp ".;h2-2.2.224.jar" JdbcExample      # Windows — 구분자 ;
 
 ### ✏️ 직접 해보기
 
-JDBC로 연결해 SELECT 결과를 출력해 보라.
+JDBC로 연결해 SELECT 결과를 출력해 보라. 위 `JdbcExample.java`를 작업 디렉터리에 단일 파일로 만들어 위 실행 명령(`javac -cp h2-2.2.224.jar ...`)으로 실행하고, INSERT 데이터나 WHERE 조건을 바꿔 다시 실행해 결과가 달라지는지 확인하라.
 
 ## 5.7 파일 처리 설계 실습
 

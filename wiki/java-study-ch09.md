@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # 테스트와 품질
 
 ## 🎯 이 장에서 배우는 것
@@ -32,7 +30,7 @@ updated: 2026-07-03
 
 ### 왜 중요한가
 Java와 Spring 실무에서는 기능 구현보다 유지보수가 더 오래 지속됩니다. 이때 테스트가 없으면 리팩터링, 버그 수정, 의존성 교체가 모두 위험한 작업이 됩니다.
-현재 `day_by_spring` 저장소도 이미 테스트를 여러 층으로 나눠 사용하고 있습니다. 도메인 모델 테스트, 서비스 단위 테스트, `@WebMvcTest` 기반 컨트롤러 테스트, `@DataJpaTest` 기반 리포지토리 테스트, `@SpringBootTest` 통합 테스트가 함께 존재합니다. 이 장은 그 구조를 읽는 법을 익히는 데 목적이 있습니다.
+필자의 실무 저장소도 이미 테스트를 여러 층으로 나눠 사용하고 있습니다. 도메인 모델 테스트, 서비스 단위 테스트, `@WebMvcTest` 기반 컨트롤러 테스트, `@DataJpaTest` 기반 리포지토리 테스트, `@SpringBootTest` 통합 테스트가 함께 존재합니다. 이 장은 그 구조를 읽는 법을 익히는 데 목적이 있습니다.
 
 ### 이 챕터에서 다루는 범위
 - Spring Boot 테스트 도구 구성
@@ -109,16 +107,16 @@ Spring 컨테이너 없이, 클래스 하나나 협력 객체 몇 개만 검증�
 - 설정, 보안, 전체 흐름 검증: `@SpringBootTest`
 이 조합이 중요한 이유는, 테스트 실패 원인을 빨리 좁히면서도 실제 동작 검증을 놓치지 않기 때문입니다.
 
-#### 현재 저장소에서 실제로 쓰는 조합
+#### 실무 저장소에서 실제로 쓰는 조합
 
-현재 `day_by_spring` 저장소는 추상적인 권장 조합이 아니라 아래 패턴을 실제로 사용합니다.
+필자의 실무 저장소는 추상적인 권장 조합이 아니라 아래 패턴을 실제로 사용합니다.
 
 - 서비스 단위 테스트: `@ExtendWith(MockitoExtension.class)` + 목 객체 (`AuthServiceImplTest`, `LoanServiceImplTest`)
 - 컨트롤러 슬라이스 테스트: `@WebMvcTest` + `@MockitoBean` + `MockMvc` (`LoanControllerTest`, `BookControllerTest`)
 - JPA 슬라이스 테스트: `@DataJpaTest` + `TestEntityManager` (`LoanRepositoryTest`, `BookRepositoryTest`)
 - 통합 테스트: `@SpringBootTest` (`OrderServiceIntegrationTest`, `AopLoggingIntegrationTest`)
 
-아래 세 블록은 **참고 코드**(day_by_spring 저장소 발췌 스텁)입니다. 조합을 읽는 용도이며, 이 장의 실습 대상이 아닙니다. 직접 작성하는 실습은 9.2에서 진행합니다.
+아래 세 블록은 **참고 코드**(실무 저장소 발췌 스텁)입니다. 조합을 읽는 용도이며, 이 장의 실습 대상이 아닙니다. 직접 작성하는 실습은 9.2에서 진행합니다.
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -186,7 +184,7 @@ class LoanRepositoryTest {
 
 ### ✏️ 직접 해보기
 
-`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. 위 `./mvnw test -Dtest`(또는 `./gradlew test --tests`)로 그 클래스만 실행해 통과 여부를 확인하라.
+`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. ch06 6.1의 `demo` 프로젝트에서 작업하되, 테스트할 컨트롤러가 없다면 `src/main/java/com/example/demo/practice/PingController.java`로 간단한 GET 엔드포인트를 먼저 만들고 테스트는 `src/test/java/com/example/demo/practice/PingControllerTest.java`에 작성하라. 위 `./mvnw test -Dtest`(또는 `./gradlew test --tests`)로 그 클래스만 실행해 통과 여부를 확인하라.
 
 #### 정리
 
@@ -337,7 +335,7 @@ class CalculatorTest {
 - Service는 규칙을 처리하고
 - Parser나 Mapper는 변환을 담당합니다.
 테스트 전략도 같습니다. 규칙은 단위 테스트로, 웹 요청/응답은 슬라이스 테스트로, 전체 흐름은 통합 테스트로 검증합니다.
-현재 `day_by_spring` 저장소에서도 같은 감각이 보입니다. 아래 두 블록은 **참고 코드**(day_by_spring 저장소 발췌 스텁)로, 이 장의 실습 대상이 아닙니다.
+필자의 실무 저장소에서도 같은 감각이 보입니다. 아래 두 블록은 **참고 코드**(실무 저장소 발췌 스텁)로, 이 장의 실습 대상이 아닙니다.
 ```java
 @DisplayName("Loan 엔티티 테스트")
 class LoanTest {
@@ -658,4 +656,4 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 
 ### ✏️ 직접 해보기
 
-실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라.
+실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라. ch06 6.1의 `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄운 뒤 새 터미널에서 요청하고, GET·POST를 받을 엔드포인트가 없다면 `src/main/java/com/example/demo/practice/`에 간단한 컨트롤러를 먼저 추가하라. 위 예시처럼 목적·요청·기대 상태 코드를 함께 기록하며 확인하라.

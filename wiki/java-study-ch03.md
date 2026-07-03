@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # 컬렉션과 함수형
 
 ## 🎯 이 장에서 배우는 것
@@ -251,7 +249,7 @@ names.add("Kim");
 
 - 컬렉션의 의도가 코드에 바로 드러납니다.
 - 잘못된 타입 삽입이 런타임이 아니라 컴파일 단계에서 막힙니다.
-제네릭은 컬렉션에만 쓰는 문법이 아니라, 같은 구조를 여러 타입에 안전하게 재사용하는 도구이기도 합니다. `day-by-java`의 단순 예제를 보면 감이 더 빠르게 잡힙니다. `Box`는 보조 클래스이므로 같은 파일에 non-public으로 함께 둡니다.
+제네릭은 컬렉션에만 쓰는 문법이 아니라, 같은 구조를 여러 타입에 안전하게 재사용하는 도구이기도 합니다. 단순 예제를 보면 감이 더 빠르게 잡힙니다. `Box`는 보조 클래스이므로 같은 파일에 non-public으로 함께 둡니다.
 
 **파일**: src/main/java/com/example/ch03/GenericsDemo.java
 
@@ -339,7 +337,7 @@ public static void printNumbers(List<? extends Number> numbers) {
 
 ### ✏️ 직접 해보기
 
-같은 데이터를 List·Set·Map에 각각 담아 중복 처리와 조회 방식의 차이를 출력으로 확인하라.
+같은 데이터를 List·Set·Map에 각각 담아 중복 처리와 조회 방식의 차이를 출력으로 확인하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionComparePractice.java` 를 새로 만들어(첫 줄 `package com.example.ch03.practice;`) 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"` 로 실행해 보라.
 
 #### 정리
 
@@ -568,7 +566,7 @@ Message 2
 
 ### ✏️ 직접 해보기
 
-Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
+Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/WordCountPractice.java` 를 새로 만들어 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"` 로 실행해 보라.
 
 #### 정리
 
@@ -808,7 +806,7 @@ class FileNode {
 
 ### ✏️ 직접 해보기
 
-"순서 유지"·"중복 제거"·"빠른 key 조회" 세 요구에 각각 맞는 컬렉션을 고르고 이유를 적어 보라.
+"순서 유지"·"중복 제거"·"빠른 key 조회" 세 요구에 각각 맞는 컬렉션을 고르고 이유를 적어 보라. 답은 메모로 충분하지만, 코드로 검증하고 싶다면 `src/main/java/com/example/ch03/practice/CollectionChoicePractice.java` 를 새로 만들어 세 요구를 각각 작은 코드로 확인하고 `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"` 로 실행해 보라.
 
 #### 정리
 
@@ -852,7 +850,7 @@ public class LambdaBasicsDemo {
 }
 ```
 
-`day-by-java` 예제 중 가장 단순한 형태는 아래와 같습니다.
+가장 단순한 형태의 예제는 아래와 같습니다.
 
 ```java
 Runnable runnable = () -> System.out.println("Hello, Lambda!");
@@ -962,7 +960,7 @@ List<String> result = names.stream()
 
 ### ✏️ 직접 해보기
 
-정수 리스트에서 짝수만 골라 제곱한 합을 구하는 코드를 for문과 스트림 두 방식으로 짜 보라.
+정수 리스트에서 짝수만 골라 제곱한 합을 구하는 코드를 for문과 스트림 두 방식으로 짜 보라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/EvenSquareSumPractice.java` 를 새로 만들어 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"` 로 실행해 보라.
 
 #### 정리
 
@@ -997,6 +995,7 @@ List<String> result = names.stream()
 - `O(n)`: 처음부터 끝까지 한 번 훑는 작업
 - `O(n log n)`: 효율적인 정렬 계열
 - `O(n^2)`: 이중 반복문이 주가 되는 비교 작업
+
 ```java
 int first = numbers[0];           // O(1)
 for (int n : numbers) { }         // O(n)
@@ -1221,6 +1220,7 @@ public class FibonacciDpDemo {
 
 - DFS: 한 방향으로 깊게 들어갑니다.
 - BFS: 가까운 노드부터 넓게 확장합니다.
+
 ```java
 Queue<Integer> queue = new LinkedList<>();
 queue.add(start);
@@ -1243,7 +1243,7 @@ while (!queue.isEmpty()) {
 
 ### ✏️ 직접 해보기
 
-선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라.
+선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라. 위 `LinearSearchDemo.java`와 `BinarySearchDemo.java`에 비교 횟수를 세는 카운터 변수를 추가해 출력하고, 이 절의 실행 명령(`-Dexec.mainClass` 값만 각 Demo 클래스로 변경)으로 두 예제를 다시 실행해 결과를 비교해 보라.
 
 #### 정리
 

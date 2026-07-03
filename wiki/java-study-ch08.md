@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # 서버와 인증
 
 ## 🎯 이 장에서 배우는 것
@@ -21,7 +19,7 @@ updated: 2026-07-03
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 인증 흐름을 그림→코드 순으로 따라 구현한다.
 
-> **실습 프로젝트**: 이 챕터의 실행 실습은 [[java-study-ch06]] **6.1에서 start.spring.io로 만든 `demo` 프로젝트** 기준입니다. 본문 곳곳에 나오는 `day_by_spring`은 필자의 실무 프로젝트(비공개 저장소) 참고 사례일 뿐, 실습에 필요하지 않습니다.
+> **실습 프로젝트**: 이 챕터의 실행 실습은 [[java-study-ch06]] **6.1에서 start.spring.io로 만든 `demo` 프로젝트** 기준입니다. 본문 곳곳에 나오는 실무 저장소 이야기는 필자의 실무 프로젝트 참고 사례일 뿐, 실습에 필요하지 않습니다.
 
 ---
 
@@ -57,7 +55,7 @@ Tomcat은 대략 아래 일을 합니다.
 - 로그와 에러를 서버 수준에서 남깁니다.
 즉, Spring MVC나 Spring Security도 결국 Tomcat이 열어 준 요청 처리 파이프라인 위에서 돌아갑니다.
 
-참고로 JWT 인증을 갖춘 실무 프로젝트(예: 실무 저장소 `day_by_spring`)에서는 이 흐름을 아래처럼 더 구체적으로 볼 수 있습니다.
+참고로 JWT 인증을 갖춘 실무 프로젝트에서는 이 흐름을 아래처럼 더 구체적으로 볼 수 있습니다.
 
 ```text
 HTTP 요청
@@ -259,7 +257,7 @@ chmod +x $CATALINA_HOME/bin/*.sh
 
 ### ✏️ 직접 해보기
 
-내장 톰캣 포트를 바꿔 실행해 보라.
+내장 톰캣 포트를 바꿔 실행해 보라. ch06 6.1에서 만든 `demo` 프로젝트의 `src/main/resources/application.properties`에 `server.port=9090`을 추가하고, 위 4.1의 `./mvnw spring-boot:run`으로 실행하라. 로그에 `Tomcat started on port(s): 9090`이 찍히고 `curl -i http://localhost:9090/`이 응답하는지 확인하라.
 
 ## 8.1 Spring Security 인증 흐름
 
@@ -281,7 +279,7 @@ chmod +x $CATALINA_HOME/bin/*.sh
 
 #### 참고 — 실무 프로젝트에서는 어떻게 연결되는가
 
-참고로 실무 저장소(`day_by_spring`)는 **로그인 시점**과 **JWT 요청 시점**을 분리해서 봐야 합니다.
+참고로 실무 저장소에서는 **로그인 시점**과 **JWT 요청 시점**을 분리해서 봐야 합니다.
 
 - 로그인 요청 `/api/auth/login`: `AuthController` -> `AuthServiceImpl.login()` -> `AuthenticationManager.authenticate(...)` -> `JwtTokenProvider.createToken(...)`
 - 보호된 API 요청: `JwtAuthenticationFilter`가 `Authorization: Bearer ...` 헤더를 읽고 `validateToken()`과 `getAuthentication()`을 거쳐 `SecurityContextHolder`를 채웁니다.
@@ -398,6 +396,7 @@ String username = authentication.getName();
 - 로그인한 사용자만 접근 가능
 - 특정 역할이 있어야 접근 가능
 - 특정 scope가 있어야 접근 가능
+
 ```java
 http
     .authorizeHttpRequests(auth -> auth
@@ -421,10 +420,11 @@ http
 - 로그인은 되었지만 권한이 부족한가
 이 차이를 구분하지 못하면 401과 403을 섞어 해석하게 됩니다.
 
-참고로 실무 저장소(`day_by_spring`) 기준으로 보면 예시를 이렇게 잡을 수 있습니다.
+참고로 실무 저장소 기준으로 보면 예시를 이렇게 잡을 수 있습니다.
 
 - 로그인 요청 `/api/auth/login`에서 잘못된 이메일/비밀번호: `AuthenticationManager` 단계 실패, `GlobalExceptionHandler`를 통해 `401 Unauthorized`
 - USER 토큰으로 `/api/admin/**` 접근: 인가는 되었지만 역할 부족, `403 Forbidden`
+
 ```text
 예상 결과
 같은 보안 실패처럼 보여도 원인이 다르면 진단 지점도 달라진다.
@@ -458,7 +458,7 @@ JWT 기반 요청도 결국 아래 순서로 흘러갑니다.
 
 ### ✏️ 직접 해보기
 
-폼 로그인을 설정해 인증된 사용자만 특정 URL에 접근하게 하라.
+폼 로그인을 설정해 인증된 사용자만 특정 URL에 접근하게 하라. ch06 6.1의 `demo` 프로젝트 `pom.xml`에 `spring-boot-starter-security` 의존성을 추가하고, 새 파일 `src/main/java/com/example/demo/config/SecurityConfig.java`에 `formLogin()`과 URL별 인가 규칙을 설정하라. `./mvnw spring-boot:run`으로 띄운 뒤 브라우저에서 보호 URL에 접근했을 때 로그인 페이지로 이동하는지(curl이라면 `curl -i`로 302 응답인지) 확인하라.
 
 #### 정리
 
@@ -504,12 +504,13 @@ Spring Security 문서를 읽다 보면 `Authentication`, `Principal`, `Security
 
 #### 참고 — 실무 저장소에서 특히 구분할 용어
 
-참고로 실무 저장소(`day_by_spring`)에서는 아래 구분이 특히 중요합니다.
+참고로 실무 저장소에서는 아래 구분이 특히 중요합니다.
 
 - `AuthenticationManager`: 로그인 요청에서 이메일/비밀번호를 검증할 때 사용
 - `JwtAuthenticationFilter`: 보호된 요청에서 Bearer 토큰을 읽고 검증할 때 사용
 - `UserDetailsService`: 로그인 시 회원을 조회할 때 사용
 - `SecurityContextHolder`: 검증이 끝난 인증 객체를 현재 요청 문맥에 저장할 때 사용
+
 ```java
 Authentication authentication = authenticationManager.authenticate(authenticationToken);
 String jwt = jwtTokenProvider.createToken(authentication);
@@ -671,13 +672,14 @@ JWT는 `Header.Payload.Signature` 구조를 가지는 토큰입니다.
 - Signature: 위변조 방지용 서명
 주의할 점은 Payload는 암호화 자체가 아니라 인코딩된 데이터로 이해해야 한다는 점입니다. 민감 정보는 넣지 않는 것이 원칙입니다.
 
-참고로 실무 저장소(`day_by_spring`)는 토큰에 아래 성격의 정보를 담습니다.
+참고로 실무 저장소는 토큰에 아래 성격의 정보를 담습니다.
 
 - `sub`: 이메일
 - `memberId`: 회원 ID
 - `name`: 회원 이름
 - `auth`: 권한 목록
 - `exp`: 만료 시각
+
 ```java
 return Jwts.builder()
         .setSubject(authentication.getName())
@@ -726,7 +728,7 @@ graph LR
 - 검증 성공 시 `SecurityContext`에 인증 정보 저장
 #### 참고 — 실무 저장소 기준으로 보면
 
-참고로 실무 저장소(`day_by_spring`)는 완전한 OAuth2 Resource Server 설정이 아니라, **Spring Security + 커스텀 JWT 필터** 구조를 사용합니다.
+참고로 실무 저장소는 완전한 OAuth2 Resource Server 설정이 아니라, **Spring Security + 커스텀 JWT 필터** 구조를 사용합니다.
 
 ```java
 http
@@ -872,7 +874,7 @@ Spring Security에서도 직접 JWT를 파싱하는 커스텀 필터 구조를 �
 
 ### ✏️ 직접 해보기
 
-로그인 시 JWT를 발급하고, 요청 헤더의 토큰을 검증하는 필터를 만들어 보라.
+로그인 시 JWT를 발급하고, 요청 헤더의 토큰을 검증하는 필터를 만들어 보라. 위 "실제로 해보기"의 전제처럼 인증 API 골격(로그인 엔드포인트·SecurityConfig)이 갖춰진 프로젝트가 있다면 거기에, 없다면 ch06 6.1의 `demo`에 jjwt 의존성과 `jwt.secret` 설정(위 전제 박스 참고)을 추가한 뒤 `src/main/java/com/example/demo/security/JwtAuthenticationFilter.java`를 새로 만들어 위 참고 코드를 완성하라. 완성했다면 위 curl 왕복(로그인 → 토큰 → 보호 API)으로 확인하라.
 
 #### 정리
 

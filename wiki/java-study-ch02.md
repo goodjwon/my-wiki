@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # Java 문법과 객체
 
 ## 🎯 이 장에서 배우는 것
@@ -65,6 +63,7 @@ Java의 기본 자료형은 값을 직접 저장합니다.
 - `float`, `double`: 실수
 - `char`: 문자
 - `boolean`: 참/거짓
+
 ```java
 int count = 10;
 double price = 19.99;
@@ -108,6 +107,7 @@ int result = (int) value;
 #### 5. 산술 연산자
 
 - `+`, `-`, `*`, `/`, `%`
+
 ```java
 int a = 10;
 int b = 3;
@@ -129,6 +129,7 @@ System.out.println(a % b);
 
 - 비교 연산자: `==`, `!=`, `>`, `<`, `>=`, `<=`
 - 논리 연산자: `&&`, `||`, `!`
+
 ```java
 int age = 20;
 boolean adult = age >= 19;
@@ -170,7 +171,7 @@ System.out.println(name + " is " + age + " years old.");
 
 ### ✏️ 직접 해보기
 
-int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals` 비교 결과를 직접 출력해 차이를 확인하라.
+int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals` 비교 결과를 직접 출력해 차이를 확인하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch02/practice/TypePractice.java` 를 새로 만들어(첫 줄 `package com.example.ch02.practice;`) 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"` 로 실행해 보라.
 
 #### 정리
 
@@ -463,7 +464,7 @@ String result = builder.toString();
 
 ### ✏️ 직접 해보기
 
-정수 배열의 합과 평균을 반환하는 메서드를 만들고, 인자로 넘긴 배열이 메서드 안에서 어떻게 다뤄지는지 출력으로 확인하라.
+정수 배열의 합과 평균을 반환하는 메서드를 만들고, 인자로 넘긴 배열이 메서드 안에서 어떻게 다뤄지는지 출력으로 확인하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch02/practice/ArrayStatsPractice.java` 를 새로 만들어 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.ArrayStatsPractice"` 로 실행해 보라.
 
 #### 정리
 
@@ -592,7 +593,7 @@ Spring에서도 객체지향 원칙은 그대로 이어집니다. DI, 전략 패
 
 #### 이 문서를 읽는 기준
 
-객체지향 원칙은 정의를 외우는 순간보다, **같은 메시지를 보내도 객체 타입에 따라 다른 동작이 나온다**는 장면을 직접 볼 때 훨씬 빨리 잡힙니다. 아래 예시는 `day-by-java`의 게임 예제 흐름을 단순화한 것으로, 다형성과 오버라이딩을 가장 짧게 보여줍니다.
+객체지향 원칙은 정의를 외우는 순간보다, **같은 메시지를 보내도 객체 타입에 따라 다른 동작이 나온다**는 장면을 직접 볼 때 훨씬 빨리 잡힙니다. 아래 예시는 게임 예제 흐름을 단순화한 것으로, 다형성과 오버라이딩을 가장 짧게 보여줍니다.
 
 **파일**: src/main/java/com/example/ch02/EnemyAttackDemo.java
 
@@ -1161,7 +1162,7 @@ public class TemplateMethodDemo {
 
 ### ✏️ 직접 해보기
 
-위 샘플 중 하나에서 필드를 `private`로 바꾸고, 외부가 메서드로만 접근하도록 캡슐화를 강화해 보라.
+위 샘플 중 하나에서 필드를 `private`로 바꾸고, 외부가 메서드로만 접근하도록 캡슐화를 강화해 보라. 좋은 대상은 위 `Car.java`(상속 예제 2)다 — `protected String brand` 필드를 `private`로 바꾸고 getter 메서드로만 읽게 고친 뒤, 이 절 대표 실행 명령의 `-Dexec.mainClass` 값을 `com.example.ch02.Car`로 바꿔 다시 실행해 보라.
 
 ## 2.5 추상 클래스 활용 예제
 
@@ -1171,7 +1172,7 @@ public class TemplateMethodDemo {
 
 추상 클래스는 "new로 바로 만들 수 없는 클래스"라는 정의만 외우면 오래 남지 않습니다. 더 중요한 것은 **공통 흐름은 부모가 잡고, 달라지는 부분만 자식이 채운다**는 구조를 보는 것입니다.
 
-`day-by-java`의 템플릿 메서드 예제를 단순화하면 아래처럼 읽을 수 있습니다.
+템플릿 메서드 예제를 단순화하면 아래처럼 읽을 수 있습니다.
 
 **파일**: src/main/java/com/example/ch02/CsvProcessorDemo.java
 
@@ -2031,7 +2032,7 @@ public class MultiLevelInheritanceDemo {
 
 ### ✏️ 직접 해보기
 
-예제 중 하나에 새 하위 클래스를 추가하되 상위(골격) 코드는 수정하지 말고 확장만으로 동작시켜 보라(OCP).
+예제 중 하나에 새 하위 클래스를 추가하되 상위(골격) 코드는 수정하지 말고 확장만으로 동작시켜 보라(OCP). 예를 들어 위 `GraphicDemo.java`(예제 2)에 `GraphicTriangle` 클래스를 추가하고 `Graphic` 추상 클래스는 그대로 둔 채 `main`에서 그리게 한 뒤, `mvn compile exec:java -Dexec.mainClass="com.example.ch02.GraphicDemo"` 로 다시 실행해 보라.
 
 ## 2.9 객체지향 실전문제
 

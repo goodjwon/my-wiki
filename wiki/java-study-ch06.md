@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # Spring과 프로젝트 실행
 
 ## 🎯 이 장에서 배우는 것
@@ -21,7 +19,7 @@ updated: 2026-07-03
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 환경 세팅을 그대로 따라 하고, 빈 주입을 직접 코드로 확인한다. 깊이: [[concept-spring-core]].
 
-> **실습 프로젝트**: 이 챕터의 실습은 **6.1에서 start.spring.io로 만드는 `demo` 프로젝트**에서 진행합니다. ch07~08·10의 Spring 실습도 같은 `demo`를 이어서 씁니다. 본문에 가끔 나오는 `day_by_spring`은 필자의 실무 프로젝트 참고 사례일 뿐, 실습에 필요하지 않습니다.
+> **실습 프로젝트**: 이 챕터의 실습은 **6.1에서 start.spring.io로 만드는 `demo` 프로젝트**에서 진행합니다. ch07~08·10의 Spring 실습도 같은 `demo`를 이어서 씁니다. 본문에 가끔 나오는 실무 프로젝트 이야기는 필자의 실무 저장소 참고 사례일 뿐, 실습에 필요하지 않습니다.
 
 ---
 
@@ -107,7 +105,7 @@ Spring 핵심 개념의 핵심은 **어노테이션 이름**보다, **객체 생
 
 ### ✏️ 직접 해보기
 
-두 클래스를 생성자 주입으로 연결한 빈을 만들어 컨테이너가 주입하는지 확인하라.
+두 클래스를 생성자 주입으로 연결한 빈을 만들어 컨테이너가 주입하는지 확인하라. 6.1에서 만드는 `demo` 프로젝트에 `src/main/java/com/example/demo/ch06/di/` 아래 `@Component` 두 개를 생성자 주입으로 연결해 만들고(아직 프로젝트가 없으면 6.1을 먼저 진행), `./mvnw spring-boot:run`으로 실행해 생성자 안에 넣은 출력이 시작 로그에 찍히는지 확인하라.
 
 ## 6.1 Spring 실습 환경 구성 가이드
 
@@ -241,7 +239,7 @@ pom.xml
 - `src/main/resources/application.properties` — 갓 만든 `demo`에는 설정 파일이 이것 하나뿐이고, 내용은 비어 있습니다.
 - 6.3에서 이 파일을 `application.yml`로 바꾸고, `application-h2.yml` 같은 프로파일별 파일을 직접 만들어 확장합니다.
 
-> **참고 — 실제 프로젝트에서는**: 필자의 실무 저장소(`day_by_spring`)처럼 `application-h2.yml`·`application-dev-my.yml`·`application-dev-pg.yml`·`application-prod.yml`을 두고 환경마다 골라 실행하는 구조가 일반적입니다. 6.3에서 같은 구조를 `demo`에 그대로 만들어 봅니다.
+> **참고 — 실제 프로젝트에서는**: 필자의 실무 저장소처럼 `application-h2.yml`·`application-dev-my.yml`·`application-dev-pg.yml`·`application-prod.yml`을 두고 환경마다 골라 실행하는 구조가 일반적입니다. 6.3에서 같은 구조를 `demo`에 그대로 만들어 봅니다.
 
 ##### 우선 확인할 항목
 
@@ -295,7 +293,7 @@ curl -i http://localhost:8080/
 
 ### ✏️ 직접 해보기
 
-Spring Initializr로 프로젝트를 만들어 내장 톰캣으로 실행해 보라.
+Spring Initializr로 프로젝트를 만들어 내장 톰캣으로 실행해 보라. 위 6.1 절차대로 start.spring.io에서 `demo` 프로젝트를 만들어 그 루트에서 위 실행 명령(`./mvnw spring-boot:run`)으로 띄우고, 시작 로그에서 Tomcat이 8080 포트로 뜨는지 확인하라.
 
 ## 6.2 Maven 환경 구성과 프로젝트 전환
 
@@ -357,7 +355,7 @@ mvn -version
 - 따라서 시스템에 설치된 `mvn` 명령으로 실행하는 전통적인 Maven 흐름을 보기 좋습니다.
 즉, **실습 프로젝트(`demo`)는 Wrapper 중심**, **기본 Maven 구조 이해용(`myapp`)은 시스템 Maven**으로 구분해서 보면 자연스럽습니다.
 
-> **참고 — 실제 프로젝트에서는**: 필자의 저장소도 같은 구분입니다. Spring 서비스 저장소(`day_by_spring`)는 Wrapper를 커밋해 두어 팀원 모두 같은 Maven 버전으로 빌드하고, 순수 Java 예제 저장소(`day-by-java`)는 시스템 `mvn`으로 실행합니다.
+> **참고 — 실제 프로젝트에서는**: 필자의 저장소도 같은 구분입니다. Spring 서비스 저장소는 Wrapper를 커밋해 두어 팀원 모두 같은 Maven 버전으로 빌드하고, 순수 Java 예제 저장소는 시스템 `mvn`으로 실행합니다.
 
 #### Maven 프로젝트 구조 이해하기
 
@@ -500,7 +498,7 @@ mvn package
 
 ### ✏️ 직접 해보기
 
-`pom.xml`에 의존성을 하나 추가하고 빌드해 적용되는지 확인하라.
+`pom.xml`에 의존성을 하나 추가하고 빌드해 적용되는지 확인하라. `demo` 프로젝트의 `pom.xml`에 의존성(예: `spring-boot-starter-validation`)을 추가하고, 위 실행 명령(`./mvnw clean compile`)으로 빌드해 새 라이브러리가 내려받아지는지 확인하라.
 
 #### 정리
 
@@ -517,7 +515,7 @@ Maven 도입의 핵심은 빌드 명령 하나가 아니라, 프로젝트 구조
 **🎯 목표**: 프로파일로 dev/prod 환경을 분리한다.
 
 ### 개요
-이 절은 6.1에서 만든 `demo` 프로젝트에 프로파일 구조를 **직접 만들어 실행**하는 실습 가이드입니다. 추상적인 `local/dev/test/prod` 예시를 외우는 대신, `application-*.yml` 파일을 하나씩 만들고 실행 명령으로 프로파일이 바뀌는 것을 눈으로 확인합니다. 프로파일 이름과 구조는 필자의 실무 프로젝트(`day_by_spring`)에서 쓰는 것을 그대로 가져왔습니다.
+이 절은 6.1에서 만든 `demo` 프로젝트에 프로파일 구조를 **직접 만들어 실행**하는 실습 가이드입니다. 추상적인 `local/dev/test/prod` 예시를 외우는 대신, `application-*.yml` 파일을 하나씩 만들고 실행 명령으로 프로파일이 바뀌는 것을 눈으로 확인합니다. 프로파일 이름과 구조는 필자의 실무 프로젝트에서 쓰는 것을 그대로 가져왔습니다.
 
 ### 왜 중요한가
 Spring Boot는 활성 프로파일에 따라 `application-{profile}.yml`을 함께 읽습니다. 따라서 같은 코드라도 어떤 프로파일로 실행하느냐에 따라 데이터베이스, 로그 레벨, DDL 전략, SQL 출력 방식이 달라질 수 있습니다. 프로파일을 코드와 분리해서 외운다면 실행은 되더라도 왜 그렇게 동작하는지 이해하기 어렵습니다.
@@ -759,7 +757,7 @@ The following 1 profile is active: "<지정한 프로파일>"
 ### 5. 테스트와 프로파일을 같이 볼 때의 기준
 테스트는 `src/test/resources`의 설정을 우선 읽습니다. `demo`에는 아직 테스트 전용 설정 파일이 없으므로, 기본 생성된 테스트(`contextLoads`)는 메인 설정을 그대로 물려받아 활성 프로파일 `h2`로 돕니다.
 
-> **참고 — 실제 프로젝트에서는**: `day_by_spring`은 `src/test/resources/application.yml`(`spring.test.database.replace=none`)과 `src/test/resources/application-dev-pg.yml`(`ddl-auto: create-drop`)을 따로 둔다. 테스트를 설명할 때는 막연히 `test` 프로파일을 가정하기보다, **테스트 리소스 파일이 어떤 프로파일을 보조하는지** 같이 봐야 한다.
+> **참고 — 실제 프로젝트에서는**: 필자의 실무 저장소는 `src/test/resources/application.yml`(`spring.test.database.replace=none`)과 `src/test/resources/application-dev-pg.yml`(`ddl-auto: create-drop`)을 따로 둔다. 테스트를 설명할 때는 막연히 `test` 프로파일을 가정하기보다, **테스트 리소스 파일이 어떤 프로파일을 보조하는지** 같이 봐야 한다.
 
 ### 6. DDL 전략을 읽는 기준
 위에서 만든 구조 기준으로 보면 다음처럼 이해하는 편이 정확합니다.
@@ -801,7 +799,7 @@ The following 1 profile is active: "<지정한 프로파일>"
 
 ### ✏️ 직접 해보기
 
-프로파일마다 `server.port`를 다르게 지정해(`h2`는 8080, `dev-pg`는 8081) 실행 로그에서 포트가 프로파일에 따라 바뀌는지 확인하라.
+프로파일마다 `server.port`를 다르게 지정해(`h2`는 8080, `dev-pg`는 8081) 실행 로그에서 포트가 프로파일에 따라 바뀌는지 확인하라. `demo` 프로젝트의 위 `application-h2.yml`·`application-dev-pg.yml`에 `server.port`를 추가하고, 위 실행 명령(`./mvnw spring-boot:run -Dspring-boot.run.profiles=h2` 등)으로 프로파일을 바꿔가며 띄워 보라.
 
 ### 정리
 프로파일 설정의 핵심은 이름을 외우는 데 있지 않습니다. **내 프로젝트가 어떤 프로파일 파일을 가지고 있고, 그 프로파일이 DB·로그·DDL 전략을 어떻게 바꾸는지**를 정확히 읽는 데 있습니다. 이 절에서 `demo`에 만든 `h2`, `dev-my`, `dev-pg`, `prod`가 그 기준선입니다.

@@ -4,10 +4,8 @@ type: source
 tags: [java, study, ch00]
 sources: [java-study/java-study-ch00-안내.md]
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-07-03
 ---
-
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
 
 # 안내
 
@@ -28,7 +26,7 @@ updated: 2026-06-30
 
 #### 개요
 
-이 문서는 `day_by_spring` 프로젝트를 기준으로 Spring Boot 프로파일을 어떻게 나누고 실행하는지 정리한 가이드입니다. 이 저장소는 추상적인 `local/dev/test/prod` 예시를 설명하는 문서가 아니라, **실제 `application-*.yml` 파일 구조와 실행 명령을 기준으로 읽어야 하는 문서**입니다.
+이 문서는 [[java-study-ch06]] 6.1에서 직접 만드는 `demo` 프로젝트를 기준으로 Spring Boot 프로파일을 어떻게 나누고 실행하는지 정리한 가이드입니다. 추상적인 `local/dev/test/prod` 예시를 설명하는 문서가 아니라, **실제 `application-*.yml` 파일 구조와 실행 명령을 기준으로 읽어야 하는 문서**입니다.
 
 #### 왜 중요한가
 

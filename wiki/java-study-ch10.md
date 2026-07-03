@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # JVM과 성능
 
 ## 🎯 이 장에서 배우는 것
@@ -21,7 +19,7 @@ updated: 2026-07-03
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 10.0→10.1→10.2 순으로 읽고, 11.90 JVM 워크북 문제로 굳힌다. 깊이: [[entity-jvm]].
 
-> **참고 프로젝트**: 본문 곳곳에 나오는 `day_by_spring`은 필자의 실무 프로젝트(비공개 저장소) 참고 사례일 뿐, 실습에 필요하지 않습니다. 직접 실행해 보는 예제는 단일 파일(`javac`/`java`)로 돌아갑니다.
+> **참고 프로젝트**: 본문 곳곳에 나오는 실무 저장소 이야기는 필자의 실무 프로젝트 참고 사례일 뿐, 실습에 필요하지 않습니다. 직접 실행해 보는 예제는 단일 파일(`javac`/`java`)로 돌아갑니다.
 
 ---
 
@@ -37,7 +35,7 @@ Spring Boot 애플리케이션을 다룰 때도 결국 JVM 위에서 프로그�
 
 #### 참고 — 실무 프로젝트의 런타임은 어떻게 생겼는가
 
-참고로 실무 저장소(`day_by_spring`)는 Java 21을 사용하고 있고, 실행 이미지는 `eclipse-temurin:21-jre-alpine` 위에서 동작합니다. 즉 이 장은 추상적인 JVM 소개이면서 동시에 **실제 서비스가 올라가는 런타임을 읽는 기초**이기도 합니다.
+참고로 필자의 실무 저장소는 Java 21을 사용하고 있고, 실행 이미지는 `eclipse-temurin:21-jre-alpine` 위에서 동작합니다. 즉 이 장은 추상적인 JVM 소개이면서 동시에 **실제 서비스가 올라가는 런타임을 읽는 기초**이기도 합니다.
 
 ```dockerfile
 FROM eclipse-temurin:21-jre-alpine
@@ -215,7 +213,7 @@ Spring Boot 프로젝트를 실행하면 아래 현상이 모두 JVM과 연결�
 
 ### ✏️ 직접 해보기
 
-간단한 프로그램의 실행 과정을 클래스 로딩→실행 순으로 설명해 보라.
+간단한 프로그램의 실행 과정을 클래스 로딩→실행 순으로 설명해 보라. 아무 작업 디렉터리에 `HelloJvmDemo.java`를 package 선언 없이 새로 만들어 `main`에서 문자열 하나를 출력하게 하고, `javac HelloJvmDemo.java && java HelloJvmDemo`로 실행하라. 그 과정이 위 실행 흐름(javac 컴파일 → 클래스 로딩 → 실행)의 어느 단계에 해당하는지 말로 짚어 보라.
 
 #### 정리
 
@@ -418,7 +416,7 @@ public class BadCache {
 
 #### 참고 — 실무 저장소는 메모리 정책을 어디서 넘기는가
 
-참고로 실무 저장소(`day_by_spring`)는 애플리케이션 코드 안에서 힙 크기를 고정하지 않고, 컨테이너 실행 레이어에서 `JAVA_OPTS`로 JVM 메모리 정책을 넘깁니다. 그래서 이 문서는 **코드에 박힌 값 설명**이라기보다 **운영 환경에서 어떤 메모리 관찰 포인트를 먼저 볼지**에 더 가깝습니다.
+참고로 필자의 실무 저장소는 애플리케이션 코드 안에서 힙 크기를 고정하지 않고, 컨테이너 실행 레이어에서 `JAVA_OPTS`로 JVM 메모리 정책을 넘깁니다. 그래서 이 문서는 **코드에 박힌 값 설명**이라기보다 **운영 환경에서 어떤 메모리 관찰 포인트를 먼저 볼지**에 더 가깝습니다.
 
 ```dockerfile
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
@@ -444,6 +442,7 @@ JVM은 컨테이너 메모리 한계를 기준으로 힙 상한을 공격적으�
 - 힙 덤프: 어떤 객체가 많이 남는지 봅니다.
 - `jcmd`: JVM 상태를 질의합니다.
 - Native Memory Tracking: 힙 밖 메모리를 추적할 때 사용합니다.
+
 ```bash
 java -XX:+HeapDumpOnOutOfMemoryError \
      -XX:HeapDumpPath=/tmp/heap.hprof \
@@ -473,7 +472,7 @@ Spring Boot에서는 아래 상황이 메모리 사용량에 큰 영향을 줍�
 
 ### ✏️ 직접 해보기
 
-객체와 지역변수가 각각 힙·스택 어디에 저장되는지 예제로 짚어 보라.
+객체와 지역변수가 각각 힙·스택 어디에 저장되는지 예제로 짚어 보라. 위에서 만든 `ReachabilityExample.java`를 다시 열어 각 줄의 객체·지역 변수가 힙과 스택 중 어디에 놓이는지 주석으로 표시하고, 위 실행 명령(`javac ReachabilityExample.java && java ReachabilityExample`)으로 여전히 동작하는지 확인하라.
 
 ## 10.2 JVM 기초 가이드 3: 튜닝과 실전 활용
 
@@ -487,7 +486,7 @@ Spring Boot에서는 아래 상황이 메모리 사용량에 큰 영향을 줍�
 
 #### 참고 — 실무 저장소 기준으로 보면
 
-참고로 실무 저장소(`day_by_spring`)의 실행 이미지는 컨테이너 친화적인 JVM 옵션만 최소한으로 두고 있습니다.
+참고로 필자의 실무 저장소의 실행 이미지는 컨테이너 친화적인 JVM 옵션만 최소한으로 두고 있습니다.
 
 ```dockerfile
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
@@ -636,6 +635,7 @@ GC 알고리즘은 중요하지만, 대부분의 문제는 GC 종류를 바꾸�
 - Old 영역 압박이 계속 증가하는가
 - Full GC 성격의 무거운 수집이 보이는가
 - GC 후에도 메모리가 충분히 회수되지 않는가
+
 ```bash
 java -XX:MaxGCPauseMillis=200 \
      -Xms1g -Xmx1g \
@@ -679,4 +679,4 @@ java -XX:MaxGCPauseMillis=200 \
 
 ### ✏️ 직접 해보기
 
-`-Xmx`·`-verbose:gc` 옵션으로 실행해 GC 로그를 출력하고 읽어 보라.
+`-Xmx`·`-verbose:gc` 옵션으로 실행해 GC 로그를 출력하고 읽어 보라. 10.1의 `ReachabilityExample.java`와 같은 디렉터리에 객체를 대량 생성하는 반복문을 담은 `GcLogDemo.java`를 package 선언 없이 새로 만들고, `javac GcLogDemo.java && java -Xmx64m -verbose:gc GcLogDemo`로 실행해 출력된 GC 로그 각 줄이 무엇을 뜻하는지 해석해 보라.

@@ -7,8 +7,6 @@ created: 2026-04-18
 updated: 2026-07-03
 ---
 
-> 📘 [[src-java-study-2024-2025]] 원본 교재 본문. 학습 흐름은 [[guide-java-learning-path]] 참조.
-
 # 데이터 접근과 SQL
 
 ## 🎯 이 장에서 배우는 것
@@ -121,6 +119,7 @@ CREATE TABLE orders (
 - `WHERE` 조건에 반복적으로 등장하는 컬럼
 - 정렬과 페이징 기준 컬럼
 - 유일성을 보장해야 하는 컬럼
+
 ```sql
 CREATE INDEX idx_orders_member_id_ordered_at
     ON orders(member_id, ordered_at DESC);
@@ -229,7 +228,7 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 
 ### ✏️ 직접 해보기
 
-회원-주문-상품을 ERD로 그리고 FK 관계를 정의해 보라.
+회원-주문-상품을 ERD로 그리고 FK 관계를 정의해 보라. 그린 ERD를 `CREATE TABLE` + `FOREIGN KEY` DDL로 옮긴 뒤, `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄우고 H2 콘솔(`http://localhost:8080/h2-console`, JDBC URL `jdbc:h2:mem:localdb`)에서 실행해 테이블이 생기는지 확인하라.
 
 #### 정리
 
@@ -534,6 +533,7 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 - 정규화는 중복을 줄이고 수정 일관성을 높입니다.
 - 대신 조회 시 JOIN이 늘어날 수 있습니다.
 - 그러나 대부분의 서비스는 먼저 정규화된 설계로 시작하는 편이 안전합니다.
+
 ```sql
 CREATE INDEX idx_posts_user_id ON posts(user_id);
 CREATE INDEX idx_comments_post_id ON comments(post_id);
@@ -546,6 +546,7 @@ CREATE INDEX idx_comments_post_id ON comments(post_id);
 - 게시글 목록에 댓글 수를 항상 보여줘야 하는 경우
 - 상품 목록에 평균 평점과 리뷰 수를 반복적으로 노출하는 경우
 - 집계 결과를 실시간처럼 읽어야 하는 경우
+
 ```sql
 CREATE TABLE posts (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -561,6 +562,7 @@ CREATE TABLE posts (
 - `WHERE` 조건에 자주 등장하는 컬럼
 - `JOIN`에 사용되는 FK 컬럼
 - 정렬과 페이징에 자주 사용되는 컬럼
+
 ```sql
 CREATE INDEX idx_products_category_price ON products(category_id, price);
 EXPLAIN SELECT *
@@ -575,6 +577,7 @@ WHERE category_id = 5 AND price > 1000;
 - 주문 생성과 재고 차감
 - 계좌 이체
 - 좌석 예약
+
 ```sql
 START TRANSACTION;
 SELECT stock_quantity FROM products WHERE id = 101 FOR UPDATE;
@@ -724,6 +727,7 @@ LEFT JOIN categories c ON c.id = b.category_id;
 - `SUM`: 합계
 - `AVG`: 평균
 - `MIN`, `MAX`: 최소/최대
+
 ```sql
 SELECT category_id, COUNT(*) AS book_count, AVG(price) AS avg_price
 FROM books
@@ -788,7 +792,7 @@ WHERE category_id = 3;
 
 ### ✏️ 직접 해보기
 
-두 테이블을 JOIN해 그룹별 집계(GROUP BY)를 구하는 SQL을 작성하라.
+두 테이블을 JOIN해 그룹별 집계(GROUP BY)를 구하는 SQL을 작성하라. `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄운 뒤 H2 콘솔(`http://localhost:8080/h2-console`, JDBC URL `jdbc:h2:mem:localdb`)에서 `CREATE TABLE`·`INSERT`로 데이터를 넣고 작성한 SQL을 실행해 집계 결과를 확인하라.
 
 #### 정리
 
@@ -867,6 +871,7 @@ WHERE category_id = 1 AND price > 100;
 - `key`: 실제 사용된 인덱스입니다.
 - `rows`: 읽을 것으로 예상하는 행 수입니다.
 - `Extra`: `Using filesort`, `Using temporary` 같은 추가 비용을 확인합니다.
+
 ```sql
 EXPLAIN SELECT
     c.category_name,
@@ -956,7 +961,7 @@ GROUP BY p.product_id, p.product_name;
 
 ### ✏️ 직접 해보기
 
-느린 쿼리에 인덱스를 추가하기 전후로 실행 계획을 비교해 보라.
+느린 쿼리에 인덱스를 추가하기 전후로 실행 계획을 비교해 보라. 7.2와 같은 `demo` H2 콘솔에서 조회 SQL 앞에 `EXPLAIN`을 붙여 실행하고, `CREATE INDEX`로 인덱스를 만든 뒤 같은 `EXPLAIN`을 다시 실행해 계획이 어떻게 달라지는지 확인하라.
 
 #### 정리
 
@@ -1001,7 +1006,7 @@ Querydsl은 이 지점에서 장점이 드러납니다. 핵심은 SQL을 숨기�
 
 #### 참고 — 실무 프로젝트는 어디에 서 있는가
 
-이 책이 참고 사례로 드는 실무 저장소(`day_by_spring`)도 아직 Querydsl을 사용하고 있지는 않습니다.
+이 책이 참고 사례로 드는 실무 저장소도 아직 Querydsl을 사용하고 있지는 않습니다.
 
 - `pom.xml`에 Querydsl 의존성이 없습니다.
 - Q 타입 생성 설정이 없습니다.
@@ -1423,7 +1428,7 @@ Querydsl은 문법이 어렵다기보다, 처음에 Q 타입과 메서드 체인
 
 #### 실습 기준: Querydsl 도입 전의 조회 코드
 
-Querydsl 문법을 배우기 전에, 같은 조회가 Spring Data JPA + JPQL 문자열로는 어떤 모습인지 비교 기준을 `demo`에 만들어 둡니다(7.4-1 실습 환경이 먼저 필요합니다). 참고로 실무 저장소(`day_by_spring`)도 아직 Querydsl 없이 이 방식이 중심입니다.
+Querydsl 문법을 배우기 전에, 같은 조회가 Spring Data JPA + JPQL 문자열로는 어떤 모습인지 비교 기준을 `demo`에 만들어 둡니다(7.4-1 실습 환경이 먼저 필요합니다). 참고로 실무 저장소도 아직 Querydsl 없이 이 방식이 중심입니다.
 
 **파일**: src/main/java/com/example/demo/ch07/LoanRepository.java
 
@@ -1499,6 +1504,7 @@ Member result = queryFactory
 - `lt()`, `loe()`: 미만, 이하
 - `between()`: 범위 조회
 - `contains()`, `startsWith()`: 문자열 검색
+
 ```java
 .where(member.age.between(20, 30))
 .where(member.username.startsWith("mem"))
@@ -1585,7 +1591,7 @@ List<Member> result = queryFactory
 
 ### ✏️ 직접 해보기
 
-단순 조건 조회를 Querydsl로 작성해 보라.
+단순 조건 조회를 Querydsl로 작성해 보라. 7.4-1 실습 환경을 갖춘 `demo` 프로젝트에 `src/test/java/com/example/demo/ch07/LoanQuerydslTest.java`를 만들어 `JPAQueryFactory`를 주입받아 `selectFrom`-`where` 체인을 작성하고, `./mvnw test -Dtest=LoanQuerydslTest`로 실행해 보라.
 
 #### 정리
 
@@ -1615,7 +1621,7 @@ Querydsl 기본 문법은 **SQL의 핵심 구조를 코드 기반으로 옮긴 �
 
 Spring Data JPA 공식 문서만으로도 인터페이스 기반 프로젝션, DTO 생성자 프로젝션, 동적 프로젝션, `Page`/`Slice` 조회가 가능합니다. 따라서 **DTO 조회 = 반드시 Querydsl**은 아닙니다.
 
-참고로 실무 저장소(`day_by_spring`)는 Querydsl DTO 프로젝션 없이, 리포지토리에서 엔티티와 스칼라 값을 조회하는 구조가 중심입니다.
+참고로 실무 저장소는 Querydsl DTO 프로젝션 없이, 리포지토리에서 엔티티와 스칼라 값을 조회하는 구조가 중심입니다.
 
 **참고 코드** — 실무 저장소의 스칼라 조회 예시입니다. `totalAmount` 같은 임베디드 금액 타입에 기대는 코드라 `demo`에 만드는 실습 파일은 아닙니다.
 
@@ -1765,7 +1771,7 @@ List<MemberDto> result = queryFactory
 
 ### ✏️ 직접 해보기
 
-엔티티 전체 대신 DTO 두 필드만 조회하는 Querydsl 쿼리를 작성하라.
+엔티티 전체 대신 DTO 두 필드만 조회하는 Querydsl 쿼리를 작성하라. `demo` 프로젝트의 `src/main/java/com/example/demo/ch07/`에 두 필드짜리 DTO를 만들고, 7.5에서 만든 `LoanQuerydslTest.java`에 `Projections.constructor` 조회 테스트를 추가해 `./mvnw test -Dtest=LoanQuerydslTest`로 실행해 보라.
 
 #### 정리
 
@@ -1789,7 +1795,7 @@ Querydsl 프로젝션은 **필요한 데이터만 안전하게 조회해 DTO로 
 실무에서 진짜 어려운 것은 문법보다도, 조건을 어디까지 메서드로 나눌지, 어떤 조건을 검색 DTO에 묶을지, Querydsl 타입을 어느 계층까지 노출할지 판단하는 일입니다.
 
 ### 실습 기준에서 먼저 보는 축
-`demo`에 만든 `LoanRepository`(7.5)와 곧 만들 `MemberRepository`(7.9)는 `JpaSpecificationExecutor`를 확장합니다. 즉 동적 검색을 받아들일 진입점은 이미 Spring Data JPA 쪽에 열려 있습니다. 참고로 실무 저장소(`day_by_spring`)의 `BookRepository`도 같은 모양입니다.
+`demo`에 만든 `LoanRepository`(7.5)와 곧 만들 `MemberRepository`(7.9)는 `JpaSpecificationExecutor`를 확장합니다. 즉 동적 검색을 받아들일 진입점은 이미 Spring Data JPA 쪽에 열려 있습니다. 참고로 실무 저장소의 `BookRepository`도 같은 모양입니다.
 
 **참고 코드** — 실무 저장소의 진입점 예시입니다.
 ```java
@@ -1901,7 +1907,7 @@ Querydsl 동적 쿼리는 **조건을 메서드 단위로 잘게 나누어 조�
 
 ### ✏️ 직접 해보기
 
-검색 조건이 있을 때만 where에 붙는 동적 쿼리를 작성하라.
+검색 조건이 있을 때만 where에 붙는 동적 쿼리를 작성하라. 7.5에서 만든 `demo`의 `LoanQuerydslTest.java`에 null이면 무시되는 `BooleanExpression` 조건 메서드 두 개를 추가해 where에 조합하고, `./mvnw test -Dtest=LoanQuerydslTest`로 조건 유무에 따라 결과가 달라지는지 확인하라.
 
 ## 7.8 Spring Data JPA와 Querydsl 통합 전략
 
@@ -1925,7 +1931,7 @@ Spring Data JPA와 Querydsl은 경쟁 관계가 아니라 역할 분담 관계�
 
 #### 참고 — 실무 저장소는 어디까지 와 있는가
 
-실무 저장소(`day_by_spring`)는 이미 Spring Data JPA 구조를 적극적으로 사용하고 있습니다.
+실무 저장소는 이미 Spring Data JPA 구조를 적극적으로 사용하고 있습니다.
 
 - `BookRepository`, `MemberRepository`, `LoanRepository` 등이 `JpaRepository`를 확장합니다.
 - 일부 리포지토리는 `JpaSpecificationExecutor`도 함께 사용합니다.
@@ -2062,7 +2068,7 @@ application/
 
 ### ✏️ 직접 해보기
 
-커스텀 리포지토리에 Querydsl 메서드를 추가해 보라.
+커스텀 리포지토리에 Querydsl 메서드를 추가해 보라. fragment 파일들은 7.9에서 `demo`에 만드니, 7.9를 마친 뒤 `src/main/java/com/example/demo/ch07/MemberQueryRepositoryImpl.java`에 조회 메서드를 하나 더 추가하고 `./mvnw test -Dtest=MemberQueryRepositoryTest`로 컴파일·실행을 확인하라.
 
 #### 정리
 
@@ -2088,7 +2094,7 @@ Spring Data JPA와 Querydsl은 **기본 저장 작업과 복잡한 조회를 분
 
 #### 실습 기준에서 읽는 법
 
-먼저 조회 전용 리포지토리를 나누기 **전 단계**를 `demo`에 만듭니다. 메서드 쿼리와 `JpaSpecificationExecutor`를 한 인터페이스에 섞어 쓰는 Spring Data JPA 리포지토리입니다. (실무 저장소 `day_by_spring`도 아직 이 단계에 서 있습니다.)
+먼저 조회 전용 리포지토리를 나누기 **전 단계**를 `demo`에 만듭니다. 메서드 쿼리와 `JpaSpecificationExecutor`를 한 인터페이스에 섞어 쓰는 Spring Data JPA 리포지토리입니다. (실무 저장소도 아직 이 단계에 서 있습니다.)
 
 **파일**: src/main/java/com/example/demo/ch07/MemberRepository.java
 
@@ -2394,7 +2400,7 @@ class MemberQueryRepositoryTest {
 
 ### ✏️ 직접 해보기
 
-조회 책임을 분리한 리포지토리 인터페이스를 설계하라.
+조회 책임을 분리한 리포지토리 인터페이스를 설계하라. 위 `MemberQueryRepository.java`·`MemberQueryRepositoryImpl.java` 구조를 참고해 `demo`의 `Loan`에도 같은 방식의 조회 fragment(`LoanQueryRepository` 인터페이스 + Impl)를 `src/main/java/com/example/demo/ch07/`에 만들고, `./mvnw compile`로 통과하는지 확인하라.
 
 #### 정리
 
@@ -2420,7 +2426,7 @@ Querydsl 조회 리포지토리 설계의 핵심은 **Querydsl을 노출하지 �
 
 #### 실습 기준에서 먼저 확인할 것
 
-Querydsl 페이징으로 가기 전에, 같은 페이징을 Spring Data JPA 메서드 쿼리로 표현한 비교 기준을 `demo`에 만들어 둡니다. (실무 저장소 `day_by_spring`도 아직 Querydsl 페이징 없이 `Pageable`과 JPQL `JOIN FETCH`를 함께 쓰는 단계입니다.) 따라서 이 문서는 **향후 목록 API를 Querydsl로 옮기거나 확장할 때 지켜야 할 성능 기준**으로 읽는 편이 정확합니다.
+Querydsl 페이징으로 가기 전에, 같은 페이징을 Spring Data JPA 메서드 쿼리로 표현한 비교 기준을 `demo`에 만들어 둡니다. (실무 저장소도 아직 Querydsl 페이징 없이 `Pageable`과 JPQL `JOIN FETCH`를 함께 쓰는 단계입니다.) 따라서 이 문서는 **향후 목록 API를 Querydsl로 옮기거나 확장할 때 지켜야 할 성능 기준**으로 읽는 편이 정확합니다.
 
 **파일**: src/main/java/com/example/demo/ch07/OrderRepository.java
 
@@ -2610,7 +2616,7 @@ N+1은 Querydsl 자체의 문제가 아니라 **조회 전략 문제**입니다.
 
 ### ✏️ 직접 해보기
 
-count 쿼리를 분리한 페이징 조회를 구현해 보라.
+count 쿼리를 분리한 페이징 조회를 구현해 보라. 7.9에서 `demo`에 만든 `MemberQueryRepositoryImpl.java`의 `search()`를 바탕으로 count 쿼리에서 불필요한 join·정렬을 빼는 식으로 다듬고, 위 실행 명령(`./mvnw test -Dtest=MemberQueryRepositoryTest`)으로 content/count 두 쿼리가 SQL 로그에 분리되어 찍히는지 확인하라.
 
 #### 정리
 
