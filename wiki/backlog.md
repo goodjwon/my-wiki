@@ -191,7 +191,7 @@ updated: 2026-07-03
 
 ## ⚠️ 주의사항·결정 사항
 
-- **day_by_spring 공개 보류 (2026-07-03)**: 위키는 자족형(6.1 demo 기준)이라 공개 불필요. 시크릿 스캔 완료 상태(실유출 0건) — 공개하려면 `.env.example`의 Supabase 호스트 플레이스홀더 교체 커밋 1개 + 위키에 URL 1줄이면 됨.
+- **day_by_spring 공개 불필요 확정 (2026-07-03)**: 수업은 저장소 공개 없이 진행 — 독자 콘텐츠에서 `day_by_spring`·`day-by-java` 저장소명 자체를 제거(42곳 일반화)하고, 직접 만드는 실습 프로젝트 2개(ch01 1.2 Java + ch06 6.1 Spring demo)로 완결. Notion 계보 배너(`📘 원본 교재 본문`)도 12챕터에서 제거. 시크릿 스캔 결과(실유출 0건)는 보존 — 향후 공개하고 싶어지면 `.env.example` Supabase 호스트 플레이스홀더 커밋 1개 + URL 1줄.
 - **실습 스캐폴드 표준 (2026-07-03)**: 새 코드 예제는 §7-7 4요소 필수 — `bash scripts/scaffold-lint.sh <파일>` 게이트 통과. 예상 결과는 실측 원칙.
 - **문체 표준 (2026-07-02)**: 독자 콘텐츠(챕터·guide·concept·entity) 합니다체, lecture-*만 개조식 — `bash scripts/style-lint.sh <파일>` 게이트.
 - **메모리 동기화 안 함 (2026-06-30)**: Claude 메모리(`~/.claude/projects/.../memory/`)는 git 저장소 바깥 PC별 로컬 파일 → push 대상 아님. 멀티-PC 공유 인계는 **이 backlog가 전담**(메모리는 각 PC 보조 캐시). 다른 PC에서 "메모리도 push?"는 No.
