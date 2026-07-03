@@ -105,7 +105,12 @@ Spring 핵심 개념의 핵심은 **어노테이션 이름**보다, **객체 생
 
 ### ✏️ 직접 해보기
 
-두 클래스를 생성자 주입으로 연결한 빈을 만들어 컨테이너가 주입하는지 확인하라. 6.1에서 만드는 `demo` 프로젝트에 `src/main/java/com/example/demo/ch06/di/` 아래 `@Component` 두 개를 생성자 주입으로 연결해 만들고(아직 프로젝트가 없으면 6.1을 먼저 진행), `./mvnw spring-boot:run`으로 실행해 생성자 안에 넣은 출력이 시작 로그에 찍히는지 확인하라.
+두 클래스를 생성자 주입으로 연결한 빈을 만들어 컨테이너가 주입하는지 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 6.1에서 만드는 `demo` 프로젝트 `src/main/java/com/example/demo/ch06/di/` 아래 `@Component` 두 개를 생성자 주입으로 연결해 작성 — 아직 프로젝트가 없으면 6.1을 먼저 진행
+    - **실행**: `./mvnw spring-boot:run` — 생성자 안에 넣은 출력이 시작 로그에 찍히는지 확인
 
 ## 6.1 Spring 실습 환경 구성 가이드
 
@@ -293,7 +298,12 @@ curl -i http://localhost:8080/
 
 ### ✏️ 직접 해보기
 
-Spring Initializr로 프로젝트를 만들어 내장 톰캣으로 실행해 보라. 위 6.1 절차대로 start.spring.io에서 `demo` 프로젝트를 만들어 그 루트에서 위 실행 명령(`./mvnw spring-boot:run`)으로 띄우고, 시작 로그에서 Tomcat이 8080 포트로 뜨는지 확인하라.
+Spring Initializr로 프로젝트를 만들어 내장 톰캣으로 실행해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 6.1 절차대로 start.spring.io에서 `demo` 프로젝트 생성
+    - **실행**: 프로젝트 루트에서 `./mvnw spring-boot:run` — 시작 로그에서 Tomcat이 8080 포트로 뜨는지 확인
 
 ## 6.2 Maven 환경 구성과 프로젝트 전환
 
@@ -498,7 +508,12 @@ mvn package
 
 ### ✏️ 직접 해보기
 
-`pom.xml`에 의존성을 하나 추가하고 빌드해 적용되는지 확인하라. `demo` 프로젝트의 `pom.xml`에 의존성(예: `spring-boot-starter-validation`)을 추가하고, 위 실행 명령(`./mvnw clean compile`)으로 빌드해 새 라이브러리가 내려받아지는지 확인하라.
+`pom.xml`에 의존성을 하나 추가하고 빌드해 적용되는지 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: `demo` 프로젝트의 `pom.xml`을 수정 — 의존성(예: `spring-boot-starter-validation`) 추가
+    - **실행**: `./mvnw clean compile` — 새 라이브러리가 내려받아지는지 확인
 
 #### 정리
 
@@ -799,7 +814,12 @@ The following 1 profile is active: "<지정한 프로파일>"
 
 ### ✏️ 직접 해보기
 
-프로파일마다 `server.port`를 다르게 지정해(`h2`는 8080, `dev-pg`는 8081) 실행 로그에서 포트가 프로파일에 따라 바뀌는지 확인하라. `demo` 프로젝트의 위 `application-h2.yml`·`application-dev-pg.yml`에 `server.port`를 추가하고, 위 실행 명령(`./mvnw spring-boot:run -Dspring-boot.run.profiles=h2` 등)으로 프로파일을 바꿔가며 띄워 보라.
+프로파일마다 `server.port`를 다르게 지정해(`h2`는 8080, `dev-pg`는 8081) 실행 로그에서 포트가 프로파일에 따라 바뀌는지 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: `demo` 프로젝트의 위 `application-h2.yml`·`application-dev-pg.yml`을 수정 — `server.port` 추가
+    - **실행**: `./mvnw spring-boot:run -Dspring-boot.run.profiles=h2` 등 — 프로파일을 바꿔가며 실행
 
 ### 정리
 프로파일 설정의 핵심은 이름을 외우는 데 있지 않습니다. **내 프로젝트가 어떤 프로파일 파일을 가지고 있고, 그 프로파일이 DB·로그·DDL 전략을 어떻게 바꾸는지**를 정확히 읽는 데 있습니다. 이 절에서 `demo`에 만든 `h2`, `dev-my`, `dev-pg`, `prod`가 그 기준선입니다.

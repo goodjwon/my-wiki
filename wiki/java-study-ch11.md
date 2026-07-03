@@ -720,7 +720,12 @@ git remote set-url origin git@github.com:your_username/my-first-git-project.git
 
 ### ✏️ 직접 해보기
 
-새 저장소에서 브랜치를 파고 커밋한 뒤 main에 병합해 보라. 아무 위치에나 연습용 디렉터리(예: `git-practice`)를 만들어 `git init`으로 시작하고, 병합 후 `git log --oneline --graph`로 브랜치 커밋이 main에 합쳐졌는지 확인하라.
+새 저장소에서 브랜치를 파고 커밋한 뒤 main에 병합해 보라. 병합 후 브랜치 커밋이 main에 합쳐졌는지 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 아무 위치에나 연습용 디렉터리(예: `git-practice`)를 만들어 `git init`으로 시작
+    - **실행**: 병합 후 `git log --oneline --graph`로 확인
 
 ## 11.16 스레드와 동기화 기초
 
@@ -804,7 +809,12 @@ try {
 
 ### ✏️ 직접 해보기
 
-두 스레드가 공유 변수를 증가시킬 때 동기화 유무에 따른 결과 차이를 확인하라. ch01 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch11/RaceConditionDemo.java`를 새로 만들어 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch11.RaceConditionDemo"`(이 프로젝트에는 mvnw 래퍼가 없다)로 실행해 `synchronized` 유무에 따라 최종 값이 달라지는지 비교하라.
+두 스레드가 공유 변수를 증가시킬 때 동기화 유무에 따른 결과 차이를 확인하라. `synchronized` 유무에 따라 최종 값이 달라지는지 비교하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: ch01 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch11/RaceConditionDemo.java`를 새로 만들기 — 첫 줄 `package com.example.ch11;`
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch11.RaceConditionDemo"` (이 프로젝트에는 mvnw 래퍼가 없다)
 
 ## 11.17 포트폴리오 예제
 

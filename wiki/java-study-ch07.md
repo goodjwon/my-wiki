@@ -228,7 +228,12 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 
 ### ✏️ 직접 해보기
 
-회원-주문-상품을 ERD로 그리고 FK 관계를 정의해 보라. 그린 ERD를 `CREATE TABLE` + `FOREIGN KEY` DDL로 옮긴 뒤, `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄우고 H2 콘솔(`http://localhost:8080/h2-console`, JDBC URL `jdbc:h2:mem:localdb`)에서 실행해 테이블이 생기는지 확인하라.
+회원-주문-상품을 ERD로 그리고 FK 관계를 정의한 뒤, 그린 ERD를 `CREATE TABLE` + `FOREIGN KEY` DDL로 옮겨 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 별도 파일 없음 — H2 콘솔(`http://localhost:8080/h2-console`, JDBC URL `jdbc:h2:mem:localdb`)에서 DDL 직접 실행
+    - **실행**: `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄운 뒤 콘솔에서 DDL 실행 — 테이블이 생기는지 확인
 
 #### 정리
 
@@ -792,7 +797,12 @@ WHERE category_id = 3;
 
 ### ✏️ 직접 해보기
 
-두 테이블을 JOIN해 그룹별 집계(GROUP BY)를 구하는 SQL을 작성하라. `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄운 뒤 H2 콘솔(`http://localhost:8080/h2-console`, JDBC URL `jdbc:h2:mem:localdb`)에서 `CREATE TABLE`·`INSERT`로 데이터를 넣고 작성한 SQL을 실행해 집계 결과를 확인하라.
+두 테이블을 JOIN해 그룹별 집계(GROUP BY)를 구하는 SQL을 작성하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 별도 파일 없음 — H2 콘솔(`http://localhost:8080/h2-console`, JDBC URL `jdbc:h2:mem:localdb`)에서 SQL 직접 실행
+    - **실행**: `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄운 뒤 `CREATE TABLE`·`INSERT`로 데이터를 넣고 작성한 SQL 실행 — 집계 결과 확인
 
 #### 정리
 
@@ -961,7 +971,12 @@ GROUP BY p.product_id, p.product_name;
 
 ### ✏️ 직접 해보기
 
-느린 쿼리에 인덱스를 추가하기 전후로 실행 계획을 비교해 보라. 7.2와 같은 `demo` H2 콘솔에서 조회 SQL 앞에 `EXPLAIN`을 붙여 실행하고, `CREATE INDEX`로 인덱스를 만든 뒤 같은 `EXPLAIN`을 다시 실행해 계획이 어떻게 달라지는지 확인하라.
+느린 쿼리에 인덱스를 추가하기 전후로 실행 계획을 비교해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 별도 파일 없음 — 7.2와 같은 `demo` H2 콘솔에서 SQL 직접 실행
+    - **실행**: 조회 SQL 앞에 `EXPLAIN`을 붙여 실행하고, `CREATE INDEX`로 인덱스를 만든 뒤 같은 `EXPLAIN` 재실행 — 계획이 어떻게 달라지는지 확인
 
 #### 정리
 
@@ -1591,7 +1606,12 @@ List<Member> result = queryFactory
 
 ### ✏️ 직접 해보기
 
-단순 조건 조회를 Querydsl로 작성해 보라. 7.4-1 실습 환경을 갖춘 `demo` 프로젝트에 `src/test/java/com/example/demo/ch07/LoanQuerydslTest.java`를 만들어 `JPAQueryFactory`를 주입받아 `selectFrom`-`where` 체인을 작성하고, `./mvnw test -Dtest=LoanQuerydslTest`로 실행해 보라.
+단순 조건 조회를 Querydsl로 작성해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 7.4-1 실습 환경을 갖춘 `demo` 프로젝트 `src/test/java/com/example/demo/ch07/LoanQuerydslTest.java`로 새로 작성 — `JPAQueryFactory`를 주입받아 `selectFrom`-`where` 체인
+    - **실행**: `./mvnw test -Dtest=LoanQuerydslTest`
 
 #### 정리
 
@@ -1771,7 +1791,12 @@ List<MemberDto> result = queryFactory
 
 ### ✏️ 직접 해보기
 
-엔티티 전체 대신 DTO 두 필드만 조회하는 Querydsl 쿼리를 작성하라. `demo` 프로젝트의 `src/main/java/com/example/demo/ch07/`에 두 필드짜리 DTO를 만들고, 7.5에서 만든 `LoanQuerydslTest.java`에 `Projections.constructor` 조회 테스트를 추가해 `./mvnw test -Dtest=LoanQuerydslTest`로 실행해 보라.
+엔티티 전체 대신 DTO 두 필드만 조회하는 Querydsl 쿼리를 작성하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: `demo` 프로젝트 `src/main/java/com/example/demo/ch07/`에 두 필드짜리 DTO를 새로 작성하고, 7.5에서 만든 `LoanQuerydslTest.java`에 `Projections.constructor` 조회 테스트 추가
+    - **실행**: `./mvnw test -Dtest=LoanQuerydslTest`
 
 #### 정리
 
@@ -1907,7 +1932,12 @@ Querydsl 동적 쿼리는 **조건을 메서드 단위로 잘게 나누어 조�
 
 ### ✏️ 직접 해보기
 
-검색 조건이 있을 때만 where에 붙는 동적 쿼리를 작성하라. 7.5에서 만든 `demo`의 `LoanQuerydslTest.java`에 null이면 무시되는 `BooleanExpression` 조건 메서드 두 개를 추가해 where에 조합하고, `./mvnw test -Dtest=LoanQuerydslTest`로 조건 유무에 따라 결과가 달라지는지 확인하라.
+검색 조건이 있을 때만 where에 붙는 동적 쿼리를 작성하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 7.5에서 만든 `demo`의 `LoanQuerydslTest.java`를 수정 — null이면 무시되는 `BooleanExpression` 조건 메서드 두 개를 추가해 where에 조합
+    - **실행**: `./mvnw test -Dtest=LoanQuerydslTest` — 조건 유무에 따라 결과가 달라지는지 확인
 
 ## 7.8 Spring Data JPA와 Querydsl 통합 전략
 
@@ -2068,7 +2098,12 @@ application/
 
 ### ✏️ 직접 해보기
 
-커스텀 리포지토리에 Querydsl 메서드를 추가해 보라. fragment 파일들은 7.9에서 `demo`에 만드니, 7.9를 마친 뒤 `src/main/java/com/example/demo/ch07/MemberQueryRepositoryImpl.java`에 조회 메서드를 하나 더 추가하고 `./mvnw test -Dtest=MemberQueryRepositoryTest`로 컴파일·실행을 확인하라.
+커스텀 리포지토리에 Querydsl 메서드를 추가해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: `src/main/java/com/example/demo/ch07/MemberQueryRepositoryImpl.java`를 수정 — 조회 메서드 하나 추가 (fragment 파일들은 7.9에서 `demo`에 만드니 7.9를 마친 뒤 진행)
+    - **실행**: `./mvnw test -Dtest=MemberQueryRepositoryTest` — 컴파일·실행 확인
 
 #### 정리
 
@@ -2400,7 +2435,12 @@ class MemberQueryRepositoryTest {
 
 ### ✏️ 직접 해보기
 
-조회 책임을 분리한 리포지토리 인터페이스를 설계하라. 위 `MemberQueryRepository.java`·`MemberQueryRepositoryImpl.java` 구조를 참고해 `demo`의 `Loan`에도 같은 방식의 조회 fragment(`LoanQueryRepository` 인터페이스 + Impl)를 `src/main/java/com/example/demo/ch07/`에 만들고, `./mvnw compile`로 통과하는지 확인하라.
+조회 책임을 분리한 리포지토리 인터페이스를 설계하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: `demo` 프로젝트 `src/main/java/com/example/demo/ch07/`에 `Loan`용 조회 fragment(`LoanQueryRepository` 인터페이스 + Impl)를 새로 작성 — 위 `MemberQueryRepository.java`·`MemberQueryRepositoryImpl.java` 구조 참고
+    - **실행**: `./mvnw compile` — 통과하는지 확인
 
 #### 정리
 
@@ -2616,7 +2656,12 @@ N+1은 Querydsl 자체의 문제가 아니라 **조회 전략 문제**입니다.
 
 ### ✏️ 직접 해보기
 
-count 쿼리를 분리한 페이징 조회를 구현해 보라. 7.9에서 `demo`에 만든 `MemberQueryRepositoryImpl.java`의 `search()`를 바탕으로 count 쿼리에서 불필요한 join·정렬을 빼는 식으로 다듬고, 위 실행 명령(`./mvnw test -Dtest=MemberQueryRepositoryTest`)으로 content/count 두 쿼리가 SQL 로그에 분리되어 찍히는지 확인하라.
+count 쿼리를 분리한 페이징 조회를 구현해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 7.9에서 `demo`에 만든 `MemberQueryRepositoryImpl.java`의 `search()`를 수정 — count 쿼리에서 불필요한 join·정렬을 빼는 식으로 다듬기
+    - **실행**: `./mvnw test -Dtest=MemberQueryRepositoryTest` — content/count 두 쿼리가 SQL 로그에 분리되어 찍히는지 확인
 
 #### 정리
 

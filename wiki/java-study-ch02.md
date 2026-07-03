@@ -171,7 +171,12 @@ System.out.println(name + " is " + age + " years old.");
 
 ### ✏️ 직접 해보기
 
-int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals` 비교 결과를 직접 출력해 차이를 확인하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch02/practice/TypePractice.java` 를 새로 만들어(첫 줄 `package com.example.ch02.practice;`) 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"` 로 실행해 보라.
+int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals` 비교 결과를 직접 출력해 차이를 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch02/practice/TypePractice.java` 새로 생성 — 첫 줄 `package com.example.ch02.practice;`
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"`
 
 #### 정리
 
@@ -464,7 +469,12 @@ String result = builder.toString();
 
 ### ✏️ 직접 해보기
 
-정수 배열의 합과 평균을 반환하는 메서드를 만들고, 인자로 넘긴 배열이 메서드 안에서 어떻게 다뤄지는지 출력으로 확인하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch02/practice/ArrayStatsPractice.java` 를 새로 만들어 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.ArrayStatsPractice"` 로 실행해 보라.
+정수 배열의 합과 평균을 반환하는 메서드를 만들고, 인자로 넘긴 배열이 메서드 안에서 어떻게 다뤄지는지 출력으로 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch02/practice/ArrayStatsPractice.java` 새로 생성
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.ArrayStatsPractice"`
 
 #### 정리
 
@@ -1162,7 +1172,12 @@ public class TemplateMethodDemo {
 
 ### ✏️ 직접 해보기
 
-위 샘플 중 하나에서 필드를 `private`로 바꾸고, 외부가 메서드로만 접근하도록 캡슐화를 강화해 보라. 좋은 대상은 위 `Car.java`(상속 예제 2)다 — `protected String brand` 필드를 `private`로 바꾸고 getter 메서드로만 읽게 고친 뒤, 이 절 대표 실행 명령의 `-Dexec.mainClass` 값을 `com.example.ch02.Car`로 바꿔 다시 실행해 보라.
+위 샘플 중 하나에서 필드를 `private`로 바꾸고, 외부가 메서드로만 접근하도록 캡슐화를 강화해 보라. 좋은 대상은 위 `Car.java`(상속 예제 2)다 — `protected String brand` 필드를 `private`로 바꾸고 getter 메서드로만 읽게 고쳐 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 `Car.java`(상속 예제 2)를 수정
+    - **실행**: 이 절 대표 실행 명령 재사용 — `-Dexec.mainClass` 값만 `com.example.ch02.Car`로 변경
 
 ## 2.5 추상 클래스 활용 예제
 
@@ -2032,7 +2047,12 @@ public class MultiLevelInheritanceDemo {
 
 ### ✏️ 직접 해보기
 
-예제 중 하나에 새 하위 클래스를 추가하되 상위(골격) 코드는 수정하지 말고 확장만으로 동작시켜 보라(OCP). 예를 들어 위 `GraphicDemo.java`(예제 2)에 `GraphicTriangle` 클래스를 추가하고 `Graphic` 추상 클래스는 그대로 둔 채 `main`에서 그리게 한 뒤, `mvn compile exec:java -Dexec.mainClass="com.example.ch02.GraphicDemo"` 로 다시 실행해 보라.
+예제 중 하나에 새 하위 클래스를 추가하되 상위(골격) 코드는 수정하지 말고 확장만으로 동작시켜 보라(OCP). 예를 들어 위 `GraphicDemo.java`(예제 2)에 `GraphicTriangle` 클래스를 추가하고 `Graphic` 추상 클래스는 그대로 둔 채 `main`에서 그리게 해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 `GraphicDemo.java`(예제 2)를 수정
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch02.GraphicDemo"`
 
 ## 2.9 객체지향 실전문제
 

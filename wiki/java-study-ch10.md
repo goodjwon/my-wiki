@@ -213,7 +213,12 @@ Spring Boot 프로젝트를 실행하면 아래 현상이 모두 JVM과 연결�
 
 ### ✏️ 직접 해보기
 
-간단한 프로그램의 실행 과정을 클래스 로딩→실행 순으로 설명해 보라. 아무 작업 디렉터리에 `HelloJvmDemo.java`를 package 선언 없이 새로 만들어 `main`에서 문자열 하나를 출력하게 하고, `javac HelloJvmDemo.java && java HelloJvmDemo`로 실행하라. 그 과정이 위 실행 흐름(javac 컴파일 → 클래스 로딩 → 실행)의 어느 단계에 해당하는지 말로 짚어 보라.
+간단한 프로그램의 실행 과정을 클래스 로딩→실행 순으로 설명해 보라. `main`에서 문자열 하나를 출력하는 프로그램을 만들어 실행하고, 그 과정이 위 실행 흐름(javac 컴파일 → 클래스 로딩 → 실행)의 어느 단계에 해당하는지 말로 짚어 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 아무 작업 디렉터리에 `HelloJvmDemo.java` — package 선언 없이 새로 만들기
+    - **실행**: `javac HelloJvmDemo.java && java HelloJvmDemo`
 
 #### 정리
 
@@ -472,7 +477,12 @@ Spring Boot에서는 아래 상황이 메모리 사용량에 큰 영향을 줍�
 
 ### ✏️ 직접 해보기
 
-객체와 지역변수가 각각 힙·스택 어디에 저장되는지 예제로 짚어 보라. 위에서 만든 `ReachabilityExample.java`를 다시 열어 각 줄의 객체·지역 변수가 힙과 스택 중 어디에 놓이는지 주석으로 표시하고, 위 실행 명령(`javac ReachabilityExample.java && java ReachabilityExample`)으로 여전히 동작하는지 확인하라.
+객체와 지역변수가 각각 힙·스택 어디에 저장되는지 예제로 짚어 보라. 각 줄의 객체·지역 변수가 힙과 스택 중 어디에 놓이는지 주석으로 표시하고, 여전히 동작하는지 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위에서 만든 `ReachabilityExample.java`를 수정
+    - **실행**: 위 절의 실행 명령 재사용 (`javac ReachabilityExample.java && java ReachabilityExample`)
 
 ## 10.2 JVM 기초 가이드 3: 튜닝과 실전 활용
 
@@ -679,4 +689,9 @@ java -XX:MaxGCPauseMillis=200 \
 
 ### ✏️ 직접 해보기
 
-`-Xmx`·`-verbose:gc` 옵션으로 실행해 GC 로그를 출력하고 읽어 보라. 10.1의 `ReachabilityExample.java`와 같은 디렉터리에 객체를 대량 생성하는 반복문을 담은 `GcLogDemo.java`를 package 선언 없이 새로 만들고, `javac GcLogDemo.java && java -Xmx64m -verbose:gc GcLogDemo`로 실행해 출력된 GC 로그 각 줄이 무엇을 뜻하는지 해석해 보라.
+`-Xmx`·`-verbose:gc` 옵션으로 실행해 GC 로그를 출력하고 읽어 보라. 객체를 대량 생성하는 반복문을 담은 프로그램을 만들어 실행하고, 출력된 GC 로그 각 줄이 무엇을 뜻하는지 해석해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 10.1의 `ReachabilityExample.java`와 같은 디렉터리에 `GcLogDemo.java` — package 선언 없이 새로 만들기
+    - **실행**: `javac GcLogDemo.java && java -Xmx64m -verbose:gc GcLogDemo`

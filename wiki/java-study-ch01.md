@@ -107,7 +107,12 @@ updated: 2026-07-03
 
 ### ✏️ 직접 해보기
 
-JDK를 설치하고 IDE에서 새 프로젝트를 만들어 `main` 메서드를 실행해 보라. 프로젝트는 IntelliJ의 *New Project*로 아무 작업 디렉터리(예: `~/hello-check`)에 만들고, IDE 실행 버튼으로 콘솔 출력이 찍히는지 확인하면 된다. 마지막으로 터미널에서 `java -version`·`javac -version`이 정상 출력되는지도 확인하라.
+JDK를 설치하고 IDE에서 새 프로젝트를 만들어 `main` 메서드를 실행해 보라. 마지막으로 터미널에서 `java -version`·`javac -version`이 정상 출력되는지도 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: IntelliJ의 *New Project*로 아무 작업 디렉터리(예: `~/hello-check`)에 새 프로젝트 생성
+    - **실행**: IDE 실행 버튼 — 콘솔 출력이 찍히는지 확인
 
 ### 정리
 개발 환경과 계정 준비는 단순한 사전 작업이 아니라, 이후 학습과 협업 흐름을 결정하는 기반입니다. 한 번만 정리해두면 다음 문서들을 훨씬 적은 마찰로 따라갈 수 있습니다.
@@ -236,7 +241,12 @@ Hello world!
 
 ### ✏️ 직접 해보기
 
-Hello World를 `javac`로 컴파일하고 `java`로 실행한 뒤, 생성된 `.class` 파일을 확인하라. 위 5번에서 만든 `~/hello-first` 디렉터리의 `HelloJava.java`를 그대로 쓰고, 위 실행 명령(`javac`·`java`)을 그대로 실행하면 된다. `.class` 파일은 같은 디렉터리에서 `ls`(Windows는 `dir`)로 확인하라.
+Hello World를 `javac`로 컴파일하고 `java`로 실행한 뒤, 생성된 `.class` 파일을 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 5번에서 만든 `~/hello-first` 디렉터리의 `HelloJava.java`를 그대로 사용
+    - **실행**: 위 실행 명령(`javac`·`java`) 재사용 — `.class` 파일은 같은 디렉터리에서 `ls`(Windows는 `dir`)로 확인
 
 #### 정리
 
@@ -398,7 +408,12 @@ git commit -m "chore: 첫 Java 프로젝트 셋업"
 
 ### ✏️ 직접 해보기
 
-Maven **또는** Gradle 중 하나로 `hello-java` 프로젝트를 만들고, `App.java`가 콘솔에 문장을 출력하도록 고친 뒤 **빌드→실행**을 명령으로 한 바퀴 돌려라. 그다음 `.gitignore`를 만들고 첫 커밋까지 남겨라. 수정할 파일은 위 2번으로 생성된 `src/main/java/com/example/App.java`(Gradle에서 소스가 `app/` 하위에 생겼다면 `app/src/main/java/com/example/App.java`)이고, 빌드·실행은 위 4번 명령(`mvn compile` + `java -cp target/classes com.example.App` 또는 `./gradlew run`)을 그대로 쓰라.
+Maven **또는** Gradle 중 하나로 `hello-java` 프로젝트를 만들고, `App.java`가 콘솔에 문장을 출력하도록 고친 뒤 **빌드→실행**을 명령으로 한 바퀴 돌려라. 그다음 `.gitignore`를 만들고 첫 커밋까지 남겨라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 2번으로 생성된 `src/main/java/com/example/App.java`를 수정 (Gradle에서 소스가 `app/` 하위에 생겼다면 `app/src/main/java/com/example/App.java`)
+    - **실행**: 위 4번 명령 재사용 — `mvn compile` + `java -cp target/classes com.example.App` 또는 `./gradlew run`
 
 #### 정리
 

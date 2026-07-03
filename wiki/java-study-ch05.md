@@ -263,7 +263,12 @@ try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
 
 ### ✏️ 직접 해보기
 
-Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 확인하라. ch01 프로젝트에 `src/main/java/com/example/ch05/exceptions/ExceptionKindsDemo.java`로 새로 만들고, `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"`로 실행해 보라.
+Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/exceptions/ExceptionKindsDemo.java`로 새로 작성
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"`
 
 #### 정리
 
@@ -414,7 +419,12 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
 
 ### ✏️ 직접 해보기
 
-도메인 규칙 위반을 표현하는 사용자 정의 예외를 만들어 던져 보라. ch01 프로젝트에 `src/main/java/com/example/ch05/exceptions/CustomExceptionDemo.java`로 새로 만들고(예외 클래스는 non-public으로 같은 파일에), `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"`로 실행해 보라.
+도메인 규칙 위반을 표현하는 사용자 정의 예외를 만들어 던져 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/exceptions/CustomExceptionDemo.java`로 새로 작성 — 예외 클래스는 non-public으로 같은 파일에
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"`
 
 ## 5.3 파일 읽기와 쓰기 기초
 
@@ -624,7 +634,12 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 
 ### ✏️ 직접 해보기
 
-텍스트 파일을 한 줄씩 읽어 출력하고 새 파일에 써 보라(자원 자동 닫기). ch01 프로젝트에 `src/main/java/com/example/ch05/fileio/FileReadWriteDemo.java`로 새로 만들고(읽을 텍스트 파일은 프로젝트 루트에), `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"`로 실행해 새 파일이 생기는지 확인하라.
+텍스트 파일을 한 줄씩 읽어 출력하고 새 파일에 써 보라(자원 자동 닫기).
+
+!!! example "실습 위치·실행"
+
+    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/fileio/FileReadWriteDemo.java`로 새로 작성 — 읽을 텍스트 파일은 프로젝트 루트에
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"` — 새 파일이 생기는지 확인
 
 #### 정리
 
@@ -771,7 +786,12 @@ class Person implements Serializable {
 
 ### ✏️ 직접 해보기
 
-CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라. ch01 프로젝트에 `src/main/java/com/example/ch05/formats/CsvLineParseDemo.java`로 새로 만들고, `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"`로 실행해 파싱 결과를 확인하라.
+CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: ch01 프로젝트 `src/main/java/com/example/ch05/formats/CsvLineParseDemo.java`로 새로 작성
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"` — 파싱 결과 확인
 
 #### 정리
 
@@ -1066,7 +1086,12 @@ nc 127.0.0.1 8888          # Mac/Linux
 
 ### ✏️ 직접 해보기
 
-에코 서버와 클라이언트를 만들어 한 줄을 주고받아 보라. 위 `EchoServer.java`·`EchoClient.java`를 작업 디렉터리에 단일 파일로 만들어 위 실행 명령대로 터미널 두 개에서 주고받은 뒤, 보내는 메시지나 응답 형식을 바꿔 다시 실행해 보라.
+에코 서버와 클라이언트를 만들어 한 줄을 주고받은 뒤, 보내는 메시지나 응답 형식을 바꿔 다시 실행해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 `EchoServer.java`·`EchoClient.java`를 작업 디렉터리에 단일 파일로 작성
+    - **실행**: 위 절의 실행 명령 재사용 — 터미널 두 개에서 주고받기
 
 ## 5.6 JDBC 기초
 
@@ -1381,7 +1406,12 @@ java  -cp ".;h2-2.2.224.jar" JdbcExample      # Windows — 구분자 ;
 
 ### ✏️ 직접 해보기
 
-JDBC로 연결해 SELECT 결과를 출력해 보라. 위 `JdbcExample.java`를 작업 디렉터리에 단일 파일로 만들어 위 실행 명령(`javac -cp h2-2.2.224.jar ...`)으로 실행하고, INSERT 데이터나 WHERE 조건을 바꿔 다시 실행해 결과가 달라지는지 확인하라.
+JDBC로 연결해 SELECT 결과를 출력한 뒤, INSERT 데이터나 WHERE 조건을 바꿔 다시 실행해 결과가 달라지는지 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 `JdbcExample.java`를 작업 디렉터리에 단일 파일로 작성
+    - **실행**: 위 절의 실행 명령 재사용 — `javac -cp h2-2.2.224.jar ...`
 
 ## 5.7 파일 처리 설계 실습
 

@@ -184,7 +184,12 @@ class LoanRepositoryTest {
 
 ### ✏️ 직접 해보기
 
-`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. ch06 6.1의 `demo` 프로젝트에서 작업하되, 테스트할 컨트롤러가 없다면 `src/main/java/com/example/demo/practice/PingController.java`로 간단한 GET 엔드포인트를 먼저 만들고 테스트는 `src/test/java/com/example/demo/practice/PingControllerTest.java`에 작성하라. 위 `./mvnw test -Dtest`(또는 `./gradlew test --tests`)로 그 클래스만 실행해 통과 여부를 확인하라.
+`@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라. 테스트할 컨트롤러가 없다면 간단한 GET 엔드포인트를 먼저 만들고, 테스트를 작성해 통과 여부를 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: ch06 6.1의 `demo` 프로젝트 — 테스트는 `src/test/java/com/example/demo/practice/PingControllerTest.java`(첫 줄 `package com.example.demo.practice;`), 컨트롤러가 없다면 `src/main/java/com/example/demo/practice/PingController.java`를 먼저 생성
+    - **실행**: 위 `./mvnw test -Dtest`(또는 `./gradlew test --tests`)로 그 클래스만 실행
 
 #### 정리
 
@@ -656,4 +661,9 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 
 ### ✏️ 직접 해보기
 
-실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라. ch06 6.1의 `demo` 프로젝트를 `./mvnw spring-boot:run`으로 띄운 뒤 새 터미널에서 요청하고, GET·POST를 받을 엔드포인트가 없다면 `src/main/java/com/example/demo/practice/`에 간단한 컨트롤러를 먼저 추가하라. 위 예시처럼 목적·요청·기대 상태 코드를 함께 기록하며 확인하라.
+실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라. 위 예시처럼 목적·요청·기대 상태 코드를 함께 기록하며 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: ch06 6.1의 `demo` 프로젝트 — GET·POST를 받을 엔드포인트가 없다면 `src/main/java/com/example/demo/practice/`에 간단한 컨트롤러를 먼저 추가
+    - **실행**: `./mvnw spring-boot:run`으로 띄운 뒤 새 터미널에서 `curl` 요청

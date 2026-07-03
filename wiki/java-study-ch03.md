@@ -337,7 +337,12 @@ public static void printNumbers(List<? extends Number> numbers) {
 
 ### ✏️ 직접 해보기
 
-같은 데이터를 List·Set·Map에 각각 담아 중복 처리와 조회 방식의 차이를 출력으로 확인하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionComparePractice.java` 를 새로 만들어(첫 줄 `package com.example.ch03.practice;`) 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"` 로 실행해 보라.
+같은 데이터를 List·Set·Map에 각각 담아 중복 처리와 조회 방식의 차이를 출력으로 확인하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionComparePractice.java` 새로 생성 — 첫 줄 `package com.example.ch03.practice;`
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"`
 
 #### 정리
 
@@ -566,7 +571,12 @@ Message 2
 
 ### ✏️ 직접 해보기
 
-Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/WordCountPractice.java` 를 새로 만들어 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"` 로 실행해 보라.
+Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/WordCountPractice.java` 새로 생성
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"`
 
 #### 정리
 
@@ -806,7 +816,12 @@ class FileNode {
 
 ### ✏️ 직접 해보기
 
-"순서 유지"·"중복 제거"·"빠른 key 조회" 세 요구에 각각 맞는 컬렉션을 고르고 이유를 적어 보라. 답은 메모로 충분하지만, 코드로 검증하고 싶다면 `src/main/java/com/example/ch03/practice/CollectionChoicePractice.java` 를 새로 만들어 세 요구를 각각 작은 코드로 확인하고 `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"` 로 실행해 보라.
+"순서 유지"·"중복 제거"·"빠른 key 조회" 세 요구에 각각 맞는 컬렉션을 고르고 이유를 적어 보라. 답은 메모로 충분하지만, 코드로 검증하고 싶다면 세 요구를 각각 작은 코드로 확인해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: (코드 검증 시) `src/main/java/com/example/ch03/practice/CollectionChoicePractice.java` 새로 생성
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"`
 
 #### 정리
 
@@ -960,7 +975,12 @@ List<String> result = names.stream()
 
 ### ✏️ 직접 해보기
 
-정수 리스트에서 짝수만 골라 제곱한 합을 구하는 코드를 for문과 스트림 두 방식으로 짜 보라. 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/EvenSquareSumPractice.java` 를 새로 만들어 작성하고, `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"` 로 실행해 보라.
+정수 리스트에서 짝수만 골라 제곱한 합을 구하는 코드를 for문과 스트림 두 방식으로 짜 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 1.2에서 만든 프로젝트에 `src/main/java/com/example/ch03/practice/EvenSquareSumPractice.java` 새로 생성
+    - **실행**: `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"`
 
 #### 정리
 
@@ -1243,7 +1263,12 @@ while (!queue.isEmpty()) {
 
 ### ✏️ 직접 해보기
 
-선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라. 위 `LinearSearchDemo.java`와 `BinarySearchDemo.java`에 비교 횟수를 세는 카운터 변수를 추가해 출력하고, 이 절의 실행 명령(`-Dexec.mainClass` 값만 각 Demo 클래스로 변경)으로 두 예제를 다시 실행해 결과를 비교해 보라.
+선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라. 두 예제에 비교 횟수를 세는 카운터 변수를 추가해 출력하고, 다시 실행해 결과를 비교해 보라.
+
+!!! example "실습 위치·실행"
+
+    - **파일**: 위 `LinearSearchDemo.java`와 `BinarySearchDemo.java`를 수정
+    - **실행**: 이 절의 실행 명령 재사용 — `-Dexec.mainClass` 값만 각 Demo 클래스로 변경
 
 #### 정리
 
