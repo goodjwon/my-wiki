@@ -9,6 +9,8 @@
 #   ③ 어디서든 `public class Main` 이면 위반 (드라이버 Main 금지 — 퀴즈는 non-public 허용)
 #   ④ java 파일 리드인이 있는 h2 절(## N.M)에는 실행 명령 bash 블록과 `예상 결과` 펜스가
 #      최소 1개씩 있어야 함 (절 대표 1회 방식 허용 — 예제마다 요구하지 않음)
+#   ⑤ 글머리(리스트) 줄 바로 다음에 코드펜스가 붙으면 위반 — 빈 줄 없이 붙이면 펜스가
+#      리스트 항목 안으로 흡수돼 들여쓰기 렌더가 됨 (§2-5 top-level 위반)
 #
 # 사용법: bash scripts/scaffold-lint.sh <wiki/파일.md> [...]
 set -uo pipefail
@@ -149,6 +151,18 @@ for fname in sys.argv[1:]:
             violations += 1
         if has_java_leadin and not has_expected:
             print(f"  [절에 예상 결과 없음] '{title}' — java 실습 예제가 있는데 예상 결과 펜스가 없음")
+            violations += 1
+
+    # ⑤ 글머리 줄 바로 다음에 코드펜스 밀착 (빈 줄 없음 → 들여쓰기 렌더)
+    LIST_RE = re.compile(r'^(-|\*|[0-9]+\.)\s')
+    in_f = False
+    for idx, l in enumerate(lines):
+        if l.strip().startswith('```'):
+            in_f = not in_f
+            continue
+        if (not in_f and LIST_RE.match(l)
+                and idx + 1 < len(lines) and lines[idx+1].startswith('```')):
+            print(f"  [글머리-펜스 밀착] L{idx+1} — 리스트 줄과 펜스 사이에 빈 줄 필요 (§2-5 top-level)")
             violations += 1
 
     # ③ public class Main 전역 검사 (java 펜스 안)

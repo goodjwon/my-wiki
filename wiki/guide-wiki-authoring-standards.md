@@ -394,6 +394,8 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 
 **실행 명령 표준형**: 프로젝트는 Maven 우선(`./mvnw compile exec:java -Dexec.mainClass="..."`, 테스트는 `./mvnw test -Dtest=...`) + Gradle 대안 병기, 단일 파일은 `javac`/`java`.
 
+**✏️ 직접 해보기도 실습 안내 필수**: 과제 한 문장만 던지지 않습니다. ① 어느 프로젝트의 어느 파일에서 작업할지(본문 예제 파일 수정이면 그 파일명, 새로 만들면 경로 제안 — 예: `src/main/java/com/example/ch02/practice/…`) ② 실행·확인 명령(절 대표 명령을 참조해도 됨)을 한두 문장으로 함께 안내합니다.
+
 **막혔을 때 참고 (자족성)**: 긴 실습 절 끝에는 "자주 나는 에러 → 원인 확인" 부기를 둡니다. 외부 저장소(완성본) 없이 **문서만으로 막힘에서 복구**할 수 있어야 합니다.
 
 **게이트**: `bash scripts/scaffold-lint.sh <파일>` — 파일 리드인↔package↔클래스명 정합, 리드인 블록의 다중 public 타입, `public class Main`을 기계 검사합니다.
