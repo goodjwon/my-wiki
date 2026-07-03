@@ -285,6 +285,18 @@ mvn archetype:generate -DgroupId=com.example -DartifactId=hello-java -Darchetype
 cd hello-java
 ```
 
+**생성 직후 pom.xml의 컴파일 타깃을 21로 수정합니다.** quickstart 1.4 아키타입이 만든 pom.xml은 `maven.compiler.source/target`이 **1.7로 고정**돼 있어, Java 21에서는 아래 4번의 `mvn compile`부터 `Source option 7 is no longer supported` 오류로 실패합니다. 이 프로젝트는 2~5장·9장에서 그대로 이어 쓰고 5.9-1·9.2에서 record(Java 16+) 문법을 쓰므로 이 수정이 필수입니다. **편집기/IDE로** `pom.xml`의 `<properties>` 안 두 값을 21로 바꿉니다:
+
+```xml
+<properties>
+  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <maven.compiler.source>21</maven.compiler.source>   <!-- 1.7 → 21 -->
+  <maven.compiler.target>21</maven.compiler.target>   <!-- 1.7 → 21 -->
+</properties>
+```
+
+> 두 줄 대신 `<maven.compiler.release>21</maven.compiler.release>` 한 줄로 대체해도 됩니다 (JDK 9+ 권장 방식).
+
 **Gradle** — `gradle init` 로 생성 (프롬프트가 뜨면 기본값 Enter):
 
 ```bash
@@ -303,8 +315,10 @@ hello-java/
 ├── src/
 │   ├── main/java/com/example/App.java   ← 실제 코드
 │   └── test/java/com/example/AppTest.java ← 테스트
-└── (gradlew / mvnw)   ← 래퍼 스크립트 (버전 고정용)
+└── (gradlew)          ← 래퍼 스크립트 (버전 고정용) — gradle init만 생성
 ```
+
+> Maven quickstart 아키타입은 래퍼(`mvnw`)를 **만들지 않습니다** — Maven 쪽은 시스템 `mvn` 명령을 그대로 씁니다. (6장 Spring Initializr 프로젝트에는 `mvnw`가 포함됩니다.)
 
 - `src/main/java` = 프로덕션 코드, `src/test/java` = 테스트 코드. 이 분리가 표준입니다.
 - 패키지 `com.example` = 디렉터리 경로와 일치해야 합니다 (2장에서 자세히).
@@ -314,7 +328,7 @@ hello-java/
 **Maven**:
 
 ```bash
-mvn compile                                   # 컴파일 → target/classes
+mvn compile                                   # 컴파일 → target/classes (2번의 타깃 21 수정을 안 했다면 여기서 실패)
 mvn test                                      # 테스트 실행
 mvn package                                   # 실행 가능 jar → target/*.jar
 java -cp target/classes com.example.App       # 직접 실행

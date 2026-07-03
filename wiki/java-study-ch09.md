@@ -412,7 +412,7 @@ src/test/java/com/example/ch09/CalculatorTest.java    ← 테스트 코드
 실행:
 
 ```bash
-./mvnw test -Dtest=CalculatorTest         # Windows: mvnw.cmd
+mvn test -Dtest=CalculatorTest            # 1장 archetype 프로젝트에는 mvnw 래퍼가 없음 (Windows도 mvn 동일)
 # 또는 Gradle
 ./gradlew test --tests "CalculatorTest"   # Windows: gradlew.bat
 ```
