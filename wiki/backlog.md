@@ -132,10 +132,7 @@ updated: 2026-07-03
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **실습 스캐폴드 실행** — 계획·프롬프트 확정: [[plan-practice-scaffold]] (2026-07-03 수립, 미실행)
-  - 진단: java-study 완결 실습 예제 ~76개 중 경로·package·실행명령 3요소 완비 3~4개뿐. ch02(Main 19회 충돌)·ch05(컴파일 실패 버그)·ch06(프로젝트 가정 단절)·ch07(넣을 곳 불명)이 심각.
-  - 정책 확정: Spring 자족형(6.1 demo 승격) / ch07 실습 가능화 / ch03 전면 실행형화 / Core는 ch01 프로젝트 승계.
-  - 실행 순서: 프롬프트 A(§7-7+scaffold-lint) → B 배치 3개(ch02·04·09 / ch01·06·11 / 대형 ch05·03·07) + ch08·10 문구 정리 → C 컴파일 스모크 → D 적대적 검수 → 배포. 프롬프트 전문은 계획 페이지에.
+- [x] ~~**실습 스캐폴드 실행**~~ (2026-07-03 완료, 배포 완료) — [[plan-practice-scaffold]] Phase B~D 전 단계 실행. §7-7 명문화 + scaffold-lint.sh(규칙 ④ 실행명령·예상결과 검사 포함), 11개 챕터 전체에 4요소(파일 리드인·package·한 블록=한 파일·실행 명령+예상 결과) 부착 — ch02 Main 18개 개명·충돌 해소, ch03 전면 실행형화(Demo 10개 실측), ch05 컴파일 버그 수정+25개 예제 실측(실코드 버그 2건 추가 발견·수정), ch06 demo 승격, ch07 Querydsl 실습 환경 신설(Q타입 미생성 결함 실측 해결), ch11 블로그 빌드·실행 신설. 컴파일 스모크(17/20 PASS→치명 2건 수정: ch01 pom Java 21, ch07 annotationProcessorPaths)+적대적 검수 반영. **11챕터 scaffold-lint·style-lint 0건.** day_by_spring 공개는 보류(시크릿 스캔 완료 — 실유출 0, 공개 시 Supabase 호스트 플레이스홀더 커밋 1개+URL 1줄).
 
 - [x] ~~**톤앤매너 정합 실행**~~ (2026-07-02 완료, 배포 완료) — [[plan-tone-consistency]] 프롬프트 A→B×6→C→후속 3파일까지 전 단계 실행. §7 문체 표준 명문화 + scripts/style-lint.sh 게이트 신작. ch01·05·06·07·08·09 **전체 6개 파일 style-lint 위반 0건** 달성. 적대적 검수 REJECT 4건 전부 반영. ch07 원노트 파편은 사용자 결정("완결 문장 목록으로 정리")에 따라 재작성.
   - **후속 확장 (2026-07-02 완료)**: 사용자가 guide-java-learning-path를 "군대식"이라 지적 → §7-1 재검토 후 **guide-*·concept-*·entity-*도 한다체→합니다체로 통일**(기존엔 챕터만 합니다체). 58개 파일(guide 15+concept 17+entity 15+표준문서 1) 8개씩 병렬 배치로 전환, 전부 style-lint 통과. 챕터 6개+이 58개 총 64개 파일 위반 0건. **커밋 8개 + push + Firebase 배포 완료**(`wiki.wonslab.dev` 라이브 확인).

@@ -170,12 +170,15 @@ ch06 6.1 생성 명령 + ch07 Q타입 생성 명령의 문법 검증까지만.)
 ## 6. 진행 체크리스트
 
 - [x] **Phase B** — 프롬프트 A (§7-7 명문화 + scaffold-lint.sh + 캘리브레이션) — 2026-07-03 완료. 캘리브레이션: ch02 `public class Main` 18건·ch05 파일명/package 불일치 3건 정확 검출, ch06·ch09 오탐 0. ch01 L187·ch11 L3185의 Main 검출은 Phase C 수정 대상(오탐 아님)
-- [ ] **Phase C 배치 1** — ch02 / ch04 / ch09
-- [ ] **Phase C 배치 2** — ch01 / ch06 / ch11
-- [ ] **Phase C 배치 3 (대형)** — ch05 / ch03 / ch07 (사이클 5회)
-- [ ] **Phase C 마무리** — ch08·ch10 전제 문구 정리
-- [ ] **Phase D** — 컴파일 스모크(프롬프트 C) → 적대적 검수(프롬프트 D) → REJECT 재실행 → 배포
-- [ ] **마감** — backlog·log 기록, §7-7 셀프체크 편입 확인
+- [x] **Phase C 배치 1** — ch02(예제 23개, Main 18 개명, 충돌 해소) / ch04(8패턴 실습화, Spring 3패턴은 demo 배치) / ch09(package 누락 보완) — 2026-07-03 완료
+- [x] **Phase C 배치 2** — ch01(Hello 단일 파일 실습화+이관 다리) / ch06(demo 승격, yml 리드인 7개, day_by_spring 격하 5건) / ch11(§11.23 빌드·실행 신설, MemoApp 정합, 퀴즈 Main 강등) — 2026-07-03 완료
+- [x] **Phase C 배치 3 (대형)** — ch05(버그 수정+리드인 30개+의존성 블록) / ch03(전면 실행형화 — Demo 10개, 예상 결과 실측) / ch07(7.4-1 실습 환경 신설, 스캐폴드 14파일, LoanRepository 통합) — 2026-07-03 완료
+- [x] **Phase C 마무리** — ch08·ch10 전제 문구 정리(demo 기준+참고 격하, ReachabilityExample 승격) — 2026-07-03 완료
+- [x] **Phase D** — 2026-07-03 완료:
+  - 컴파일 스모크: 20체크 중 17 PASS, 예제 코드 자체는 문자 단위 일치. **치명 발견 2건** — ch01 archetype pom 1.7 고정(Java 21 컴파일 불가), ch07 Q타입 미생성(Boot 4.x Lombok annotationProcessorPaths가 프로세서 자동 발견 차단) + ch09 mvnw 오용, ch05 샘플 데이터 부재
+  - 적대적 검수: ch05 실행명령·예상결과 대량 누락(lint 사각지대), 참고 코드 라벨 누락 8곳, ch11 MemoryMonitor 리드인 누락 등
+  - 수정 라운드(3병렬): 전부 반영. ch05는 25개 예제 전량 실측(실측 중 실코드 버그 2건 — BufferedReader 재사용·Jackson getter — 추가 발견·수정). scaffold-lint에 규칙 ④(절 단위 실행 명령·예상 결과 검사) 보강
+- [x] **마감** — 11개 챕터 전체 scaffold-lint·style-lint 위반 0건, backlog·log 기록, §7-7 셀프체크 편입, 배포 — 2026-07-03
 
 ## 관련 페이지
 

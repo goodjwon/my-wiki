@@ -4,6 +4,14 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-03] feat | 실습 스캐폴드 Phase C+D — 11개 챕터 4요소 부착 + 실측 검증 완료
+- [[plan-practice-scaffold]] 프롬프트 B(배치 3개+ch08·10)·C(컴파일 스모크)·D(적대적 검수) 전부 실행. **11개 챕터 전체 scaffold-lint·style-lint 위반 0건** 달성.
+- **Phase C** (챕터별 병렬 에이전트): ch02 예제 23개 부착+Main 18개 개명+클래스명 충돌 해소 / ch03 전면 실행형화(Demo 10개 신설, javac 실측으로 예상 결과 대조) / ch04 8패턴 실습화(Spring 3패턴은 demo 배치) / ch05 컴파일 실패 버그 수정+리드인 30개+의존성 블록 / ch06 demo 승격(yml 리드인 7개, day_by_spring 참고 격하) / ch07 "7.4-1 Querydsl 실습 환경" 신설(엔티티 5·QuerydslConfig·스캐폴드 14파일, LoanRepository 이중 정의 통합) / ch09 package 누락 보완 / ch01 Hello 단일 파일 실습화 / ch11 §11.23 빌드·실행 신설 / ch08·10 전제 문구 정리.
+- **Phase D 스모크**(실제 Maven 프로젝트에 문서 그대로 생성·실행, 20체크): 예제 코드 17건 문자 단위 일치. 치명 2건 발견 — ① ch01 archetype pom이 1.7 고정이라 Java 21에서 `mvn compile`부터 실패(Core 실습 전체 차단) ② ch07 Q타입 미생성(Boot 4.x는 Lombok annotationProcessorPaths 명시로 프로세서 자동 발견이 꺼짐). ch09 `./mvnw`(래퍼 없음) 오용, ch05 샘플 데이터 부재도 발견.
+- **Phase D 적대적 검수**: lint 사각지대(4요소 중 실행명령·예상결과 미검사)를 짚음 — ch05 Excel 11·JSON 10 예제 실행명령·예상결과 누락, 참고 코드 라벨 누락 8곳, ch11 MemoryMonitor 리드인 누락.
+- **수정 라운드**(3병렬): 전부 반영. scaffold-lint에 규칙 ④(java 리드인 있는 h2 절에 실행 bash·예상 결과 요구) 보강 + `./mvnw`가 `\b`에 안 걸리던 정규식 버그 수정. ch05는 25개 예제 전량 실측 — 실측 중 **실제 코드 버그 2건 추가 발견·수정**(5.8-1 BufferedReader 3-pass, JSON 풀이 Jackson getter 6클래스).
+- 커밋: Phase C 10개 + 수정 라운드 4개. 파일별 개별 커밋, 매 단계 빌드 통과.
+
 ## [2026-07-03] feat | 실습 스캐폴드 Phase B — §7-7 명문화 + scaffold-lint.sh 게이트
 - [[plan-practice-scaffold]] 프롬프트 A 실행. guide-wiki-authoring-standards에 **§7-7 실습 스캐폴드** 신설: 스니펫/실습 예제 구분 원칙, 4요소(파일 리드인·package·한 블록=한 파일·실행 명령+예상 결과), 챕터→프로젝트 매핑 표, `public class Main` 금지(→`<주제>Demo`), 실행 명령 표준형(Maven 우선), **자족성 규칙**(실습 절 끝 "자주 나는 에러→원인" 부기 — 사용자: "GitHub 안 보더라도 문서만으로 막힘 복구").
 - `scripts/scaffold-lint.sh` 신작(bash+python3) — ① 파일 리드인(`**파일**:`·`**파일명 N:**`·`파일명:` 3형식)↔package↔public 클래스명 정합 ② 리드인 블록의 다중 public 타입 ③ `public class Main` 전역 검사.
