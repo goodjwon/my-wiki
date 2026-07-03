@@ -1373,7 +1373,7 @@ java  -cp ".;h2-2.2.224.jar" JdbcExample      # Windows — 구분자 ;
 ```
 
 - `No suitable driver found` → 드라이버 jar가 classpath에 없습니다. `-cp`에 h2 jar를 포함했는지 확인합니다.
-- Gradle/Maven 프로젝트라면 `./gradlew run` / `./mvnw exec:java`로 실행하면 classpath는 자동으로 잡힙니다.
+- Gradle/Maven 프로젝트라면 `./gradlew run` / `mvn exec:java`로 실행하면 classpath는 자동으로 잡힙니다.
 - MySQL로 하려면 `jdbc:mysql://localhost:3306/DB이름` + `com.mysql:mysql-connector-j` 드라이버로 바꾸고, DB를 먼저 띄웁니다(`docker run -e MYSQL_ROOT_PASSWORD=pw -p 3306:3306 mysql`).
 
 ---
@@ -1973,10 +1973,8 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.FileIOHandlerMain
 # Gradle 프로젝트: build.gradle에 application { mainClass = 'com.example.ch05.files.FileIOHandlerMain' } 지정 후 ./gradlew run
 ```
 
-**출력 예시 (일부)**
-
 ```text
-
+예상 결과
 [Text 파일 읽기 결과]
 홍길동 / 30
 김영희 / 25
@@ -2026,12 +2024,9 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.FileIOHandlerMain
 홍길동 / 30
 김영희 / 25
 박철수 / 35
-
-Process finished with exit code 0
-
 ```
 
----
+실행이 끝나면 프로젝트 루트에 `people.txt`, `people.csv`, `people.dat`, `people.json` 등 형식별 파일 10개가 생성됩니다.
 
 ---
 
@@ -2050,17 +2045,14 @@ Process finished with exit code 0
 ---
 
 #### 문제 설명
-주어진 CSV 파일(`sample_data.csv`)에는 5000개의 데이터 행이 있으며, 각 행은 다음 형식으로 구성됩니다:
+주어진 CSV 파일(`sample_data.csv`)에는 5,000개의 데이터 행이 있으며, 첫 줄은 헤더이고 각 데이터 행은 다음 형식으로 구성됩니다:
 `ID,이름,나이,점수`
 예제 데이터 (일부):
 ```text
 1001,홍길동,25,87.5
 1002,김철수,30,92.3
 1003,이영희,22,76.8
-
-아래 첨부파일 참고.
 ```
-sample_data.csv
 
 CSV 파일을 읽고 다음의 작업을 수행해야 합니다:
 1. 모든 데이터의 평균 나이 및 평균 점수 계산
@@ -2080,6 +2072,43 @@ CSV 파일을 읽고 다음의 작업을 수행해야 합니다:
 
 ```
 
+#### 실습용 샘플 데이터
+
+원 문제는 5,000행짜리 첨부 파일을 가정하지만, 첨부 없이도 실습할 수 있게 아래 10행 샘플을 사용합니다. 풀이 절과 같은 프로젝트의 `src/main/resources/sample_data.csv`로 저장합니다 — 풀이 코드가 클래스패스에서 파일을 읽기 때문입니다.
+
+**파일**: src/main/resources/sample_data.csv
+
+```text
+id,name,age,score
+1001,홍길동,25,87.5
+1002,김철수,30,92.3
+1003,이영희,22,76.8
+1004,김민수,41,95.0
+1005,박지훈,18,64.2
+1006,최수진,35,90.0
+1007,김하늘,28,88.9
+1008,정우성,52,71.4
+1009,한가인,23,93.6
+1010,오세훈,47,59.8
+```
+
+코드를 다 작성했다면 풀이 절(5.8-1, 5.8-2)과 같은 명령으로 실행해 확인합니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.LargeFileProcessing"
+```
+
+위 10행 샘플 기준 예상 결과입니다. 5,000행 원본을 쓰면 수치가 달라지고, 풀이 코드는 평균 점수 항목을 구현하지 않으므로 직접 추가해 보면 좋습니다.
+
+```text
+예상 결과
+평균 나이: 32
+최연소 사용자 나이: 18
+최고령 사용자 나이: 52
+90점 이상 사용자 수: 4
+'김'으로 시작하는 사용자 수: 3
+```
+
 ## 5.8-1 파일 처리 실전문제 1 풀이 1
 
 **🎯 목표**: 파일 처리 실전문제 풀이(1)를 확인한다.
@@ -2087,13 +2116,15 @@ CSV 파일을 읽고 다음의 작업을 수행해야 합니다:
 ### 개요
 이 풀이는 한 클래스 안에서 빠르게 통계를 계산하는 직진형 해설입니다.
 처음 문제를 풀 때는 이 방식이 이해하기 쉽고, 두 번째 풀이와 비교하면 구조화의 필요성이 더 잘 보입니다.
+`BufferedReader`는 한 번 끝까지 읽으면 되감을 수 없으므로, 이 풀이는 통계마다 파일을 새로 여는 3-pass 방식을 씁니다. 리더 하나로 세 메서드를 이어 부르면 두 번째 메서드부터는 빈 스트림을 읽어 0이 나옵니다 — 한 번만 읽는 풀이 2(→ 5.8-2)와 비교해 보세요.
 
-**파일**: src/main/java/com/example/ch05/files/csv/LargeFileProcessing.java
+**파일**: src/main/java/com/example/ch05/csv/LargeFileProcessing.java
 
 ```java
-package com.example.ch05.files.csv;
+package com.example.ch05.csv;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -2103,30 +2134,42 @@ public class LargeFileProcessing {
     private static final String FILE_NAME = "sample_data.csv";
 
     public static void main(String[] args) {
-        processFile(FILE_NAME);
-    }
+        try {
+            // 통계마다 파일을 처음부터 다시 읽는 3-pass 방식.
+            // BufferedReader는 한 번 소비하면 되감을 수 없으므로 패스마다 새로 연다.
+            int[] ageStats;
+            int scoreAbove90Count;
+            int kimNameCount;
+            try (BufferedReader br = openData()) {
+                ageStats = calculateAverageAge(br);
+            }
+            try (BufferedReader br = openData()) {
+                scoreAbove90Count = countHighScores(br, 90);
+            }
+            try (BufferedReader br = openData()) {
+                kimNameCount = countNameOccurrences(br, "김");
+            }
 
-    private static void processFile(String fileName) {
-        try (InputStream inputStream = LargeFileProcessing.class.getClassLoader().getResourceAsStream(fileName);
-             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-            br.readLine(); // 첫 줄(헤더) 스킵
-            analyzeData(br);
+            System.out.println("평균 나이: " + ageStats[0]);
+            System.out.println("최연소 사용자 나이: " + ageStats[1]);
+            System.out.println("최고령 사용자 나이: " + ageStats[2]);
+            System.out.println("90점 이상 사용자 수: " + scoreAbove90Count);
+            System.out.println("'김'으로 시작하는 사용자 수: " + kimNameCount);
         } catch (IOException e) {
             System.err.println("파일 처리 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private static void analyzeData(BufferedReader br) throws IOException {
-        int[] ageStats = calculateAverageAge(br);
-        int scoreAbove90Count = countHighScores(br, 90);
-        int kimNameCount = countNameOccurrences(br, "김");
-
-        System.out.println("평균 나이: " + ageStats[0]);
-        System.out.println("최연소 사용자 나이: " + ageStats[1]);
-        System.out.println("최고령 사용자 나이: " + ageStats[2]);
-        System.out.println("90점 이상 사용자 수: " + scoreAbove90Count);
-        System.out.println("'김'으로 시작하는 사용자 수: " + kimNameCount);
+    // 클래스패스에서 데이터 파일을 열고 헤더 한 줄을 건너뛴 리더를 돌려준다
+    private static BufferedReader openData() throws IOException {
+        InputStream inputStream = LargeFileProcessing.class.getClassLoader().getResourceAsStream(FILE_NAME);
+        if (inputStream == null) {
+            throw new FileNotFoundException("클래스패스에서 파일을 찾을 수 없습니다: " + FILE_NAME);
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        br.readLine(); // 첫 줄(헤더) 스킵
+        return br;
     }
 
     private static int[] calculateAverageAge(BufferedReader br) throws IOException {
@@ -2174,11 +2217,20 @@ public class LargeFileProcessing {
 
 ```
 
-데이터 파일 `sample_data.csv`는 `src/main/resources/`에 둡니다(클래스패스에서 읽기 때문). 프로젝트 루트에서 실행합니다.
+데이터 파일은 문제 절(→ 5.8)의 10행 샘플을 `src/main/resources/sample_data.csv`로 둡니다(클래스패스에서 읽기 때문). 프로젝트 루트에서 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.csv.LargeFileProcessing"
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.LargeFileProcessing"
 # Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
+```
+
+```text
+예상 결과
+평균 나이: 32
+최연소 사용자 나이: 18
+최고령 사용자 나이: 52
+90점 이상 사용자 수: 4
+'김'으로 시작하는 사용자 수: 3
 ```
 
 ## 5.8-2 파일 처리 실전문제 1 풀이 2
@@ -2188,6 +2240,7 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.csv.LargeFileProc
 ### 개요
 이 풀이는 CSV 읽기, 통계 집계, 결과 표현을 역할별로 나눈 구조화된 해설입니다.
 같은 문제라도 도메인 모델과 리포지토리, 분석 서비스로 분리할 수 있다는 점을 보여주기 위해 남깁니다.
+풀이 1과 같은 `com.example.ch05.csv` 패키지에 두면 클래스명이 달라 두 풀이가 공존합니다. 이 풀이는 파일을 한 번만 읽으면서 모든 통계를 동시에 누적하는 1-pass 방식입니다.
 
 **파일**: src/main/java/com/example/ch05/csv/BigFileProcessingDomain.java
 
@@ -2450,6 +2503,16 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.BigFileProcessingDo
 # Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
 ```
 
+```text
+예상 결과
+[대용량 CSV 통계 결과]
+평균 나이: 32
+최연소 사용자 나이: 18
+최고령 사용자 나이: 52
+90점 이상 사용자 수: 4
+'김'으로 시작하는 사용자 수: 3
+```
+
 ## 5.9 형식별 파일 처리 실전문제
 
 **🎯 목표**: 형식별 파일 처리를 실전 문제로 적용한다.
@@ -2596,6 +2659,195 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.CsvProcessor"
 
 ---
 
+##### 실습 데이터 준비 (공용 샘플)
+
+문제 절에는 데이터 파일 이름만 있고 내용이 없으므로, 아래 샘플을 기준으로 실습합니다. 이 절의 모든 `예상 결과`는 이 샘플로 실측한 출력입니다.
+
+**CSV** — 아래 내용을 프로젝트 루트에 저장합니다.
+
+**파일**: data.csv
+
+```text
+id,name,age,department
+1,Kim,35,Engineering
+2,Lee,28,Marketing
+3,Park,41,Engineering
+4,Choi,24,Sales
+5,Jung,31,Engineering
+6,Han,29,HR
+```
+
+**Excel** — xlsx는 손으로 쓸 수 없으므로, 엑셀(또는 구글 시트에서 xlsx로 내려받기)로 아래 표대로 만들어 프로젝트 루트에 저장합니다. 1행은 헤더, 숫자 칸은 숫자 셀로 입력합니다. 같은 표를 여러 파일이 공유합니다.
+
+`sales_data.xlsx` · `monthly_sales.xlsx` (월별 매출):
+
+| 월 | 매출 |
+|----|------|
+| 1월 | 1200000 |
+| 2월 | 1350000 |
+| 3월 | 980000 |
+| 4월 | 1500000 |
+| 5월 | 1100000 |
+| 6월 | 1750000 |
+
+`students_scores.xlsx` · `grades.xlsx` · `test_scores.xlsx` (학생 점수):
+
+| 이름 | 과목 | 점수 |
+|------|------|------|
+| 김하늘 | 수학 | 88 |
+| 이준 | 영어 | 92 |
+| 박서준 | 수학 | 45 |
+| 최유나 | 과학 | 77 |
+| 정민재 | 영어 | 61 |
+| 한지민 | 과학 | 95 |
+
+`employee_data.xlsx` (직원):
+
+| 이름 | 부서 | 연봉 |
+|------|------|------|
+| 김민수 | 개발 | 62000000 |
+| 이서연 | 마케팅 | 48000000 |
+| 박준호 | 개발 | 55000000 |
+| 최지우 | 영업 | 43000000 |
+| 정다은 | 인사 | 50000000 |
+
+`inventory.xlsx` (재고):
+
+| 제품 | 수량 | 가격 |
+|------|------|------|
+| 키보드 | 45 | 32000 |
+| 모니터 | 12 | 210000 |
+| 마우스 | 80 | 15000 |
+| 노트북 | 7 | 1450000 |
+
+`data1.xlsx` / `data2.xlsx` (통합용) — `data.csv`와 같은 형식으로, data1에는 1~3행(Kim·Lee·Park), data2에는 4~6행(Choi·Jung·Han)을 나눠 담습니다.
+
+`survey_data.xlsx` (설문 — 빈 셀과 "없음" 문자열 포함):
+
+| 응답자 | Q1 | Q2 |
+|--------|----|----|
+| A | 만족 | 없음 |
+| B | (빈 셀) | 보통 |
+| C | 불만 | 없음 |
+| D | 만족 | (빈 셀) |
+
+`multi_sheet.xlsx` (다중 시트) — 시트 "개발"에 김민수·박준호, 시트 "마케팅"에 이서연·최지우를 `이름 | 부서` 두 컬럼으로 담습니다.
+
+**JSON** — 아래 내용을 각 파일명으로 프로젝트 루트에 저장합니다.
+
+**파일**: products.json
+
+```json
+[
+  { "id": 1, "name": "키보드", "price": 32000 },
+  { "id": 2, "name": "모니터", "price": 210000 },
+  { "id": 3, "name": "마우스", "price": 15000 }
+]
+```
+
+**파일**: users.json
+
+```json
+[
+  { "name": "김민수", "age": 34, "email": "minsu@example.com" },
+  { "name": "이서연", "age": 27, "email": "seoyeon@example.com" },
+  { "name": "박준호", "age": 41, "email": "junho@example.com" }
+]
+```
+
+**파일**: sales.json
+
+```json
+{
+  "monthlySales": [
+    { "month": "1월", "sales": 1200000 },
+    { "month": "2월", "sales": 1350000 },
+    { "month": "3월", "sales": 980000 }
+  ]
+}
+```
+
+**파일**: organization.json
+
+```json
+{
+  "departments": [
+    { "name": "개발팀", "employees": [ { "name": "김민수" }, { "name": "박준호" } ] },
+    { "name": "마케팅팀", "employees": [ { "name": "이서연" } ] }
+  ]
+}
+```
+
+**파일**: inventory.json
+
+```json
+[
+  { "product": "키보드", "quantity": 45, "price": 32000 },
+  { "product": "모니터", "quantity": 12, "price": 210000 },
+  { "product": "마우스", "quantity": 80, "price": 15000 }
+]
+```
+
+**파일**: data1.json
+
+```json
+[
+  { "id": 1, "name": "Kim" },
+  { "id": 2, "name": "Lee" }
+]
+```
+
+**파일**: data2.json
+
+```json
+[
+  { "id": 3, "name": "Park" },
+  { "id": 4, "name": "Choi" }
+]
+```
+
+**파일**: movies.json
+
+```json
+[
+  { "title": "인셉션", "rating": 8.8 },
+  { "title": "어바웃 타임", "rating": 7.8 },
+  { "title": "기생충", "rating": 8.6 }
+]
+```
+
+**파일**: population.json
+
+```json
+[
+  { "country": "Korea", "population": 51740000 },
+  { "country": "Japan", "population": 123290000 },
+  { "country": "Vietnam", "population": 100350000 }
+]
+```
+
+**파일**: customers.json
+
+```json
+[
+  { "name": "김민수", "age": 34, "address": "서울" },
+  { "name": "이서연", "age": 16, "address": "부산" },
+  { "name": "박준호", "age": 22, "address": "대전" }
+]
+```
+
+**파일**: orders.json
+
+```json
+[
+  { "orderId": "A-001", "product": "키보드", "quantity": 2 },
+  { "orderId": "A-002", "product": "마우스", "quantity": 1 },
+  { "orderId": "A-001", "product": "키보드", "quantity": 2 }
+]
+```
+
+---
+
 ##### CSV 파일 문제 풀이
 
 1. 부서별 CSV 필터링과 정렬
@@ -2618,6 +2870,7 @@ public class CsvProcessor {
                 .sorted(Comparator.comparingInt(Employee::age))
                 .toList();
         writeCsv("filtered_data.csv", filtered);
+        System.out.println("Engineering 부서 " + filtered.size() + "명을 filtered_data.csv에 저장했습니다.");
     }
 
     static List<Employee> readCsv(String filePath) throws IOException {
@@ -2652,6 +2905,20 @@ public class CsvProcessor {
 }
 ```
 
+```text
+예상 결과
+Engineering 부서 3명을 filtered_data.csv에 저장했습니다.
+```
+
+생성된 `filtered_data.csv`는 나이 오름차순으로 정렬됩니다.
+
+```text
+id,name,age,department
+5,Jung,31,Engineering
+1,Kim,35,Engineering
+3,Park,41,Engineering
+```
+
 해설
 
 CSV 문제의 핵심은 포맷이 단순하다는 이유로 검증을 빼먹지 않는 것입니다. 헤더 처리, 컬럼 수 검증, 숫자 파싱 실패 대응까지 같이 봐야 실무 코드에 가까워집니다.
@@ -2662,6 +2929,17 @@ CSV 문제의 핵심은 포맷이 단순하다는 이유로 검증을 빼먹지 
 ---
 
 ##### 엑셀 파일 문제 (1 ~ 10)
+
+엑셀 풀이는 모두 같은 꼴로 실행합니다. `-Dexec.mainClass`의 클래스명만 각 풀이의 public 클래스로 바꿉니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.excel.ExcelSumProcessor"
+# 2번 이후: EmployeeFilterProcessor, StudentScoreProcessor, InventoryUpdater, ExcelDataMerger,
+#           GradeHighlighter, SalesVisualizer, SurveyDataCleaner, SurveyDataReplacer,
+#           MultiSheetMerger, TestScoresAnalyzer
+```
+
+실행 시 `ERROR StatusLogger Log4j2 could not find a logging implementation` 경고가 먼저 찍힐 수 있는데, POI가 내는 무해한 경고이므로 무시해도 됩니다.
 
 ---
 
@@ -2704,6 +2982,11 @@ class ExcelSalesDataReader {
     }
 }
 
+```
+
+```text
+예상 결과
+월별 매출 합계: 7880000.0
 ```
 
 ---
@@ -2753,6 +3036,14 @@ class EmployeeDataReader {
     }
 }
 
+```
+
+```text
+예상 결과
+연봉 5천만 원 이상 직원:
+김민수
+박준호
+정다은
 ```
 
 ---
@@ -2828,6 +3119,19 @@ class StudentScoreReader {
 
 ```
 
+샘플 표는 6행뿐이므로 6명 전원이 내림차순으로 출력됩니다.
+
+```text
+예상 결과
+상위 10명 학생 점수:
+이름: 한지민, 과목: 과학, 점수: 95
+이름: 이준, 과목: 영어, 점수: 92
+이름: 김하늘, 과목: 수학, 점수: 88
+이름: 최유나, 과목: 과학, 점수: 77
+이름: 정민재, 과목: 영어, 점수: 61
+이름: 박서준, 과목: 수학, 점수: 45
+```
+
 ---
 
 ##### 4. 특정 셀 값 변경
@@ -2881,6 +3185,13 @@ class InventoryDataModifier {
 }
 
 ```
+
+```text
+예상 결과
+모니터 수량이 100으로 변경됨.
+```
+
+`inventory.xlsx`를 열어 모니터 행의 수량이 100으로 바뀌었으면 정상입니다.
 
 ---
 
@@ -2957,6 +3268,13 @@ class ExcelMerger {
 
 ```
 
+```text
+예상 결과
+엑셀 데이터가 병합되어 merged_data.xlsx에 저장됨.
+```
+
+`merged_data.xlsx`가 생성되면 정상입니다. 두 파일의 헤더 행까지 그대로 복사되므로, 중간에 헤더가 한 번 더 나타납니다 — 헤더를 건너뛰는 처리는 직접 개선해 보세요.
+
 ---
 
 ##### 6. 조건에 맞는 셀 색상 변경
@@ -3009,6 +3327,13 @@ class GradeCellModifier {
 }
 
 ```
+
+```text
+예상 결과
+점수 50점 미만 셀이 강조되었음.
+```
+
+`grades.xlsx`를 열어 박서준(45점)의 점수 셀 배경이 빨간색이면 정상입니다.
 
 ---
 
@@ -3073,6 +3398,13 @@ class SalesChartGenerator {
 
 ```
 
+```text
+예상 결과
+차트가 sales_chart.png에 저장되었음.
+```
+
+프로젝트 루트에 `sales_chart.png`(800x600 바 차트)가 생성되면 정상입니다.
+
 ---
 
 ##### 8. 빈 셀 채우기
@@ -3124,6 +3456,11 @@ class SurveyCleaner {
         }
     }
 }
+```
+
+```text
+예상 결과
+빈 셀이 'N/A'로 채워졌음.
 ```
 
 같은 문제의 변형으로, "없음"으로 적힌 셀을 "n/a"로 대체하는 풀이는 별도 파일로 둡니다.
@@ -3178,6 +3515,11 @@ class SurveyReplacer {
     }
 }
 
+```
+
+```text
+예상 결과
+'없음'이 'n/a'로 대체됨.
 ```
 
 ---
@@ -3252,6 +3594,13 @@ class MultiSheetProcessor {
 
 ```
 
+```text
+예상 결과
+다중 시트 데이터가 병합되어 merged_sheets.xlsx에 저장됨.
+```
+
+`merged_sheets.xlsx`의 "Merged Data" 시트에 두 시트 내용이 이어 붙어 있으면 정상입니다.
+
 ---
 
 ##### 10. 엑셀 데이터 통계 분석
@@ -3308,9 +3657,24 @@ class TestScoreProcessor {
 
 ```
 
+```text
+예상 결과
+평균 점수: 76.33333333333333
+최대 점수: 95.0
+최소 점수: 45.0
+```
+
 ---
 
 ##### JSON 파일 문제 (1 ~ 10)
+
+JSON 풀이도 실행 꼴은 같고, 클래스명만 바꿉니다. 각 데이터 클래스는 모든 필드에 getter를 두는데, Jackson이 private 필드를 직접 읽지 못해 getter가 없는 필드를 만나면 `Unrecognized field` 예외를 던지기 때문입니다.
+
+```bash
+mvn compile exec:java -Dexec.mainClass="com.example.ch05.json.ProductKeySearcher"
+# 2번 이후: UserFilter, SalesSumCalculator, DepartmentEmployeeFinder, InventoryPriceUpdater,
+#           JsonMerger, MovieSorter, PopulationVisualizer, CustomerDataCleaner, OrderDeduplicator
+```
 
 ---
 
@@ -3362,11 +3726,27 @@ class Product {
     private String name;
     private double price;
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public double getPrice() {
         return price;
     }
 }
 
+```
+
+```text
+예상 결과
+price 값 목록:
+32000.0
+210000.0
+15000.0
 ```
 
 ---
@@ -3416,6 +3796,10 @@ class JsonUser {
     private int age;
     private String email;
 
+    public String getName() {
+        return name;
+    }
+
     public int getAge() {
         return age;
     }
@@ -3425,6 +3809,13 @@ class JsonUser {
     }
 }
 
+```
+
+```text
+예상 결과
+나이 30 이상 사용자의 이메일:
+minsu@example.com
+junho@example.com
 ```
 
 ---
@@ -3481,11 +3872,20 @@ class MonthlySale {
     private String month;
     private double sales;
 
+    public String getMonth() {
+        return month;
+    }
+
     public double getSales() {
         return sales;
     }
 }
 
+```
+
+```text
+예상 결과
+총 매출액: 3530000.0
 ```
 
 ---
@@ -3561,6 +3961,12 @@ class OrgEmployee {
 
 ```
 
+```text
+예상 결과
+김민수
+박준호
+```
+
 ---
 
 ##### 5. JSON 데이터 수정
@@ -3614,12 +4020,27 @@ class InventoryProduct {
         return product;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }
 }
 
 ```
+
+```text
+예상 결과
+가격 수정 완료.
+```
+
+`inventory.json`을 다시 열어 모니터의 price가 150000.0으로 바뀌었으면 정상입니다.
 
 ---
 
@@ -3669,6 +4090,13 @@ class JsonDataMerger {
 }
 
 ```
+
+```text
+예상 결과
+JSON 파일 병합 완료: merged_data.json
+```
+
+`merged_data.json`에 두 파일의 항목 4개가 모두 들어 있으면 정상입니다.
 
 ---
 
@@ -3732,6 +4160,14 @@ class Movie {
     }
 }
 
+```
+
+```text
+예상 결과
+평점 정렬된 영화:
+영화 제목: 인셉션, 평점: 8.8
+영화 제목: 기생충, 평점: 8.6
+영화 제목: 어바웃 타임, 평점: 7.8
 ```
 
 ---
@@ -3807,6 +4243,13 @@ class Country {
 
 ```
 
+```text
+예상 결과
+인구 차트가 population_chart.png에 저장됨.
+```
+
+프로젝트 루트에 `population_chart.png`가 생성되면 정상입니다.
+
 ---
 
 ##### 9. 특정 조건의 데이터 삭제
@@ -3858,8 +4301,16 @@ class Customer {
     private int age;
     private String address;
 
+    public String getName() {
+        return name;
+    }
+
     public int getAge() {
         return age;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     @Override
@@ -3869,6 +4320,13 @@ class Customer {
 }
 
 ```
+
+```text
+예상 결과
+18세 미만 고객 제거 완료. 결과는 filtered_customers.json에 저장됨.
+```
+
+`filtered_customers.json`에 김민수·박준호만 남아 있으면 정상입니다.
 
 ---
 
@@ -3928,6 +4386,14 @@ class Order {
         return orderId;
     }
 
+    public String getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
     @Override
     public String toString() {
         return "주문 ID: " + orderId + ", 제품: " + product + ", 수량: " + quantity;
@@ -3935,6 +4401,13 @@ class Order {
 }
 
 ```
+
+```text
+예상 결과
+중복된 주문 제거 완료. 결과는 deduplicated_orders.json에 저장됨.
+```
+
+`deduplicated_orders.json`에 A-001이 한 번만 남아 주문 2건이 있으면 정상입니다.
 
 ---
 
@@ -3956,5 +4429,7 @@ class Order {
 | `FileNotFoundException: data.csv` 등 데이터 파일을 못 찾음 | 명령을 실행하는 작업 디렉터리가 프로젝트 루트인지, 데이터 파일을 그 위치에 두었는지 확인합니다. 5.8 풀이의 `sample_data.csv`만 예외로 `src/main/resources/`에 둡니다. |
 | 출력에서 한글이 깨짐 | 터미널·소스 파일 인코딩이 UTF-8인지 확인하고, 필요하면 `MAVEN_OPTS=-Dfile.encoding=UTF-8`을 지정해 실행합니다. |
 | `mvn exec:java`에서 `ClassNotFoundException` | `compile` 없이 실행하지 않았는지(`mvn compile exec:java`), `-Dexec.mainClass`의 패키지 경로(`com.example.ch05.csv/excel/json`)에 오타가 없는지 확인합니다. |
+| `ERROR StatusLogger Log4j2 could not find a logging implementation` | POI가 내는 무해한 경고입니다. 없애려면 `log4j-core` 의존성을 추가하고, 실습에서는 무시해도 됩니다. |
+| Jackson `Unrecognized field "..." not marked as ignorable` | 데이터 클래스에 그 필드의 getter가 없어서입니다. Jackson은 private 필드를 직접 읽지 못하므로 모든 필드에 getter를 두거나 클래스에 `@JsonIgnoreProperties(ignoreUnknown = true)`를 붙입니다. |
 
 ---
