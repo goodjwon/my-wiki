@@ -255,7 +255,7 @@ chmod +x $CATALINA_HOME/bin/*.sh
 
 ---
 
-### ✏️ 직접 해보기
+### ✏️ Tomcat 실행과 설정 직접 해보기
 
 내장 톰캣 포트를 9090으로 바꿔 실행해 보라.
 
@@ -463,7 +463,7 @@ JWT 기반 요청도 결국 아래 순서로 흘러갑니다.
 - [Authorization Architecture](https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html)
 - [OAuth 2.0 Bearer Tokens](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/bearer-tokens.html)
 
-### ✏️ 직접 해보기
+### ✏️ Spring Security 인증 흐름 직접 해보기
 
 폼 로그인을 설정해 인증된 사용자만 특정 URL에 접근하게 하라.
 
@@ -908,7 +908,7 @@ Spring Security에서도 직접 JWT를 파싱하는 커스텀 필터 구조를 �
 - [OAuth 2.0 Resource Server JWT](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html)
 - [OAuth 2.0 Bearer Tokens](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/bearer-tokens.html)
 
-### ✏️ 직접 해보기
+### ✏️ 토큰 기반 인증 직접 해보기
 
 로그인 시 JWT를 발급하고, 요청 헤더의 토큰을 검증하는 필터를 만들어 위 참고 코드를 완성해 보라.
 

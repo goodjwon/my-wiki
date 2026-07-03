@@ -169,7 +169,7 @@ System.out.println(name + " is " + age + " years old.");
 
 기초 문법은 이후 DTO 필드 타입, 엔티티 속성, 조건 분기, API 응답 처리, 컬렉션 순회까지 모든 곳에 이어집니다. 즉 이 문서는 가장 단순하지만, 가장 넓게 연결되는 문서입니다.
 
-### ✏️ 직접 해보기
+### ✏️ 기본 문법 직접 해보기
 
 int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals` 비교 결과를 직접 출력해 차이를 확인하라.
 
@@ -482,7 +482,7 @@ String result = builder.toString();
 - [Strings](https://docs.oracle.com/javase/tutorial/java/data/strings.html)
 - [String API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html)
 
-### ✏️ 직접 해보기
+### ✏️ 메서드와 배열, 문자열 직접 해보기
 
 정수 배열의 합과 평균을 반환하는 메서드를 만들고, 인자로 넘긴 배열이 메서드 안에서 어떻게 다뤄지는지 출력으로 확인하라.
 
@@ -1200,7 +1200,7 @@ public class TemplateMethodDemo {
 
 ---
 
-### ✏️ 직접 해보기
+### ✏️ 객체지향 원칙별 샘플 코드 직접 해보기
 
 위 샘플 중 하나에서 필드를 `private`로 바꾸고, 외부가 메서드로만 접근하도록 캡슐화를 강화해 보라.
 
@@ -2076,7 +2076,7 @@ public class MultiLevelInheritanceDemo {
 | `error: class, interface, or enum expected` (파일 첫머리) | `package com.example.ch02;`가 첫 줄이 아니거나 import가 클래스 선언 뒤에 있음 → 코드블록 순서 그대로 복사 |
 | 컴파일은 되는데 실행 시 `ClassNotFoundException` | 파일을 `src/main/java/com/example/ch02/`가 아닌 곳에 만듦 → 디렉터리 경로와 package 선언 일치 확인 |
 
-### ✏️ 직접 해보기
+### ✏️ 추상 클래스 활용 예제 직접 해보기
 
 예제 중 하나에 새 하위 클래스를 추가하되 상위(골격) 코드는 수정하지 말고 확장만으로 동작시켜 보라(OCP).
 

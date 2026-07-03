@@ -182,7 +182,7 @@ class LoanRepositoryTest {
 - Maven은 `Tests run: N, Failures: 0`이, Gradle은 `BUILD SUCCESSFUL`이 출력되면 정상입니다.
 - 실패하면 리포트를 확인합니다: Maven은 `target/surefire-reports/*.txt`, Gradle은 `build/reports/tests/test/index.html`.
 
-### ✏️ 직접 해보기
+### ✏️ Spring Boot 테스트 전략 직접 해보기
 
 `@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라.
 
@@ -708,7 +708,7 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 
 ---
 
-### ✏️ 직접 해보기
+### ✏️ API 수동 검증 직접 해보기
 
 실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라.
 

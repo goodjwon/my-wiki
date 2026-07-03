@@ -226,7 +226,7 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 - [PostgreSQL Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html)
 - [PostgreSQL Indexes](https://www.postgresql.org/docs/current/indexes.html)
 
-### ✏️ 직접 해보기
+### ✏️ 데이터베이스 설계 직접 해보기
 
 회원-주문-상품을 ERD로 그리고 FK 관계를 정의한 뒤, 그린 ERD를 `CREATE TABLE` + `FOREIGN KEY` DDL로 옮겨 보라. 별도 파일은 없습니다.
 
@@ -796,7 +796,7 @@ WHERE category_id = 3;
 - 정렬 기준 없이 페이징을 걸어 결과가 흔들리는 것
 - 변경문에서 `WHERE` 범위를 충분히 검토하지 않는 것
 
-### ✏️ 직접 해보기
+### ✏️ SQL 기본기 직접 해보기
 
 두 테이블을 JOIN해 그룹별 집계(GROUP BY)를 구하는 SQL을 작성하라. 별도 파일은 없습니다.
 
@@ -971,7 +971,7 @@ GROUP BY p.product_id, p.product_name;
 - 정렬과 페이징 기준이 인덱스와 맞는가
 - 문제를 SQL 하나로 해결하려다 지나치게 복잡해진 것은 아닌가
 
-### ✏️ 직접 해보기
+### ✏️ 쿼리 최적화 직접 해보기
 
 느린 쿼리에 인덱스를 추가하기 전후로 실행 계획을 비교해 보라. 별도 파일은 없습니다.
 
@@ -1607,7 +1607,7 @@ List<Member> result = queryFactory
 - [Querydsl GitHub](https://github.com/querydsl/querydsl)
 - [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
 
-### ✏️ 직접 해보기
+### ✏️ Querydsl 기본 문법 직접 해보기
 
 단순 조건 조회를 Querydsl로 작성해 보라.
 
@@ -1822,7 +1822,7 @@ List<MemberDto> result = queryFactory
 - [Querydsl GitHub](https://github.com/querydsl/querydsl)
 - [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/reference/)
 
-### ✏️ 직접 해보기
+### ✏️ Querydsl 프로젝션과 DTO 조회 직접 해보기
 
 엔티티 전체 대신 DTO 두 필드만 조회하는 Querydsl 쿼리를 작성하라.
 
@@ -1976,7 +1976,7 @@ public List<Member> search(MemberSearchCondition condition) {
 ### 한 줄 정리
 Querydsl 동적 쿼리는 **조건을 메서드 단위로 잘게 나누어 조합하는 방식**으로 읽기 쉽게 만드는 것이 핵심입니다.
 
-### ✏️ 직접 해보기
+### ✏️ Querydsl 동적 쿼리와 조건 조합 직접 해보기
 
 검색 조건이 있을 때만 where에 붙는 동적 쿼리를 작성하라.
 
@@ -2143,7 +2143,7 @@ application/
 - [Spring Data JPA - Projections](https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html)
 - [Querydsl Reference Guide](https://querydsl.com/static/querydsl/latest/reference/html/)
 
-### ✏️ 직접 해보기
+### ✏️ Spring Data JPA와 Querydsl 통합 전략 직접 해보기
 
 커스텀 리포지토리에 Querydsl 메서드를 추가해 보라. fragment 파일들은 7.9에서 `demo`에 만드니 7.9를 마친 뒤 진행합니다.
 
@@ -2481,7 +2481,7 @@ class MemberQueryRepositoryTest {
 - [Spring Data JPA - Projections](https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html)
 - [Querydsl Reference Guide](https://querydsl.com/static/querydsl/latest/reference/html/)
 
-### ✏️ 직접 해보기
+### ✏️ Querydsl 조회 리포지토리 설계 직접 해보기
 
 조회 책임을 분리한 리포지토리 인터페이스를 설계하라. 위 `MemberQueryRepository.java`·`MemberQueryRepositoryImpl.java` 구조를 `Loan`에 적용합니다.
 
@@ -2736,7 +2736,7 @@ N+1은 Querydsl 자체의 문제가 아니라 **조회 전략 문제**입니다.
 - [Querydsl Reference Guide](https://querydsl.com/static/querydsl/latest/reference/html/)
 - [Querydsl Releases](https://querydsl.com/releases.html)
 
-### ✏️ 직접 해보기
+### ✏️ Querydsl 페이징과 성능 직접 해보기
 
 count 쿼리를 분리한 페이징 조회를 구현해 보라.
 

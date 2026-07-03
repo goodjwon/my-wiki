@@ -211,7 +211,7 @@ Spring Boot 프로젝트를 실행하면 아래 현상이 모두 JVM과 연결�
 - [JVM Spec Chapter 2: Run-Time Data Areas](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html)
 - [JVM Spec Chapter 5: Loading, Linking, and Initializing](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html)
 
-### ✏️ 직접 해보기
+### ✏️ JVM 기초 가이드 1 직접 해보기
 
 간단한 프로그램의 실행 과정을 클래스 로딩→실행 순으로 설명해 보라.
 
@@ -488,7 +488,7 @@ Spring Boot에서는 아래 상황이 메모리 사용량에 큰 영향을 줍�
 
 ---
 
-### ✏️ 직접 해보기
+### ✏️ JVM 기초 가이드 2 직접 해보기
 
 객체와 지역변수가 각각 힙·스택 어디에 저장되는지 예제로 짚어 보라.
 
@@ -701,7 +701,7 @@ java -XX:MaxGCPauseMillis=200 \
 
 ---
 
-### ✏️ 직접 해보기
+### ✏️ JVM 기초 가이드 3 직접 해보기
 
 `-Xmx`·`-verbose:gc` 옵션으로 실행해 GC 로그를 출력하고 읽어 보라.
 

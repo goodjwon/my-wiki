@@ -335,7 +335,7 @@ public static void printNumbers(List<? extends Number> numbers) {
 - [The Collection Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html)
 - [dev.java](http://dev.java/)[ Generics](https://dev.java/learn/generics/)
 
-### ✏️ 직접 해보기
+### ✏️ 컬렉션 프레임워크와 제네릭 직접 해보기
 
 같은 데이터를 List·Set·Map에 각각 담아 중복 처리와 조회 방식의 차이를 출력으로 확인하라.
 
@@ -584,7 +584,7 @@ Message 2
 
 실무에서는 자료구조를 아주 많이 바꾸기보다, 처음 선택을 너무 무겁게 하지 않는 것이 중요합니다. 대부분의 경우 `ArrayList`, `HashMap`, `ArrayDeque`만 잘 이해해도 기본적인 선택은 충분히 할 수 있습니다.
 
-### ✏️ 직접 해보기
+### ✏️ 컬렉션 자료구조 활용 사례 직접 해보기
 
 Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
 
@@ -844,7 +844,7 @@ class FileNode {
 - 동시성 키-값 저장소: `ConcurrentHashMap`
 - 계층 구조 표현: `List`를 포함한 사용자 정의 노드 구조
 
-### ✏️ 직접 해보기
+### ✏️ 컬렉션 선택 시나리오 직접 해보기
 
 "순서 유지"·"중복 제거"·"빠른 key 조회" 세 요구에 각각 맞는 컬렉션을 고르고 이유를 적어 보라. 답은 메모로 충분하지만, 코드로 검증하고 싶다면 세 요구를 각각 작은 코드로 확인해 보라.
 
@@ -1018,7 +1018,7 @@ List<String> result = names.stream()
 - [Stream Package Summary](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html)
 - [Stream Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html)
 
-### ✏️ 직접 해보기
+### ✏️ 람다와 스트림 직접 해보기
 
 정수 리스트에서 짝수만 골라 제곱한 합을 구하는 코드를 for문과 스트림 두 방식으로 짜 보라.
 
@@ -1321,7 +1321,7 @@ while (!queue.isEmpty()) {
 - 최단 거리나 레벨 탐색인가: BFS
 - 모든 경로를 깊게 내려가야 하는가: DFS
 
-### ✏️ 직접 해보기
+### ✏️ 알고리즘 기초 직접 해보기
 
 선형 탐색과 이진 탐색의 비교 횟수를 직접 세어 비교해 보라.
 
