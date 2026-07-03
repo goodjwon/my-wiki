@@ -38,7 +38,13 @@ updated: 2026-07-03
 
 ## ✅ 최근 완료 작업 (2026-06~07 누적)
 
+### 2026-07-03
+- ✅ **실습 스캐폴드 전면 적용** ([[plan-practice-scaffold]] Phase B~D, 배포 완료) — 사용자 피드백("따라 해보니 클래스명부터 고민") 기반. §7-7 표준 명문화(4요소: 파일 리드인·package·한 블록=한 파일·실행 명령+예상 결과) + `scripts/scaffold-lint.sh` 게이트(규칙 4종). 11개 챕터 전체 적용: ch02 Main 18개 개명·충돌 해소, ch03 전면 실행형화(Demo 10개), ch05 컴파일 버그 수정+예제 25개, ch06 demo 승격(자족형), ch07 "7.4-1 Querydsl 실습 환경" 신설, ch11 블로그 빌드·실행 신설 등.
+- ✅ **컴파일 스모크 + 적대적 검수 (Phase D)** — 실제 Maven 프로젝트에 문서 그대로 생성·실행(20체크). 치명 2건 발견·수정: ch01 archetype pom 1.7 고정(Java 21 컴파일 불가 — Core 실습 전체 차단), ch07 Q타입 미생성(Boot 4.x annotationProcessorPaths). 실측 중 **원본 코드 실버그 2건**(5.8-1 BufferedReader 재사용, JSON 풀이 Jackson getter 6클래스)도 발견·수정. **11챕터 scaffold-lint·style-lint 0건.**
+- ✅ **day_by_spring 시크릿 스캔** — gitleaks+수동 전 히스토리(126커밋): 실유출 0건(검출 78건 전부 플레이스홀더/더미 오탐), 유일 주의점은 `.env.example`의 Supabase 호스트 노출. 공개는 보류(아래 결정 사항).
+
 ### 2026-07-02
+- ✅ **톤앤매너 정합 전면 완료** ([[plan-tone-consistency]], 배포 완료) — §7 문체 표준 명문화 + `scripts/style-lint.sh` 게이트. 챕터 6개 정합(적대적 검수 REJECT 반영 포함) 후, 사용자 "군대식" 지적으로 §7-1 개정 — **guide-*·concept-*·entity-* 58개 파일도 한다체→합니다체 통일**. 총 64개 파일 style-lint 0건.
 - ✅ **위키 콘텐츠에서 Notion(소스 도구) 언급 제거** — "Notion은 자료 담아둔 도구일 뿐 독자에 노출 불필요". 12챕터 `원본: Notion...`·`notion` 태그·HTML 주석 48건, index/src 개요, ch00 `0.1 출판용 Notion 뷰 가이드` 문서 삭제(ch01 계정 안내는 유지). backlog Notion 보류 노트도 "공개 DB=curl published-site API, 비공개=토큰" 한 줄로 정리. (log/backlog/raw 추적층은 유지)
 - ✅ **ch01 "1.2 첫 프로젝트 만들기" 신설** — 빈약하던 프로젝트 셋업 보강: 생성→구조→빌드·실행→의존성→git. **Maven·Gradle 둘 다 병기, IDE 최소·커맨드 중심, Mac/Windows 분기**(래퍼·줄바꿈·파일생성).
 - ✅ **셋업/실행 전 챕터 보강** (에이전트 5병렬 진단 → 빈약순 보강) — ch05 소켓 2터미널·JDBC(H2) 실행, ch06 6.1 Spring 생성(start.spring.io)·6.2 의존성·6.3 `.env`, ch08 8.0 Tomcat·8.2 용어표·8.3 인증 curl 왕복(로그인→토큰→401/403), ch09 9.1·9.2 테스트 실행·9.3 서버 띄우기. 모두 실제 커맨드+Mac/Win+포그라운드/2터미널+성공확인 통일.
@@ -132,30 +138,15 @@ updated: 2026-07-03
 
 ### 다음 세션 최우선 (Pending)
 
-- [x] ~~**실습 스캐폴드 실행**~~ (2026-07-03 완료, 배포 완료) — [[plan-practice-scaffold]] Phase B~D 전 단계 실행. §7-7 명문화 + scaffold-lint.sh(규칙 ④ 실행명령·예상결과 검사 포함), 11개 챕터 전체에 4요소(파일 리드인·package·한 블록=한 파일·실행 명령+예상 결과) 부착 — ch02 Main 18개 개명·충돌 해소, ch03 전면 실행형화(Demo 10개 실측), ch05 컴파일 버그 수정+25개 예제 실측(실코드 버그 2건 추가 발견·수정), ch06 demo 승격, ch07 Querydsl 실습 환경 신설(Q타입 미생성 결함 실측 해결), ch11 블로그 빌드·실행 신설. 컴파일 스모크(17/20 PASS→치명 2건 수정: ch01 pom Java 21, ch07 annotationProcessorPaths)+적대적 검수 반영. **11챕터 scaffold-lint·style-lint 0건.** day_by_spring 공개는 보류(시크릿 스캔 완료 — 실유출 0, 공개 시 Supabase 호스트 플레이스홀더 커밋 1개+URL 1줄).
-
-- [x] ~~**톤앤매너 정합 실행**~~ (2026-07-02 완료, 배포 완료) — [[plan-tone-consistency]] 프롬프트 A→B×6→C→후속 3파일까지 전 단계 실행. §7 문체 표준 명문화 + scripts/style-lint.sh 게이트 신작. ch01·05·06·07·08·09 **전체 6개 파일 style-lint 위반 0건** 달성. 적대적 검수 REJECT 4건 전부 반영. ch07 원노트 파편은 사용자 결정("완결 문장 목록으로 정리")에 따라 재작성.
-  - **후속 확장 (2026-07-02 완료)**: 사용자가 guide-java-learning-path를 "군대식"이라 지적 → §7-1 재검토 후 **guide-*·concept-*·entity-*도 한다체→합니다체로 통일**(기존엔 챕터만 합니다체). 58개 파일(guide 15+concept 17+entity 15+표준문서 1) 8개씩 병렬 배치로 전환, 전부 style-lint 통과. 챕터 6개+이 58개 총 64개 파일 위반 0건. **커밋 8개 + push + Firebase 배포 완료**(`wiki.wonslab.dev` 라이브 확인).
-- [x] ~~**위키 본문 글쓰기 스타일 1차 일괄 점검·개선**~~ (2026-06-27 완료) — 비유 괄호 매핑·명사구 단편을 자연어 완결 문장 + 매핑 분리 문단으로 재작성. 규칙: 메모리 `feedback-wiki-writing-style`.
-  - **1차 13편 완료** (에이전트 13병렬, ch6은 직전 세션 시연 완료): lecture-object ch4·ch5·ch7·ch9·ch12·ch13·ch15·appendixA·appendixC + lecture-clean-code ch4·ch6 + lecture-tdd ch4·ch11. 각 1건씩.
-  - **2차 확장 후보 (남음)**: 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring-and-review 의 도입·비유 산문 부분. 다음 세션에 같은 방식(에이전트 병렬)으로 진행 가능.
+- [ ] **글쓰기 스타일 2차 확장** — 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring-and-review의 도입·비유 산문 부분을 "장면+매핑 2문단 완결 문장"으로 (1차 13편은 2026-06-27 완료, 같은 방식 에이전트 병렬로 진행 가능). ※ 이 파일들 문체는 2026-07-02 합니다체 전환이 이미 적용됨 — 남은 건 비유 산문의 구조 개선.
   - **유지 영역** (수정 X): 표·코드·체크리스트·`---` 절 헤더 옆 한 줄. 간결성이 본질인 곳은 그대로.
 
 ### 즉시 가능 (입력 대기 중)
 
-- [x] ~~**📚 Java 도서 ingest 5권 entity + 강의 교재 모두 완성**~~ (2026-06-21)
-  - *오브젝트* — entity + 강의 18편 (15장 + 부록 A·B·C)
-  - *Effective Java* — entity + 강의 11편 (2~12장)
-  - *리팩터링* — entity + 강의 12편 (1~12장)
-  - *Clean Code* — entity + 강의 17편 (1~17장)
-  - *TDD* — entity + 강의 35편 (1~32장 + 부록 A·B + 마치는 글)
-  - **총 강의 교재 93편**
-  - **5권 오각형 비교표** (관점·단위·시점·언어 + "이 책의 자리") 5권 entity 모두 동일 형식
 - [ ] **Clean Code 책 기반 신규 concept 페이지 3개** — 사용자 노트·발췌 입력 대기
   - [ ] `concept-naming-conventions` — 2장 + 17장 N1~N7
   - [ ] `concept-tdd-laws-and-first` — 9장 TDD 3법칙 + F.I.R.S.T.
   - [ ] `concept-simple-design-rules` — 12장 Kent Beck 단순 설계 4규칙
-- [x] ~~**raw 디렉터리 정리**~~ — 2026-06-20 완료. `raw/clean-code/리팩터링*` 12편 → `raw/refactoring/`
 - [ ] **오브젝트 책 기반 신규 concept 페이지 4개** — 사용자 노트·발췌 입력 대기
   - [ ] `concept-solid` — SOLID 5원칙 (OCP·LSP·DIP 포함, 책 9·13장 기반)
   - [ ] `concept-grasp` — GRASP 책임 할당 9패턴 (책 5장 기반)
@@ -200,6 +191,9 @@ updated: 2026-07-03
 
 ## ⚠️ 주의사항·결정 사항
 
+- **day_by_spring 공개 보류 (2026-07-03)**: 위키는 자족형(6.1 demo 기준)이라 공개 불필요. 시크릿 스캔 완료 상태(실유출 0건) — 공개하려면 `.env.example`의 Supabase 호스트 플레이스홀더 교체 커밋 1개 + 위키에 URL 1줄이면 됨.
+- **실습 스캐폴드 표준 (2026-07-03)**: 새 코드 예제는 §7-7 4요소 필수 — `bash scripts/scaffold-lint.sh <파일>` 게이트 통과. 예상 결과는 실측 원칙.
+- **문체 표준 (2026-07-02)**: 독자 콘텐츠(챕터·guide·concept·entity) 합니다체, lecture-*만 개조식 — `bash scripts/style-lint.sh <파일>` 게이트.
 - **메모리 동기화 안 함 (2026-06-30)**: Claude 메모리(`~/.claude/projects/.../memory/`)는 git 저장소 바깥 PC별 로컬 파일 → push 대상 아님. 멀티-PC 공유 인계는 **이 backlog가 전담**(메모리는 각 PC 보조 캐시). 다른 PC에서 "메모리도 push?"는 No.
 - **GCP 배포 결정 (2026-06-07)**: Firebase Hosting 그대로 유지. Cloud Storage+CDN/Cloud Run 이전 안 함.
 - **다이어그램 표준 (2026-06-06)**: subgraph + 외부 연결은 무조건 HTML+flexbox. mermaid 사용 X.
@@ -220,9 +214,10 @@ updated: 2026-07-03
 | 로컬 프리뷰 | `.venv/bin/mkdocs serve` (docs/만 watch) |
 | 배포 | `firebase deploy --only hosting` |
 | Git 원격 | `git@github.com:goodjwon/my-wiki.git` |
-| 로컬 path | `/Users/jungwonpark/Documents/my-wiki/` |
+| 로컬 path | PC별 상이 (예: `/Users/jungwonpark/Documents/my-wiki/`, `/Users/jwon/VsCodeProjects/my-wiki/`) |
+| 품질 게이트 | `scripts/style-lint.sh`(§7 문체) · `scripts/scaffold-lint.sh`(§7-7 실습 스캐폴드) — 토큰 0 |
 
-## 📊 위키 규모 (2026-06-21 기준)
+## 📊 위키 규모 (2026-07-03 기준)
 
 ```bash
 # 빠른 통계 (다른 PC에서 확인)
@@ -234,11 +229,11 @@ git log --oneline | wc -l
 
 | 구분 | 수 |
 |------|---|
-| wiki 페이지 | **165개** (entity·concept·src·guide·lecture·index·log·backlog 종합) |
+| wiki 페이지 | **187개** (entity·concept·src·guide·lecture·plan·index·log·backlog 종합) |
 | 5권 도서 강의 교재 | **93편** (lecture-*) |
-| raw 원본 | 약 130 파일 (15개 주제 디렉터리) |
+| raw 원본 | 157 파일 (14개 주제 디렉터리) |
 | nav 카테고리 | 5개 (위키관리·하네스·Java/Spring·DB운영·📚도서) |
-| 커밋 | 50+ (5월 30일~) |
+| 커밋 | 134 (5월 30일~) |
 
 ## 🗺️ 새 세션 시작 가이드
 
