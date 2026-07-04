@@ -192,6 +192,8 @@ Martin Fowler가 정리한 **이름 있는 작은 단계의 카탈로그**입니
 
 ## 관련 페이지
 
+- [[concept-simple-design-rules]] — 중복 제거·의도 표현이 리팩터링 기법과 만나는 지점
+
 - [[src-refactoring-lecture]] — 실전 강의 교재 12장 통합 인덱스 (각 장 raw 링크)
 - [[entity-object]] — *오브젝트* (책임 주도 설계 = 리팩터링의 목적지)
 - [[entity-effective-java]] — *Effective Java* (매일의 권고 = 리팩터링 트리거 사전)

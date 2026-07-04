@@ -59,6 +59,13 @@ updated: 2026-06-26
 - [[concept-functional-interfaces]] — Item 44 표준 함수형 인터페이스 6종 + Spring 활용
 - [[concept-generics-pecs]] — Item 31 한정적 와일드카드 (PECS)
 - [[concept-java-serialization-risk]] — Item 85·88·90 + 역직렬화 위험과 방어
+- [[concept-naming-conventions]] — Clean Code 2장 + N1~N7, 이름=문서·계약
+- [[concept-tdd-laws-and-first]] — TDD 3법칙 + F.I.R.S.T. 5속성
+- [[concept-simple-design-rules]] — Kent Beck 단순 설계 4규칙과 창발적 설계
+- [[concept-solid]] — SOLID 5원칙 심화 (오브젝트 9·13장 + Martin 원전)
+- [[concept-grasp]] — GRASP 책임 할당 9패턴 (오브젝트 5장)
+- [[concept-design-by-contract]] — 계약 3요소와 Java 실현 수단 (오브젝트 부록 A)
+- [[concept-domain-model-kinds]] — 분석/설계/구현 모델 구분 (오브젝트 부록 C)
 - [[concept-oop]] — 객체지향 프로그래밍 4원칙 (캡슐화·상속·다형성·추상화)
 - [[concept-design-patterns]] — Java 디자인 패턴 8가지 (전략·템플릿·팩토리·싱글톤·옵저버·프록시·어댑터·파사드)
 - [[concept-spring-core]] — Spring 핵심 개념 (IoC, DI, Bean, MVC, AOP)

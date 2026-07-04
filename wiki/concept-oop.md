@@ -213,6 +213,9 @@ assert r.area() == 50;  // 실패! Square 때문에 100
 
 ## 관련 페이지
 
+- [[concept-solid]] — 5원칙 심화·통합
+- [[concept-grasp]] — 책임 할당 9패턴 심화
+
 - [[entity-object]] — 조영호 *오브젝트* (한국어 OO 설계 표준 해설서)
 - [[entity-effective-java]] — Joshua Bloch *Effective Java* (Item 17 불변·18 컴포지션·20 인터페이스 우선이 OOP 4원칙의 실전 적용)
 - [[entity-refactoring]] — Martin Fowler *리팩터링 2판* (OOP 4원칙 위배 = 24가지 코드 악취 → 리팩터링 트리거)

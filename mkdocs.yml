@@ -280,6 +280,13 @@ nav:
         - 표준 함수형 인터페이스: concept-functional-interfaces.md
         - "제네릭 PECS": concept-generics-pecs.md
         - "Java 직렬화 위험": concept-java-serialization-risk.md
+        - "네이밍 규약": concept-naming-conventions.md
+        - "TDD 3법칙과 F.I.R.S.T.": concept-tdd-laws-and-first.md
+        - "단순 설계 4규칙": concept-simple-design-rules.md
+        - SOLID: concept-solid.md
+        - GRASP: concept-grasp.md
+        - "계약에 의한 설계": concept-design-by-contract.md
+        - "도메인 모델 3구분": concept-domain-model-kinds.md
       - 도구·생태계:
         - JVM: entity-jvm.md
         - Querydsl: entity-querydsl.md

@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-04] ingest | Clean Code 3 + 오브젝트 4 concept 신설 — 책 기반 concept 11개 완성
+- backlog "즉시 가능" 잔여 7개 실행(7병렬 에이전트, 재료: lecture 교재 발췌 + 원전 검증). EJ 4개와 합쳐 책 기반 concept 페이지 11개 전부 완성.
+- **Clean Code**: [[concept-naming-conventions]](158줄, Spring Data JPA 쿼리 메서드=이름이 계약 — 공식 문서 검증) / [[concept-tdd-laws-and-first]](169줄, **귀속 오류 발견·교정**: 교재의 "Kent Beck의 3법칙"은 Martin 정식화가 정확 — Martin 본인 술회 확인, lecture-ch9·raw 동시 교정) / [[concept-simple-design-rules]](162줄, Fowler 순서 논쟁·4번 규칙 오독 주의).
+- **오브젝트**: [[concept-solid]](223줄, Liskov & Wing 1994 원문 인용, SRP·ISP는 Martin 원전 보완 명시) / [[concept-grasp]](242줄, Larman 원전·초판 5→2판 9패턴) / [[concept-design-by-contract]](194줄, Meyer·Eiffel·상표 사실 확인, Java 실현 수단 5종 매핑) / [[concept-domain-model-kinds]](160줄, 부록 C 4모델 실확인, 카카오페이 DDD 사례 연결).
+- **통합**: entity 3권 매핑 표 실링크화, lecture 소스 9곳 "개념 정리판" 링크, 패턴 비교표 양방향(loop-engineering 거부 신호 표에 TDD 행, functional↔naming, solid↔design-patterns/pecs, DbC↔jspecify, domain-model↔kakaopay), nav·index 7항.
+- 신설 7 + 수정 20파일 lint 통과, 빌드 통과. wiki 페이지 191→198.
+
 ## [2026-07-04] ingest | EJ concept 4개 신설 — enum 매핑·함수형 인터페이스·PECS·직렬화 위험
 - backlog "즉시 가능" EJ 항목 실행 (재료: lecture-effective-java ch5·6·7·12 발췌 + 공식 문서 검증). 4병렬 에이전트로 페이지 생성, nav·index·역링크는 일괄 통합.
 - **concept-jpa-enum-mapping** (198줄) — Item 34·35 + `@Enumerated` 기본 ORDINAL 함정(Jakarta Persistence javadoc 검증, Hibernate 6 저장 타입 확인). "기본값과 가정의 함정" 패턴 **7번째 사례**로 비교표 양방향 합류.

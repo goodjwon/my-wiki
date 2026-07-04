@@ -9,6 +9,8 @@ updated: 2026-06-21
 
 # 클린 코드 실전 강의 교재
 
+> N1~N7 개념 정리판: [[concept-naming-conventions]]
+
 ## 17장 — 냄새와 휴리스틱
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 휴리스틱 카탈로그 — 사전처럼 사용 **전제 환경**: Java 17+, Spring Boot 3.x

@@ -89,13 +89,13 @@ Robert C. Martin(Uncle Bob)이 정리한 **코드를 "깨끗하게" 만드는 �
 
 | Clean Code 주제 | 장 | 위키 기존 페이지 |
 |----------------|----|------------------|
-| 이름 짓기 (의도·중복·맥락) | 2장·N1~N7 | (신규 후보 — `concept-naming-conventions`) |
+| 이름 짓기 (의도·중복·맥락) | 2장·N1~N7 | [[concept-naming-conventions]] |
 | 함수는 작게·한 가지·CQS·오류→예외 | 3·7장 | [[entity-effective-java]] Item 49·51·70 / [[entity-refactoring]] 6.1·11.1·11.12 |
 | 디미터 법칙·자료/객체 비대칭 | 6장 | [[concept-oop]]·[[entity-object]] 6.03 |
-| 단위 테스트 / F.I.R.S.T. / TDD 3법칙 | 9장 | [[src-spring-testing-ref]] (신규 후보 — `concept-tdd-laws-and-first`) |
+| 단위 테스트 / F.I.R.S.T. / TDD 3법칙 | 9장 | [[src-spring-testing-ref]] [[concept-tdd-laws-and-first]] |
 | SRP·응집도·작은 클래스 | 10장 | [[concept-oop]]·[[entity-object]] 5장 |
 | 시스템·Main 분리·DI·AOP | 11장 | [[concept-spring-core]] (IoC·AOP) |
-| 단순한 설계 4규칙 (Kent Beck) | 12장 | (신규 후보 — `concept-simple-design-rules`) |
+| 단순한 설계 4규칙 (Kent Beck) | 12장 | [[concept-simple-design-rules]] |
 | 동시성 방어 원칙 (SRP·자료 사본·독립 스레드) | 13장·부록 A | [[entity-effective-java]] 11장 (Item 78~84) |
 | 17장 휴리스틱 G23 (다형성 > switch) | 17장 | [[entity-refactoring]] 10.4 |
 | 17장 휴리스틱 G25 (매직 숫자→상수) | 17장 | [[entity-refactoring]] 9.6 |

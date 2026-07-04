@@ -79,6 +79,7 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 | **Hooks** | 에이전트가 위험 명령 자유 실행 → 사고 | `guard.sh` 종료 코드 1 → 도구 실행 차단 | [[concept-claude-hooks]] |
 | **멀티 에이전트** | 단일 에이전트 자기검증 → 통과 편향 | Critic의 `CONDITIONAL REJECT` / 모델 교차 검증 (Claude+Codex 3라운드) | [[concept-multi-agent-pattern]] |
 | **선언 층** | 부정 명령("하지 마") 잊힘 | STOP 트리거 → 명시적 중단 조건 | [[concept-claude-md]] |
+| **TDD** | 실패 테스트 없이 코드 작성 → 검증 없는 누적 | 3법칙: 빨강(실패 테스트)이 사이클 안의 거부 신호 | [[concept-tdd-laws-and-first]] |
 | **크론잡** | 잡이 끝났는지 확인 없이 `concurrencyPolicy: Forbid`만 걸어 무한 적체 | `activeDeadlineSeconds` + 실제 종료 신호 | [[concept-cronjob-concurrency-trap]] |
 | **LB ↔ 서버** | Keep-Alive 타임아웃 일치 가정, 종료 신호 없음 → 502 race | LB 타임아웃 < 서버 타임아웃, FIN 명시 | [[concept-keepalive-timeout-race]] |
 

@@ -201,7 +201,7 @@ PR 리뷰 어휘 — 표준 코드로 합의 빠르게.
 | 12 직렬화 | 85 | 자바 직렬화 대안 우선 | JSON·protobuf |
 
 ### 3.4 GRASP — 책임 할당 (9패턴)
-*근거: [[lecture-object-ch5]]*
+*근거: [[lecture-object-ch5]] · 심화: [[concept-grasp]]*
 
 | 패턴 | 책임 할당 질문 |
 |------|------|

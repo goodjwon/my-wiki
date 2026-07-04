@@ -35,6 +35,8 @@ updated: 2026-04-19
 
 ## 관련 페이지
 
+- [[concept-domain-model-kinds]] — DomainEntity/JpaEntity 분리의 이론 배경 (분석/설계/구현 모델 구분)
+
 - [[concept-oop]] — DDD의 기반이 되는 객체지향 원칙
 - [[concept-spring-core]] — Spring DI/Bean으로 도메인 모듈 조합
 - [[src-spring-guide]] — cheese10yun의 Spring 실무 가이드 (domain-guide 참고)

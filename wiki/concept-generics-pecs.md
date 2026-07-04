@@ -154,6 +154,8 @@ PECS의 본질은 "읽기 전용·쓰기 전용이라는 사용 방향을 주석
 
 ## 관련 페이지
 
+- [[concept-solid]] — "변경의 방향을 설계에 반영" 같은 인사이트 (OCP)
+
 - [[lecture-effective-java-ch5]] — 5장 제네릭 강의노트 (아이템 26~33 전체, 이 페이지의 원 소스)
 - [[entity-effective-java]] — *Effective Java* 책 전체 지도 (⭐ 현업 최핵심 20 아이템에 Item 31 포함)
 - [[java-study-ch03]] — 3.1 컬렉션 프레임워크와 제네릭 (제네릭 기초·와일드카드 입문)

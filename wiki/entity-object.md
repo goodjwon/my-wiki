@@ -101,10 +101,10 @@ OO 설계 핵심 5권이 서로 다른 단위·시점에서 같은 OO 결론을 
 | Template Method / Factory | 5·9 | [[concept-design-patterns]] |
 | 도메인 모델 / 분석·설계·구현 모델 | 부록 C | [[src-kakaopay-ddd]] (DDD 실전), [[concept-spring-core]] (IoC) |
 | 의존성 주입 / IoC | 9 | [[concept-spring-core]] (Spring DI), [[concept-design-patterns]] (Factory) |
-| 계약에 의한 설계 / 사전·사후조건 / 불변식 | 부록 A | (신규 후보 — `concept-design-by-contract`, 미작성) |
-| 리스코프 치환 원칙 (LSP) | 13 | (신규 후보 — `concept-solid`, 미작성) |
-| 개방-폐쇄 원칙 (OCP) / 의존성 역전 (DIP) | 9 | (신규 후보 — `concept-solid`, 미작성) |
-| GRASP (책임 할당 9패턴) | 5 | (신규 후보 — `concept-grasp`, 미작성) |
+| 계약에 의한 설계 / 사전·사후조건 / 불변식 | 부록 A | [[concept-design-by-contract]] |
+| 리스코프 치환 원칙 (LSP) | 13 | [[concept-solid]] |
+| 개방-폐쇄 원칙 (OCP) / 의존성 역전 (DIP) | 9 | [[concept-solid]] |
+| GRASP (책임 할당 9패턴) | 5 | [[concept-grasp]] |
 
 → **신규 concept 후보 4개** (DbC·SOLID·GRASP·DDD 모델 종류) — 사용자가 책 노트·발췌를 보내주면 그때 ingest합니다. 백로그에도 등록해 두었습니다.
 

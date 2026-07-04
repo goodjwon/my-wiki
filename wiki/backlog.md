@@ -47,6 +47,7 @@ updated: 2026-07-04
 - ✅ **붙은 리스트 렌더 버그 89건 일괄 수정** — 실제 렌더러로 실증(문단·펜스·표 직후 리스트는 한 줄로 붙고 **헤딩 직후만 정상**) 후 자동 스크립트 수정. ch00 daybyspring 잔재도 demo 기준 정합.
 - ✅ **Notion 변환 결손 완전 소거 (raw+wiki 동시)** — ch01 C/C++ 비교표, ch11 11.90 잘림·11.23 코드 유실·`‣` 10건·11.25 비교 표 8개, raw 마커 23건(ch07 22·ch08 1) 역이식. **저장소 전체 `<!-- table -->`·`‣`·펜스 불균형 잔존 0**.
 - ✅ **원본 블록 수 전수 대조 (97개 문서)** — 블록 수·꼬리·커버리지 3단 감사: 이상 없음 65 / 의도된 차이 12 / **실누락 17건 병합**(최대: ch10 10.2 §8~11 통째, ch11 11.23 §11~17, ch05 5.8 원문 전체·5.9 문제 23개). ch03 3.9 링크 4건도 링크 주석(annotation) 추출로 복원 — **감사 보류 0건 종결**.
+- ✅ **Clean Code 3 + 오브젝트 4 concept 신설 (책 기반 즉시 가능 항목 전부 종결)** — [[concept-naming-conventions]]·[[concept-tdd-laws-and-first]](3법칙 귀속 오류 교정: Beck 표기→Martin 정식화, 원전 확인)·[[concept-simple-design-rules]](Fowler 순서 논쟁 병기)·[[concept-solid]](LSP 원문 인용)·[[concept-grasp]](Larman 원전)·[[concept-design-by-contract]](Meyer·상표 사실 확인)·[[concept-domain-model-kinds]]. EJ 4개와 함께 **책 기반 concept 11개 완성**, 역링크 25곳+ 양방향.
 - ✅ **EJ concept 4개 신설 (즉시 가능 항목 종결)** — [[concept-jpa-enum-mapping]](@Enumerated ORDINAL 함정 — "기본값과 가정" 7번째 사례)·[[concept-functional-interfaces]](표준 6종+Spring)·[[concept-generics-pecs]](PECS·JDK 시그니처 실검증)·[[concept-java-serialization-risk]](Item 85·88·90 + Commons Collections 사건, 방어 관점). 전부 공식 문서 검증(Jakarta javadoc·Oracle API·JEP 290·CVE), nav·index·양방향 역링크 12곳 반영.
 - ✅ **글쓰기 스타일 2차 확장 (Pending 종결)** — 5권 entity·concept-oop·concept-design-patterns·guide-code-authoring 8편. 장면+매핑 2문단 3곳(concept-oop 극장 장면·EJ "정비사의 매뉴얼"·TDD 거부 신호) + 명사구 단편 약 35곳 완결문화. 비유가 원래 없는 4편은 과잉 금지로 신설 안 함.
 - ✅ **원본 불신 검증 정책 신설·적용** (CLAUDE.md 보강 정책 6) — 원본 오류 교정: ch01 C/C++ 표 3건("C는 함수형"→절차적 등), ch06 Boot 3.x 로그 문구·순서(**소스 코드 대조**), ch10 UseContainerSupport 기본 활성 부기(JDK 21 매뉴얼), ch11 중복 인덱스·static 캐시 부기, URL 17건 실접속 확인.
@@ -157,15 +158,6 @@ updated: 2026-07-04
 
 ### 즉시 가능 (입력 대기 중)
 
-- [ ] **Clean Code 책 기반 신규 concept 페이지 3개** — 사용자 노트·발췌 입력 대기
-  - [ ] `concept-naming-conventions` — 2장 + 17장 N1~N7
-  - [ ] `concept-tdd-laws-and-first` — 9장 TDD 3법칙 + F.I.R.S.T.
-  - [ ] `concept-simple-design-rules` — 12장 Kent Beck 단순 설계 4규칙
-- [ ] **오브젝트 책 기반 신규 concept 페이지 4개** — 사용자 노트·발췌 입력 대기
-  - [ ] `concept-solid` — SOLID 5원칙 (OCP·LSP·DIP 포함, 책 9·13장 기반)
-  - [ ] `concept-grasp` — GRASP 책임 할당 9패턴 (책 5장 기반)
-  - [ ] `concept-design-by-contract` — 계약에 의한 설계 (책 부록 A 기반)
-  - [ ] `concept-domain-model-kinds` — 분석/설계/구현 모델 구분 (책 부록 C 기반)
 - [ ] **5권 코드 가이드 — 다른 언어 분기 페이지** — 필요 시 신설 (현재 Java/Spring 가정, 다른 언어 학습자 등장 시)
   - 우선순위 순: Kotlin (Java 친화 99%) → TypeScript (리팩터링 책이 JS) → Python (OO·TDD·리팩터링 적용) → Go·Rust (OO 패러다임 다름)
   - 각 언어 매핑: record → data class/dataclass/struct, Optional → null safety, Stream → 언어별 함수형, try-with-resources → use/with/defer

@@ -157,6 +157,8 @@ TDD 개발자는 코드를 짜기 전에 먼저 실패하는 테스트를 작성
 
 ## 관련 페이지
 
+- [[concept-tdd-laws-and-first]] — Clean Code 9장 관점의 3법칙 + F.I.R.S.T. (사이클 안의 거부 신호 패턴 공유)
+
 - [[src-tdd-lecture]] — 실전 강의 교재 통합 인덱스
 - [[entity-object]] — *오브젝트* (OO 설계 큰 그림)
 - [[entity-effective-java]] — *Effective Java* (Java 권고 90개)

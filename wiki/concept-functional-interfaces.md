@@ -171,5 +171,6 @@ Item 44의 본질은 성능이 아니라 **어휘의 경제학**입니다. 모�
 - [[entity-effective-java]] — 책 전체 지도, "표준을 우선" 6원칙
 - [[java-study-ch03]] — 3.4 람다와 스트림 (함수형 인터페이스 입문 눈높이)
 - [[guide-code-authoring-and-review]] — PR 리뷰 표준 어휘 (같은 인사이트 패턴)
+- [[concept-naming-conventions]] — 이름 자체가 문서·계약이라는 관점 (같은 패턴)
 - [[concept-design-patterns]] — 패턴 이름 = 팀 공용어 (같은 인사이트 패턴)
 - [[concept-spring-core]] — Spring 빈·DI (registerBean·`@Bean` 팩토리의 배경)
