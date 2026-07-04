@@ -235,64 +235,197 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 
 #### 1. 사용자(users)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 사용자 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| email | VARCHAR(255) | 이메일 주소 | UNIQUE, NOT NULL |
+| password | VARCHAR(255) | 비밀번호(해시화) | NOT NULL |
+| name | VARCHAR(100) | 사용자 이름 | NOT NULL |
+| user_type | ENUM('student', 'teacher') | 사용자 타입 | NOT NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 2. 학생(students)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 학생 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| user_id | INT | 사용자 ID | FOREIGN KEY (users.id), UNIQUE, NOT NULL |
+| grade_level | VARCHAR(50) | 학년 정보 | NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 3. 교사(teachers)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 교사 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| user_id | INT | 사용자 ID | FOREIGN KEY (users.id), UNIQUE, NOT NULL |
+| specialization | VARCHAR(100) | 전문 분야 | NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 4. 강의(courses)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 강의 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| teacher_id | INT | 교사 ID | FOREIGN KEY (teachers.id), NOT NULL |
+| title | VARCHAR(255) | 강의 제목 | NOT NULL |
+| description | TEXT | 강의 설명 | NULL |
+| difficulty | ENUM('beginner', 'intermediate', 'advanced') | 난이도 | NOT NULL |
+| target_grade | VARCHAR(50) | 대상 학년 | NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 5. 강의 자료(course_contents)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 강의 자료 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| course_id | INT | 강의 ID | FOREIGN KEY (courses.id), NOT NULL |
+| title | VARCHAR(255) | 자료 제목 | NOT NULL |
+| content_type | ENUM('document', 'video', 'quiz', 'assignment') | 자료 타입 | NOT NULL |
+| order_index | INT | 자료 순서 | NOT NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 6. 문서(Contents)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 문서 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| content_id | INT | 강의 자료 ID | FOREIGN KEY (course_contents.id), UNIQUE, NOT NULL |
+| content_type | ENUM | 구분 (video/document) | NOT NULL |
+| file_path | VARCHAR(255) | 파일 경로 | NOT NULL |
+| file_type | VARCHAR(50) | 파일 타입 | NOT NULL |
 #### 7. 비디오(videos)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 비디오 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| content_id | INT | 강의 자료 ID | FOREIGN KEY (course_contents.id), UNIQUE, NOT NULL |
+| video_url | VARCHAR(255) | 비디오 URL | NOT NULL |
+| duration | INT | 비디오 길이(초) | NULL |
 #### 8. 퀴즈(quizzes)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 퀴즈 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| content_id | INT | 강의 자료 ID | FOREIGN KEY (course_contents.id), UNIQUE, NOT NULL |
+| title | VARCHAR(255) | 퀴즈 제목 | NOT NULL |
+| total_points | INT | 총 점수 | DEFAULT 100, NOT NULL |
 #### 9. 퀴즈 문항(quiz_questions)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 문항 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| quiz_id | INT | 퀴즈 ID | FOREIGN KEY (quizzes.id), NOT NULL |
+| question_text | TEXT | 문제 내용 | NOT NULL |
+| question_type | ENUM('multiple_choice', 'true_false', 'short_answer') | 문제 타입 | NOT NULL |
+| points | INT | 배점 | DEFAULT 1, NOT NULL |
+| order_index | INT | 문제 순서 | NOT NULL |
 #### 10. 퀴즈 보기(quiz_options)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 보기 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| question_id | INT | 문항 ID | FOREIGN KEY (quiz_questions.id), NOT NULL |
+| option_text | TEXT | 보기 내용 | NOT NULL |
+| is_correct | BOOLEAN | 정답 여부 | NOT NULL |
+| order_index | INT | 보기 순서 | NOT NULL |
 #### 11. 과제(assignments)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 과제 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| content_id | INT | 강의 자료 ID | FOREIGN KEY (course_contents.id), UNIQUE, NOT NULL |
+| title | VARCHAR(255) | 과제 제목 | NOT NULL |
+| description | TEXT | 과제 설명 | NULL |
+| due_date | DATETIME | 제출 기한 | NULL |
 #### 12. 질문(questions)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 질문 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| content_id | INT | 강의 자료 ID | FOREIGN KEY (course_contents.id), NOT NULL |
+| student_id | INT | 학생 ID | FOREIGN KEY (students.id), NOT NULL |
+| content | TEXT | 질문 내용 | NOT NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 13. 답변(answers)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 답변 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| question_id | INT | 질문 ID | FOREIGN KEY (questions.id), NOT NULL |
+| user_id | INT | 사용자 ID | FOREIGN KEY (users.id), NOT NULL |
+| parent_answer_id | INT | 부모 답변 ID | FOREIGN KEY (answers.id), NULL |
+| content | TEXT | 답변 내용 | NOT NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 14. 퀴즈 제출(quiz_submissions)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 제출 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| quiz_id | INT | 퀴즈 ID | FOREIGN KEY (quizzes.id), NOT NULL |
+| student_id | INT | 학생 ID | FOREIGN KEY (students.id), NOT NULL |
+| score | INT | 획득 점수 | NOT NULL |
+| submitted_at | DATETIME | 제출 일시 | DEFAULT CURRENT_TIMESTAMP |
 #### 15. 퀴즈 답안(quiz_answers)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 답안 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| submission_id | INT | 제출 ID | FOREIGN KEY (quiz_submissions.id), NOT NULL |
+| question_id | INT | 문항 ID | FOREIGN KEY (quiz_questions.id), NOT NULL |
+| selected_option_id | INT | 선택한 보기 ID | FOREIGN KEY (quiz_options.id), NULL |
+| answer_text | TEXT | 주관식 답변 | NULL |
+| is_correct | BOOLEAN | 정답 여부 | NOT NULL |
+| points_earned | INT | 획득 점수 | NOT NULL |
 #### 16. 과제 제출(assignment_submissions)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 제출 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| assignment_id | INT | 과제 ID | FOREIGN KEY (assignments.id), NOT NULL |
+| student_id | INT | 학생 ID | FOREIGN KEY (students.id), NOT NULL |
+| submission_file | VARCHAR(255) | 제출 파일 경로 | NULL |
+| submission_text | TEXT | 제출 내용 | NULL |
+| status | ENUM('pending', 'graded') | 상태 | DEFAULT 'pending', NOT NULL |
+| grade | INT | 성적 | NULL |
+| feedback | TEXT | 피드백 | NULL |
+| submitted_at | DATETIME | 제출 일시 | DEFAULT CURRENT_TIMESTAMP |
 #### 17. 태그(tags)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 태그 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| name | VARCHAR(50) | 태그 이름 | UNIQUE, NOT NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
 #### 18. 강의-태그(course_tags)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 관계 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| course_id | INT | 강의 ID | FOREIGN KEY (courses.id), NOT NULL |
+| tag_id | INT | 태그 ID | FOREIGN KEY (tags.id), NOT NULL |
 #### 19. 학생-강의(student_courses)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 등록 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| student_id | INT | 학생 ID | FOREIGN KEY (students.id), NOT NULL |
+| course_id | INT | 강의 ID | FOREIGN KEY (courses.id), NOT NULL |
+| progress_percentage | FLOAT | 진도율(%) | DEFAULT 0, NOT NULL |
+| enrolled_at | DATETIME | 등록 일시 | DEFAULT CURRENT_TIMESTAMP |
+| last_accessed_at | DATETIME | 마지막 접속 일시 | DEFAULT CURRENT_TIMESTAMP |
 #### 20. 학생 컨텐츠 진도(student_content_progress)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 진도 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| student_id | INT | 학생 ID | FOREIGN KEY (students.id), NOT NULL |
+| content_id | INT | 강의 자료 ID | FOREIGN KEY (course_contents.id), NOT NULL |
+| is_completed | BOOLEAN | 완료 여부 | DEFAULT FALSE, NOT NULL |
+| last_accessed_at | DATETIME | 마지막 접속 일시 | DEFAULT CURRENT_TIMESTAMP |
+| completed_at | DATETIME | 완료 일시 | NULL |
 
 
 ##### 시나리오 2: 레시피 공유 애플리케이션
@@ -385,13 +518,33 @@ rpg ⇒ 던전게임 (도스 커맨드)  ⇒ 유니티 ⇒ json
 
 #### 1. 사용자(users)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 사용자 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| email | VARCHAR(255) | 이메일 주소 | UNIQUE, NOT NULL |
+| password | VARCHAR(255) | 비밀번호(해시화) | NOT NULL |
+| name | VARCHAR(100) | 사용자 이름 | NOT NULL |
+| user_type | ENUM('student', 'teacher') | 사용자 타입 | NOT NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 2. 학생(students)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 학생 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| user_id | INT | 사용자 ID | FOREIGN KEY (users.id), UNIQUE, NOT NULL |
+| grade_level | VARCHAR(50) | 학년 정보 | NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 3. 교사(teachers)
 
-<!-- table -->
+| 컬럼명 | 데이터 타입 | 설명 | 제약조건 |
+|---|---|---|---|
+| id | INT | 교사 식별자 | PRIMARY KEY, AUTO_INCREMENT |
+| user_id | INT | 사용자 ID | FOREIGN KEY (users.id), UNIQUE, NOT NULL |
+| specialization | VARCHAR(100) | 전문 분야 | NULL |
+| created_at | DATETIME | 생성 일시 | DEFAULT CURRENT_TIMESTAMP |
+| updated_at | DATETIME | 수정 일시 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
 #### 4. 강의(courses)
 
 
