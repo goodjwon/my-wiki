@@ -6,7 +6,7 @@ sources: [java-study/java-study-ch04-객체지향설계와패턴.md]
 external:
   - https://refactoring.guru/design-patterns
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-04
 ---
 
 # 디자인 패턴
@@ -51,7 +51,7 @@ public class OrderService {
 }
 ```
 
-**Spring 활용**: DI 그 자체. 결제·알림·할인 계산 등 "교체 가능한 알고리즘" 어디서나.
+**Spring 활용**: DI가 곧 전략 패턴입니다. 결제·알림·할인 계산처럼 "교체 가능한 알고리즘"이 필요한 곳이라면 어디서나 적용할 수 있습니다.
 
 ## 2. 템플릿 메서드 (Template Method)
 
@@ -108,7 +108,7 @@ public enum Cache {
 }
 ```
 
-**Spring 활용**: Bean의 기본 스코프 = singleton ([[concept-spring-core]]).
+**Spring 활용**: Spring Bean의 기본 스코프가 바로 singleton입니다 ([[concept-spring-core]]).
 
 **함정**:
 - **싱글톤 + 가변 상태 = 동시성 폭탄** — 싱글톤 Bean에 `Map`/mutable counter 두면 race condition
@@ -207,7 +207,7 @@ public class OrderFacade {
 }
 ```
 
-**Spring 활용**: 외부 API 게이트웨이, Application Service, 복잡한 외부 라이브러리(AWS SDK) 래핑.
+**Spring 활용**: 외부 API 게이트웨이, Application Service, 복잡한 외부 라이브러리(AWS SDK) 래핑에 사용합니다.
 
 ## 공통 교훈
 

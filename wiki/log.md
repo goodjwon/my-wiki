@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-04] style | 글쓰기 스타일 2차 확장 완료 — 5권 entity·concept 2·guide 1 (8편)
+- backlog 최우선 Pending이던 2차 확장(1차 13편은 2026-06-27) 실행. 대상: entity-object/effective-java/refactoring/clean-code/tdd + concept-oop + concept-design-patterns + guide-code-authoring-and-review.
+- **장면+매핑 2문단 재구성 3곳**: concept-oop 도입(극장 장면 — 사용자 모범 문장 활용 + lecture-object-ch1 링크), entity-effective-java "본질"("정비사의 매뉴얼" 장면 신설), entity-tdd "빨강=거부 신호" 괄호 매핑 분리.
+- **명사구 단편→능동 완결문 약 35곳**: guide-code-authoring 15, entity-clean-code 6, entity-object 5, 나머지 소량. entity-refactoring "이 책의 자리" 말미 단편(24 악취 + 66+ 기법.)도 완결문화 — 5권 통일은 형식이므로 유지됨.
+- **과잉 금지 판정**: concept-design-patterns·entity-clean-code·entity-object·guide-code-authoring은 장면형 비유가 원래 없어 신설하지 않음(1차 선례와 동일 기준). 5권 오각형 비교표·표·코드·체크리스트·절 헤더 캡션 불변.
+- 8편 style-lint 0건, 빌드 통과.
+
 ## [2026-07-04] fix | ch03 3.9 공식 문서 링크 4건 URL 복원 (보류분 종결)
 - 원본 대조 감사에서 보류했던 링크 4건 — Notion 렌더 시 텍스트만 뽑고 링크 속성이 버려진 것이 원인. 블록의 **링크 주석(annotation: `['a', url]`)을 직접 추출**해 복원: Lambda Expressions(dev.java)·Stream Package Summary·Stream Interface·Optional Interface(JDK 21 API). 4건 전부 HTTP 200 확인.
 - wiki(설명 부기 포함)·raw(교정 노트) 동시 반영. 이로써 원본 블록 대조 감사의 보류 항목 0건 — **97개 문서 전수 감사 완전 종결**.
