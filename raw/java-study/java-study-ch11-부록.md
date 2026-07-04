@@ -1005,60 +1005,98 @@ public class UserDAO {
     SessionUtil.logout(request, response);
     response.sendRedirect("login_form.jsp?logout=success");
 %>
+```
 
 ### **공통 헤더 (로그인 상태 표시) (`common/header.jsp`)**
 
-```
-
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="com.myblog.util.SessionUtil" %>
-
 <%@ page import="com.myblog.dto.User" %>
-
-<%@ taglib uri="[http://java.sun.com/jsp/jstl/core](http://java.sun.com/jsp/jstl/core)" prefix="c" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%-- 로그인 상태 확인 --%>
-
 <%
-
+User loginUser = SessionUtil.getLoginUser(request);
+boolean isLoggedIn = (loginUser != null);
+boolean isAdmin = SessionUtil.isAdmin(request);
+// JSP EL에서 사용할 수 있도록 request에 설정
+request.setAttribute("loginUser", loginUser);
+request.setAttribute("isLoggedIn", isLoggedIn);
+request.setAttribute("isAdmin", isAdmin);
 %>
-
 <header class="site-header">
-
+<div class="container">
+<h1><a href="${pageContext.request.contextPath}/index.jsp">마이 블로그</a></h1>
+<nav>
+<ul class="nav-menu">
+<li><a href="${pageContext.request.contextPath}/post/list.jsp">게시글</a></li>
+<c:choose>
+<c:when test="${isLoggedIn}">
+<%-- 로그인된 상태 --%>
+<li><a href="${pageContext.request.contextPath}/post/form.jsp">글 작성</a></li>
+<li><a href="${pageContext.request.contextPath}/user/profile.jsp">프로필</a></li>
+<c:if test="${isAdmin}">
+<li><a href="${pageContext.request.contextPath}/admin/userList.jsp">관리자</a></li>
+</c:if>
+<li class="user-info">
+안녕하세요, ${loginUser.nickname}님!
+<a href="${pageContext.request.contextPath}/user/logout_action.jsp">로그아웃</a>
+</li>
+</c:when>
+<c:otherwise>
+<%-- 로그인되지 않은 상태 --%>
+<li><a href="${pageContext.request.contextPath}/user/login_form.jsp">로그인</a></li>
+<li><a href="${pageContext.request.contextPath}/user/signup_form.jsp">회원가입</a></li>
+</c:otherwise>
+</c:choose>
+</ul>
+</nav>
+</div>
 </header>
-
-```javascript
-### **인증 체크 공통 로직 (****`common/auth_check.jsp`****)**
 ```
 
+### **인증 체크 공통 로직 (`common/auth_check.jsp`)**
+
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="com.myblog.util.SessionUtil" %>
-
 <%--
-
+이 파일을 include하여 로그인 필요 페이지에서 인증 체크
+사용법: <%@ include file="../common/auth_check.jsp" %>
 --%>
-
 <%
-
+if (!SessionUtil.isLoggedIn(request)) {
+// 현재 요청 URL을 returnUrl로 저장
+String currentUrl = request.getRequestURL().toString();
+String queryString = request.getQueryString();
+if (queryString != null) {
+currentUrl += "?" + queryString;
+}
+String encodedReturnUrl = java.net.URLEncoder.encode(currentUrl, "UTF-8");
+response.sendRedirect(request.getContextPath() + "/user/login_form.jsp?returnUrl=" + encodedReturnUrl);
+return;
+}
 %>
-
-```javascript
-### **관리자 권한 체크 (****`common/admin_check.jsp`****)**
 ```
 
+### **관리자 권한 체크 (`common/admin_check.jsp`)**
+
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="com.myblog.util.SessionUtil" %>
-
 <%--
-
+관리자 권한이 필요한 페이지에서 사용
+사용법: <%@ include file="../common/admin_check.jsp" %>
 --%>
-
 <%
-
+if (!SessionUtil.isAdmin(request)) {
+response.sendRedirect(request.getContextPath() + "/post/list.jsp?error=access_denied");
+return;
+}
 %>
+```
+
+<!-- 복구 노트: 위 3개 절 코드는 변환 시 유실·뒤섞였던 것을 2026-07-04 Notion published API로 재수집해 복원함 -->
 
 ##### **회원가입 처리 (****`user/signup_action.jsp`****)**
 
@@ -1955,11 +1993,11 @@ JSP의 기본 문법과 실행 흐름을 빠르게 훑어보기 위한 예제 �
 - 특정 프로젝트 문서가 일반 개념 문서로 승격될 수 있는지 판단하고 싶을 때
 
 ### 이 묶음에 포함되는 문서
-- [11.23 [PJ]Java/JSP(Model 1) 기반 블로그 개발 실습 가이드](‣)
-- [11.22 [PJ]도서 주문 및 대여 시스템 시나리오](‣)
+- 11.23 [PJ]Java/JSP(Model 1) 기반 블로그 개발 실습 가이드(→ 11.23)
+- 11.22 [PJ]도서 주문 및 대여 시스템 시나리오(→ 11.22)
 - [11.24 Loan API 리팩터링 요약](https://www.notion.so/2d61e21f38368071a777c4c117d093e8)
-- [11.25 [PJ]블로그 작성하기 미니프로젝트](‣)
-- [11.19 [PJ]온라인 게임 토이 프로젝트](‣)
+- 11.25 [PJ]블로그 작성하기 미니프로젝트(→ 11.25)
+- 11.19 [PJ]온라인 게임 토이 프로젝트(→ 11.19)
 
 ### 편집 원칙
 - 책 본문과 중복되는 설명은 `통합됨` 문서로 접고 대표 문서 링크만 남깁니다.
@@ -2485,3 +2523,129 @@ public class UserSession {
 }
 
 ```
+
+**해결:**
+```java
+public static void logout(String id) {
+    sessions.remove(id);
+}
+```
+
+---
+
+#### 시나리오 2: 파일 리소스
+**문제:**
+```java
+public void readFile(String path) throws IOException {
+    FileInputStream fis = new FileInputStream(path);
+    // 읽기...
+    // fis.close() 없음!
+}
+```
+**해결:**
+```java
+public void readFile(String path) throws IOException {
+    try (FileInputStream fis = new FileInputStream(path)) {
+        // 읽기...
+    }  // 자동으로 close()
+}
+```
+
+---
+
+#### 시나리오 3: 캐시 크기 제한
+**문제:**
+```java
+private static Map<String, Object> cache = new HashMap<>();
+
+public static void put(String key, Object value) {
+    cache.put(key, value);  // 무한 증가
+}
+```
+**해결:**
+```java
+private static final int MAX_SIZE = 100;
+private static Map<String, Object> cache = new LinkedHashMap<>();
+
+public static void put(String key, Object value) {
+    if (cache.size() >= MAX_SIZE) {
+        String first = cache.keySet().iterator().next();
+        cache.remove(first);
+    }
+    cache.put(key, value);
+}
+```
+
+---
+
+#### 시나리오 4: 문자열 처리
+**문제:**
+```java
+String result = "";
+for (String log : logs) {
+    result += log + "\n";  // 매번 새 객체 생성
+}
+```
+**해결:**
+```java
+StringBuilder sb = new StringBuilder();
+for (String log : logs) {
+    sb.append(log).append("\n");
+}
+String result = sb.toString();
+```
+
+---
+
+#### 시나리오 5: 컬렉션 초기화
+**문제:**
+```java
+List<String> list = new ArrayList<>();  // 기본 크기 10
+for (int i = 0; i < 100000; i++) {
+    list.add("data" + i);  // 여러 번 크기 조정
+}
+```
+**해결:**
+```java
+List<String> list = new ArrayList<>(100000);  // 초기 크기 지정
+for (int i = 0; i < 100000; i++) {
+    list.add("data" + i);
+}
+```
+
+---
+
+### 4. 핵심 정리
+
+#### 메모리 관리 5대 원칙
+
+1. 필요한 만큼만 할당
+2. 안 쓰는 참조 제거 (= null)
+3. 리소스는 반드시 닫기 (try-with-resources)
+4. StringBuilder 사용 (문자열 연결)
+5. 컬렉션 초기 크기 지정
+
+#### 체크리스트
+
+필수:
+
+- [ ] JVM 기본 개념 이해
+- [ ] 힙과 스택 차이 이해
+- [ ] 가비지 컬렉션 이해
+- [ ] 메모리 누수 방지
+
+권장:
+
+- [ ] try-with-resources 사용
+- [ ] StringBuilder 사용
+- [ ] 컬렉션 초기 크기 지정
+- [ ] static 컬렉션 주의
+
+#### 다음 단계
+
+- JVM 튜닝 옵션
+- 프로파일링 도구 (JVisualVM)
+- 성능 최적화 기법
+
+<!-- 복구 노트: 위 "시나리오 1 해결" 이하 내용은 2026-06-29 추출 시 잘렸던 부분을
+     2026-07-04 Notion published API(loadPageChunk 커서 페이지네이션)로 재수집해 복원함. -->

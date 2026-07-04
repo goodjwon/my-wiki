@@ -890,7 +890,7 @@ try {
 
 ### 연결 문서
 - 미니프로젝트 정리: 11.10 미니프로젝트 과제 정리 (→ 11.10)
-- 실습 예시: [11.25 [PJ]블로그 작성하기 미니프로젝트](‣), [11.19 [PJ]온라인 게임 토이 프로젝트](‣)
+- 실습 예시: 11.25 [PJ]블로그 작성하기 미니프로젝트(→ 11.25), 11.19 [PJ]온라인 게임 토이 프로젝트(→ 11.19)
 
 ### 한 줄 정리
 포트폴리오는 결과 화면 모음이 아니라, 문제 정의와 설계 판단을 설명하는 문서여야 합니다.
@@ -1169,11 +1169,11 @@ src/main/resources/game_data.json
 - 특정 프로젝트 문서가 일반 개념 문서로 승격될 수 있는지 판단하고 싶을 때
 
 ### 이 묶음에 포함되는 문서
-- [11.23 [PJ]Java/JSP(Model 1) 기반 블로그 개발 실습 가이드](‣)
-- [11.22 [PJ]도서 주문 및 대여 시스템 시나리오](‣)
+- 11.23 [PJ]Java/JSP(Model 1) 기반 블로그 개발 실습 가이드(→ 11.23)
+- 11.22 [PJ]도서 주문 및 대여 시스템 시나리오(→ 11.22)
 - 11.24 Loan API 리팩터링 요약 (이 부록에는 미수록, 원고 데이터베이스에서만 유지)
-- [11.25 [PJ]블로그 작성하기 미니프로젝트](‣)
-- [11.19 [PJ]온라인 게임 토이 프로젝트](‣)
+- 11.25 [PJ]블로그 작성하기 미니프로젝트(→ 11.25)
+- 11.19 [PJ]온라인 게임 토이 프로젝트(→ 11.19)
 
 ### 편집 원칙
 - 책 본문과 중복되는 설명은 `통합됨` 문서로 접고 대표 문서 링크만 남깁니다.
@@ -2098,60 +2098,102 @@ public class UserDAO {
     SessionUtil.logout(request, response);
     response.sendRedirect("login_form.jsp?logout=success");
 %>
-
-### 공통 헤더 (로그인 상태 표시) (`common/header.jsp`)
-
 ```
 
+##### 공통 헤더 (로그인 상태 표시) (`common/header.jsp`)
+
+모든 페이지 상단에 include되는 헤더입니다. 세션에서 로그인 사용자를 읽어 EL 변수로 노출하고, 로그인 여부·관리자 여부에 따라 메뉴를 분기합니다.
+
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="com.myblog.util.SessionUtil" %>
-
 <%@ page import="com.myblog.dto.User" %>
-
-<%@ taglib uri="[http://java.sun.com/jsp/jstl/core](http://java.sun.com/jsp/jstl/core)" prefix="c" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%-- 로그인 상태 확인 --%>
-
 <%
-
+User loginUser = SessionUtil.getLoginUser(request);
+boolean isLoggedIn = (loginUser != null);
+boolean isAdmin = SessionUtil.isAdmin(request);
+// JSP EL에서 사용할 수 있도록 request에 설정
+request.setAttribute("loginUser", loginUser);
+request.setAttribute("isLoggedIn", isLoggedIn);
+request.setAttribute("isAdmin", isAdmin);
 %>
-
 <header class="site-header">
-
+<div class="container">
+<h1><a href="${pageContext.request.contextPath}/index.jsp">마이 블로그</a></h1>
+<nav>
+<ul class="nav-menu">
+<li><a href="${pageContext.request.contextPath}/post/list.jsp">게시글</a></li>
+<c:choose>
+<c:when test="${isLoggedIn}">
+<%-- 로그인된 상태 --%>
+<li><a href="${pageContext.request.contextPath}/post/form.jsp">글 작성</a></li>
+<li><a href="${pageContext.request.contextPath}/user/profile.jsp">프로필</a></li>
+<c:if test="${isAdmin}">
+<li><a href="${pageContext.request.contextPath}/admin/userList.jsp">관리자</a></li>
+</c:if>
+<li class="user-info">
+안녕하세요, ${loginUser.nickname}님!
+<a href="${pageContext.request.contextPath}/user/logout_action.jsp">로그아웃</a>
+</li>
+</c:when>
+<c:otherwise>
+<%-- 로그인되지 않은 상태 --%>
+<li><a href="${pageContext.request.contextPath}/user/login_form.jsp">로그인</a></li>
+<li><a href="${pageContext.request.contextPath}/user/signup_form.jsp">회원가입</a></li>
+</c:otherwise>
+</c:choose>
+</ul>
+</nav>
+</div>
 </header>
-
-```javascript
-### 인증 체크 공통 로직 (`common/auth_check.jsp`)
 ```
 
+##### 인증 체크 공통 로직 (`common/auth_check.jsp`)
+
+로그인이 필요한 페이지 머리에 include합니다. 비로그인이면 현재 URL을 returnUrl로 담아 로그인 폼으로 돌려보냅니다.
+
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="com.myblog.util.SessionUtil" %>
-
 <%--
-
+이 파일을 include하여 로그인 필요 페이지에서 인증 체크
+사용법: <%@ include file="../common/auth_check.jsp" %>
 --%>
-
 <%
-
+if (!SessionUtil.isLoggedIn(request)) {
+// 현재 요청 URL을 returnUrl로 저장
+String currentUrl = request.getRequestURL().toString();
+String queryString = request.getQueryString();
+if (queryString != null) {
+currentUrl += "?" + queryString;
+}
+String encodedReturnUrl = java.net.URLEncoder.encode(currentUrl, "UTF-8");
+response.sendRedirect(request.getContextPath() + "/user/login_form.jsp?returnUrl=" + encodedReturnUrl);
+return;
+}
 %>
-
-```javascript
-### 관리자 권한 체크 (`common/admin_check.jsp`)
 ```
 
+##### 관리자 권한 체크 (`common/admin_check.jsp`)
+
+관리자 전용 페이지 머리에 include합니다. 권한이 없으면 목록으로 돌려보냅니다.
+
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="com.myblog.util.SessionUtil" %>
-
 <%--
-
+관리자 권한이 필요한 페이지에서 사용
+사용법: <%@ include file="../common/admin_check.jsp" %>
 --%>
-
 <%
-
+if (!SessionUtil.isAdmin(request)) {
+response.sendRedirect(request.getContextPath() + "/post/list.jsp?error=access_denied");
+return;
+}
 %>
+```
 
 ##### 회원가입 처리 (`user/signup_action.jsp`)
 
@@ -2984,7 +3026,7 @@ http://localhost:8080/my-blog/user/login_form.jsp 접속 → 로그인 폼(이�
 #### 2단계: MVC 패턴 + 서블릿 구현 (목록, 쓰기, 상세읽기, 수정하기, 삭제하기, 로그인)
 - 1단계 코드를 MVC 패턴으로 리팩토링
 - 모델(DAO, DTO), 뷰(JSP), 컨트롤러(서블릿) 분리
-  - 서블릿을 이용한 컨트롤러 구현+++——
+  - 서블릿을 이용한 컨트롤러 구현
 - Front Controller 패턴 적용
 - 서비스 계층 추가
 
@@ -3092,7 +3134,13 @@ Modified: 2024-11-23 07:30:18
 ### 함께 보면 좋은 문서
 - 토이프로젝트 메모 앱 만들기 풀이 (→ 11.26-1)
 - 미니프로젝트 과제 정리 (→ 11.10)
-- **힌트 (어려울 때만 보세요)**
+### 힌트 (어려울 때만 보세요)
+
+막혔을 때만 펼쳐 보라는 용도로 원본에 접혀 있던 코드 설명입니다.
+
+1. **클래스 구조** — `Memo`: 메모 데이터를 관리하는 클래스 / `MemoApp`: 사용자와 상호작용하는 CLI 프로그램
+2. **기능 구현** — `addMemo`(추가), `listMemos`(전체 출력), `searchMemo`(제목·키워드 검색), `editMemo`(ID로 수정), `deleteMemo`(ID로 삭제)
+3. **확장 포인트** — 메모리 저장 → 파일 저장 전환, 검색 범위를 내용까지 확장, 예외 메시지·입력 검증 보강
 
 ### 정리
 이 프로젝트의 목적은 거대한 기능을 만드는 것이 아니라, 작은 요구사항을 클래스, 컬렉션, 예외 처리, 테스트로 끝까지 밀어 보는 데 있습니다. Spring 없이도 프로그램 구조를 세울 수 있어야 이후 프레임워크 학습이 훨씬 가벼워집니다.
@@ -3599,3 +3647,146 @@ public class CachedUserSession {   // 11.23 블로그의 DTO UserSession과 별�
 }
 
 ```
+
+**해결:** 로그아웃 시 참조를 제거해 static 맵이 무한히 자라지 않게 합니다.
+
+```java
+public static void logout(String id) {
+    sessions.remove(id);
+}
+```
+
+---
+
+#### 시나리오 2: 파일 리소스
+
+파일 스트림을 닫지 않으면 파일 디스크립터가 누적돼 결국 "Too many open files" 오류로 이어집니다.
+
+**문제:**
+```java
+public void readFile(String path) throws IOException {
+    FileInputStream fis = new FileInputStream(path);
+    // 읽기...
+    // fis.close() 없음!
+}
+```
+
+**해결:** try-with-resources로 블록을 벗어나면 자동으로 닫히게 합니다 (5장 파일 처리에서 다룬 패턴).
+
+```java
+public void readFile(String path) throws IOException {
+    try (FileInputStream fis = new FileInputStream(path)) {
+        // 읽기...
+    }  // 자동으로 close()
+}
+```
+
+---
+
+#### 시나리오 3: 캐시 크기 제한
+
+상한 없는 캐시는 시나리오 1과 같은 구조의 누수입니다 — 넣기만 하고 빼는 규칙이 없기 때문입니다.
+
+**문제:**
+```java
+private static Map<String, Object> cache = new HashMap<>();
+
+public static void put(String key, Object value) {
+    cache.put(key, value);  // 무한 증가
+}
+```
+
+**해결:** 최대 크기를 정하고, 가득 차면 가장 오래된 항목부터 밀어냅니다.
+
+```java
+private static final int MAX_SIZE = 100;
+private static Map<String, Object> cache = new LinkedHashMap<>();
+
+public static void put(String key, Object value) {
+    if (cache.size() >= MAX_SIZE) {
+        String first = cache.keySet().iterator().next();
+        cache.remove(first);
+    }
+    cache.put(key, value);
+}
+```
+
+---
+
+#### 시나리오 4: 문자열 처리
+
+String은 불변이라 `+=` 연결마다 새 객체가 생깁니다. 반복문에서는 임시 객체가 반복 횟수만큼 쌓여 GC 부담이 됩니다.
+
+**문제:**
+```java
+String result = "";
+for (String log : logs) {
+    result += log + "\n";  // 매번 새 객체 생성
+}
+```
+
+**해결:** StringBuilder로 한 버퍼에 이어 붙입니다 (2장 문자열에서 다룬 패턴).
+
+```java
+StringBuilder sb = new StringBuilder();
+for (String log : logs) {
+    sb.append(log).append("\n");
+}
+String result = sb.toString();
+```
+
+---
+
+#### 시나리오 5: 컬렉션 초기화
+
+ArrayList는 가득 찰 때마다 내부 배열을 새로 만들어 복사합니다. 최종 크기를 안다면 처음부터 그 크기로 시작하는 편이 낫습니다.
+
+**문제:**
+```java
+List<String> list = new ArrayList<>();  // 기본 크기 10
+for (int i = 0; i < 100000; i++) {
+    list.add("data" + i);  // 여러 번 크기 조정
+}
+```
+
+**해결:**
+```java
+List<String> list = new ArrayList<>(100000);  // 초기 크기 지정
+for (int i = 0; i < 100000; i++) {
+    list.add("data" + i);
+}
+```
+
+---
+
+### 4. 핵심 정리
+
+#### 메모리 관리 5대 원칙
+
+1. 필요한 만큼만 할당합니다.
+2. 안 쓰는 참조는 제거합니다 (`= null`).
+3. 리소스는 반드시 닫습니다 (try-with-resources).
+4. 문자열 연결은 StringBuilder를 사용합니다.
+5. 컬렉션은 초기 크기를 지정합니다.
+
+#### 체크리스트
+
+필수:
+
+- [ ] JVM 기본 개념 이해
+- [ ] 힙과 스택 차이 이해
+- [ ] 가비지 컬렉션 이해
+- [ ] 메모리 누수 방지
+
+권장:
+
+- [ ] try-with-resources 사용
+- [ ] StringBuilder 사용
+- [ ] 컬렉션 초기 크기 지정
+- [ ] static 컬렉션 주의
+
+#### 다음 단계
+
+- JVM 튜닝 옵션
+- 프로파일링 도구 (JVisualVM)
+- 성능 최적화 기법
