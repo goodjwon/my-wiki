@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-04] feat | §7-8 "불쑥 등장 금지" 신설 + harness 8편 선행 소개 전수 보강
+- 사용자 피드백 2건: ① "태스크 B — 새 조회 API"가 왜 만드는지 설명 없이 등장, `[베이스라인 측정 중]`이 정의 없이 튀어나옴 ② "독자가 안다고 가정하고 불쑥 내미는 패턴이 많다 — 전반 보강하고 정책에 명시하라".
+- **§7-8 신설** (guide-wiki-authoring-standards): 선행 소개 4규칙 — 블록 리드인 / 표기·규약 첫 등장 정의 / 태스크 의도 문장 / 산출물 반문장 재소개. 판정 기준 "절만 떼어 읽어도 '이게 뭐지?'가 없는가". §8 셀프체크 + CLAUDE.md 셀프체크에 항목 추가.
+- **§7-7 언어 무관 원칙 추가**: 향후 Python·C 등 새 자료 트랙도 스캐폴드 4요소 동일 적용, 실행 명령 표준형만 언어별 확장 (사용자 방침: "계속 업데이트할 것이므로 구성 규칙이 중요"). backlog 결정 사항에도 기록.
+- **harness 8편 전수 보강** (module1 직접 + 7편 병렬 에이전트, 총 70여 곳): module1 태스크 A·B·C 의도 문장·`[베이스라인 측정 중]` 표시 정의 / demo hook·guard.sh·PreToolUse 정의 / prerequisites 리드인 8·용어 5(Zod·Conventional Commits 등) / module2 STOP·12섹션 정의 / module3 PreToolUse·stdin JSON·exit 2·matcher 정의 / module4 Planner·Coder·Critic·판정 용어·커밋 접두어 규약 정의 / module5 Rippable 정식 정의·"M2 After" 열 선행 소개 / loop 메아리방·거부 신호·헤드리스 정의·실측 수치 유래 재소개.
+- 9개 파일 style-lint 0건(표준 문서 자기참조 3건은 기존 의도 표기), 붙은 리스트 0건, 빌드 통과.
+
 ## [2026-07-04] feat | harness 가이드 8편 실습 정비 — 박스·리스트 렌더·배너 제거·개연성·모순 교정
 - 사용자 피드백 3건 반영: ① "이 모듈에서 얻을 것" 등 번호 리스트가 한 줄로 붙어 렌더됨 ② `> 원본: raw/...` 배너가 위키에 노출 ③ "본인 기존 프로젝트는 이 시점에 쓰지 않습니다" 같은 뜬금 문장·Step 간 개연성 부족.
 - 대상 8편: prerequisites·demo·module1~5·loop-engineering-demo (module1 직접 수정으로 기준 수립 → 나머지 7편 병렬 에이전트).
