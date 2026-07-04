@@ -4,6 +4,14 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-04] fix | ch11 Notion 변환 결손 복구 — 11.90 잘림·11.23 코드 유실·‣ 링크 (raw+wiki 동시)
+- **복구 방법**: Notion published API 재수집. queryCollection(spaceId 필수, `value.value` 중첩 주의)으로 페이지 ID 특정 → loadPageChunk **커서 페이지네이션**(cursor.stack 재전달, chunkNumber만 올리면 같은 청크 반복)으로 전체 블록 수집. 접힌 토글은 토글 블록 ID를 pageId로 재요청. syncRecordValues는 익명 403.
+- **11.90 JVM 워크북 잘림**: 2026-06-29 추출 때 "시나리오 1 문제"에서 파일이 끊겨 있던 것(raw도 동일) → 시나리오 1 해결 + 시나리오 2~5(파일 리소스·캐시 상한·StringBuilder·컬렉션 초기 크기) + "4. 핵심 정리"(5대 원칙·체크리스트·다음 단계) 전량 복원. wiki에는 §7-8 리드인 부착, raw에는 원문 그대로 + 복구 노트 주석.
+- **11.23 공통 헤더·인증 체크·관리자 체크 코드 유실**: 변환 때 코드 본문(`<% %>` 안)이 비고 펜스가 뒤섞여 헤딩이 코드블록 안에 렌더되던 구간 → header.jsp(JSTL 메뉴 분기)·auth_check.jsp(returnUrl 리다이렉트)·admin_check.jsp 원본 코드 전량 복원, 펜스 정상화 (raw+wiki).
+- **‣ 깨진 내부 링크 10건**(wiki 6·raw 4) → `제목(→ 11.NN)` 평문 참조로 전환(2026-07-01 notion.so 링크 처리와 같은 방식). 빌드의 unrecognized link 경고 소멸.
+- **잔재 2건**: 11.25 `구현+++——` 토글 아티팩트 제거(원본에도 자식 없음 확인), 11.26 매달린 "힌트" 불릿 → 원본 토글 내용(클래스 구조·기능 구현·확장 포인트) 복구해 정식 절로 승격.
+- ch11 style-lint·scaffold-lint 0건, 펜스 균형 확인, 빌드 통과. 남은 결손: ch01 [참고 1] "2.1 언어의 특징 비교" 빈 절(원본에도 없을 가능성 — 확인 필요).
+
 ## [2026-07-04] feat | java-study 12챕터 §7-8 전수 점검 + 붙은 리스트 89건 일괄 수정
 - §7-8 신설 직후 사용자 요청("java-study도 점검")으로 12챕터(2.1만 줄) 챕터당 1에이전트 병렬 점검. 교재 특칙 적용: 전방 참조는 정의 대신 "(N.N에서 다룹니다)" 안내, §7-7 스캐폴드·실측 예상 결과 불변.
 - **§7-8 보강 약 120곳**: 용어 첫 등장 정의(아키타입·pom.xml·Lombok·HikariPool·N+1·BooleanBuilder·JWT·서블릿·클레임·jq·JUnit/Mockito/MockMvc·Young/Old/Full GC 등), 예제 의도 리드인(ch02 2.5 예제 10개, ch10 jcmd 5절 명령→설명 구조 역전), `hello-java`/`demo` 첫 사용 지점 반문장 재소개(§7-7 이름 명시 규칙 정합), 빈 절·댕글링 참조 정리(ch09 존재하지 않는 코드 지시문, ch05 SimpleTCPServer 유령 이름, ch07 7.7↔7.9 참조 불일치, ch04 문제 구성 예고↔실제 5문제 불일치, ch07 장 번호 리넘버링 잔재 2곳).
