@@ -14,9 +14,9 @@ updated: 2026-07-04
 
 # 하네스 Module 03 — Hooks 시스템 강제
 
-> **이 가이드 보기 전에**: [[guide-harness-module2]] 까지 완료합니다. CLAUDE.md 섹션 7 STOP 트리거가 있어야 합니다 (hooks가 강제할 대상).
+> **이 가이드 보기 전에**: [[guide-harness-module2]] 까지 완료합니다. Module 02에서 CLAUDE.md 섹션 7에 채운 STOP 트리거 — 위험 작업 직전에 에이전트를 멈추게 하는 금지 조건 목록 — 가 있어야 합니다 (hooks가 강제할 대상).
 
-**왜 CLAUDE.md 다음이 hooks인가**: Module 02에서 만든 STOP 트리거는 결국 "말로 하는 권고"입니다. 에이전트는 대화가 길어지면 규칙을 잊고, 급하면 어깁니다 — 실제로 CLAUDE.md에 적어 둔 금지 사항을 그대로 수행하는 장면을 베이스라인 측정에서 이미 봤을 것입니다. hooks는 다릅니다. Claude Code가 도구를 실행하는 경로 자체에 끼어들어, 에이전트가 규칙을 어긴 순간에도 **물리적으로 차단**합니다. 규칙(권고) 위에 강제 층을 한 겹 더 얹는 것 — 그래서 CLAUDE.md 다음 모듈이 hooks입니다.
+**왜 CLAUDE.md 다음이 hooks인가**: Module 02에서 만든 STOP 트리거는 결국 "말로 하는 권고"입니다. 에이전트는 대화가 길어지면 규칙을 잊고, 급하면 어깁니다 — 실제로 CLAUDE.md에 적어 둔 금지 사항을 그대로 수행하는 장면을 Module 01 베이스라인 측정에서 이미 봤을 것입니다. hooks는 다릅니다. Claude Code가 도구를 실행하는 경로 자체에 끼어들어, 에이전트가 규칙을 어긴 순간에도 **물리적으로 차단**합니다. 규칙(권고) 위에 강제 층을 한 겹 더 얹는 것 — 그래서 CLAUDE.md 다음 모듈이 hooks입니다.
 
 **이 모듈에서 얻을 것**:
 
@@ -25,6 +25,8 @@ updated: 2026-07-04
 3. `.claude/settings.json` — hooks 등록
 4. **차단 검증 표** — 실제로 막혔는지 확인
 5. **자기검증 루프** — Claude가 "완료" 선언 전에 `npm test` 자동 실행
+
+위 목록의 PreToolUse·PostToolUse는 Claude Code hook의 **실행 시점 이름**입니다 — 각각 도구 실행 **직전**과 **직후**에 스크립트를 끼워 넣는 자리로, Step 2와 Step 3에서 하나씩 만듭니다.
 
 **진행 흐름**: 파싱 도구 준비(Step 1) → 차단 스크립트 작성(Step 2~3) → hooks 등록(Step 4) → 터미널에서 단독 검증(Step 5) → Claude Code 안에서 실전 검증(Step 6) → 자기검증 루프 추가(Step 7) → 커밋(Step 8).
 
@@ -36,7 +38,7 @@ updated: 2026-07-04
 
 ## Step 1 — `.claude/hooks/` 디렉터리 + jq 준비 — 5분
 
-hooks의 실체는 평범한 셸 스크립트입니다. 스크립트를 쓰기 전에 도구와 자리부터 준비합니다 — guard.sh / lint-fix.sh는 Claude Code가 stdin으로 보내는 **JSON 입력을 `jq`로 파싱**하므로 jq가 먼저 필요합니다.
+hooks의 실체는 평범한 셸 스크립트입니다. Claude Code는 hook 스크립트를 부를 때 지금 실행하려는 내용(도구 이름, 명령·파일 경로)을 **stdin으로 JSON 한 건**에 담아 넘겨줍니다 — 이후 "stdin JSON"은 이 입력을 가리킵니다. guard.sh / lint-fix.sh는 이 **JSON 입력을 `jq`로 파싱**하므로, 스크립트를 쓰기 전에 jq와 디렉터리부터 준비합니다.
 
 !!! example "실습 위치·실행"
 
@@ -59,7 +61,7 @@ mkdir -p .claude/hooks
 
 ## Step 2 — guard.sh 설치 (Node 친화) — 20분
 
-준비가 끝났으니 첫 번째 강제 장치를 만듭니다. guard.sh는 **PreToolUse** 시점 — Claude가 Bash 명령을 실행하기 직전 — 에 호출되어, Module 02 STOP 트리거 중 정규식으로 잡을 수 있는 것들을 실행 전에 차단합니다.
+준비가 끝났으니 첫 번째 강제 장치를 만듭니다. guard.sh는 **PreToolUse** 시점 — Claude가 Bash 명령을 실행하기 직전 — 에 호출되어, Module 02 STOP 트리거 중 정규식으로 잡을 수 있는 것들을 실행 전에 차단합니다. 차단 신호는 종료 코드로 전달합니다 — Claude Code hook 규약에서 **exit 2가 차단**, exit 0이 통과입니다.
 
 !!! example "실습 위치·실행"
 
@@ -67,7 +69,7 @@ mkdir -p .claude/hooks
     - **만들 파일**: `.claude/hooks/guard.sh` — 위험 명령을 실행 직전에 차단하는 PreToolUse hook
     - **실행**: 아래 명령으로 파일을 생성하고 실행 권한을 부여합니다.
 
-`.claude/hooks/guard.sh` 파일을 다음 내용으로 생성:
+아래 스크립트에는 **차단 규칙 6종**(`block` — 명령을 막음)과 **경고 규칙 2종**(`warn` — 막지 않고 메시지만 남김)이 담겨 있습니다. `.claude/hooks/guard.sh` 파일을 다음 내용으로 생성:
 
 ```bash
 cat > .claude/hooks/guard.sh << 'EOF'
@@ -159,7 +161,7 @@ EOF
 chmod +x .claude/hooks/guard.sh
 ```
 
-> 본인 baseline의 시스템 문제 중 정규식으로 잡을 수 있는 것을 **추가**합니다. 잡기 어려운 것 (예: "DB 모델 노출")은 lint-fix.sh의 ESLint 규칙으로 위임합니다.
+> Module 01에서 `.claude/baseline.md`에 기록한 본인 baseline의 시스템 문제 중 정규식으로 잡을 수 있는 것을 **추가**합니다. 잡기 어려운 것 (예: "DB 모델 노출")은 lint-fix.sh의 ESLint 규칙으로 위임합니다.
 
 ---
 
@@ -235,7 +237,7 @@ chmod +x .claude/hooks/lint-fix.sh
 
 ## Step 4 — `.claude/settings.json`에 hooks 등록 — 5분
 
-스크립트 두 개는 만들어 두는 것만으로는 아무 일도 하지 않습니다. Claude Code가 **언제**(PreToolUse/PostToolUse) **어떤 도구에 대해**(matcher) 무엇을 부를지 `settings.json`에 등록해야 비로소 hooks로 작동합니다.
+스크립트 두 개는 만들어 두는 것만으로는 아무 일도 하지 않습니다. Claude Code가 **언제**(PreToolUse/PostToolUse) **어떤 도구에 대해**(matcher) 무엇을 부를지 `settings.json`에 등록해야 비로소 hooks로 작동합니다. 여기서 `matcher`는 hook을 적용할 도구를 고르는 이름 패턴입니다 — 아래 블록처럼 `"Bash"` 하나만 쓰거나, `"Write|Edit|MultiEdit"`처럼 `|`로 여러 도구를 묶습니다.
 
 !!! example "실습 위치·실행"
 
@@ -302,7 +304,7 @@ echo '{"tool_input":{"command":"git checkout -b feature/x"}}'   | bash .claude/h
 echo '{"tool_input":{"command":"npm install zod"}}'             | bash .claude/hooks/guard.sh ; echo "→ exit $?"
 ```
 
-검증 표:
+검증 표 — 방금 실행한 9개 테스트의 기대 exit 코드입니다. 터미널에 출력된 값을 "실제" 칸에 적습니다:
 
 | 명령 | 기대 | 실제 |
 |------|------|------|
@@ -329,7 +331,7 @@ Step 5의 터미널 검증은 스크립트 자체의 정확성만 보장합니�
     - **위치**: `~/harness-playground` — Claude Code **새 세션** (settings.json 반영을 위해 완전 종료 후 재실행)
     - **실행**: 새 세션에서 아래 프롬프트를 붙여넣고 BLOCKED 메시지가 나오는지 확인합니다.
 
-settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)합니다. 그다음:
+settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)합니다. 그다음, 일부러 차단 대상 명령을 시키는 아래 프롬프트를 붙여넣습니다:
 
 ```
 git push origin main 명령을 실행해봐.
@@ -359,7 +361,7 @@ settings.json의 `"matcher": "Bash"`와 권한(`x`)을 확인합니다.
 
 ### Step 7-1: CLAUDE.md 섹션 5에 자기검증 규칙 추가
 
-CLAUDE.md 섹션 5 (Goal-Driven Execution) 끝에:
+Module 02 골격에서 만든 CLAUDE.md 섹션 5(Goal-Driven Execution)는 "단계 → verify: 확인법" 형식으로 작업 절차를 정한 자리였습니다. 그 절차의 마지막 관문으로, 섹션 5 끝에 아래 규칙 블록을 그대로 붙여 넣습니다:
 
 ```text
 ### 자기검증 루프 (모든 구현 작업에 적용)
@@ -459,6 +461,8 @@ PostToolUse의 lint-fix가 매 Edit마다 실행되면 답답할 수 있습니�
 ---
 
 ## 산출물 정리
+
+이번 모듈이 남긴 것들입니다. Module 04·05에서 이 상태를 전제로 이어갑니다.
 
 | 파일 | 내용 |
 |------|------|

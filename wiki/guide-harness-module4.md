@@ -15,7 +15,7 @@ updated: 2026-07-04
 
 > **이 가이드 보기 전에**: [[guide-harness-module3]] 까지 완료. CLAUDE.md + hooks가 작동 중이어야 합니다.
 
-**왜 Module 3 다음이 역할 분담인가**: Module 2의 CLAUDE.md가 규칙을, Module 3의 hooks가 차단을 맡으면서 한 세션 안의 실수는 상당 부분 잡히게 됐습니다. 그런데 기능 하나를 통째로 맡기는 큰 작업에서는 다른 문제가 나타납니다 — 한 세션이 계획·구현·검증을 전부 겸하면 탐색·실패·재시도의 잡음이 컨텍스트에 쌓여 중요 지시가 밀리고, 검증할 때쯤에는 자기가 짠 코드를 스스로 옹호하게 됩니다. 그래서 이번 모듈은 규칙 추가가 아니라 **역할 분리**입니다. 여러 에이전트를 쓰는 목적은 분업이 아니라 **컨텍스트 윈도우 오염 방지** — 역할 분리는 그 잡음을 격리하는 방화벽입니다.
+**왜 Module 3 다음이 역할 분담인가**: Module 2의 CLAUDE.md가 규칙을, Module 3의 hooks가 차단을 맡으면서 한 세션 안의 실수는 상당 부분 잡히게 됐습니다. 그런데 기능 하나를 통째로 맡기는 큰 작업에서는 다른 문제가 나타납니다 — 한 세션이 계획·구현·검증을 전부 겸하면 탐색·실패·재시도의 잡음이 컨텍스트에 쌓여 중요 지시가 밀리고, 검증할 때쯤에는 자기가 짠 코드를 스스로 옹호하게 됩니다. 그래서 이번 모듈은 규칙 추가가 아니라 **역할 분리**입니다. 역할은 셋으로 나눕니다 — 계획만 맡는 **Planner**, 구현만 맡는 **Coder**, 검증만 맡는 **Critic**. 여러 에이전트를 쓰는 목적은 분업이 아니라 **컨텍스트 윈도우 오염 방지** — 역할 분리는 그 잡음을 격리하는 방화벽입니다.
 
 **이 모듈에서 얻을 것**:
 
@@ -124,6 +124,8 @@ git add AGENTS.md
 git commit -m "harness(M4): AGENTS.md 추가 (Planner/Coder/Critic)"
 ```
 
+역할 정의 안의 섹션 번호들은 Module 02에서 작성한 CLAUDE.md를 가리킵니다 — 섹션 7은 STOP 트리거, 섹션 8은 작업 전 체크리스트, 섹션 5는 자기검증 루프가 들어 있는 Goal-Driven Execution입니다. Critic의 판정 용어도 여기서 처음 등장합니다: **APPROVE**(통과), **CONDITIONAL REJECT**(조건부 반려 — 지적 사항을 고치면 재검토로 통과 가능), **REJECT**(근본적 재설계 필요). 이 세 단계 판정은 Step 6에서 실제로 받아 처리하게 됩니다.
+
 ---
 
 ## Step 2 — `task-list.md` 템플릿 — 5분
@@ -187,6 +189,8 @@ task-list.md가 "무엇을 할지"의 대장이라면 `claude-progress.txt`는 "
 
 ### Step 3-1: 초기 progress 파일
 
+먼저 손으로 채우는 초기 템플릿을 만듭니다. 맨 아래 "에이전트 메모" 칸이 이 파일의 숨은 역할입니다 — 세션 중 발견한 개선점을 CLAUDE.md 섹션 11(Module 02의 누적 실패 패턴 표)과 guard.sh(Module 03의 명령 차단 hook)로 되돌려 보내는 통로입니다.
+
 ```bash
 cd ~/harness-playground
 cat > claude-progress.txt << 'EOF'
@@ -216,6 +220,8 @@ EOF
 ```
 
 ### Step 3-2: Stop hook으로 자동 갱신
+
+다음 스크립트는 세션이 끝날 때마다 마지막 커밋·최근 변경 파일·테스트 결과를 모아 claude-progress.txt를 덮어씁니다. 자동으로 모을 수 있는 사실은 스크립트가 채우고, 판단이 필요한 메모만 사람(또는 에이전트)이 "수동 메모" 칸에 남기는 구조입니다.
 
 ```bash
 cat > .claude/hooks/update-progress.sh << 'EOF'
@@ -256,7 +262,7 @@ chmod +x .claude/hooks/update-progress.sh
 
 ### Step 3-3: settings.json에 Stop hook 등록
 
-`.claude/settings.json`에 다음을 추가 (기존 hooks 블록에):
+Module 03 Step 4에서 guard.sh·lint-fix.sh를 등록했던 `.claude/settings.json`의 hooks 블록에 다음을 추가합니다:
 
 ```json
 "Stop": [
@@ -280,7 +286,7 @@ git commit -m "harness(M4): task-list·progress 템플릿 + Stop hook 등록"
 
 ## Step 4 — Planner Agent 시연 — 30분
 
-파일 3개가 준비됐으니 첫 역할인 Planner를 실제로 돌려 봅니다. Planner의 일은 코드가 아니라 분해입니다 — 요구사항을 받아 task-list.md 형식의 원자 단위 태스크로 쪼개는 것까지만 맡깁니다. 실습 기능은 playground에 새로 붙일 사용자 인증(회원가입·로그인·내 정보)입니다.
+파일 3개가 준비됐으니 첫 역할인 Planner를 실제로 돌려 봅니다. Planner의 일은 코드가 아니라 분해입니다 — 요구사항을 받아 task-list.md 형식의 원자 단위 태스크로 쪼개는 것까지만 맡깁니다. 실습 기능은 playground에 새로 붙일 사용자 인증(회원가입·로그인·내 정보)입니다. 인증을 고른 이유는 크기와 모양 때문입니다 — 스키마·리포지토리·서비스·라우트·미들웨어가 모두 필요해 5~8개 원자 태스크로 자연스럽게 쪼개지고, 태스크 간 의존 순서도 뚜렷해서 Planner의 분해 품질을 평가하기에 알맞습니다.
 
 !!! example "실습 위치·실행"
 
@@ -290,7 +296,7 @@ git commit -m "harness(M4): task-list·progress 템플릿 + Stop hook 등록"
 
 ### Step 4-1: 새 세션에서 Planner 호출
 
-새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다.
+새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다. 역할 선언 → 요구사항 → 제약 → 출력 형식 순서로 짜여 있어서, Claude는 AGENTS.md의 Planner 정의를 읽은 뒤 코드를 한 줄도 쓰지 않고 task-list.md 형식의 태스크 목록만 출력하게 됩니다.
 
 ```
 너는 지금부터 Planner Agent로만 동작해.
@@ -330,7 +336,7 @@ DDD 레이어 순서 대신 Node 흐름 (route → controller → service → re
 - ❌ verify 없음
 - ❌ "그리고 ~도 같이" 같은 끼워넣기
 
-위 표지를 통과하면, Step 4-1에서 Planner가 출력한 task-list 형식 결과를 에디터로 `task-list.md`에 붙여넣어 저장한 뒤 커밋합니다:
+위 표지를 통과하면, Step 4-1에서 Planner가 출력한 task-list 형식 결과를 에디터로 `task-list.md`에 붙여넣어 저장한 뒤 커밋합니다. 커밋 접두어는 여기서부터 역할별로 나눕니다 — 계획은 `plan(M4)`, 구현은 `feat(M4)`, 판정은 `review(M4)` — git 히스토리만 봐도 사이클의 어느 단계인지 추적하기 위해서입니다:
 
 ```bash
 git add task-list.md
@@ -351,7 +357,7 @@ git commit -m "plan(M4): 인증 기능 태스크 분해"
 
 ### Step 5-1: 새 세션에서 Coder 호출
 
-새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다.
+새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다. 태스크 지정과 실행 순서(인계 파일 확인 → 계획 제시 → 구현 → 자기검증)를 못 박아 두었기 때문에, Claude는 TASK-001 하나만 구현하고 task-list.md 상태를 갱신한 뒤 멈추게 됩니다.
 
 ```
 너는 지금부터 Coder Agent로만 동작해.
@@ -381,7 +387,7 @@ task-list.md의 TASK-001 만 구현해.
 - TASK-001 범위를 **벗어나서** TASK-002까지 손댔는가? (벗어났으면 멈춰)
 - task-list.md를 업데이트했는가?
 
-완료 후:
+관찰까지 끝나면 TASK-001 산출물을 커밋합니다:
 
 ```bash
 git add task-list.md src/
@@ -402,7 +408,7 @@ git commit -m "feat(M4): TASK-001 User 스키마 + 리포지토리"
 
 ### Step 6-1: 새 세션에서 Critic 호출
 
-세션을 새로 시작하는 이유: Coder의 컨텍스트(시도·실패·중간 출력)에서 격리하기 위해서입니다. 새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다.
+세션을 새로 시작하는 이유: Coder의 컨텍스트(시도·실패·중간 출력)에서 격리하기 위해서입니다. 새 세션에서 Claude가 뜨면 다음 프롬프트를 그대로 붙여넣습니다. 검토 대상 커밋과 판정 형식을 지정해 두었기 때문에, Claude는 코드를 고치지 않고 AGENTS.md 체크리스트를 기준으로 Step 1에서 정의한 세 단계 판정 중 하나만 내리게 됩니다.
 
 ```
 너는 지금부터 Critic Agent로만 동작해.
@@ -437,6 +443,8 @@ REJECT면:
 - **APPROVE**: task-list.md의 "완료된 태스크" 표에 기록, 다음 TASK 진행
 - **CONDITIONAL REJECT**: 새 Coder 세션 시작 → Critic 지적 사항만 수정 → Critic 재검토
 - **REJECT**: Planner로 돌아가 태스크 재분해
+
+어느 판정이든 결과는 기록으로 남깁니다 — `.claude/critic-log.md`는 태스크별 Critic 판정을 한 줄씩 누적하는 기록 파일입니다. 아래는 APPROVE가 나온 경우입니다:
 
 ```bash
 # 판정 결과 기록
