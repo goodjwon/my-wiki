@@ -1972,6 +1972,15 @@ for (String name : names) {
 - `Optional`을 null 감추기 용도로만 쓰지 않았는가
 - 람다식 한 줄이 짧다는 이유만으로 좋은 코드라고 판단하지 않았는가
 
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+문제를 풀다가 동작 원리가 궁금해지면 아래 공식 자료에서 확인합니다.
+
+- [Lambda Expressions](https://dev.java/learn/lambdas/) — dev.java 공식 람다 학습 문서
+- [Stream Package Summary](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html) — 스트림 패키지 개요 (지연 평가·파이프라인 규칙)
+- [Stream Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html) — 중간·최종 연산 전체 목록
+- [Optional Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html) — Optional API와 권장 사용 패턴
+
 #### 정리
 
 함수형 스타일 학습의 핵심은 새로운 문법을 많이 외우는 것이 아니라, 입력값이 어떻게 변환되고 어떤 결과 타입이 만들어지는지 읽는 힘을 기르는 데 있습니다. 이 문서는 그 감각을 직접 손으로 확인하기 위한 워크북입니다.

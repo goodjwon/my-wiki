@@ -1539,7 +1539,15 @@ for (String name : names) {
 - `Optional`을 null 감추기 용도로만 쓰지 않았는가
 - 람다식 한 줄이 짧다는 이유만으로 좋은 코드라고 판단하지 않았는가
 
-<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 -->
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [Lambda Expressions](https://dev.java/learn/lambdas/)
+- [Stream Package Summary](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html)
+- [Stream Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html)
+- [Optional Interface](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html)
+
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합.
+     공식 문서 4링크는 렌더 유실됐던 URL을 링크 주석(annotation)에서 재추출해 복원(전부 HTTP 200 확인). -->
 
 #### 정리
 
