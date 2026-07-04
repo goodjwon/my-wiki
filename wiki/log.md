@@ -4,6 +4,15 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-04] ingest | EJ concept 4개 신설 — enum 매핑·함수형 인터페이스·PECS·직렬화 위험
+- backlog "즉시 가능" EJ 항목 실행 (재료: lecture-effective-java ch5·6·7·12 발췌 + 공식 문서 검증). 4병렬 에이전트로 페이지 생성, nav·index·역링크는 일괄 통합.
+- **concept-jpa-enum-mapping** (198줄) — Item 34·35 + `@Enumerated` 기본 ORDINAL 함정(Jakarta Persistence javadoc 검증, Hibernate 6 저장 타입 확인). "기본값과 가정의 함정" 패턴 **7번째 사례**로 비교표 양방향 합류.
+- **concept-functional-interfaces** (175줄) — 표준 6종 표·박싱 비용·Item 44 예외 3조건·Spring 예제 3개. java.util.function 43개를 Oracle API로 검증.
+- **concept-generics-pecs** (161줄) — PECS 장면 비유·상황별 선택표·JDK 시그니처 5개 원문 대조·컴파일 오류→원인 자족 표.
+- **concept-java-serialization-risk** (225줄) — Item 85·88·90 + Commons Collections 사건(CVE-2015-4852/7501·3.2.2 패치·JEP 290 백포트 교차 확인). 방어 관점 서술, 공격 재현 코드 배제.
+- **양방향 통합**: entity-effective-java 매핑 표 4행 링크화, lecture ch5·6·7·12 심화 링크, 패턴 비교표(api-backward-compatibility) 2행 추가, concept-design-patterns·jspecify·java-study-ch03 역링크, mkdocs nav·index 4항.
+- 신설 4 + 수정 10파일 lint 0건, 빌드 통과. wiki 페이지 187→191.
+
 ## [2026-07-04] style | 글쓰기 스타일 2차 확장 완료 — 5권 entity·concept 2·guide 1 (8편)
 - backlog 최우선 Pending이던 2차 확장(1차 13편은 2026-06-27) 실행. 대상: entity-object/effective-java/refactoring/clean-code/tdd + concept-oop + concept-design-patterns + guide-code-authoring-and-review.
 - **장면+매핑 2문단 재구성 3곳**: concept-oop 도입(극장 장면 — 사용자 모범 문장 활용 + lecture-object-ch1 링크), entity-effective-java "본질"("정비사의 매뉴얼" 장면 신설), entity-tdd "빨강=거부 신호" 괄호 매핑 분리.

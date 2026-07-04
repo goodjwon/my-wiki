@@ -209,4 +209,5 @@ JSpecify + NullAway 도입 효과:
 - [[src-spring-framework-7]] — 7.0 릴리스 노트 소스
 - [[concept-api-versioning]] — Spring 7.0 또 다른 신규 기능
 - [[concept-spring-core]] — Spring 핵심 개념
+- [[concept-generics-pecs]] — 같은 인사이트: 제약을 타입으로 강제해 컴파일 시점에 잡기
 - [[concept-api-backward-compatibility]] — 같은 "명시적 계약" 패턴

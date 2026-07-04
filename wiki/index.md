@@ -55,6 +55,10 @@ updated: 2026-06-26
 - [[concept-api-versioning]] — Spring 7.0의 API 버전 관리 1급 지원
 - [[concept-api-backward-compatibility]] — API 하위 호환성과 JSON Tolerant Reader 계약 (Gson/Jackson/kotlinx.serialization 비교)
 - [[concept-jspecify-null-safety]] — JSR 305을 대체하는 JSpecify 기반 null 안전성 표준
+- [[concept-jpa-enum-mapping]] — Item 34·35 + `@Enumerated` 기본 ORDINAL 함정
+- [[concept-functional-interfaces]] — Item 44 표준 함수형 인터페이스 6종 + Spring 활용
+- [[concept-generics-pecs]] — Item 31 한정적 와일드카드 (PECS)
+- [[concept-java-serialization-risk]] — Item 85·88·90 + 역직렬화 위험과 방어
 - [[concept-oop]] — 객체지향 프로그래밍 4원칙 (캡슐화·상속·다형성·추상화)
 - [[concept-design-patterns]] — Java 디자인 패턴 8가지 (전략·템플릿·팩토리·싱글톤·옵저버·프록시·어댑터·파사드)
 - [[concept-spring-core]] — Spring 핵심 개념 (IoC, DI, Bean, MVC, AOP)

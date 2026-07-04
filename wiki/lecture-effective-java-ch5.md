@@ -278,6 +278,8 @@ Set<String> a = union(Set.of("x"), Set.of("y"));   // E가 String으로 추론�
 
 ## 아이템 31. 한정적 와일드카드를 사용해 API 유연성을 높이라 (PECS) ⭐핵심
 
+> 심화 정리: [[concept-generics-pecs]] — 상황별 선택표·JDK 시그니처·컴파일 오류 진단
+
 ### 한 줄 요약
 
 **PECS: Producer-Extends, Consumer-Super.** 데이터를 **꺼내 주는(생산)** 매개변수엔 `? extends E`, **받아 담는(소비)** 매개변수엔 `? super E`.

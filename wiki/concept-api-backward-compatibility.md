@@ -168,6 +168,8 @@ grep -rn "ignoreUnknownKeys\s*=\s*false\|FAIL_ON_UNKNOWN_PROPERTIES.*true\|deny_
 | [[concept-keepalive-timeout-race]] | 웹 서버 keep-alive 짧음 |
 | [[concept-db-connection-pool]] | 무한 수명 커넥션 |
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` |
+| [[concept-jpa-enum-mapping]] | JPA `@Enumerated` 기본 ORDINAL |
+| [[concept-java-serialization-risk]] | 기본 제공 직렬화의 암묵적 신뢰 |
 
 → **"가장 엄격한 구현이 사실상의 표준이 됩니다"** — 서버 개발자가 자기 기준으로만 "안전한 변경"을 판단하면 안 됩니다.
 

@@ -117,10 +117,10 @@ Joshua Bloch(JDK 컬렉션·`java.lang` 핵심 설계자)가 자바 API를 만�
 | 책임 주도 설계 + 합성 > 상속 | Item 18 | [[entity-object]] (11장 합성과 유연한 설계) |
 | `@Transactional` checked vs unchecked | Item 70 | [[concept-transactional-rollback-policy]] |
 | JPA 엔티티 equals/hashCode 함정 | Item 11 | [[concept-spring-core]] (관련) |
-| EnumType.STRING (ORDINAL 위험) | Item 34·35 | (신규 후보 — `concept-jpa-enum-mapping`) |
-| 표준 함수형 인터페이스 | Item 44 | (신규 후보 — `concept-functional-interfaces`) |
-| 한정적 와일드카드 (PECS) | Item 31 | (신규 후보 — `concept-generics-pecs`) |
-| 자바 직렬화 RCE | Item 85·88·90 | (신규 후보 — `concept-java-serialization-risk`) |
+| EnumType.STRING (ORDINAL 위험) | Item 34·35 | [[concept-jpa-enum-mapping]] |
+| 표준 함수형 인터페이스 | Item 44 | [[concept-functional-interfaces]] |
+| 한정적 와일드카드 (PECS) | Item 31 | [[concept-generics-pecs]] |
+| 자바 직렬화 RCE | Item 85·88·90 | [[concept-java-serialization-risk]] |
 
 → **신규 concept 후보 4개** — 본문 노트·실무 사례 입력 시 ingest. 백로그 등록.
 

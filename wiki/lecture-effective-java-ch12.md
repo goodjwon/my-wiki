@@ -39,7 +39,7 @@ updated: 2026-06-20
 
 ### 0.3 현업에서 왜 중요한가
 
-- **자바 직렬화 역사상 최악의 보안 취약점**들이 여기서 나옴 — Apache Commons Collections, Spring4Shell 등 RCE(원격 코드 실행) 사고의 단골.
+- **자바 직렬화 역사상 최악의 보안 취약점**들이 여기서 나옴 — Apache Commons Collections, Spring4Shell 등 RCE(원격 코드 실행) 사고의 단골. → 사건 정리와 방어: [[concept-java-serialization-risk]]
 - 대부분의 백엔드 프로젝트는 **JSON(Jackson)·Protobuf·MessagePack**으로 충분하며, 자바 직렬화는 **거의 사용 안 함**.
 - 그래도 알아야 하는 이유: **레거시 시스템**·**일부 캐시(Hazelcast 등)** ·**RMI**·**JPA의 일부 컬렉션**에 여전히 남아 있음.
 

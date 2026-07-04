@@ -134,7 +134,7 @@ public enum ContractStatus {
 
 이제 "DRAFT → CLOSED"처럼 금지된 전이를 도메인이 스스로 막습니다(불변식 보호).
 
-> **JPA 메모**: 엔티티에 enum을 저장할 때는 `@Enumerated(EnumType.STRING)`을 쓰세요. 기본값인 `ORDINAL`은 **순서(0,1,2)를 DB에 저장**하므로, 나중에 상수 순서를 바꾸면 기존 데이터가 깨집니다(아이템 35와 직결).
+> **JPA 메모**: 엔티티에 enum을 저장할 때는 `@Enumerated(EnumType.STRING)`을 쓰세요. 기본값인 `ORDINAL`은 **순서(0,1,2)를 DB에 저장**하므로, 나중에 상수 순서를 바꾸면 기존 데이터가 깨집니다(아이템 35와 직결). → 상세: [[concept-jpa-enum-mapping]]
 
 ### 따라하기 (실습 34-A)
 

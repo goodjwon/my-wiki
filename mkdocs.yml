@@ -276,6 +276,10 @@ nav:
         - API Versioning: concept-api-versioning.md
         - API 하위 호환성 (Tolerant Reader): concept-api-backward-compatibility.md
         - JSpecify Null Safety: concept-jspecify-null-safety.md
+        - "JPA Enum 매핑 함정": concept-jpa-enum-mapping.md
+        - 표준 함수형 인터페이스: concept-functional-interfaces.md
+        - "제네릭 PECS": concept-generics-pecs.md
+        - "Java 직렬화 위험": concept-java-serialization-risk.md
       - 도구·생태계:
         - JVM: entity-jvm.md
         - Querydsl: entity-querydsl.md

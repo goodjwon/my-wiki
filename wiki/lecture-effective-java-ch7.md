@@ -177,6 +177,8 @@ service.execute(() -> action());
 
 ## 아이템 44. 표준 함수형 인터페이스를 사용하라
 
+> 심화 정리: [[concept-functional-interfaces]] — 기본형 6종 표·Spring 활용 예제
+
 ### 한 줄 요약
 
 직접 함수형 인터페이스를 만들기 전에 **`java.util.function`의 43개 표준 인터페이스**부터 살펴라. 6개 기본형만 외워도 거의 다 해결된다.

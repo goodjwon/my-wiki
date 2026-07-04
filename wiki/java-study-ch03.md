@@ -321,6 +321,8 @@ public static void printNumbers(List<? extends Number> numbers) {
 }
 ```
 
+생산자·소비자 방향에 따라 `? extends`와 `? super`를 고르는 실전 규칙(PECS)은 [[concept-generics-pecs]]에서 자세히 다룹니다.
+
 #### 6. 실무에서 자주 하는 실수
 
 - `List`, `Map` 인터페이스가 아니라 구현체 타입으로 필드를 고정하는 것
@@ -401,6 +403,7 @@ public class DataStructureUsageDemo {
 ```
 
 #### 1. ArrayList
+
 
 ##### 언제 적합한가
 
