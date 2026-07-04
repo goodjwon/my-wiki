@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch07]
 sources: [java-study/java-study-ch07-데이터접근과SQL.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # 데이터 접근과 SQL
@@ -232,8 +232,8 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 
 !!! example "실습 순서"
 
-    1. **demo 서버 실행** — `demo` 프로젝트 루트에서 `./mvnw spring-boot:run`
-    2. **H2 콘솔 접속** — `http://localhost:8080/h2-console` 에서 JDBC URL `jdbc:h2:mem:localdb`로 접속합니다.
+    1. **demo 서버 실행** — 6장 6.1에서 start.spring.io로 만든 `demo` 프로젝트 루트에서 `./mvnw spring-boot:run`
+    2. **H2 콘솔 접속** — `demo`에 내장된 H2 데이터베이스의 웹 콘솔(6장에서 활성화해 둔 화면)인 `http://localhost:8080/h2-console` 에서 JDBC URL `jdbc:h2:mem:localdb`로 접속합니다.
     3. **SQL 입력·확인** — 그린 ERD를 `CREATE TABLE` + `FOREIGN KEY` DDL로 옮겨 실행하고, 왼쪽 테이블 목록에 새 테이블이 생기는지 확인합니다.
 
 #### 정리
@@ -250,6 +250,8 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 
 **🎯 목표**: 추가 시나리오로 설계 감각을 넓힌다.
 
+아래 시나리오 다섯 개는 가상의 기획자가 전달한 서비스 요구사항을 따옴표 안에 그대로 옮긴 것입니다. 7.0에서 잡은 `개체 -> 관계 -> 제약조건 -> 인덱스` 순서를 다른 도메인에 다시 적용해 보는 연습 자료로, 시나리오 1은 요구사항을 테이블 정의서까지 옮긴 풀이 예시를 함께 싣고, 시나리오 2~5는 같은 방식으로 직접 설계해 보는 과제입니다.
+
 ### 시나리오 1: 온라인 학습 플랫폼
 
 "우리 서비스는 학생과 교사가 온라인에서 효과적으로 학습할 수 있는 교육 플랫폼을 목표로 합니다. 사용자는 학생과 교사로 구분되어 회원가입 및 로그인할 수 있어야 합니다. 교사는 다양한 주제의 강의를 생성하고, 각 강의에는 제목, 설명, 난이도, 대상 학년이 포함되어야 합니다.
@@ -263,6 +265,8 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 마지막으로, 검색 기능을 통해 학생들이 관심 있는 주제나 키워드로 강의를 찾을 수 있도록 각 강의에는 여러 주제 태그를 지정할 수 있어야 합니다."
 
 ### 온라인 학습 플랫폼 테이블 정의서
+
+위 요구사항을 관계형 스키마로 옮기면 아래 테이블 20개가 나옵니다. 표 하나가 테이블 하나이고, 각 행은 그 테이블의 컬럼입니다. 어떤 문장이 어떤 테이블·FK로 바뀌었는지 대응시키며 읽습니다.
 
 #### 1. 사용자(users)
 
@@ -536,9 +540,12 @@ JPA를 사용하면 테이블과 엔티티를 자동으로 연결하기 쉬워�
 
 ### 정규화를 하면 성능이 떨어지나요
 정규화 자체가 문제라기보다, 정규화된 구조 위에서 어떤 조회 패턴이 반복되는지가 더 중요합니다.
+
 - 정규화는 중복을 줄이고 수정 일관성을 높입니다.
 - 대신 조회 시 JOIN이 늘어날 수 있습니다.
 - 그러나 대부분의 서비스는 먼저 정규화된 설계로 시작하는 편이 안전합니다.
+
+예를 들어 JOIN에 쓰이는 FK 컬럼에는 아래처럼 인덱스를 겁니다.
 
 ```sql
 CREATE INDEX idx_posts_user_id ON posts(user_id);
@@ -549,9 +556,12 @@ CREATE INDEX idx_comments_post_id ON comments(post_id);
 ### 역정규화는 언제 고려하나요
 역정규화는 읽기 성능이 압도적으로 중요하고, 계산 비용이 큰 값을 자주 보여줘야 할 때 고려합니다.
 예를 들면:
+
 - 게시글 목록에 댓글 수를 항상 보여줘야 하는 경우
 - 상품 목록에 평균 평점과 리뷰 수를 반복적으로 노출하는 경우
 - 집계 결과를 실시간처럼 읽어야 하는 경우
+
+댓글 수를 게시글 테이블에 `comment_count` 컬럼으로 미리 저장해 두는 역정규화 예시는 이렇습니다.
 
 ```sql
 CREATE TABLE posts (
@@ -565,6 +575,7 @@ CREATE TABLE posts (
 
 ### 인덱스는 어떻게 잡아야 하나요
 인덱스는 많이 만드는 것이 아니라, 자주 조회되는 조건에 맞게 만드는 것입니다.
+
 - `WHERE` 조건에 자주 등장하는 컬럼
 - `JOIN`에 사용되는 FK 컬럼
 - 정렬과 페이징에 자주 사용되는 컬럼
@@ -580,9 +591,12 @@ WHERE category_id = 5 AND price > 1000;
 ### 트랜잭션과 락은 언제부터 의식해야 하나요
 한 번의 처리에서 여러 데이터가 함께 바뀌는 순간부터 트랜잭션을 생각해야 합니다.
 예를 들어:
+
 - 주문 생성과 재고 차감
 - 계좌 이체
 - 좌석 예약
+
+재고 차감과 주문 생성을 한 트랜잭션으로 묶으면 아래 모양이 됩니다.
 
 ```sql
 START TRANSACTION;
@@ -595,10 +609,14 @@ COMMIT;
 
 ### 백업은 어느 수준까지 준비해야 하나요
 운영을 생각한다면 백업은 설계의 일부입니다.
+
 - 정기 백업
 - 다른 물리적 위치 보관
 - 복원 테스트
 이 세 가지가 함께 있어야 의미가 있습니다.
+
+MySQL 기준의 백업·복원 명령 예시는 다음과 같습니다.
+
 ```bash
 mysqldump -u root -p mydb > mydb_backup.sql
 mysql -u root -p mydb < mydb_backup.sql
@@ -632,7 +650,7 @@ DB 설계의 좋은 답은 항상 하나가 아니라, 일관성·성능·운영
 
 - 조회가 왜 느린지 이해하려면 `WHERE`, `JOIN`, `GROUP BY`, 인덱스를 함께 봐야 합니다.
 - Querydsl을 읽으려면 `select`, `join`, `groupBy`, `orderBy`, `limit`가 SQL에서 어떤 의미인지 먼저 잡혀 있어야 합니다.
-- JPA를 쓸 때도 N+1, 잘못된 fetch join, 과한 update 같은 문제는 SQL 감각이 없으면 원인을 놓치기 쉽습니다.
+- JPA를 쓸 때도 N+1(목록 1건 조회 후 연관 데이터를 행마다 1번씩 더 조회해 쿼리가 N+1번 나가는 문제), 잘못된 fetch join, 과한 update 같은 문제는 SQL 감각이 없으면 원인을 놓치기 쉽습니다.
 #### 1. SQL은 크게 세 가지 축으로 보면 된다
 
 ##### DDL: 구조를 정의한다
@@ -997,7 +1015,7 @@ GROUP BY p.product_id, p.product_name;
 
 #### 개요
 
-이 문서는 `6장 데이터 접근과 SQL` 안에서 Querydsl 묶음을 시작하는 안내 문서입니다. Querydsl은 단순히 JPQL을 다른 문법으로 바꾸는 도구가 아니라, **복잡한 조회를 더 안전하고 읽기 좋은 구조로 옮기기 위한 선택지**입니다.
+이 문서는 이 장(`데이터 접근과 SQL`) 안에서 Querydsl 묶음을 시작하는 안내 문서입니다. Querydsl은 단순히 JPQL을 다른 문법으로 바꾸는 도구가 아니라, **복잡한 조회를 더 안전하고 읽기 좋은 구조로 옮기기 위한 선택지**입니다.
 
 이 문서의 목적은 설정 방법만 나열하는 데 있지 않습니다. Querydsl을 언제 도입해야 하는지, Spring Data JPA와 어떤 역할로 나눠 써야 하는지, 그리고 이후 문서를 어떤 순서로 읽어야 하는지를 먼저 정리하는 데 있습니다.
 
@@ -1483,11 +1501,15 @@ Querydsl을 도입하면 같은 의도를 selectFrom, where, orderBy 체인으�
 
 #### 1. JPQL과 Querydsl 비교
 
+성인 회원만 조회하는 같은 쿼리를 두 방식으로 나란히 봅니다. 먼저 JPQL 문자열 방식입니다.
+
 ```java
 List<Member> members = em.createQuery(
         "select m from Member m where m.age > 18", Member.class)
     .getResultList();
 ```
+
+같은 조회를 Querydsl로 옮기면 문자열이 사라지고 메서드 체인이 됩니다.
 
 ```java
 QMember member = QMember.member;
@@ -1642,6 +1664,7 @@ List<Member> result = queryFactory
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `./mvnw test -Dtest=LoanQuerydslTest` — 추가할 때마다 다시 실행해 테스트 통과를 확인합니다.
 
@@ -1840,6 +1863,7 @@ List<MemberDto> result = queryFactory
             // 1) Projections.constructor(LoanSummary.class, loan.id, loan.loanDate) 와 필드 순서·타입을 맞춘다
         }
         ```
+
     3. **수정** — 7.5에서 만든 `LoanQuerydslTest.java`에 `Projections.constructor(LoanSummary.class, ...)`로 두 필드만 조회하는 테스트 메서드를 추가합니다.
     4. **재실행** — `./mvnw test -Dtest=LoanQuerydslTest` — 새 테스트까지 통과하는지 확인합니다.
 
@@ -1881,6 +1905,7 @@ Querydsl 조건 메서드 조합으로 가기 전, 동적 조회의 1차 선택�
 그래서 이 문서는 **현재 구현 설명**보다는 **Querydsl 도입 시 조건 조합을 어떻게 설계할지**를 미리 배우는 장으로 읽는 편이 정확합니다.
 
 ### 1. `BooleanBuilder` 방식
+`BooleanBuilder`는 조건식을 차곡차곡 담아 두었다가 한 번에 `where`에 넘기는 Querydsl의 조건 조립 객체입니다. 값이 들어온 조건만 `and`로 쌓습니다.
 ```java
 public List<Member> search(String usernameCond, Integer ageCond) {
     BooleanBuilder builder = new BooleanBuilder();
@@ -1901,6 +1926,7 @@ public List<Member> search(String usernameCond, Integer ageCond) {
 가장 직관적인 방식이지만, 조건이 많아질수록 메서드가 비대해질 수 있습니다.
 
 ### 2. `BooleanExpression` 분리 방식
+조건 하나를 `BooleanExpression`(조건식 타입)을 돌려주는 메서드 하나로 분리하고, `where(...)`에 나열하는 방식입니다. Querydsl의 `where`는 `null` 인자를 무시하므로, 조건이 비었을 때 `null`을 돌려주기만 하면 동적 조합이 됩니다.
 ```java
 public List<Member> search(String usernameCond, Integer ageCond) {
     return queryFactory
@@ -1954,6 +1980,7 @@ public List<Member> search(MemberSearchCondition condition) {
 - 조건이 많고 재사용해야 할 때: `BooleanExpression` 분리 방식
 초중급 개발자 기준으로는 결국 **조건 메서드 분리 방식**에 익숙해지는 것이 더 중요합니다.
 이때 기준을 하나 더 두면 좋습니다.
+
 - 서비스 계층은 검색 조건 DTO를 넘깁니다.
 - Querydsl 전용 `BooleanExpression` 조합은 조회 리포지토리 안에 둡니다.
 이렇게 나누면 서비스는 비즈니스 흐름에 집중하고, 조회 기술 세부사항은 리포지토리에 가둘 수 있습니다.
@@ -2004,7 +2031,7 @@ Spring Data JPA와 Querydsl은 경쟁 관계가 아니라 역할 분담 관계�
 
 - Spring Data JPA: 기본 CRUD, 단건 조회, 단순한 조건 조회
 - Querydsl: 동적 검색, 여러 엔티티 조인, 목록 API, DTO 프로젝션, 복잡한 정렬과 페이지 조회
-기준은 단순합니다. **애그리거트의 생애주기를 다루는 작업**은 JPA 리포지토리가 맡고, **읽기 모델을 조립하는 작업**은 Querydsl 쿼리 쪽으로 보냅니다.
+기준은 단순합니다. **애그리거트(함께 생성·수정되는 엔티티 묶음, 예: 주문과 주문 항목)의 생애주기를 다루는 작업**은 JPA 리포지토리가 맡고, **읽기 모델을 조립하는 작업**은 Querydsl 쿼리 쪽으로 보냅니다.
 
 #### 참고 — 실무 저장소는 어디까지 와 있는가
 
@@ -2098,7 +2125,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 - `JpaRepository`: 저장, 수정, 삭제, 단건 조회
 - Querydsl fragment: 검색, 목록, 조인, 페이징
 - DTO projection: API 응답 모델
-이 조합이 좋은 이유는 **쓰기 모델과 읽기 모델의 관심사를 최소한으로 분리**하기 때문입니다. CQRS를 과하게 도입하지 않아도, 읽기 복잡도가 높아지는 지점에서 구조가 버텨 줍니다.
+이 조합이 좋은 이유는 **쓰기 모델과 읽기 모델의 관심사를 최소한으로 분리**하기 때문입니다. 명령(쓰기)과 조회(읽기) 모델을 아예 갈라 두는 설계 기법인 CQRS를 과하게 도입하지 않아도, 읽기 복잡도가 높아지는 지점에서 구조가 버텨 줍니다.
 
 #### 6. 언제 `@Query`로 충분한가
 
@@ -2520,6 +2547,7 @@ class MemberQueryRepositoryTest {
             // 2) 인터페이스 메서드 구현 — 위 MemberQueryRepositoryImpl 처럼 selectFrom-where 체인으로
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제 1)·2)를 함께 구현합니다.
     4. **실행·확인** — `./mvnw compile` — BUILD SUCCESS를 확인합니다. — 다시 컴파일해 통과를 확인합니다.
 
@@ -2544,7 +2572,7 @@ Querydsl 조회 리포지토리 설계의 핵심은 **Querydsl을 노출하지 �
 
 #### 이 문서의 역할
 
-앞선 문서에서 조회 문법과 리포지토리 구조를 정리했다면, 이제는 같은 조회를 **어떻게 더 적게 읽고, 더 안정적으로 페이지로 나눌지**를 결정해야 합니다. 이 문서는 `5장`의 마무리이자, 이후 API 설계를 현실로 끌어내리는 문서입니다.
+앞선 문서에서 조회 문법과 리포지토리 구조를 정리했다면, 이제는 같은 조회를 **어떻게 더 적게 읽고, 더 안정적으로 페이지로 나눌지**를 결정해야 합니다. 이 문서는 이 장 Querydsl 묶음의 마무리이자, 이후 API 설계를 현실로 끌어내리는 문서입니다.
 
 #### 실습 기준에서 먼저 확인할 것
 
@@ -2803,7 +2831,7 @@ CREATE TABLE salaries (
 
 #### 샘플 데이터
 
-이 문서는 기존 샘플 데이터를 그대로 사용해도 좋고, 직접 직원을 몇 명 더 추가해서 난이도를 높여도 좋습니다. 중요한 것은 문제를 풀 수 있는 최소 데이터셋을 직접 손에 익히는 것입니다.
+이 문서는 정해진 샘플 데이터 스크립트를 따로 제공하지 않습니다. 부서 두세 개와 직원 몇 명, 급여 이력을 직접 `INSERT`해서 시작하고, 필요하면 직원을 더 추가해서 난이도를 높입니다. 중요한 것은 문제를 풀 수 있는 최소 데이터셋을 직접 손에 익히는 것입니다. 이때 현재 유효한 급여 행은 `end_date = '9999-12-31'`로 넣습니다 — 종료일이 아직 정해지지 않은 이력을 나타내는 이 문제집의 표기 규약입니다.
 
 #### 문제 구성
 
@@ -2840,6 +2868,8 @@ CREATE TABLE salaries (
 - `LAG()`로 급여 증가율 계산
 - `SUM() OVER (...)`로 누적합 계산
 #### 예시 문제
+
+아래 세 문제는 문제 제목 바로 밑에 정답 SQL을 함께 실은 풀이 예시입니다. 나머지 문제의 풀이는 7.12-1에서 다룹니다.
 
 ##### 문제 1. 현재 재직 중인 직원의 현재 급여 조회
 

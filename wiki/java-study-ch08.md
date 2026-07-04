@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch08]
 sources: [java-study/java-study-ch08-서버와인증.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # 서버와 인증
@@ -29,7 +29,9 @@ updated: 2026-07-03
 
 #### 개요
 
-이 문서는 Java 웹 애플리케이션이 어떤 서버 위에서 실행되는지 이해하기 위한 Tomcat 입문 가이드입니다. Spring Boot를 주로 쓰는 요즘에도 Tomcat을 따로 배우는 이유는 단순합니다. **내장 톰캣이 대신해 주는 일이 무엇인지 알아야 서버 실행, 포트, 배포, 로그, JVM 옵션을 한 번에 이해할 수 있기 때문**입니다.
+이 문서는 Java 웹 애플리케이션이 어떤 서버 위에서 실행되는지 이해하기 위한 Tomcat 입문 가이드입니다. Tomcat(아파치 톰캣)은 Java 웹 애플리케이션을 받아 실행해 주는 대표적인 서버로, ch06에서 `spring-boot:run`을 하면 로그에 `Tomcat started on port 8080`이 찍히던 바로 그 주인공입니다. Spring Boot를 주로 쓰는 요즘에도 Tomcat을 따로 배우는 이유는 단순합니다. **내장 톰캣이 대신해 주는 일이 무엇인지 알아야 서버 실행, 포트, 배포, 로그, JVM 옵션을 한 번에 이해할 수 있기 때문**입니다.
+
+여기서 서블릿(Servlet)은 Java에서 HTTP 요청을 받아 처리하는 표준 부품이고, 서블릿을 로딩·실행·관리해 주는 프로그램을 **서블릿 컨테이너**라고 부릅니다. Tomcat이 바로 그 대표 주자입니다.
 
 이 장은 인증 문서보다 앞에 두는 것이 자연스럽습니다. 인증도 결국 HTTP 요청이 Tomcat 같은 서블릿 컨테이너를 통과해 필터 체인과 애플리케이션 코드로 들어오는 흐름 위에서 동작하기 때문입니다.
 
@@ -55,7 +57,7 @@ Tomcat은 대략 아래 일을 합니다.
 - 로그와 에러를 서버 수준에서 남깁니다.
 즉, Spring MVC나 Spring Security도 결국 Tomcat이 열어 준 요청 처리 파이프라인 위에서 돌아갑니다.
 
-참고로 JWT 인증을 갖춘 실무 프로젝트에서는 이 흐름을 아래처럼 더 구체적으로 볼 수 있습니다.
+참고로 JWT(로그인 증표를 토큰 문자열로 주고받는 인증 방식 — 8.3에서 자세히 다룹니다) 인증을 갖춘 실무 프로젝트에서는 이 흐름을 아래처럼 더 구체적으로 볼 수 있습니다.
 
 ```text
 HTTP 요청
@@ -69,7 +71,7 @@ JwtAuthenticationFilter
 Controller / Service
 ```
 
-이 연결을 먼저 이해해야 뒤 문서의 `AuthenticationManager`, `SecurityContextHolder`, Bearer 토큰 흐름이 덜 추상적으로 읽힙니다.
+이 연결을 먼저 이해해야 뒤 절(8.1~8.3)에 나올 `AuthenticationManager`, `SecurityContextHolder`, Bearer 토큰 흐름이 덜 추상적으로 읽힙니다.
 
 #### 3. Spring Boot에서는 왜 Tomcat을 덜 의식하게 되는가
 
@@ -272,11 +274,11 @@ chmod +x $CATALINA_HOME/bin/*.sh
 
 #### 개요
 
-이 문서는 Spring Security를 처음 공부할 때 가장 먼저 잡아야 하는 **인증 흐름의 큰 그림**을 정리한 입문 가이드입니다. 설정 코드를 바로 읽기 시작하면 `filterChain`, `AuthenticationManager`, `SecurityContextHolder` 같은 이름이 한꺼번에 등장해서 구조가 잘 안 잡힙니다. 그래서 이 문서에서는 문법보다 먼저, 요청이 들어와서 인증 정보가 저장되고 인가 판단이 일어나는 흐름을 한 번에 연결합니다.
+이 문서는 Spring Security를 처음 공부할 때 가장 먼저 잡아야 하는 **인증 흐름의 큰 그림**을 정리한 입문 가이드입니다. 설정 코드를 바로 읽기 시작하면 `filterChain`, `AuthenticationManager`, `SecurityContextHolder` 같은 이름이 한꺼번에 등장해서 구조가 잘 안 잡힙니다 (이 용어들의 뜻은 8.2 용어표에서 한 번에 정리합니다). 그래서 이 문서에서는 문법보다 먼저, 요청이 들어와서 인증 정보가 저장되고 인가 판단이 일어나는 흐름을 한 번에 연결합니다.
 
 #### 왜 이 문서가 먼저 필요한가
 
-`토큰 기반 인증`이나 `스프링 시큐리티 용어`를 각각 따로 읽으면 개념은 외워도 흐름이 끊기기 쉽습니다. 하지만 실제로는 아래 질문이 먼저 정리되어야 합니다.
+뒤에 나올 용어 정리(8.2)나 토큰 기반 인증(8.3)을 각각 따로 읽으면 개념은 외워도 흐름이 끊기기 쉽습니다. 하지만 실제로는 아래 질문이 먼저 정리되어야 합니다.
 
 - 요청은 어디서부터 보안 검사를 받는가
 - 누가 사용자를 인증하는가
@@ -286,11 +288,13 @@ chmod +x $CATALINA_HOME/bin/*.sh
 
 #### 참고 — 실무 프로젝트에서는 어떻게 연결되는가
 
-참고로 실무 저장소에서는 **로그인 시점**과 **JWT 요청 시점**을 분리해서 봐야 합니다.
+참고로 실무 저장소에서는 **로그인 시점**과 **JWT 요청 시점**을 분리해서 봐야 합니다 (JWT·Bearer 토큰 자체는 8.3에서 자세히 다룹니다).
 
 - 로그인 요청 `/api/auth/login`: `AuthController` -> `AuthServiceImpl.login()` -> `AuthenticationManager.authenticate(...)` -> `JwtTokenProvider.createToken(...)`
 - 보호된 API 요청: `JwtAuthenticationFilter`가 `Authorization: Bearer ...` 헤더를 읽고 `validateToken()`과 `getAuthentication()`을 거쳐 `SecurityContextHolder`를 채웁니다.
 즉 이 구조에서 `AuthenticationManager`는 로그인 시점에 쓰이고, JWT가 포함된 모든 요청마다 다시 호출되는 구조는 아닙니다.
+
+**로그인 시점의 코드** — 자격 증명을 검증하고 토큰을 발급합니다:
 
 ```java
 Authentication authentication = authenticationManager.authenticate(
@@ -298,6 +302,8 @@ Authentication authentication = authenticationManager.authenticate(
 );
 String jwt = jwtTokenProvider.createToken(authentication);
 ```
+
+**JWT 요청 시점의 코드** — 필터가 헤더의 토큰을 검증해 인증 정보를 채웁니다:
 
 ```java
 String jwt = resolveToken(httpServletRequest);
@@ -404,6 +410,8 @@ String username = authentication.getName();
 - 특정 역할이 있어야 접근 가능
 - 특정 scope가 있어야 접근 가능
 
+이 규칙을 설정 코드로 표현하면 다음과 같습니다.
+
 ```java
 http
     .authorizeHttpRequests(auth -> auth
@@ -425,7 +433,7 @@ http
 
 - 토큰이 없거나 잘못되었는가
 - 로그인은 되었지만 권한이 부족한가
-이 차이를 구분하지 못하면 401과 403을 섞어 해석하게 됩니다.
+이 차이를 구분하지 못하면 HTTP 상태 코드 401(Unauthorized — 인증 실패)과 403(Forbidden — 인가 실패)을 섞어 해석하게 됩니다.
 
 참고로 실무 저장소 기준으로 보면 예시를 이렇게 잡을 수 있습니다.
 
@@ -492,6 +500,7 @@ JWT 기반 요청도 결국 아래 순서로 흘러갑니다.
             }
         }
         ```
+
     4. **실행** — `./mvnw spring-boot:run` (뼈대만으로도 기동됩니다)
     5. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 추가할 때마다 다시 실행해 브라우저에서 보호 URL에 접근했을 때 로그인 페이지로 이동하는지(curl이라면 `curl -i`로 302 응답인지) 확인합니다.
 
@@ -547,10 +556,14 @@ Spring Security 문서를 읽다 보면 `Authentication`, `Principal`, `Security
 - `UserDetailsService`: 로그인 시 회원을 조회할 때 사용
 - `SecurityContextHolder`: 검증이 끝난 인증 객체를 현재 요청 문맥에 저장할 때 사용
 
+**로그인 시점의 코드** — `AuthenticationManager`가 자격을 검증하고 토큰을 발급합니다:
+
 ```java
 Authentication authentication = authenticationManager.authenticate(authenticationToken);
 String jwt = jwtTokenProvider.createToken(authentication);
 ```
+
+**JWT 요청 시점의 코드** — 토큰에 담긴 사용자 정보(이를 클레임이라고 부릅니다 — 8.3에서 다룹니다)로 principal을 만들어 `Authentication`을 재구성합니다:
 
 ```java
 UserDetails principal = new CustomUserDetails(memberId, email, name, authorities);
@@ -716,6 +729,8 @@ JWT는 `Header.Payload.Signature` 구조를 가지는 토큰입니다.
 - `auth`: 권한 목록
 - `exp`: 만료 시각
 
+이 클레임들을 담아 토큰을 만드는 코드(참고)는 다음과 같습니다.
+
 ```java
 return Jwts.builder()
         .setSubject(authentication.getName())
@@ -747,6 +762,8 @@ return Jwts.builder()
 이 구조는 API 중심 서비스나 MSA, 모바일 앱 환경과 잘 맞습니다.
 
 #### Spring Security에서의 구현 흐름
+
+로그인 시 토큰이 발급되고, 이후 요청마다 필터가 토큰을 검증하는 흐름을 그림으로 보면 다음과 같습니다.
 
 ```mermaid
 graph LR
@@ -788,9 +805,11 @@ http
 
 #### 코드 예시 (참고 코드)
 
-아래 두 코드는 실무 저장소의 구조를 발췌한 **참고 코드**입니다. 그대로 붙여넣는 실습 단위가 아니라, `demo`에 인증을 직접 구현할 때의 뼈대로 참고합니다.
+아래 세 코드는 실무 저장소의 구조를 발췌한 **참고 코드**입니다. 그대로 붙여넣는 실습 단위가 아니라, `demo`에 인증을 직접 구현할 때의 뼈대로 참고합니다.
 
 ##### SecurityConfig
+
+세션을 끄고(STATELESS) 커스텀 JWT 필터를 필터 체인에 끼워 넣는 설정입니다.
 
 ```java
 @Bean
@@ -807,6 +826,8 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 ```
 
 ##### 로그인 후 토큰 발급
+
+로그인 성공 시 토큰을 만들어 응답 본문으로 내려 주는 컨트롤러입니다.
 
 ```java
 @PostMapping("/api/auth/login")
@@ -833,6 +854,8 @@ public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest requ
 ```
 
 ##### 필터에서 토큰 검증
+
+보호 API 요청마다 헤더의 토큰을 검증해 `SecurityContext`를 채우는 필터 핵심부입니다.
 
 ```java
 String token = resolveToken(request);
@@ -863,7 +886,7 @@ curl -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: applicati
 {"accessToken":"eyJhbGciOiJIUzI1NiJ9...","tokenType":"Bearer","expiresIn":3600000}
 ```
 
-**2) 받은 토큰을 변수에 담아 보호 API를 호출합니다** (`jq`로 추출):
+**2) 받은 토큰을 변수에 담아 보호 API를 호출합니다** (JSON 응답에서 값을 뽑아 주는 명령줄 도구 `jq`로 추출):
 
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@test.com","password":"pw"}' | jq -r .accessToken)
@@ -942,6 +965,7 @@ Spring Security에서도 직접 JWT를 파싱하는 커스텀 필터 구조를 �
             }
         }
         ```
+
     4. **실행** — `./mvnw spring-boot:run`
     5. **하나씩 추가** — 주석의 과제를 한 항목씩 구현하고, 완성하면 위 curl 왕복(로그인 → 토큰 → 보호 API)으로 확인합니다.
 

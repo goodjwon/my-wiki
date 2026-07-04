@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch03]
 sources: [java-study/java-study-ch03-컬렉션과함수형.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # 컬렉션과 함수형
@@ -32,7 +32,7 @@ updated: 2026-07-03
 
 ### 왜 중요한가
 컬렉션과 함수형 프로그래밍은 서로 다른 주제처럼 보이지만, 실제 Java 코드에서는 함께 등장합니다. 컬렉션이 데이터를 담는 방식이라면, 람다와 스트림은 그 데이터를 읽고 변환하고 집계하는 방식입니다.
-가장 짧은 연결 예시는 아래처럼 볼 수 있습니다. 이 장의 첫 실행 예제이기도 합니다.
+가장 짧은 연결 예시는 아래처럼 볼 수 있습니다. 이 장의 첫 실행 예제이기도 합니다. 화살표(`->`)나 `String::toUpperCase` 같은 문법이 아직 낯설어도 지금은 "리스트를 걸러서 바꾼다"는 흐름만 보면 충분합니다(문법은 3.4에서 자세히 다룹니다).
 
 **파일**: src/main/java/com/example/ch03/IntroPipelineDemo.java
 
@@ -54,7 +54,7 @@ public class IntroPipelineDemo {
 }
 ```
 
-프로젝트 루트에서 아래 한 줄로 실행합니다. 이 장의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
+위 실습 프로젝트 안내에서 말한 `hello-java` 프로젝트 루트에서 아래 한 줄로 실행합니다. 이 장의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
 
 ```bash
 mvn compile exec:java -Dexec.mainClass="com.example.ch03.IntroPipelineDemo"
@@ -82,7 +82,7 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch03.IntroPipelineDemo"
 1. `람다와 스트림`
 
 ### 보조 자료
-- `함수형 인터페이스와 스트림 연습 문제`: 본문을 읽은 뒤 손으로 직접 풀어보는 워크북 성격의 문서입니다. `출판 포함 = 아니오` 상태로 관리합니다.
+- `함수형 인터페이스와 스트림 연습 문제`: 본문을 읽은 뒤 손으로 직접 풀어보는 워크북 성격의 문서입니다. `출판 포함 = 아니오` 상태로 관리합니다(책 원고에는 싣지 않고 이 위키에서만 유지한다는 표시입니다).
 
 ### 이 챕터를 읽을 때 체크할 것
 - 지금 다루는 데이터가 순서 중심인지, 중복 제거 중심인지, 키-값 조회 중심인지 구분하는가
@@ -281,6 +281,8 @@ public class GenericsDemo {
 }
 ```
 
+실행은 3.0에서 소개한 명령에서 `-Dexec.mainClass` 값만 `com.example.ch03.GenericsDemo`로 바꾸면 됩니다.
+
 ```text
 예상 결과
 Hello, Generics!
@@ -355,6 +357,7 @@ public static void printNumbers(List<? extends Number> numbers) {
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -604,6 +607,7 @@ Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -758,7 +762,7 @@ Runnable consumer = () -> {
 
 #### 5. 우선순위 주문 처리: PriorityQueue
 
-모든 요청을 입력 순서대로 처리하지 않고, VIP나 긴급 작업을 먼저 처리해야 한다면 `PriorityQueue`를 고려합니다.
+모든 요청을 입력 순서대로 처리하지 않고, VIP나 긴급 작업을 먼저 처리해야 한다면 `PriorityQueue`를 고려합니다. 아래 코드의 `record Order(...)`는 값 묶음(이름·우선순위)을 한 줄로 선언하는 Java 16+ 문법으로, 지금은 필드 두 개짜리 간단한 클래스라고 읽으면 충분합니다.
 
 ```java
 record Order(String name, int priority) {}
@@ -864,6 +868,7 @@ class FileNode {
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -969,7 +974,7 @@ Hello, Lambda!
 
 #### 3. 스트림은 컬렉션을 대체하지 않는다
 
-스트림은 데이터를 저장하는 구조가 아니라, **데이터를 처리하는 파이프라인**입니다.
+스트림은 데이터를 저장하는 구조가 아니라, **데이터를 처리하는 파이프라인**입니다. 3.0에서 실행해 본 `IntroPipelineDemo`와 같은 구조의 파이프라인을 다시 보겠습니다(`names`는 문자열 리스트입니다).
 
 ```java
 List<String> result = names.stream()
@@ -1038,6 +1043,7 @@ List<String> result = names.stream()
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -1075,6 +1081,8 @@ List<String> result = names.stream()
 - `O(n)`: 처음부터 끝까지 한 번 훑는 작업
 - `O(n log n)`: 효율적인 정렬 계열
 - `O(n^2)`: 이중 반복문이 주가 되는 비교 작업
+
+각 기준을 코드 한 줄에 대응해 보면 다음과 같습니다.
 
 ```java
 int first = numbers[0];           // O(1)
@@ -1164,6 +1172,8 @@ public class BinarySearchDemo {
 }
 ```
 
+실행 명령은 위 `LinearSearchDemo`와 같고, `-Dexec.mainClass` 값만 `com.example.ch03.BinarySearchDemo`로 바꿉니다.
+
 ```text
 예상 결과
 중간 인덱스: 3, 값: 7
@@ -1207,7 +1217,7 @@ System.out.println(Arrays.toString(numbers));
 - 실무 기본값: `Arrays.sort`, `Collections.sort`, `Comparator`
 #### 4. 복잡도보다 더 중요한 선택 기준
 
-같은 `O(n)`이라도 어떤 자료구조를 쓰느냐에 따라 체감 성능과 코드 구조가 달라집니다.
+같은 `O(n)`이라도 어떤 자료구조를 쓰느냐에 따라 체감 성능과 코드 구조가 달라집니다. 예를 들어 아래는 반복 조회할 값들을 `HashSet`에 담아 두는 선택입니다.
 
 ```java
 Set<Integer> lookup = new HashSet<>(List.of(1, 3, 5, 7));
@@ -1258,7 +1268,7 @@ void preOrder(TreeNode node) {
 
 - `base case`: 언제 멈출지
 - `recursive case`: 어떤 더 작은 문제로 내려갈지
-재귀는 코드가 짧아지기 쉽지만, 호출 깊이가 너무 깊어지면 스택을 많이 사용합니다. 그래서 JVM 문서에서 `StackOverflowError`가 다시 연결됩니다.
+재귀는 코드가 짧아지기 쉽지만, 호출 깊이가 너무 깊어지면 스택을 많이 사용합니다. 호출이 지나치게 깊어지면 `StackOverflowError`가 나는데, 이 에러는 10장(JVM과 성능)에서 자세히 다룹니다.
 
 #### 7. 동적 프로그래밍은 무엇을 줄이나
 
@@ -1287,6 +1297,8 @@ public class FibonacciDpDemo {
 }
 ```
 
+실행은 `-Dexec.mainClass` 값만 `com.example.ch03.FibonacciDpDemo`로 바꿔 같은 방식으로 합니다.
+
 ```text
 예상 결과
 55
@@ -1300,6 +1312,8 @@ public class FibonacciDpDemo {
 
 - DFS: 한 방향으로 깊게 들어갑니다.
 - BFS: 가까운 노드부터 넓게 확장합니다.
+
+BFS의 뼈대를 코드로 보면 다음과 같습니다(`start`는 탐색을 시작할 노드입니다).
 
 ```java
 Queue<Integer> queue = new LinkedList<>();
@@ -1387,6 +1401,8 @@ while (!queue.isEmpty()) {
 
 ##### 문제 1. 재고가 부족한 상품 찾기
 
+주어지는 입력은 아래와 같습니다. 안쪽 배열 하나가 상품 하나를 뜻합니다.
+
 ```java
 int[][] inventory = {
     {101, 5},
@@ -1399,6 +1415,8 @@ int[][] inventory = {
 - 재고가 10개 미만인 상품의 ID를 반환합니다.
 - 출력 예시는 `101, 103`입니다.
 ##### 문제 2. 추천 상품 정렬
+
+주어지는 입력은 아래와 같습니다. 안쪽 배열은 `{상품 ID, 선호도 점수}`입니다.
 
 ```java
 int[][] recommendations = {
@@ -1955,6 +1973,8 @@ for (String name : names) {
 ---
 
 #### 자주 나는 에러 → 원인 (3장 실습 공통)
+
+이 장의 실습에서 막혔을 때 먼저 확인하는 표입니다. 만난 에러 메시지를 왼쪽 열에서 찾아 원인을 대조합니다.
 
 | 에러 메시지 | 원인 → 확인할 것 |
 |------------|----------------|

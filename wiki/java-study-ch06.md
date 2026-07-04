@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch06]
 sources: [java-study/java-study-ch06-Spring과프로젝트실행.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # Spring과 프로젝트 실행
@@ -31,7 +31,7 @@ updated: 2026-07-03
 이 문서는 Java와 객체지향 기초를 마친 독자가 Spring 프로젝트로 넘어가기 전에 잡아야 할 공통 개념을 정리한 본문 가이드입니다. 뒤 장에서 환경 구성, 데이터 접근, 보안, 테스트를 각각 다루기 전에, 여기서 IoC, DI, Bean, MVC, 프록시 같은 핵심 축을 먼저 연결합니다.
 
 ### 1. IoC와 DI는 무엇이 다른가
-`IoC`는 객체 생성과 연결의 제어권을 코드 바깥으로 넘기는 관점이고, `DI`는 그 제어를 실제 코드에서 구현하는 대표적인 방법입니다. (참고 코드 — 생성자 주입 형태를 보여주는 개념 예시입니다.)
+`IoC`는 객체 생성과 연결의 제어권을 코드 바깥으로 넘기는 관점이고, `DI`는 그 제어를 실제 코드에서 구현하는 대표적인 방법입니다. (참고 코드 — 생성자 주입 형태를 보여주는 개념 예시입니다. 클래스 위 `@Service`는 아래 3에서 다루는 Bean 등록 표기입니다.)
 ```java
 @Service
 public class OrderService {
@@ -43,11 +43,13 @@ public class OrderService {
 }
 ```
 핵심은 `new PaymentClient()`를 직접 호출하지 않고, 외부에서 준비된 객체를 받는다는 점입니다.
+
 - IoC: 누가 객체를 만들고 연결할 것인가
 - DI: 그 객체를 생성자나 메서드로 주입하는 방식
 
 ### 2. 왜 생성자 주입을 기본값으로 두나
 Spring에서는 필드 주입도 가능하지만, 기본값은 생성자 주입이 더 낫습니다.
+
 - 의존성이 드러납니다.
 - `final`로 불변성을 유지하기 쉽습니다.
 - 테스트에서 직접 객체를 만들기 쉽습니다.
@@ -61,12 +63,14 @@ public class BookService {
 }
 ```
 여기서 중요한 점은 다음입니다.
+
 - 대부분 기본 스코프는 싱글톤입니다.
 - 그래서 Bean 안에 가변 상태를 오래 들고 있으면 동시성 문제가 생길 수 있습니다.
 - 직접 싱글톤 패턴을 구현하는 것보다, Spring의 Bean 생명주기를 이해하는 편이 더 중요합니다.
 
 ### 4. MVC는 무엇을 나누는가
 Spring MVC는 `DispatcherServlet`을 중심으로 요청을 받고, 컨트롤러에 연결하고, 응답을 조립합니다.
+
 - Controller: HTTP 계약
 - Service: 유스케이스 조율
 - Repository: 데이터 접근
@@ -74,7 +78,7 @@ Spring MVC는 `DispatcherServlet`을 중심으로 요청을 받고, 컨트롤러
 즉 MVC를 본다는 것은 화면 기술을 보는 것이 아니라, **웹 요청을 어디서 끊어 책임을 나누는지** 보는 것입니다.
 
 ### 5. AOP와 프록시는 왜 자꾸 같이 나오나
-트랜잭션, 로깅, 보안은 비즈니스 메서드마다 반복되기 쉽습니다. Spring은 프록시 기반 AOP로 이런 공통 관심사를 분리합니다.
+트랜잭션, 로깅, 보안은 비즈니스 메서드마다 반복되기 쉽습니다. Spring은 프록시 기반 AOP로 이런 공통 관심사를 분리합니다. (참고 코드 — 메서드에 트랜잭션 처리를 입히는 `@Transactional` 개념 예시입니다.)
 ```java
 @Transactional
 public void placeOrder(CreateOrderRequest request) {
@@ -84,7 +88,8 @@ public void placeOrder(CreateOrderRequest request) {
 여기서 중요한 것은 `@Transactional`을 외우는 것이 아니라, **실제 메서드 호출 앞뒤에 부가 동작이 끼어들 수 있다**는 프록시 모델을 이해하는 것입니다.
 
 ### 6. Spring을 어떤 순서로 읽는 게 좋은가
-이 저장소 기준으로는 아래 흐름이 자연스럽습니다.
+이 저장소 기준으로는 아래 흐름이 자연스럽습니다. 각 항목은 대부분 이 원고 뒤 절의 제목입니다 — 환경 구성은 바로 다음 6.1, Tomcat과 Security는 ch08, 테스트 전략은 ch09에서 만나므로, 여기서는 읽기 순서만 눈에 담아 두면 됩니다.
+
 - `Spring 실습 환경 구성 가이드`: 실행 준비
 - `Local Docker Deployment Guide`: Docker 기반 로컬 실행이 필요할 때 보는 보조 문서
 - `Tomcat 실행과 설정`: 요청이 어디서 시작되는가
@@ -144,6 +149,7 @@ Spring 핵심 개념의 핵심은 **어노테이션 이름**보다, **객체 생
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `./mvnw spring-boot:run` — 시작 로그에 "MessageClient 생성 — 주입 확인"이 찍히는지 확인합니다. — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -172,7 +178,7 @@ Spring 학습 초반에는 문법보다 **실행 가능한 환경을 먼저 확�
 - JDK 21
 - IntelliJ IDEA 또는 VS Code
 - Git
-- Maven Wrapper가 포함된 Spring Boot 프로젝트
+- Maven Wrapper가 포함된 Spring Boot 프로젝트 — 아래 3에서 start.spring.io로 직접 만듭니다
 ##### 권장 기준
 
 - 현재 실습 저장소 기준은 **Java 21**입니다.
@@ -180,7 +186,7 @@ Spring 학습 초반에는 문법보다 **실행 가능한 환경을 먼저 확�
 - 가능하면 실습 저장소의 기준 버전에 맞추는 편이 좋습니다.
 #### 1. JDK를 먼저 맞추는 이유
 
-Spring 실습에서 가장 먼저 확인해야 할 것은 IDE가 아니라 **JDK 버전**입니다. 컴파일러와 런타임 버전이 다르면 애플리케이션이 실행되지 않거나, Lombok과 같은 도구가 이상하게 동작할 수 있습니다.
+Spring 실습에서 가장 먼저 확인해야 할 것은 IDE가 아니라 **JDK 버전**입니다. 컴파일러와 런타임 버전이 다르면 애플리케이션이 실행되지 않거나, Lombok(getter·생성자 같은 반복 코드를 어노테이션으로 자동 생성해 주는 라이브러리)과 같은 도구가 이상하게 동작할 수 있습니다.
 
 ##### 확인 명령
 
@@ -210,7 +216,7 @@ VS Code로도 실습은 가능하지만, 초중급 개발자에게는 **프로�
 - Maven 프로젝트가 정상적으로 import 되었는지 확인합니다.
 #### 3. 프로젝트 생성보다 먼저 알아야 할 것
 
-Spring Initializr로 프로젝트를 만드는 것은 어렵지 않습니다. 하지만 더 중요한 것은 **왜 그 의존성을 넣는지 이해하는 것**입니다. 의존성을 무작정 많이 넣으면 초반 학습 범위가 불필요하게 넓어집니다.
+Spring Initializr(start.spring.io — 스프링 부트 프로젝트 뼈대를 만들어 주는 공식 생성 도구)로 프로젝트를 만드는 것은 어렵지 않습니다. 하지만 더 중요한 것은 **왜 그 의존성을 넣는지 이해하는 것**입니다. 의존성을 무작정 많이 넣으면 초반 학습 범위가 불필요하게 넓어집니다.
 
 ##### 권장 기본 설정
 
@@ -229,14 +235,14 @@ Spring Initializr로 프로젝트를 만드는 것은 어렵지 않습니다. �
 ##### 왜 이 조합이 적절한가
 
 - `Spring Web`: HTTP 요청과 컨트롤러 흐름을 이해하기 좋습니다.
-- `Spring Data JPA`: 엔티티, 리포지토리, 트랜잭션 개념을 함께 익힐 수 있습니다.
+- `Spring Data JPA`: 엔티티, 리포지토리, 트랜잭션 개념을 함께 익힐 수 있습니다. (JPA 자체는 ch07에서 자세히 다룹니다)
 - `Validation`: 요청 검증을 일찍 경험할 수 있습니다.
-- `H2 Database`: 로컬에서 빠르게 실습하기 좋습니다.
+- `H2 Database`: 별도 설치 없이 메모리에서 도는 경량 DB라 로컬에서 빠르게 실습하기 좋습니다.
 - `Spring Boot Starter Test`: 테스트 습관을 초반부터 잡을 수 있습니다.
 
 ##### 실제로 프로젝트 만들기 (start.spring.io)
 
-권장 의존성 그대로 프로젝트를 생성합니다. 명령으로 한 번 만들어 보면 구조가 눈에 들어옵니다.
+권장 의존성 그대로 프로젝트를 생성합니다. 여기서 만드는 `demo`가 이후 Spring 챕터(ch07~08·10)까지 이어 쓰는 기준 프로젝트입니다. 명령으로 한 번 만들어 보면 구조가 눈에 들어옵니다.
 
 ```bash
 # start.spring.io에 요청해 zip으로 받아 푼다 (한 줄)
@@ -424,7 +430,7 @@ project-root
 
 #### 새 프로젝트를 Maven으로 시작하기
 
-가장 단순한 예시는 archetype 기반 생성입니다.
+가장 단순한 예시는 archetype(Maven이 제공하는 프로젝트 템플릿) 기반 생성입니다.
 
 ```bash
 mvn archetype:generate \
@@ -697,6 +703,7 @@ spring:
 
 ### 3. 왜 `local/dev/test/prod` 일반론으로 외우면 안 되는가
 프로파일 이름은 예약어가 아니라 팀이 정하는 규약입니다. 위에서 만든 구조는 아래처럼 역할이 분리됩니다.
+
 - `h2`: 가장 가벼운 기본 로컬 실행
 - `dev-my`: MySQL 개발 환경
 - `dev-pg`: PostgreSQL 개발 환경
@@ -737,7 +744,7 @@ Started DemoApplication in 3.x seconds
 docker run -d --name demo-mysql -e MYSQL_ROOT_PASSWORD=changeme -e MYSQL_DATABASE=demo -p 3306:3306 mysql:8
 ```
 
-접속 정보는 환경변수로 주입합니다. 먼저 `demo` 프로젝트 루트에 `.env`를 만듭니다.
+접속 정보는 환경변수로 주입합니다. 이때 쓰는 `.env`는 접속 정보 같은 값을 `KEY=값` 줄로 모아 두는 관례적인 파일로, 비밀번호를 설정 파일에 적어 커밋하는 대신 셸 환경변수로 불러 쓰기 위한 것입니다. 먼저 `demo` 프로젝트 루트에 `.env`를 만듭니다.
 
 **파일**: .env
 ```text
@@ -762,7 +769,7 @@ HikariPool-1 - Starting...
 HikariPool-1 - Start completed.
 Started DemoApplication in 4.x seconds
 ```
-MySQL 접속 정보가 잘못되거나 서버가 없으면 `HikariPool ... Unable to acquire JDBC Connection` 오류가 발생합니다.
+로그의 `HikariPool`은 Spring Boot가 기본으로 쓰는 DB 커넥션 풀 이름으로, `Start completed`가 보이면 실제 DB 연결에 성공했다는 뜻입니다. MySQL 접속 정보가 잘못되거나 서버가 없으면 `HikariPool ... Unable to acquire JDBC Connection` 오류가 발생합니다.
 
 #### dev-pg 실행
 
@@ -778,6 +785,8 @@ DEV_PG_DB_URL=jdbc:postgresql://localhost:5432/demo
 DEV_PG_DB_USERNAME=postgres
 DEV_PG_DB_PASSWORD=changeme
 ```
+
+dev-my 때와 같은 방식으로 `.env`를 셸에 다시 불러들여 실행합니다.
 
 ```bash
 set -a; source .env; set +a
@@ -814,6 +823,7 @@ The following 1 profile is active: "<지정한 프로파일>"
 
 ### 6. DDL 전략을 읽는 기준
 위에서 만든 구조 기준으로 보면 다음처럼 이해하는 편이 정확합니다.
+
 - `h2`: 빠른 실습용이므로 `create-drop`
 - `dev-my`: 로컬 MySQL 실험용으로 `create-drop`
 - `dev-pg`: 개발 DB를 유지하며 검증하기 위해 `update`

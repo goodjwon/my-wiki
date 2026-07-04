@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch09]
 sources: [java-study/java-study-ch09-테스트와품질.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # 테스트와 품질
@@ -18,6 +18,8 @@ updated: 2026-07-03
 **단계**: 3단계 — 고급·품질 · **앞 장**: [[java-study-ch08]] · **다음 장**: [[java-study-ch10]]
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 9.2 계산기 테스트를 직접 작성하고, 9.3에서 curl로 API를 찔러본다. 방법론: [[entity-tdd]].
+>
+> **실습 프로젝트는 두 개**: 9.2 계산기는 ch01 1.2에서 만든 순수 Java 프로젝트 `hello-java`에, 9.1·9.3의 Spring 실습(✏️)은 ch06 6.1에서 start.spring.io로 만든 `demo` 프로젝트에 작성한다. 본문에 나오는 필자의 실무 저장소(도서 대출 API) 코드는 읽기 자료일 뿐 실습에 필요하지 않다.
 
 ---
 
@@ -69,7 +71,7 @@ Spring Boot는 웹, 데이터, 보안, 설정이 함께 묶인 프레임워크�
 
 #### 1. 기본 출발점
 
-Spring Boot는 `spring-boot-starter-test`를 통해 테스트에 필요한 기본 구성을 제공합니다. 초중급 단계에서는 먼저 이 스타터가 어떤 테스트 도구를 묶어 주는지 이해하는 것이 좋습니다.
+Spring Boot는 `spring-boot-starter-test`를 통해 테스트에 필요한 기본 구성을 제공합니다. 초중급 단계에서는 먼저 이 스타터가 어떤 테스트 도구를 묶어 주는지 이해하는 것이 좋습니다. 이 스타터 하나로 이 장에서 계속 만나게 될 세 도구가 함께 들어옵니다 — `@Test`를 붙인 메서드를 찾아 실행해 주는 테스트 프레임워크 **JUnit 5**, 진짜 협력 객체 대신 가짜(목, mock) 객체를 만들어 끼워 주는 라이브러리 **Mockito**, 서버를 띄우지 않고 가짜 HTTP 요청을 보내 컨트롤러를 검증하는 **MockMvc**(Spring Test 소속)입니다.
 
 #### 2. 테스트를 나누는 기본 기준
 
@@ -186,6 +188,8 @@ class LoanRepositoryTest {
 
 `@WebMvcTest`로 컨트롤러 한 개를 단위 테스트해 보라.
 
+애플리케이션 전체를 띄우지 않고도 웹 계층만 잘라 검증할 수 있다는 것을 직접 체감하는 과제입니다. 위 3번에서 읽은 슬라이스 테스트가 실제로 어떻게 생겼는지 가장 작은 컨트롤러로 확인합니다.
+
 !!! example "실습 순서"
 
     1. **파일 생성** — ch06 6.1에서 만든 `demo` 프로젝트에 컨트롤러 `src/main/java/com/example/demo/practice/PingController.java`와 테스트 `src/test/java/com/example/demo/practice/PingControllerTest.java`를 만듭니다.
@@ -236,6 +240,7 @@ class LoanRepositoryTest {
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `./mvnw test -Dtest=PingControllerTest` (Gradle이라면 `./gradlew test --tests "*PingControllerTest"`) — 테스트 1개가 통과하는지 확인합니다. — 추가할 때마다 다시 실행해 통과 여부를 확인합니다.
 
@@ -265,8 +270,11 @@ Spring Boot 테스트의 핵심은 **가장 작은 비용으로 가장 큰 회�
 - 입력 파싱과 계산 책임을 나누기
 - 성공 케이스와 실패 케이스를 JUnit 5로 검증하기
 
+이 절의 파일들은 [[java-study-ch01]] 1.2에서 만든 순수 Java 프로젝트 `hello-java`에 `com.example.ch09` 패키지로 작성합니다. JUnit 5 의존성 추가와 실행 방법은 절 끝의 "프로젝트에 두고 실행하기"에서 안내합니다.
+
 ### 1. 처음 코드가 왜 테스트하기 어려운가
-아래와 같은 코드는 콘솔 입력, 문자열 파싱, 계산, 출력이 모두 `main` 메서드에 붙어 있어 테스트가 어렵습니다.
+계산기의 첫 코드는 흔히 콘솔 입력, 문자열 파싱, 계산, 출력이 모두 `main` 메서드 하나에 붙어 있는 형태가 됩니다. 이런 코드는 테스트가 어렵습니다.
+
 - 입력을 직접 넣기 어렵습니다.
 - 계산 규칙만 따로 검증하기 어렵습니다.
 - 예외 상황을 세밀하게 확인하기 어렵습니다.
@@ -335,6 +343,8 @@ public class ExpressionParser {
 
 ### 4. JUnit 5 테스트 예제
 
+이제 분리해 둔 계산 규칙을 JUnit 5로 검증합니다. 코드에 처음 나오는 세 요소만 미리 알아 두면 됩니다 — `assertEquals`는 기대값과 실제 결과가 같은지, `assertThrows`는 지정한 예외가 실제로 발생하는지 확인하는 단언(assertion) 메서드이고, `@DisplayName`은 테스트 결과에 표시될 이름을 사람이 읽는 문장으로 붙이는 애노테이션입니다.
+
 **파일**: src/test/java/com/example/ch09/CalculatorTest.java
 
 ```java
@@ -372,12 +382,14 @@ class CalculatorTest {
 }
 ```
 이 테스트에서 중요한 점은 세 가지입니다.
+
 - 정상 흐름을 먼저 검증합니다.
 - 실패 케이스를 명시적으로 검증합니다.
 - 콘솔 출력이 아니라 핵심 규칙을 직접 검증합니다.
 
 ### 5. 어디까지 테스트해야 하는가
 초중급 단계에서는 아래 순서로 보는 것이 좋습니다.
+
 1. 계산 규칙 테스트
 1. 파싱 규칙 테스트
 1. 두 객체를 엮는 작은 애플리케이션 서비스 테스트
@@ -385,6 +397,7 @@ class CalculatorTest {
 
 ### 6. 이 예제가 Spring Boot 테스트와 이어지는 이유
 이 계산기 예제는 아주 작지만, 실제 Spring Boot 구조와 동일한 감각을 요구합니다.
+
 - Controller는 입력을 받고
 - Service는 규칙을 처리하고
 - Parser나 Mapper는 변환을 담당합니다.
@@ -430,7 +443,7 @@ class LoanServiceImplTest {
 
 #### 프로젝트에 두고 실행하기
 
-위 `Calculator`·`Expression`·`ExpressionParser`·`CalculatorTest`를 실제로 실행하려면 JUnit 5 의존성과 표준 위치가 필요합니다. 프로젝트는 [[java-study-ch01]] 1.2에서 만든 Maven/Gradle 프로젝트를 그대로 사용하고, 이 장의 코드는 `com.example.ch09` 패키지에 둡니다.
+위 `Calculator`·`Expression`·`ExpressionParser`·`CalculatorTest`를 실제로 실행하려면 JUnit 5 의존성과 표준 위치가 필요합니다. 프로젝트는 [[java-study-ch01]] 1.2에서 만든 Maven/Gradle 프로젝트 `hello-java`를 그대로 사용하고, 이 장의 코드는 `com.example.ch09` 패키지에 둡니다.
 
 의존성 (빌드 파일):
 
@@ -496,7 +509,7 @@ mvn test -Dtest=CalculatorTest            # 1장 archetype 프로젝트에는 mv
 
 #### 먼저 — 서버를 띄우고 시작한다
 
-curl은 떠 있는 서버에 요청을 보내는 도구입니다. **다른 터미널에서 서버를 먼저 띄운 뒤**, 이 터미널에서 curl 명령을 실행합니다.
+curl은 떠 있는 서버에 요청을 보내는 도구입니다. **다른 터미널에서 서버를 먼저 띄운 뒤**, 이 터미널에서 curl 명령을 실행합니다. 참고로 본문 3~6번의 예시 URL은 이 장 앞에서 소개한 필자의 실무 저장소(도서 대출 API) 기준의 읽기 자료라 그대로 실행되지 않아도 괜찮고, 직접 실행하는 실습은 절 끝에서 ch06 6.1의 `demo` 프로젝트로 진행합니다.
 
 ```bash
 # 별도 터미널에서 (포그라운드로 계속 떠 있음, 종료는 Ctrl+C)
@@ -549,6 +562,8 @@ curl은 떠 있는 서버에 요청을 보내는 도구입니다. **다른 터�
 - `403 Forbidden`: 권한 없는 사용자를 막는가
 - `404 Not Found`: 없는 리소스 접근을 적절히 처리하는가
 #### 3. 기본 `curl` 패턴
+
+아래는 실무에서 가장 자주 쓰는 요청 패턴 다섯 가지입니다. 모든 명령에 공통으로 붙는 `-i` 옵션은 응답 바디만이 아니라 상태 줄과 헤더까지 함께 출력하게 합니다 — 2번에서 강조한 상태 코드를 매번 확인하기 위한 장치입니다.
 
 ##### GET 요청
 
@@ -612,7 +627,7 @@ curl -i -X DELETE http://localhost:8080/api/books/1
 1. 없는 ID로 요청해서 `404` 확인
 이 순서가 좋은 이유는, 환경 문제와 도메인 문제를 섞지 않게 해 주기 때문입니다.
 
-현재 저장소 기준으로는 아래 순서가 특히 자연스럽습니다.
+필자의 실무 저장소(이하 "현재 저장소") 기준으로는 아래 순서가 특히 자연스럽습니다.
 
 ```text
 GET /api/books/{id}
@@ -711,6 +726,8 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 ### ✏️ API 수동 검증 직접 해보기
 
 실행 중인 API에 `curl`로 GET·POST 요청을 보내 응답을 확인하라.
+
+본문에서 읽기만 한 요청 패턴을 내 손으로 실행해 보는 과제입니다. 응답 바디보다 상태 코드를 먼저 확인하는 습관과, 검증 절차를 텍스트로 남기는 습관을 여기서 들입니다.
 
 !!! example "실습 순서"
 

@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch05]
 sources: [java-study/java-study-ch05-입출력과네트워크.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # 입출력과 네트워크
@@ -42,6 +42,8 @@ Java 문법과 객체지향, 컬렉션을 학습한 뒤에도 실제 프로그�
 - 실무 Spring 프로젝트: 외부 자원을 Spring 추상화 위에서 다루는 기준
 - 이 장의 저수준 예제: 파일 처리, 소켓 통신, 순수 JDBC 같은 바닥 흐름을 직접 보는 기준
 즉 이 장은 고수준 프레임워크 코드만 읽어서는 감이 안 잡히는 부분을 저수준 예제로 메우는 장입니다.
+
+덧붙여 이 장 전체에서 코드나 실습 뒤에 붙는 `예상 결과` 블록은, 실행했을 때 나와야 할 출력이나 도달해야 할 상태를 미리 적어 둔 것입니다. 이 절에서는 코드 대신 두 갈래 기준을 갖췄을 때 도달하는 읽기 상태를 같은 형식으로 적어 둡니다.
 
 ```text
 예상 결과
@@ -281,6 +283,7 @@ Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 �
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -306,6 +309,7 @@ Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 �
 예외 처리는 프로그램이 죽지 않게 만드는 기술이 아니라, 실패의 의미를 설계하는 작업에 가깝습니다. 같은 실패라도 어디에서, 어떤 이름으로, 어떤 응답으로 번역하느냐에 따라 코드의 읽기 난이도가 달라집니다.
 
 ### 1. 기본 예외 처리 구조
+`try`, `catch`, `finally` 세 블록이 모두 등장하는 가장 기본적인 형태부터 봅니다.
 ```java
 try {
     int value = Integer.parseInt("ABC");
@@ -345,6 +349,7 @@ try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
 
 ### 3. 사용자 정의 예외가 필요한 시점
 표준 예외만으로 상황을 설명하기 어렵다면 사용자 정의 예외를 고려합니다.
+
 - 비즈니스 규칙 위반을 명확히 표현하고 싶을 때
 - 호출하는 쪽에서 예외 종류에 따라 분기해야 할 때
 - 같은 `IllegalArgumentException`만으로는 의미가 흐려질 때
@@ -452,6 +457,7 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -477,6 +483,8 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
 
 이 장에는 전통적인 IO와 NIO 예제가 함께 나옵니다. 새 코드의 기본값은 `Path` + `Files` + `try-with-resources` 쪽으로 이해하는 편이 좋고, 레거시 코드를 읽을 때는 `BufferedReader`, `FileReader` 흐름을 같이 볼 수 있어야 합니다.
 
+**전통 IO — 한 줄씩 읽기**:
+
 ```java
 try (BufferedReader br = new BufferedReader(new FileReader("output.txt"))) {
     String line;
@@ -485,6 +493,8 @@ try (BufferedReader br = new BufferedReader(new FileReader("output.txt"))) {
     }
 }
 ```
+
+**NIO — 같은 파일에 내용 덧붙이기**:
 
 ```java
 Path filePath = Paths.get("output.txt");
@@ -499,6 +509,8 @@ NIO 예제는 같은 작업을 더 간결하게 표현하지만, `APPEND` 사용
 
 #### 2. 텍스트 파일 쓰기
 
+가장 단순한 쓰기는 `Files.writeString` 한 줄로 끝납니다.
+
 ```java
 Path path = Paths.get("output.txt");
 Files.writeString(path, "Hello Java\n", StandardCharsets.UTF_8);
@@ -511,6 +523,8 @@ Files.writeString(path, "Hello Java\n", StandardCharsets.UTF_8);
 - 인코딩은 가능하면 명시합니다.
 #### 3. 텍스트 파일 읽기
 
+읽기는 쓰기와 짝을 이루는 `Files.readString`으로 시작합니다.
+
 ```java
 Path path = Paths.get("output.txt");
 String content = Files.readString(path, StandardCharsets.UTF_8);
@@ -520,6 +534,8 @@ System.out.println(content);
 작은 파일은 `readString`으로 충분하지만, 큰 파일은 라인 단위로 읽는 쪽이 낫습니다.
 
 #### 4. 라인 단위 읽기
+
+파일이 커지면 전체를 한 번에 읽는 대신 `Files.lines`로 한 줄씩 스트리밍합니다.
 
 ```java
 try (Stream<String> lines = Files.lines(Paths.get("app.log"), StandardCharsets.UTF_8)) {
@@ -531,6 +547,8 @@ try (Stream<String> lines = Files.lines(Paths.get("app.log"), StandardCharsets.U
 로그 파일처럼 큰 텍스트 파일은 이 패턴이 더 실용적입니다.
 
 #### 5. 내용 추가하기
+
+이미 있는 파일 뒤에 덧붙일 때는 열기 옵션(`StandardOpenOption`)을 함께 지정합니다.
 
 ```java
 Files.writeString(
@@ -545,6 +563,8 @@ Files.writeString(
 `APPEND`만 쓰면 파일이 없을 때 실패할 수 있으므로 `CREATE`를 함께 쓰는 편이 안전합니다.
 
 #### 6. 바이너리 파일 다루기
+
+텍스트가 아닌 파일은 문자열 대신 바이트 배열로 읽고 씁니다.
 
 ```java
 byte[] data = Files.readAllBytes(Paths.get("image.png"));
@@ -682,6 +702,7 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"` — 추가할 때마다 다시 실행해 출력과 `output.txt` 생성 여부를 확인합니다.
 
@@ -850,6 +871,7 @@ CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라.
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"` — 추가할 때마다 다시 실행해 파싱 결과를 확인합니다.
 
@@ -973,7 +995,7 @@ try (Socket socket = new Socket("127.0.0.1", 12345);
 
 #### 5. 아주 작은 TCP 에코 서버 예제로 흐름 보기
 
-아래 `SimpleTCPServer`, `SimpleTCPClient`는 입문용 네트워크 예제로 바로 실행해 보기 좋습니다.
+아래는 TCP 에코 서버와 클라이언트의 핵심 흐름만 발췌한 참고 코드입니다. 파일로 만들어 실제로 실행하는 완성본은 뒤의 "실제로 띄워 보기"에서 `EchoServer`·`EchoClient`로 다룹니다.
 
 ##### 서버
 
@@ -1074,7 +1096,7 @@ socket.receive(packet);
 
 #### 실제로 띄워 보기 — 서버 먼저, 클라이언트는 다른 터미널
 
-소켓 실습의 핵심은 **서버를 먼저 띄우고, 클라이언트를 별도 터미널에서 실행**하는 것입니다. 아래 두 파일을 만들어 그대로 실행해 봅니다.
+소켓 실습의 핵심은 **서버를 먼저 띄우고, 클라이언트를 별도 터미널에서 실행**하는 것입니다. 이 실습은 `hello-java` 프로젝트에 넣지 않고, 빈 작업 디렉터리에 단일 파일로 저장해 `javac`로 바로 컴파일합니다. 아래 두 파일을 만들어 그대로 실행해 봅니다.
 
 **파일**: EchoServer.java
 
@@ -1117,12 +1139,16 @@ public class EchoClient {
 }
 ```
 
+컴파일과 실행은 터미널 두 개에서 순서대로 진행합니다.
+
 ```bash
 # 터미널 1 — 서버 (먼저 실행, 포그라운드로 계속 떠 있음)
 javac EchoServer.java
 java EchoServer
 # → "서버 시작 — 8888에서 대기 중..." 출력 후 멈춘 듯 보이면 정상
 ```
+
+서버가 대기 상태로 들어간 것을 확인한 뒤, 두 번째 터미널에서 클라이언트를 실행합니다.
 
 ```bash
 # 터미널 2 — 클라이언트 (별도 창)
@@ -1168,7 +1194,7 @@ nc 127.0.0.1 8888          # Mac/Linux
 
 #### 실무 코드와 저수준 예제를 구분해서 읽기
 
-실무 Spring 프로젝트는 대개 JDBC를 직접 노출하지 않고 Spring Data JPA와 트랜잭션 추상화 위에서 데이터 접근을 수행합니다. 반면 아래 순수 JDBC 예제(`JDBCBasicExample`)에서는 커넥션 획득부터 `PreparedStatement`, `ResultSet`, `finally` 정리까지 바닥 구조를 직접 볼 수 있습니다.
+실무 Spring 프로젝트는 대개 JDBC를 직접 노출하지 않고 Spring Data JPA와 트랜잭션 추상화 위에서 데이터 접근을 수행합니다. 반면 아래처럼 순수 JDBC로 쓴 발췌 코드에서는 커넥션 획득부터 `PreparedStatement`, `ResultSet` 순회까지 바닥 구조가 그대로 드러납니다.
 
 ```java
 Connection conn = DriverManager.getConnection(url, user, password);
@@ -1189,7 +1215,7 @@ while (rs.next()) {
 현재 Spring 프로젝트는 이런 저수준 흐름을 직접 쓰지 않지만, 내부적으로는 같은 JDBC 생명주기 위에서 동작한다.
 ```
 
-주의할 점도 있습니다. 예제 저장소의 JDBC 샘플은 학습용이라 자격 증명이 코드에 직접 들어 있고 `finally`로 자원을 닫습니다. 출판 기준에서는 실제 프로젝트 코드로 권장하기보다, **왜 `try-with-resources`와 외부 설정 분리가 필요한지 보여주는 예제**로 읽는 편이 정확합니다.
+주의할 점도 있습니다. 이런 학습용 JDBC 샘플은 자격 증명이 코드에 직접 들어 있고 `finally`로 자원을 닫는 경우가 많습니다. 출판 기준에서는 실제 프로젝트 코드로 권장하기보다, **왜 `try-with-resources`와 외부 설정 분리가 필요한지 보여주는 예제**로 읽는 편이 정확합니다.
 
 #### 왜 JDBC를 먼저 알아야 하는가
 
@@ -1492,7 +1518,7 @@ JDBC로 연결해 SELECT 결과를 출력한 뒤, INSERT 데이터나 WHERE 조�
 
 > 아래 파일은 유틸리티 클래스를 만들어 여러 형태로 처리 하는 연습을 해 봅니다. 한번에 다하지 말고 메소드 하나 하고 결과 보고 하는 식으로 진행 바랍니다.
 
-이 실습은 1장 1.2에서 만든 Maven/Gradle 프로젝트에 `com.example.ch05.files` 패키지로 추가합니다. JSON 처리에 Gson을 사용하므로 의존성을 먼저 추가합니다.
+이 실습은 1장 1.2에서 만든 Maven/Gradle 프로젝트(`hello-java`)에 `com.example.ch05.files` 패키지로 추가합니다. JSON 처리에는 Gson(구글이 만든, 자바 객체와 JSON을 서로 변환해 주는 라이브러리)을 사용하므로 의존성을 먼저 추가합니다.
 
 ```xml
 <!-- pom.xml -->
@@ -2151,6 +2177,7 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.FileIOHandlerMain
 ```
 
 CSV 파일을 읽고 다음의 작업을 수행해야 합니다:
+
 1. 모든 데이터의 평균 나이 및 평균 점수 계산
 1. 특정 점수 이상을 받은 사용자 수 카운트 (예: 90점 이상)
 1. 이름이 특정 문자로 시작하는 사용자 수 검색 (예: '김')
@@ -2631,55 +2658,68 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.BigFileProcessingDo
 ---
 
 #### 엑셀 파일 관련 연습문제
+
+일부 문제 이름 옆의 (완료)·(숙제) 표시는 원 수업 진행 당시의 상태 메모입니다. 구분 없이 모든 문제의 풀이가 5.9-1에 있습니다.
+
 1. **문제 이름:** `엑셀 데이터 합산`
   - **파일 이름:** `sales_data.xlsx`
 sales_data.xlsx
+
   - **데이터:** 각 열에 월별 매출 데이터가 포함된 테이블
   - **요구사항:** 월별 매출의 합계 계산
 1. **문제 이름:** `특정 열의 데이터 필터링`
   - **파일 이름:** `employee_data.xlsx`
 employee_data.xlsx
+
   - **데이터:** 직원 이름, 부서, 연봉 데이터 포함
   - **요구사항:** 연봉 5천만 원 이상인 직원 리스트 출력
 1. **문제 이름:** `엑셀 데이터 정렬`
   - **파일 이름:** `students_scores.xlsx`
 students_scores.xlsx
+
   - **데이터:** 학생 이름, 과목, 점수
   - **요구사항:** 점수를 기준으로 내림차순 정렬 후 상위 10명 출력
 1. **문제 이름:** `특정 셀 값 변경` (완료)
   - **파일 이름:** `inventory.xlsx`
 inventory.xlsx
+
   - **데이터:** 제품 이름, 수량, 가격
   - **요구사항:** 특정 제품의 수량을 100으로 수정 후 저장
 1. **문제 이름:** `엑셀 데이터 통합`
   - **파일 이름:** `data1.xlsx`, `data2.xlsx`
 data1.xlsx
 data2.xlsx
+
   - **데이터:** 동일한 형식의 데이터가 포함된 두 파일
   - **요구사항:** 두 파일의 데이터를 통합해 새로운 엑셀 파일 생성
 1. **문제 이름:** `조건에 맞는 셀 색상 변경`
   - **파일 이름:** `grades.xlsx`
 grades.xlsx
+
   - **데이터:** 학생 이름, 과목, 점수
   - **요구사항:** 점수가 50점 미만인 셀의 배경색을 빨간색으로 변경
 1. **문제 이름:** `엑셀 데이터 시각화` 
   - **파일 이름:** `monthly_sales.xlsx`
 monthly_sales.xlsx
+
   - **데이터:** 월별 매출 데이터
   - **요구사항:** 매출 데이터를 바 차트로 시각화
 1. **문제 이름: `빈 셀 채우기` (숙제)**
   - **파일 이름:** `survey_data.xlsx`
 survey_data.xlsx
+
   - **데이터:** 설문 데이터, 일부 셀이 비어 있음
   - **요구사항:** 없음으로 표시된 셀을 "N/A"로 채운 후 저장
 1. **문제 이름:** `다중 시트 데이터 처리` (숙제?)
   - **파일 이름:** `multi_sheet.xlsx`
 multi_sheet.xlsx
+
   - **데이터:** 여러 시트에 부서별 데이터 포함
   - **요구사항:** 모든 시트 데이터를 하나로 병합해 새로운 시트 생성
 1. **문제 이름: `엑셀 데이터 통계 분석` (숙제)**
   - **파일 이름:** `test_scores.xlsx`
 test_scores.xlsx
+
   - **데이터:** 과목별 학생 점수
   - **요구사항:** 평균, 중간값, 최대값, 최소값 계산
 
@@ -2689,24 +2729,30 @@ test_scores.xlsx
 1. **문제 이름:** `JSON 데이터 키 검색`
   - **파일 이름:** `products.json`
 products.json
+
   - **데이터:** 제품 ID, 이름, 가격 포함
   - **요구사항:** 특정 키(예: `price`)의 값을 출력
 1. **문제 이름:** `특정 값 추출`
   - **파일 이름:** `users.json`
 users.json
+
   - **데이터:** 사용자 이름, 나이, 이메일
   - **요구사항:** 나이가 30 이상인 사용자의 이메일 출력
 1. **문제 이름:** `JSON 데이터 합산`
   - **파일 이름:** `sales.json`
 sales.json
+
   - **데이터:** 월별 매출 데이터
   - **요구사항:** 매출 총합 계산
 1. **문제 이름:** `중첩 JSON 데이터 탐색`
   - **파일 이름:** `organization.json`
 organization.json
+
   - **데이터:** 조직, 부서, 직원 데이터 포함
   - **요구사항:** 특정 부서에 속한 직원의 이름 출력
 1. **문제 이름:** `JSON 데이터 수정`
+
+원 자료의 문제 목록은 여기서 끊깁니다. JSON 문제 5~10(데이터 수정·병합·정렬·시각화·조건 삭제·중복 제거)의 상세 요구사항은 풀이 절(→ 5.9-1)에 풀이와 함께 실려 있습니다.
 
 ## 5.9-1 형식별 파일 처리 실전문제 풀이
 
@@ -2718,7 +2764,7 @@ organization.json
 
 아래 코드는 단일 책임 원칙을 기준으로 각 작업의 책임을 독립적인 클래스로 나눠 구조화한 예시입니다.
 
-이 풀이도 1장 1.2에서 만든 Maven/Gradle 프로젝트를 그대로 사용하고, 형식별로 `com.example.ch05.csv` / `com.example.ch05.excel` / `com.example.ch05.json` 패키지에 나눠 담습니다. 엑셀은 Apache POI, JSON은 Jackson, 차트 문제(엑셀 7번·JSON 8번)는 JFreeChart를 사용하므로 의존성을 먼저 추가합니다.
+이 풀이도 1장 1.2에서 만든 Maven/Gradle 프로젝트(`hello-java`)를 그대로 사용하고, 형식별로 `com.example.ch05.csv` / `com.example.ch05.excel` / `com.example.ch05.json` 패키지에 나눠 담습니다. 라이브러리는 세 가지를 씁니다 — 엑셀은 5.4에서 소개한 Apache POI, JSON은 Jackson(자바 객체와 JSON을 서로 변환해 주는 라이브러리로, Spring이 기본으로 쓰는 그 라이브러리입니다), 차트 문제(엑셀 7번·JSON 8번)는 JFreeChart(차트를 그려 이미지 파일로 저장해 주는 자바 라이브러리)입니다. 의존성을 먼저 추가합니다.
 
 ```xml
 <!-- pom.xml -->
@@ -4509,9 +4555,11 @@ class Order {
 
 ##### 주요 원칙 적용 설명
 
-1. **단일 책임 원칙 (SRP)**:
-1. **확장성**:
-1. **재사용성**:
+위 풀이들이 공통으로 지킨 설계 기준을 정리합니다.
+
+1. **단일 책임 원칙 (SRP)**: 각 풀이에서 실행 진입점(main)과 실제 처리 로직을 별도 클래스(`ProductReader`, `SurveyCleaner` 등)로 나눠, 한 클래스가 한 가지 이유로만 바뀌게 했습니다.
+1. **확장성**: 검색 키, 필터 기준값, 채움 문자열 같은 조건을 메서드 파라미터로 받아, 요구사항이 바뀌어도 호출부만 고치면 되게 했습니다.
+1. **재사용성**: 데이터 클래스(`Product`, `User` 등)와 읽기·쓰기 로직을 분리해, 같은 데이터 구조를 여러 문제에서 반복해 쓸 수 있게 했습니다.
 
 ---
 

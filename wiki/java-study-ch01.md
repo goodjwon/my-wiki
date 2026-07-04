@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch01]
 sources: [java-study/java-study-ch01-환경과실행.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # 환경과 실행
@@ -40,11 +40,11 @@ updated: 2026-07-03
 이 교재는 외부 저장소를 내려받지 않습니다. 독자가 직접 만드는 아래 두 프로젝트로 처음부터 끝까지 따라가는 구성입니다.
 
 #### ① Java 실습 프로젝트 — 1.2에서 직접 생성
-- 1.2에서 Maven 또는 Gradle로 직접 만드는 순수 Java 프로젝트입니다.
+- 1.2에서 Maven 또는 Gradle로 직접 만드는 순수 Java 프로젝트 `hello-java`입니다.
 - Java 문법, 객체, 함수형, 예외, 파일 처리, 네트워크, 패턴처럼 **작게 실행해 볼 수 있는 예제**(2~5장·9장 실습)의 기준입니다.
 
 #### ② Spring `demo` 프로젝트 — 6.1에서 직접 생성
-- 6장 6.1에서 start.spring.io로 직접 만드는 Spring Boot 3.5.x, Java 21 기준 프로젝트입니다.
+- 6장 6.1에서 Spring 공식 프로젝트 생성 사이트인 start.spring.io로 직접 만드는 Spring Boot 3.5.x, Java 21 기준 프로젝트입니다.
 - 설정, 실행, 보안, 테스트, 데이터 접근처럼 **프로젝트형 설명**(6~8장·10장)의 기준선입니다.
 
 #### 독자가 먼저 맞춰야 할 기준
@@ -91,7 +91,7 @@ updated: 2026-07-03
 
 ### 7. MySQL
 - 로컬 DB 실습이 필요하면 MySQL을 설치합니다.
-- 초반에는 H2로 시작해도 되지만, DB 차이를 경험하려면 MySQL 설치가 도움이 됩니다.
+- 초반에는 설치 없이 쓰는 경량 자바 DB인 H2로 시작해도 되지만, DB 차이를 경험하려면 MySQL 설치가 도움이 됩니다.
 [MySQL Installer](https://dev.mysql.com/downloads/installer/)
 
 ### 8. 짝코딩과 협업 준비
@@ -286,7 +286,7 @@ Java 입문의 핵심은 **언어 특징을 아는 것보다, JDK 설치와 첫 
 > | 여러 줄 명령 | 줄 끝 `\` 로 이어쓰기 | `\` 안 됨 → **한 줄로** 붙여 실행 (PowerShell은 백틱 `` ` ``) |
 > | 파일 만들기 | `cat > 파일 << 'EOF'` 가능 | 안 됨 → **편집기/IDE로** 파일 생성 |
 >
-> 아래 예시는 한 줄 명령으로 적어 두 OS에서 모두 동작합니다. (`mvn`·`java`·`git`·`mkdir`·`cd`는 양쪽 공통)
+> 아래 예시는 한 줄 명령으로 적어 두 OS에서 모두 동작합니다. (`mvn`·`java`·`git`·`mkdir`·`cd`는 양쪽 공통) 표의 래퍼(`gradlew`·`mvnw`)는 빌드 도구를 프로젝트에 동봉해 실행하는 스크립트입니다 — 아래 3번 표준 구조에서 다시 봅니다.
 
 #### 1. 왜 빌드 도구인가
 
@@ -298,14 +298,14 @@ Java 입문의 핵심은 **언어 특징을 아는 것보다, JDK 설치와 첫 
 
 #### 2. 프로젝트 생성
 
-**Maven** — quickstart 아키타입으로 생성 (한 줄):
+**Maven** — 아키타입(archetype, 프로젝트 뼈대를 찍어내는 Maven의 템플릿) 중 quickstart로 생성 (한 줄):
 
 ```bash
 mvn archetype:generate -DgroupId=com.example -DartifactId=hello-java -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
 cd hello-java
 ```
 
-**생성 직후 pom.xml의 컴파일 타깃을 21로 수정합니다.** quickstart 1.4 아키타입이 만든 pom.xml은 `maven.compiler.source/target`이 **1.7로 고정**돼 있어, Java 21에서는 아래 4번의 `mvn compile`부터 `Source option 7 is no longer supported` 오류로 실패합니다. 이 프로젝트는 2~5장·9장에서 그대로 이어 쓰고 5.9-1·9.2에서 record(Java 16+) 문법을 쓰므로 이 수정이 필수입니다. **편집기/IDE로** `pom.xml`의 `<properties>` 안 두 값을 21로 바꿉니다:
+**생성 직후, Maven의 빌드 설정 파일인 pom.xml의 컴파일 타깃을 21로 수정합니다.** quickstart 1.4 아키타입이 만든 pom.xml은 `maven.compiler.source/target`이 **1.7로 고정**돼 있어, Java 21에서는 아래 4번의 `mvn compile`부터 `Source option 7 is no longer supported` 오류로 실패합니다. 이 프로젝트는 2~5장·9장에서 그대로 이어 쓰고 5.9-1·9.2에서 record(Java 16+) 문법을 쓰므로 이 수정이 필수입니다. **편집기/IDE로** `pom.xml`의 `<properties>` 안 두 값을 21로 바꿉니다:
 
 ```xml
 <properties>
@@ -365,7 +365,7 @@ java -cp target/classes com.example.App       # 직접 실행
 
 #### 5. 의존성 추가 (예: Guava)
 
-외부 라이브러리는 빌드 파일에 좌표 한 줄만 적으면 자동으로 받아집니다.
+외부 라이브러리는 빌드 파일에 좌표 한 줄만 적으면 자동으로 받아집니다. 예시로 쓰는 Guava는 Google이 만든 자바 유틸리티 라이브러리입니다.
 
 **Maven** — `pom.xml` 의 `<dependencies>` 안:
 

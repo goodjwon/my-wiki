@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch02]
 sources: [java-study/java-study-ch02-Java문법과객체.md]
 created: 2026-04-18
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # Java 문법과 객체
@@ -19,7 +19,7 @@ updated: 2026-07-03
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 각 절의 코드를 직접 쳐보고, 끝의 2.9 실전문제를 풀어본다. 막히면 [[concept-oop]].
 
-> **실습 프로젝트**: 이 장의 실습 예제 파일(2.4·2.5)은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/com/example/ch02/` 아래에 만듭니다(패키지 `com.example.ch02`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
+> **실습 프로젝트**: 이 장의 실습 예제 파일(2.4·2.5와 각 절의 ✏️ 직접 해보기)은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/com/example/ch02/` 아래에 만듭니다(패키지 `com.example.ch02`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
 
 ---
 
@@ -157,7 +157,7 @@ int age = 20;
 System.out.println(name + " is " + age + " years old.");
 ```
 
-다만 반복문 안에서 문자열을 많이 붙일 때는 나중에 `StringBuilder`를 고려해야 합니다.
+다만 반복문 안에서 문자열을 많이 붙일 때는 나중에 `StringBuilder`를 고려해야 합니다(2.2 8절에서 자세히 다룹니다).
 
 #### 자주 하는 실수
 
@@ -172,6 +172,8 @@ System.out.println(name + " is " + age + " years old.");
 ### ✏️ 기본 문법 직접 해보기
 
 int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals` 비교 결과를 직접 출력해 차이를 확인하라.
+
+`==`와 `equals`의 차이는 2.2 7절에서 자세히 다루므로, 여기서는 두 비교의 결과가 서로 다르게 나온다는 사실만 먼저 관찰하면 충분합니다.
 
 !!! example "실습 순서"
 
@@ -189,6 +191,7 @@ int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -502,6 +505,7 @@ String result = builder.toString();
             }
         }
         ```
+
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.ArrayStatsPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
@@ -574,6 +578,7 @@ public class SafeAccount {
 
 ### 4. 상속보다 먼저 합성을 의식할 것
 상속은 공통 구조를 재사용하는 데 유용하지만, 모든 재사용 문제를 상속으로 해결하려 하면 결합도가 높아집니다.
+
 - 상속: `is-a` 관계가 분명할 때
 - 합성: 다른 객체를 내부에 두고 협력할 때
 실무에서는 상속보다 합성이 더 안전한 경우가 많습니다.
@@ -607,6 +612,7 @@ public class RateDiscountPolicy implements DiscountPolicy {
 
 ### 7. 생성자는 객체의 시작 상태를 보장해야 한다
 좋은 생성자는 "이 객체가 유효한 상태로 시작한다"는 약속을 만듭니다.
+
 - 필수 값은 생성자에서 받기
 - 불완전한 객체를 만들지 않기
 - 생성 이후 거의 바뀌지 않는 값은 `final`로 고정하기
@@ -700,6 +706,8 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch02.EnemyAttackDemo"
 이 장면에서 중요한 점은 변수 타입이 둘 다 `Enemy`인데도 실제 동작은 하위 클래스 구현이 실행된다는 것입니다. 즉, 객체지향 원칙은 문법 이름보다 **책임 분리와 메시지 위임**으로 읽는 편이 더 정확합니다.
 
 #### 1. 캡슐화(Encapsulation)
+
+2.3 3절에서 캡슐화의 목적이 잘못된 상태 변경을 막는 것임을 확인했습니다. 아래 두 예제는 그 원칙을 실행 코드로 보여줍니다 — 예제 1은 setter의 유효성 검사로, 예제 2는 입출금 메서드로만 잔액을 바꾸게 하는 방식으로 상태를 지킵니다.
 
 ##### 예제 1: Private 필드와 Public 메서드 사용
 
@@ -815,6 +823,8 @@ public class BankAccountDemo {
 
 #### 2. 상속(Inheritance)
 
+부모 클래스의 필드·메서드를 자식 클래스가 물려받는 구조를 세 예제로 확인합니다 — 예제 1·2는 물려받은 기능에 자식 고유 기능을 더하는 형태이고, 예제 3은 물려받은 메서드를 재정의(오버라이딩)까지 하는 형태입니다.
+
 ##### 예제 1: 동물과 개 클래스
 
 **파일**: src/main/java/com/example/ch02/InheritanceDemo.java
@@ -926,6 +936,8 @@ public class ManagerDemo {
 `Manager` 클래스는 `Staff` 클래스를 상속받아 `work()` 메서드를 재정의하고, 추가로 `manage()` 메서드를 제공합니다. (직원 클래스 이름은 2.5의 `Employee` 예제와 겹치지 않게 `Staff`로 두었습니다.)
 
 #### 3. 다형성(Polymorphism)
+
+같은 이름의 호출이 상황에 따라 다르게 동작하는 세 가지 형태를 봅니다 — 예제 1은 매개변수에 따라 갈리는 오버로딩, 예제 2는 부모 타입 변수로 호출해도 실제 객체의 구현이 실행되는 오버라이딩, 예제 3은 인터페이스 타입 하나로 서로 다른 구현을 다루는 방식입니다.
 
 ##### 예제 1: 메서드 오버로딩 (Overloading)
 
@@ -1067,6 +1079,8 @@ public class PolymorphismDemo {
 `Shape` 인터페이스를 구현한 `Circle`과 `Rectangle` 클래스는 `getArea()` 메서드를 각각 다르게 구현합니다. 이를 통해 인터페이스 타입의 변수로 다양한 객체를 다룰 수 있습니다.
 
 #### 4. 추상화(Abstraction)
+
+공통 계약만 드러내고 세부 구현을 감추는 방식을 세 예제로 확인합니다 — 예제 1은 추상 클래스, 예제 2는 인터페이스, 예제 3은 공통 흐름을 부모가 고정하는 템플릿 메서드 패턴입니다(같은 패턴을 2.5에서 더 깊게 다룹니다).
 
 ##### 예제 1: 추상 클래스 사용
 
@@ -1291,6 +1305,8 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch02.CsvProcessorDemo"
 
 ##### 추상 클래스와 구체 클래스
 
+정규직과 계약직의 급여 계산식이 서로 다른 상황입니다. 공통 정보(이름·ID)와 출력은 부모가 들고, 계산식만 자식이 채우는 분담을 봅니다.
+
 **파일**: src/main/java/com/example/ch02/EmployeeSalaryDemo.java
 
 ```java
@@ -1374,6 +1390,8 @@ public class EmployeeSalaryDemo {
 
 ##### 추상 클래스와 다형성의 결합
 
+원과 사각형처럼 그리는 방법은 다르지만 이동 방식은 같은 도형들입니다. 추상 클래스가 공통 동작(`move`)을 제공하고, 부모 타입 변수로 서로 다른 `draw()`가 실행되는 다형성을 함께 봅니다.
+
 **파일**: src/main/java/com/example/ch02/GraphicDemo.java
 
 ```java
@@ -1443,6 +1461,8 @@ public class GraphicDemo {
 #### 예제 3: 템플릿 메서드 패턴의 응용
 
 ##### 데이터 처리 과정의 추상화
+
+읽기→처리→저장 순서는 고정하고 처리 단계만 CSV·XML별로 갈라지는 구조입니다. 절 첫머리의 `CsvProcessorDemo`와 같은 템플릿 메서드 패턴을 두 형식으로 확장한 예제입니다.
 
 **파일**: src/main/java/com/example/ch02/DataProcessorDemo.java
 
@@ -1521,6 +1541,8 @@ public class DataProcessorDemo {
 #### 예제 4: 게임 캐릭터의 능력 정의
 
 ##### 추상 클래스와 인터페이스의 조합
+
+모든 캐릭터가 공유하는 동작은 추상 클래스로, 마법사만 가지는 능력은 인터페이스로 나누는 조합입니다. 상속 계층 하나로 다 담지 않고 역할별 계약을 분리하는 감각을 봅니다.
 
 **파일**: src/main/java/com/example/ch02/GameCharacterDemo.java
 
@@ -1602,6 +1624,8 @@ public class GameCharacterDemo {
 
 ##### 추상 클래스의 기본 구현 제공
 
+전원 켜기·끄기 같은 공통 동작은 추상 클래스가 완성된 구현으로 제공하고, 제품별 기능만 추상 메서드로 남기는 구조입니다. 전원이 꺼진 상태의 분기까지 함께 봅니다.
+
 **파일**: src/main/java/com/example/ch02/ApplianceDemo.java
 
 ```java
@@ -1673,6 +1697,8 @@ public class ApplianceDemo {
 #### 예제 6: 온라인 주문 처리 시스템
 
 ##### 추상 클래스의 부분 구현 활용
+
+주문 흐름 가운데 결제 방법은 반드시 자식이 정하고, 선물 포장 여부는 필요한 자식만 재정의하는 구조입니다. 기본값을 돌려주다가 선택적으로 바꾸는 후크(hook) 메서드가 처음 등장하는 예제입니다.
 
 **파일**: src/main/java/com/example/ch02/OrderProcessorDemo.java
 
@@ -1769,6 +1795,8 @@ public class OrderProcessorDemo {
 
 ##### 추상 클래스에서 공통 동작과 추상화된 동작 정의
 
+수강 흐름 다섯 단계 중 시험 방식 하나만 온라인·오프라인별로 달라지는 구조입니다. 고정 단계가 많고 가변 지점이 하나뿐일 때 템플릿이 얼마나 단순해지는지 봅니다.
+
 **파일**: src/main/java/com/example/ch02/CourseDemo.java
 
 ```java
@@ -1857,6 +1885,8 @@ public class CourseDemo {
 #### 예제 8: 파일 시스템 구성
 
 ##### 추상 클래스와 재귀적 구조 표현
+
+파일과 디렉터리를 같은 부모 타입으로 묶어, 중첩된 트리 구조를 재귀 호출 한 번으로 출력하는 예제입니다. 디렉터리가 자기 안의 구성 요소에게 같은 `display`를 위임하는 지점이 핵심입니다.
 
 **파일**: src/main/java/com/example/ch02/FileSystemDemo.java
 
@@ -1948,6 +1978,8 @@ public class FileSystemDemo {
 
 ##### 추상 클래스의 계층 구조 확장
 
+이메일·SMS처럼 전송 수단이 달라도 보낸 사람·받는 사람 구조는 같은 상황입니다. 공통 필드는 부모가 들고, 전송 방식만 자식이 구현합니다.
+
 **파일**: src/main/java/com/example/ch02/MessageSenderDemo.java
 
 ```java
@@ -2017,6 +2049,8 @@ public class MessageSenderDemo {
 
 ##### 추상 클래스의 계층적 설계
 
+추상 클래스가 추상 클래스를 상속하며 계약을 단계적으로 넓히고, 맨 아래 구체 클래스가 전부 구현하는 구조입니다. 중간 계층을 언제 추상으로 남길지 감을 잡는 예제입니다.
+
 **파일**: src/main/java/com/example/ch02/MultiLevelInheritanceDemo.java
 
 ```java
@@ -2062,7 +2096,7 @@ public class MultiLevelInheritanceDemo {
 
 #### 결론
 
-추상 클래스는 공통된 동작과 인터페이스를 정의하면서도, 하위 클래스에서의 구체적인 구현을 **강제함으로써 **코드의 유연성과 재사용성 향상시킴. 
+추상 클래스는 공통된 동작과 인터페이스를 정의하면서도, 하위 클래스에서의 구체적인 구현을 **강제함으로써** 코드의 유연성과 재사용성을 향상시킴.
 
 ---
 
@@ -2131,6 +2165,9 @@ public class MultiLevelInheritanceDemo {
 ### 예시 문제
 
 #### 문제 1. Wallet 클래스를 캡슐화 방식으로 수정하기
+
+상태를 외부에서 직접 바꿀 수 있던 지갑 클래스를, 객체 스스로 입출금 규칙을 지키는 형태로 고치는 문제입니다. 아래는 수정을 마친 정답 예시입니다(참고 코드).
+
 ```java
 class Wallet {
     private int balance;
@@ -2157,6 +2194,9 @@ class Wallet {
 이 문제의 핵심은 상태를 외부에서 직접 바꾸지 못하게 막고, 객체 스스로 자신의 규칙을 지키게 만드는 것입니다.
 
 #### 문제 2. 다형성을 이용한 급여 계산
+
+정규직과 시간제 직원의 급여를 같은 메서드 호출 `calculatePay()`로 계산하도록 설계하는 문제입니다. 아래는 정답 예시입니다(참고 코드).
+
 ```java
 abstract class Worker {
     abstract int calculatePay();
@@ -2212,6 +2252,9 @@ class PartTimeWorker extends Worker {
 **🎯 목표**: 캐릭터·아이템·전투를 객체 협력으로 모델링한다. 상속 vs 합성 판단이 핵심.
 
 > 게임에 필요한 요소들에 대해서 고민해 보고 객체화 하는 연습을 통해 객체 활용에 대한 이해를 높인다.
+
+각 문제 아래의 코드 펜스는 구현을 마쳤을 때 콘솔에 나와야 하는 예상 출력입니다. 정답 코드는 제시하지 않으므로, 출력이 똑같이 나오도록 클래스를 직접 설계합니다. 파일은 `hello-java` 프로젝트에 `com.example.ch02.game`처럼 별도 하위 패키지를 만들어 두면 2.4·2.5 예제의 `Character`·`Goblin` 같은 클래스와 이름이 겹치지 않습니다.
+
 **문제**: 게임 캐릭터를 나타내는 `Character` 클래스를 작성하세요. 이 클래스는 `name`, `health`, `level` 등의 속성을 가지며, `attack()`과 `defend()` 메서드를 포함합니다. 이 클래스를 기반으로 여러 캐릭터 객체를 생성하고, 각 캐릭터의 행동을 구현하세요
 ```javascript
 용사이(가) 공격합니다!
@@ -2244,7 +2287,7 @@ Jwon이(가) 레벨 4로 상승했습니다!
 Jwon이(가) 레벨 5로 상승했습니다!
 ```
 
-추상 클래스 `Item`을 만들고, **`Player` 객체를 매개변수로 받는** 추상 메서드 `use(Player player)`를 정의하세요. 이를 상속하는 `HealthPotion`과 `ManaPotion` 클래스를 작성하고, 각각의 `use(Player player)` 메서드를 구현하여 **플레이어의 체력과 마나를 회복**시키는 로직을 포함하세요.
+**문제**: 추상 클래스 `Item`을 만들고, **`Player` 객체를 매개변수로 받는** 추상 메서드 `use(Player player)`를 정의하세요. 이를 상속하는 `HealthPotion`과 `ManaPotion` 클래스를 작성하고, 각각의 `use(Player player)` 메서드를 구현하여 **플레이어의 체력과 마나를 회복**시키는 로직을 포함하세요.
 
 ```javascript
 Jwon이(가) 체력을 20 회복했습니다.
@@ -2300,7 +2343,7 @@ NPC 상인이(가) 위치 (35, 45)로 이동했습니다.
 고블린에게 썬더 스트라이크 마법을 위력 10로 시전합니다.
 ```
 
-**문제**: 아이템을 저장하는 `Inventory<T>` 제네릭 클래스를 작성하세요.
+**문제**: 아이템을 저장하는 `Inventory<T>` 제네릭 클래스를 작성하세요. 제네릭 문법은 [[java-study-ch03]] 3.1에서 자세히 다루므로, 아직 배우지 않았다면 3장을 마친 뒤 돌아와 풀어도 됩니다.
 ```javascript
 무기: 전설의 검이(가) 인벤토리에 추가되었습니다.
 물약: 체력 회복 물약이(가) 인벤토리에 추가되었습니다.
@@ -2310,6 +2353,8 @@ NPC 상인이(가) 위치 (35, 45)로 이동했습니다.
 ## 2.93 제어문: 조건문, 반복문 예제
 
 **🎯 목표**: 제어문을 반복 문제로 손에 익힌다.
+
+열 문제 모두 정답 코드 없이 문제 설명과 출력 예시만 제시합니다. 2.1에서 익힌 조건문·반복문만으로 풀 수 있으며, 파일은 ✏️ 직접 해보기와 같은 `com.example.ch02.practice` 패키지에 자유롭게 만들면 됩니다.
 
 #### 문제 1: 1부터 100까지의 숫자 출력
 **문제 설명**: 1부터 100까지의 숫자를 출력하는 프로그램 작성.
