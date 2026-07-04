@@ -812,6 +812,31 @@ socket.receive(packet);
 - 종료 신호를 어떻게 표현할지
 초보 단계에서는 `println`과 `readLine` 기반의 간단한 텍스트 프로토콜로 시작하는 편이 좋습니다. 핵심은 복잡한 포맷보다, **양쪽이 같은 규칙을 공유하는 것**입니다.
 
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 — 10절·공식 문서·정리·한 줄 정리 꼬리 블록 복원. 링크 URL은 덤프에서 유실돼 공식 Oracle 문서(HTTP 200 확인)로 보충 -->
+
+#### 10. 통신 코드에서 꼭 지켜야 할 기본 습관
+
+- `try-with-resources`로 소켓과 스트림을 닫기
+- 포트와 호스트를 상수나 설정으로 분리하기
+- 예외 메시지에 연결 대상과 상황을 함께 남기기
+- 블로킹 가능 지점을 의식하기
+- 메시지 경계를 명확히 정하기
+이 다섯 가지가 잡히면 네트워크 예제가 단순 장난감 코드에서 실무형 코드로 넘어가기 쉬워집니다.
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [Socket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/Socket.html)
+- [ServerSocket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/ServerSocket.html)
+- [DatagramSocket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/DatagramSocket.html)
+- [DatagramPacket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/DatagramPacket.html)
+
+#### 정리
+
+네트워크 프로그래밍 기초의 핵심은 TCP와 UDP 예제를 각각 외우는 데 있지 않습니다. 서버와 클라이언트의 역할, 블로킹 호출, 스트림과 메시지 경계, 예외 처리, 자원 해제를 하나의 구조로 이해해야 실제 통신 코드를 읽고 고칠 수 있습니다.
+
+#### 한 줄 정리
+
+네트워크 입문의 핵심은 소켓 문법이 아니라, **연결과 메시지와 실패를 한 흐름으로 보는 감각**을 만드는 것입니다.
 
 ---
 
@@ -1057,6 +1082,23 @@ JPA는 엔티티 중심으로 더 높은 추상화를 제공하고, MyBatis는 S
 - `Statement`보다 `PreparedStatement`를 먼저 습관으로 잡는 편이 안전합니다.
 - `ResultSet`도 닫아야 하는 자원입니다.
 - ORM을 쓴다고 해서 JDBC 구조를 몰라도 되는 것은 아닙니다.
+
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 — 공식 문서·정리·한 줄 정리 꼬리 블록 복원. 링크 URL은 덤프에서 유실돼 공식 Oracle 문서(HTTP 200 확인)로 보충 -->
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [JDBC Basics](https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html)
+- [Connection API](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/Connection.html)
+- [PreparedStatement API](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html)
+- [ResultSet API](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/ResultSet.html)
+
+#### 정리
+
+JDBC의 핵심은 드라이버 설치 방법을 외우는 데 있지 않습니다. Java 코드가 데이터베이스와 연결되고, SQL을 실행하고, 결과를 읽고, 자원을 해제하는 전체 수명 주기를 이해하는 데 있습니다. 이 구조를 알고 있어야 이후의 JPA, Querydsl, 트랜잭션 문서도 훨씬 잘 읽힙니다.
+
+#### 한 줄 정리
+
+JDBC 입문의 핵심은 SQL 문법이 아니라, **DB 접근 코드의 생명주기와 자원 해제 구조를 이해하는 것**입니다.
 
 ---
 
@@ -2952,11 +2994,17 @@ class Order {
 
 ---
 
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 — 주요 원칙 3항목의 하위 설명 불릿 복원 -->
+
 ##### 주요 원칙 적용 설명
 
 1. **단일 책임 원칙 (SRP)**:
+  - 각 클래스는 특정한 작업(예: 읽기, 필터링, 시각화 등)을 담당.
+  - 유지보수와 확장이 용이함.
 1. **확장성**:
+  - 요구사항 변경 시 기존 클래스 수정 없이 새로운 클래스 추가 가능.
 1. **재사용성**:
+  - 데이터를 처리하는 각 클래스는 다른 JSON 또는 엑셀 파일에도 쉽게 재사용 가능.
 
 
 
@@ -3000,11 +3048,61 @@ try {
 
 ## 5.8 파일 처리 실전문제 1
 
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 — 요약문으로만 남아 있던 문제 설명을 원문(메타 정보·데이터 형식·예제 데이터·작업 목록·출력 예시)으로 복원 -->
+
 #### 개요
 
-이 문서는 파일 읽기와 쓰기 기초를 읽은 뒤 이어서 푸는 실전문제입니다. 핵심은 파일을 전부 메모리에 올리지 않고, 한 줄씩 읽으면서 통계를 누적하는 방식으로 사고를 바꾸는 데 있습니다.
+이 문서는 파일 읽기와 쓰기 기초와 파일 처리 설계 실습를 읽은 뒤 이어서 푸는 실전문제입니다.
 
-문제: CSV 파일을 읽고 평균 나이, 평균 점수, 90점 이상 사용자 수, 특정 문자로 시작하는 사용자 수, 최연소/최고령 사용자를 구합니다.
+핵심은 파일을 전부 메모리에 올리지 않고, 한 줄씩 읽으면서 통계를 누적하는 방식으로 사고를 바꾸는 데 있습니다.
+
+문제이름: 대용량 파일 처리
+
+파일명: `LargeFileProcessing.java`
+
+데이터 파일명: `sample_data.csv`
+
+출력: 처리된 데이터의 통계 정보 출력
+
+---
+
+#### 문제 설명
+
+주어진 CSV 파일(`sample_data.csv`)에는 5000개의 데이터 행이 있으며, 각 행은 다음 형식으로 구성됨:
+
+ID,이름,나이,점수
+
+예제 데이터 (일부):
+
+```plain text
+1001,홍길동,25,87.5
+1002,김철수,30,92.3
+1003,이영희,22,76.8
+
+아래 첨부파일 참고.
+```
+
+sample_data.csv
+
+CSV 파일을 읽고 다음의 작업을 수행해야 함:
+
+1. 모든 데이터의 평균 나이 및 평균 점수 계산
+1. 특정 점수 이상을 받은 사용자 수 카운트 (예: 90점 이상)
+1. 이름이 특정 문자로 시작하는 사용자 수 검색 (예: '김')
+1. 최연소 및 최고령 사용자 찾기
+---
+
+출력 예시 (아래와 같은 형식으로 출력 하시오~! )
+
+```plain text
+평균 나이: 35.4
+평균 점수: 85.2
+90점 이상 사용자 수: 1240
+'김'으로 시작하는 사용자 수: 1123
+최연소 사용자 나이: 18
+최고령 사용자 나이: 67
+
+```
 
 ---
 
@@ -3014,16 +3112,88 @@ try {
 
 이 풀이는 한 클래스 안에서 빠르게 통계를 계산하는 직진형 해설입니다. 처음 문제를 풀 때는 이 방식이 이해하기 쉽고, 두 번째 풀이와 비교하면 구조화의 필요성이 더 잘 보입니다.
 
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 — 발췌 조각만 남아 있던 풀이 코드를 원문 전체 클래스로 복원 -->
+<!-- 검증 노트: 원문 코드는 BufferedReader 하나를 세 집계 메서드에 연속 전달하는데, 첫 메서드가 스트림을 소진하므로 두 번째 메서드부터 0을 반환하는 런타임 버그가 있다(BufferedReader는 mark 없이 되감기 불가 — java.io.BufferedReader API). 원문 보존 차원에서 그대로 두며, 패스마다 리더를 새로 여는 실행 가능한 교정본은 wiki/java-study-ch05.md 5.8-1 참조 -->
+
 ```java
+package com.example.ch4.files.csv;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
 public class LargeFileProcessing {
+
+    private static final String FILE_NAME = "sample_data.csv";
+
+    public static void main(String[] args) {
+        processFile(FILE_NAME);
+    }
+
     private static void processFile(String fileName) {
-        try (InputStream is = LargeFileProcessing.class.getClassLoader().getResourceAsStream(fileName);
-             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            br.readLine(); // 헤더 스킵
+        try (InputStream inputStream = LargeFileProcessing.class.getClassLoader().getResourceAsStream(fileName);
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            br.readLine(); // 첫 줄(헤더) 스킵
             analyzeData(br);
         } catch (IOException e) {
             System.err.println("파일 처리 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    private static void analyzeData(BufferedReader br) throws IOException {
+        int[] ageStats = calculateAverageAge(br);
+        int scoreAbove90Count = countHighScores(br, 90);
+        int kimNameCount = countNameOccurrences(br, "김");
+
+        System.out.println("평균 나이: " + ageStats[0]);
+        System.out.println("최연소 사용자 나이: " + ageStats[1]);
+        System.out.println("최고령 사용자 나이: " + ageStats[2]);
+        System.out.println("90점 이상 사용자 수: " + scoreAbove90Count);
+        System.out.println("'김'으로 시작하는 사용자 수: " + kimNameCount);
+    }
+
+    private static int[] calculateAverageAge(BufferedReader br) throws IOException {
+        String line;
+        int totalAge = 0, count = 0;
+        int minAge = Integer.MAX_VALUE;
+        int maxAge = Integer.MIN_VALUE;
+
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+            int age = Integer.parseInt(values[2]);
+            totalAge += age;
+            count++;
+            minAge = Math.min(minAge, age);
+            maxAge = Math.max(maxAge, age);
+        }
+        return new int[]{totalAge / count, minAge, maxAge};
+    }
+
+    private static int countHighScores(BufferedReader br, int threshold) throws IOException {
+        String line;
+        int count = 0;
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+            double score = Double.parseDouble(values[3]);
+            if (score >= threshold) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static int countNameOccurrences(BufferedReader br, String prefix) throws IOException {
+        String line;
+        int count = 0;
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+            if (values[1].startsWith(prefix)) {
+                count++;
+            }
+        }
+        return count;
     }
 }
 ```
@@ -3037,6 +3207,259 @@ public class LargeFileProcessing {
 
 이 풀이는 CSV 읽기, 통계 집계, 결과 표현을 역할별로 나눈 구조화된 해설입니다. 도메인 모델(User), 리포지토리(CsvUserRepository), 분석 서비스(UserAnalyticsService)로 분리하여 같은 문제를 더 확장 가능한 구조로 풀어봅니다.
 
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 — 개요만 남아 있던 풀이에 원문 전체 코드 복원 -->
+
+```java
+package com.example.ch4.csv;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * 대용량 CSV 파일을 '스트리밍' 방식으로 처리하는 예시 코드
+ * 파일명: BigFileProcessingDomain.java
+ */
+public class BigFileProcessingDomain {
+
+    // -----------------------------------------------------
+    // 1) 도메인 모델: User
+    // -----------------------------------------------------
+    public static class User {
+        private final String id;
+        private final String name;
+        private final int age;
+        private final double score;
+
+        public User(String id, String name, int age, double score) {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+            this.score = score;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public double getScore() {
+            return score;
+        }
+    }
+
+    // -----------------------------------------------------
+    // 2) 인프라스트럭처: CSV 파일을 '스트리밍'으로 읽는 Repository
+    // -----------------------------------------------------
+    public static class CsvUserRepository {
+
+        /**
+         * CSV 파일(헤더 포함)을 '한 줄씩' 읽어 User 객체로 변환한 뒤,
+         * 주어진 'UserConsumer'로 넘겨준다.
+         *
+         * @param inputStream CSV 파일의 입력 스트림
+         * @param idIndex     CSV에서 ID가 위치한 컬럼 인덱스
+         * @param nameIndex   CSV에서 NAME이 위치한 컬럼 인덱스
+         * @param ageIndex    CSV에서 AGE가 위치한 컬럼 인덱스
+         * @param scoreIndex  CSV에서 SCORE가 위치한 컬럼 인덱스
+         * @param consumer    User 객체를 받아서 처리할 로직(콜백)
+         * @throws IOException 파일 IO 예외
+         */
+        public void streamAllUsers(
+                InputStream inputStream,
+                int idIndex,
+                int nameIndex,
+                int ageIndex,
+                int scoreIndex,
+                UserConsumer consumer
+        ) throws IOException {
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+                // 1) CSV 헤더 스킵
+                String header = br.readLine();
+                if (header == null) {
+                    return;
+                }
+
+                // 2) CSV 본문을 한 줄씩 읽으면서 User로 변환 후 consumer에 전달
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(",");
+                    // 인덱스 범위를 벗어나면 스킵
+                    if (values.length <= Math.max(Math.max(idIndex, nameIndex), Math.max(ageIndex, scoreIndex))) {
+                        continue;
+                    }
+
+                    String id = values[idIndex].trim();
+                    String name = values[nameIndex].trim();
+                    int age = Integer.parseInt(values[ageIndex].trim());
+                    double score = Double.parseDouble(values[scoreIndex].trim());
+
+                    User user = new User(id, name, age, score);
+                    consumer.accept(user);
+                }
+            }
+        }
+    }
+
+    /**
+     * User 객체를 처리하는 함수형 인터페이스 (Java 8 이상의 경우 Consumer<User>로 대체 가능)
+     */
+    @FunctionalInterface
+    public interface UserConsumer {
+        void accept(User user);
+    }
+
+    // -----------------------------------------------------
+    // 3) 도메인 서비스: 통계를 계산하기 위한 UserAnalyticsService
+    // -----------------------------------------------------
+    public static class UserAnalyticsService {
+        private final int scoreThreshold;
+        private final String namePrefix;
+
+        // 통계를 누적할 내부 상태
+        private int totalAge;
+        private int count;
+        private int minAge = Integer.MAX_VALUE;
+        private int maxAge = Integer.MIN_VALUE;
+        private int highScoreCount;
+        private int namePrefixCount;
+
+        /**
+         * @param scoreThreshold 예: 점수가 90 이상인지 확인
+         * @param namePrefix     예: '김'으로 시작하는 사용자
+         */
+        public UserAnalyticsService(int scoreThreshold, String namePrefix) {
+            this.scoreThreshold = scoreThreshold;
+            this.namePrefix = namePrefix;
+        }
+
+        /**
+         * 한 명의 유저에 대해 통계를 누적한다.
+         */
+        public void aggregate(User user) {
+            // 나이 관련 통계
+            int age = user.getAge();
+            totalAge += age;
+            count++;
+            minAge = Math.min(minAge, age);
+            maxAge = Math.max(maxAge, age);
+
+            // 점수 통계
+            if (user.getScore() >= scoreThreshold) {
+                highScoreCount++;
+            }
+
+            // 이름 통계
+            if (user.getName().startsWith(namePrefix)) {
+                namePrefixCount++;
+            }
+        }
+
+        /**
+         * 최종 통계를 UserStats로 만들어 반환한다.
+         */
+        public UserStats getStats() {
+            int averageAge = (count > 0) ? totalAge / count : 0;
+            // count가 0이면 min/max가 초기값 그대로이므로 별도 처리 필요할 수 있음
+            int finalMinAge = (count > 0) ? minAge : 0;
+            int finalMaxAge = (count > 0) ? maxAge : 0;
+
+            return new UserStats(averageAge, finalMinAge, finalMaxAge, highScoreCount, namePrefixCount);
+        }
+    }
+
+    // -----------------------------------------------------
+    // 4) 통계 결과 VO (UserStats)
+    // -----------------------------------------------------
+    public static class UserStats {
+        private final int averageAge;
+        private final int minAge;
+        private final int maxAge;
+        private final int highScoreCount;
+        private final int namePrefixCount;
+
+        public UserStats(int averageAge, int minAge, int maxAge, int highScoreCount, int namePrefixCount) {
+            this.averageAge = averageAge;
+            this.minAge = minAge;
+            this.maxAge = maxAge;
+            this.highScoreCount = highScoreCount;
+            this.namePrefixCount = namePrefixCount;
+        }
+
+        public int getAverageAge() {
+            return averageAge;
+        }
+
+        public int getMinAge() {
+            return minAge;
+        }
+
+        public int getMaxAge() {
+            return maxAge;
+        }
+
+        public int getHighScoreCount() {
+            return highScoreCount;
+        }
+
+        public int getNamePrefixCount() {
+            return namePrefixCount;
+        }
+    }
+
+    // -----------------------------------------------------
+    // 5) 애플리케이션 계층: 실행 진입점
+    // -----------------------------------------------------
+    private static final String FILE_NAME = "sample_data.csv";
+
+    public static void main(String[] args) {
+        try (InputStream inputStream = BigFileProcessingDomain.class
+                .getClassLoader()
+                .getResourceAsStream(FILE_NAME)) {
+
+            if (inputStream == null) {
+                System.err.println("리소스 파일을 찾을 수 없습니다: " + FILE_NAME);
+                return;
+            }
+
+            // 1) CSV 리포지토리 준비
+            CsvUserRepository repository = new CsvUserRepository();
+
+            // 2) 통계 서비스 준비
+            // 예: 점수 90 이상, 이름이 "김"으로 시작하는 사용자
+            UserAnalyticsService analyticsService = new UserAnalyticsService(90, "김");
+
+            // 3) CSV 스트리밍: 사용자 한 명씩 읽어 analyticsService에 전달
+            //    (idIndex=0, nameIndex=1, ageIndex=2, scoreIndex=3)
+            repository.streamAllUsers(inputStream, 0, 1, 2, 3, analyticsService::aggregate);
+
+            // 4) 최종 통계 결과 출력
+            UserStats stats = analyticsService.getStats();
+
+            System.out.println("[대용량 CSV 통계 결과]");
+            System.out.println("평균 나이: " + stats.getAverageAge());
+            System.out.println("최연소 사용자 나이: " + stats.getMinAge());
+            System.out.println("최고령 사용자 나이: " + stats.getMaxAge());
+            System.out.println("90점 이상 사용자 수: " + stats.getHighScoreCount());
+            System.out.println("'김'으로 시작하는 사용자 수: " + stats.getNamePrefixCount());
+
+        } catch (IOException e) {
+            System.err.println("파일 처리 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
+```
+
 ---
 
 ## 5.9 형식별 파일 처리 실전문제
@@ -3045,34 +3468,108 @@ public class LargeFileProcessing {
 
 이 문서는 `여러 형식의 파일 처리` 다음에 푸는 형식별 파일 처리 실전문제 모음입니다. CSV, Excel, JSON은 모두 파일이지만 읽는 방식과 도구와 실수 포인트가 다르므로, 형식별로 따로 연습하는 편이 좋습니다.
 
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 — 제목만 남아 있던 문제 목록에 원문 상세(파일 이름·데이터·요구사항·상태 메모) 복원 -->
+
 #### CSV 파일 관련 연습문제
-1. `부서별 CSV 필터링과 정렬`
-2. `CSV 헤더와 유효성 검사`
-3. `대용량 CSV 집계`
+
+1. 문제 이름: 부서별 CSV 필터링과 정렬
+  - 파일 이름: data.csv
+  - 데이터: id,name,age,department
+  - 요구사항: 헤더를 건너뛰고 데이터를 읽은 뒤, 유효한 행만 객체로 변환하고 Engineering 부서만 필터링해 나이 오름차순으로 정렬한 뒤 filtered_data.csv로 저장
+1. 문제 이름: CSV 헤더와 유효성 검사
+  - 파일 이름: data.csv
+  - 요구사항: 필수 컬럼 수가 맞지 않거나 숫자 파싱에 실패하는 행은 건너뛰고, 건너뛴 행 수를 함께 출력
+1. 문제 이름: 대용량 CSV 집계
+  - 관련 문서: 파일처리 실전연습문제-1
+  - 요구사항: 파일 전체를 메모리에 올리지 않고 한 줄씩 읽으면서 평균, 최솟값, 최댓값, 특정 조건 카운트를 누적
+---
 
 #### 엑셀 파일 관련 연습문제
-1. `엑셀 데이터 합산`
-2. `특정 열의 데이터 필터링`
-3. `엑셀 데이터 정렬`
-4. `특정 셀 값 변경`
-5. `엑셀 데이터 통합`
-6. `조건에 맞는 셀 색상 변경`
-7. `엑셀 데이터 시각화`
-8. `빈 셀 채우기`
-9. `다중 시트 데이터 처리`
-10. `엑셀 데이터 통계 분석`
+
+1. 문제 이름: 엑셀 데이터 합산
+  - 파일 이름: sales_data.xlsx
+  - 데이터: 각 열에 월별 매출 데이터가 포함된 테이블
+  - 요구사항: 월별 매출의 합계 계산
+1. 문제 이름: 특정 열의 데이터 필터링
+  - 파일 이름: employee_data.xlsx
+  - 데이터: 직원 이름, 부서, 연봉 데이터 포함
+  - 요구사항: 연봉 5천만 원 이상인 직원 리스트 출력
+1. 문제 이름: 엑셀 데이터 정렬
+  - 파일 이름: students_scores.xlsx
+  - 데이터: 학생 이름, 과목, 점수
+  - 요구사항: 점수를 기준으로 내림차순 정렬 후 상위 10명 출력
+1. 문제 이름: 특정 셀 값 변경 (완료)
+  - 파일 이름: inventory.xlsx
+  - 데이터: 제품 이름, 수량, 가격
+  - 요구사항: 특정 제품의 수량을 100으로 수정 후 저장
+1. 문제 이름: 엑셀 데이터 통합
+  - 파일 이름: data1.xlsx, data2.xlsx
+  - 데이터: 동일한 형식의 데이터가 포함된 두 파일
+  - 요구사항: 두 파일의 데이터를 통합해 새로운 엑셀 파일 생성
+1. 문제 이름: 조건에 맞는 셀 색상 변경
+  - 파일 이름: grades.xlsx
+  - 데이터: 학생 이름, 과목, 점수
+  - 요구사항: 점수가 50점 미만인 셀의 배경색을 빨간색으로 변경
+1. 문제 이름: 엑셀 데이터 시각화
+  - 파일 이름: monthly_sales.xlsx
+  - 데이터: 월별 매출 데이터
+  - 요구사항: 매출 데이터를 바 차트로 시각화
+1. 문제 이름: 빈 셀 채우기 (숙제)
+  - 파일 이름: survey_data.xlsx
+  - 데이터: 설문 데이터, 일부 셀이 비어 있음
+  - 요구사항: 없음으로 표시된 셀을 "N/A"로 채운 후 저장
+1. 문제 이름: 다중 시트 데이터 처리 (숙제?)
+  - 파일 이름: multi_sheet.xlsx
+  - 데이터: 여러 시트에 부서별 데이터 포함
+  - 요구사항: 모든 시트 데이터를 하나로 병합해 새로운 시트 생성
+1. 문제 이름: 엑셀 데이터 통계 분석 (숙제)
+  - 파일 이름: test_scores.xlsx
+  - 데이터: 과목별 학생 점수
+  - 요구사항: 평균, 중간값, 최대값, 최소값 계산
+---
 
 #### JSON 파일 관련 연습문제
-1. `JSON 데이터 키 검색`
-2. `특정 값 추출`
-3. `JSON 데이터 합산`
-4. `중첩 JSON 데이터 탐색`
-5. `JSON 데이터 수정`
-6. `JSON 데이터 병합`
-7. `JSON 데이터 정렬`
-8. `JSON 데이터 시각화`
-9. `특정 조건의 데이터 삭제`
-10. `JSON 데이터에서 중복 제거`
+
+1. 문제 이름: JSON 데이터 키 검색
+  - 파일 이름: products.json
+  - 데이터: 제품 ID, 이름, 가격 포함
+  - 요구사항: 특정 키(예: price)의 값을 출력
+1. 문제 이름: 특정 값 추출
+  - 파일 이름: users.json
+  - 데이터: 사용자 이름, 나이, 이메일
+  - 요구사항: 나이가 30 이상인 사용자의 이메일 출력
+1. 문제 이름: JSON 데이터 합산
+  - 파일 이름: sales.json
+  - 데이터: 월별 매출 데이터
+  - 요구사항: 매출 총합 계산
+1. 문제 이름: 중첩 JSON 데이터 탐색
+  - 파일 이름: organization.json
+  - 데이터: 조직, 부서, 직원 데이터 포함
+  - 요구사항: 특정 부서에 속한 직원의 이름 출력
+1. 문제 이름: JSON 데이터 수정
+  - 파일 이름: inventory.json
+  - 데이터: 제품 이름, 수량, 가격
+  - 요구사항: 특정 제품의 가격을 수정 후 저장
+1. 문제 이름: JSON 데이터 병합
+  - 파일 이름: data1.json, data2.json
+  - 데이터: 서로 다른 JSON 구조
+  - 요구사항: 데이터를 병합해 새로운 JSON 파일 생성
+1. 문제 이름: JSON 데이터 정렬
+  - 파일 이름: movies.json
+  - 데이터: 영화 제목, 평점
+  - 요구사항: 평점을 기준으로 영화 데이터를 정렬
+1. 문제 이름: JSON 데이터 시각화
+  - 파일 이름: population.json
+  - 데이터: 국가별 인구 데이터
+  - 요구사항: 데이터를 막대그래프로 시각화
+1. 문제 이름: 특정 조건의 데이터 삭제
+  - 파일 이름: customers.json
+  - 데이터: 고객 이름, 나이, 주소
+  - 요구사항: 나이가 18 미만인 고객 데이터를 삭제 후 저장
+1. 문제 이름: JSON 데이터에서 중복 제거
+  - 파일 이름: orders.json
+  - 데이터: 주문 ID, 제품, 수량
+  - 요구사항: 중복된 주문 ID 제거 후 저장
 
 ---
 

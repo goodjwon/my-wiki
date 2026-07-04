@@ -492,6 +492,17 @@ Spring Boot에서는 아래 상황이 메모리 사용량에 큰 영향을 줍�
 
 - 지역 변수가 사라진다고 해서 관련 힙 객체가 반드시 바로 사라지는 것은 아닙니다.
 - GC가 있다고 해서 메모리 누수가 사라지는 것은 아닙니다.
+- 힙이 넉넉하다고 해서 프로세스 전체 메모리가 충분한 것은 아닙니다.
+- `Metaspace` 문제와 `Java heap space` 문제는 같은 대응으로 풀리지 않습니다.
+- 참조에 `= null`을 대입하는 것은 만능 해결책이 아니라, 실제 참조 구조를 이해하는 것이 먼저입니다.
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [JVM Spec Chapter 2: Run-Time Data Areas](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html)
+- [The java Command](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html)
+- [The jcmd Command](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html)
+- [Native Memory Tracking](https://docs.oracle.com/en/java/javase/21/vm/native-memory-tracking.html)
+- [Garbage Collection Tuning Guide](https://docs.oracle.com/en/java/javase/21/gctuning/introduction-garbage-collection-tuning.html)
 
 ---
 
@@ -504,6 +515,16 @@ Spring Boot에서는 아래 상황이 메모리 사용량에 큰 영향을 줍�
     1. **파일 열기** — 위에서 만든 `ReachabilityExample.java`를 엽니다.
     2. **수정** — 각 줄의 객체·지역 변수가 힙과 스택 중 어디에 놓이는지 주석으로 표시합니다.
     3. **재실행** — 위 절의 실행 명령 재사용(`javac ReachabilityExample.java && java ReachabilityExample`)으로 여전히 동작하는지 확인합니다.
+
+#### 정리
+
+JVM 메모리 관점의 핵심은 "힙이 크냐 작냐"가 아닙니다. 어떤 객체가 왜 살아남는지, 어떤 메모리 영역에서 문제가 나는지, 무엇을 관찰해야 하는지 구분하는 것이 더 중요합니다. 이 기준이 있어야 다음 단계인 GC 튜닝과 장애 분석이 의미를 가집니다.
+
+#### 한 줄 정리
+
+메모리 관리의 핵심은 객체를 많이 만들지 않는 것이 아니라, 객체가 왜 안 사라지는지 설명할 수 있는 상태에 도달하는 것입니다.
+
+---
 
 ## 10.2 JVM 기초 가이드 3: 튜닝과 실전 활용
 
@@ -725,6 +746,101 @@ java -XX:MaxGCPauseMillis=200 \
 
 - `-Xmx`가 컨테이너 메모리 한계 대비 너무 공격적이지 않은가
 - 힙 밖 메모리까지 고려했는가
+- OOM이 JVM 예외인지, 컨테이너에서 프로세스를 죽인 것인지 구분했는가
+
+#### 8. 흔한 문제와 기본 대응
+
+##### 8.1 메모리 사용량이 계속 오른다
+
+먼저 해야 할 일:
+
+- GC 후에도 사용량이 다시 낮아지는지 봅니다.
+- `GC.class_histogram`(4.3에서 본 명령)으로 어떤 객체가 많은지 봅니다.
+- 캐시, static 컬렉션, 장수 객체 참조를 의심합니다.
+- 필요하면 힙 덤프를 남깁니다.
+
+##### 8.2 pause가 너무 길다
+
+먼저 해야 할 일:
+
+- GC 로그로 pause가 실제 원인인지 확인합니다.
+- 힙이 너무 작아 수집이 과도하게 자주 일어나는지 봅니다.
+- 너무 큰 객체 그래프나 대량 적재 구간이 있는지 봅니다.
+- 그다음에야 GC 관련 옵션 조정을 검토합니다.
+
+##### 8.3 `OutOfMemoryError: Metaspace`
+
+먼저 해야 할 일:
+
+- 클래스 수가 비정상적으로 늘어나는지 봅니다.
+- 프록시 생성, 리로딩, 클래스 로더 누수를 의심합니다.
+- 단순히 힙을 늘리는 것으로 해결하려 하지 않습니다.
+
+##### 8.4 CPU는 낮은데 처리량이 안 나온다
+
+먼저 해야 할 일:
+
+- 스레드 덤프를 봅니다.
+- 락 경합이나 외부 I/O 대기를 의심합니다.
+- GC가 아니라 스레드 상태가 병목일 가능성을 확인합니다.
+
+#### 9. JFR은 "나중 고급 도구"가 아니라 실전 기본기다
+
+성능 이슈를 한 번에 넓게 보려면 Java Flight Recorder(JFR)를 익히는 것이 좋습니다. 특히 GC, 스레드, 할당, 메서드 hotspot을 한 흐름으로 볼 수 있다는 점이 강합니다.
+
+실행 중인 프로세스에서 60초 분량의 실행 기록을 파일로 남기는 명령입니다. `<pid>`는 4.1의 `jcmd` 출력에서 확인한 프로세스 ID를 넣습니다.
+
+```bash
+jcmd <pid> JFR.start name=app_profile duration=60s filename=/tmp/app.jfr
+```
+
+짧은 시간의 실제 트래픽 구간을 기록해 두면 "메모리 문제인지", "락 문제인지", "할당이 너무 많은지"를 한 번에 좁히기 쉬워집니다.
+
+#### 10. 실전에서 자주 하는 잘못된 접근
+
+- 증상 확인 없이 `-Xmx`부터 크게 올리는 것
+- 남이 쓰는 옵션을 맥락 없이 그대로 복사하는 것
+- GC 알고리즘만 바꾸면 문제가 해결될 거라고 믿는 것
+- 운영 장애가 났는데 GC 로그나 힙 덤프를 남기지 않은 것
+- JVM 튜닝 문제를 애플리케이션 구조 문제와 분리해서 보는 것
+
+튜닝은 대개 "JVM 옵션 문제"와 "코드 구조 문제"가 같이 얽혀 있습니다. 둘을 따로 떼어 생각하면 오판하기 쉽습니다.
+
+#### 11. 운영용 기본 템플릿 예시
+
+아래 설정은 만능값이 아니라, 관찰 가능한 상태를 만드는 출발점 정도로 보는 편이 맞습니다. 2장에서 본 GC 로그·힙 덤프 옵션을 하나로 모은 형태이고, `-Xlog:'gc*'`의 따옴표는 zsh가 `*`를 파일 이름 패턴으로 해석하지 않게 막는 표기입니다.
+
+```bash
+java -Xms1g -Xmx1g \
+     -Xlog:'gc*':file=/var/log/app-gc.log:time,level,tags \
+     -XX:+HeapDumpOnOutOfMemoryError \
+     -XX:HeapDumpPath=/var/log/app.hprof \
+     -jar app.jar
+```
+
+필자의 실무 저장소에 바로 적용된 값은 아니고, 실제로는 앞의 "참고 — 실무 저장소 기준으로 보면"에서 본 것처럼 더 보수적인 컨테이너 기본값이 먼저 잡혀 있습니다.
+
+```bash
+java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -jar app.jar
+```
+
+```text
+예상 결과
+운영용 기본 템플릿은 장애 분석 자료를 남기기 위한 확장 예시다.
+이런 실무 프로젝트는 이보다 단순한 기본값으로 시작하고 있으며, GC 로그나 힙 덤프 설정은
+필요 시 운영 환경에서 추가하는 방식으로 읽는 편이 정확하다.
+```
+
+여기서 시작한 뒤 실제 트래픽과 지표를 보고 조정해야 합니다.
+
+참고로 `-XX:+UseContainerSupport`는 JDK 10부터 리눅스에서 기본 활성(true)이라, 위처럼 명시하는 것은 동작을 바꾸는 조정이 아니라 컨테이너 인지 동작을 쓰고 있다는 의도를 드러내는 표기에 가깝습니다 (실제로 동작을 바꾸는 쪽은 끌 때의 `-XX:-UseContainerSupport`입니다). 반면 `-XX:MaxRAMPercentage`는 기본값이 25.0이므로 75.0 지정은 실제 효력이 있는 조정입니다.
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [The java Command](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html)
+- [The jcmd Command](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html)
+- [Native Memory Tracking](https://docs.oracle.com/en/java/javase/21/vm/native-memory-tracking.html)
+- [Garbage Collection Tuning Guide](https://docs.oracle.com/en/java/javase/21/gctuning/introduction-garbage-collection-tuning.html)
 
 ---
 
@@ -752,4 +868,12 @@ java -XX:MaxGCPauseMillis=200 \
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
     4. **실행·확인** — `javac GcLogDemo.java && java -Xmx64m -verbose:gc GcLogDemo` — 추가할 때마다 다시 실행해 GC 로그가 어떻게 달라지는지 확인합니다.
+
+#### 정리
+
+JVM 튜닝의 핵심은 옵션을 많이 아는 것이 아니라, 어떤 지표를 보고 어떤 가설을 세울지 아는 것입니다. 좋은 튜닝은 크게 한 번 바꾸는 방식이 아니라, 관찰 가능한 상태를 만들고 작은 변경을 반복해서 검증하는 방식으로 진행됩니다.
+
+#### 한 줄 정리
+
+JVM 실전 활용의 핵심은 옵션 조정이 아니라, 측정 가능한 운영 루프를 만드는 것입니다.
 

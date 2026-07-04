@@ -1094,6 +1094,17 @@ socket.receive(packet);
 - 종료 신호를 어떻게 표현할지
 초보 단계에서는 `println`과 `readLine` 기반의 간단한 텍스트 프로토콜로 시작하는 편이 좋습니다. 핵심은 복잡한 포맷보다, **양쪽이 같은 규칙을 공유하는 것**입니다.
 
+#### 10. 통신 코드에서 꼭 지켜야 할 기본 습관
+
+지금까지 본 내용을 습관 다섯 가지로 압축하면 아래와 같습니다.
+
+- `try-with-resources`로 소켓과 스트림을 닫기
+- 포트와 호스트를 상수나 설정으로 분리하기
+- 예외 메시지에 연결 대상과 상황을 함께 남기기
+- 블로킹 가능 지점을 의식하기
+- 메시지 경계를 명확히 정하기
+이 다섯 가지가 잡히면 네트워크 예제가 단순 장난감 코드에서 실무형 코드로 넘어가기 쉬워집니다.
+
 #### 실제로 띄워 보기 — 서버 먼저, 클라이언트는 다른 터미널
 
 소켓 실습의 핵심은 **서버를 먼저 띄우고, 클라이언트를 별도 터미널에서 실행**하는 것입니다. 이 실습은 `hello-java` 프로젝트에 넣지 않고, 빈 작업 디렉터리에 단일 파일로 저장해 `javac`로 바로 컴파일합니다. 아래 두 파일을 만들어 그대로 실행해 봅니다.
@@ -1181,6 +1192,24 @@ nc 127.0.0.1 8888          # Mac/Linux
     2. **실행** — 위 절의 명령 재사용: 터미널 1에서 `javac EchoServer.java` 후 `java EchoServer`, 터미널 2에서 `javac EchoClient.java` 후 `java EchoClient`로 한 줄을 주고받습니다.
     3. **수정** — 클라이언트가 보내는 메시지나 서버 응답 형식(예: `echo:` 대신 대문자 변환)을 바꿉니다.
     4. **재실행** — 바꾼 파일을 다시 컴파일해 두 터미널에서 실행하고, 달라진 응답을 확인합니다.
+
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [Socket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/Socket.html)
+- [ServerSocket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/ServerSocket.html)
+- [DatagramSocket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/DatagramSocket.html)
+- [DatagramPacket API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/DatagramPacket.html)
+
+#### 정리
+
+네트워크 프로그래밍 기초의 핵심은 TCP와 UDP 예제를 각각 외우는 데 있지 않습니다. 서버와 클라이언트의 역할, 블로킹 호출, 스트림과 메시지 경계, 예외 처리, 자원 해제를 하나의 구조로 이해해야 실제 통신 코드를 읽고 고칠 수 있습니다.
+
+#### 한 줄 정리
+
+네트워크 입문의 핵심은 소켓 문법이 아니라, **연결과 메시지와 실패를 한 흐름으로 보는 감각**을 만드는 것입니다.
+
+---
 
 ## 5.6 JDBC 기초
 
@@ -1503,6 +1532,24 @@ JDBC로 연결해 SELECT 결과를 출력한 뒤, INSERT 데이터나 WHERE 조�
     2. **실행** — 위 절의 명령 재사용: `javac -cp h2-2.2.224.jar JdbcExample.java` 후 OS에 맞는 `java -cp` 명령으로 SELECT 결과를 확인합니다.
     3. **수정** — INSERT 데이터를 한 줄 더 넣거나 SELECT에 WHERE 조건을 추가합니다.
     4. **재실행** — 다시 컴파일·실행해 출력 행이 달라지는지 확인합니다.
+
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [JDBC Basics](https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html)
+- [Connection API](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/Connection.html)
+- [PreparedStatement API](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html)
+- [ResultSet API](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/ResultSet.html)
+
+#### 정리
+
+JDBC의 핵심은 드라이버 설치 방법을 외우는 데 있지 않습니다. Java 코드가 데이터베이스와 연결되고, SQL을 실행하고, 결과를 읽고, 자원을 해제하는 전체 수명 주기를 이해하는 데 있습니다. 이 구조를 알고 있어야 이후의 JPA, Querydsl, 트랜잭션 문서도 훨씬 잘 읽힙니다.
+
+#### 한 줄 정리
+
+JDBC 입문의 핵심은 SQL 문법이 아니라, **DB 접근 코드의 생명주기와 자원 해제 구조를 이해하는 것**입니다.
+
+---
 
 ## 5.7 파일 처리 설계 실습
 
@@ -2751,8 +2798,42 @@ organization.json
   - **데이터:** 조직, 부서, 직원 데이터 포함
   - **요구사항:** 특정 부서에 속한 직원의 이름 출력
 1. **문제 이름:** `JSON 데이터 수정`
+  - **파일 이름:** `inventory.json`
+  - **데이터:** 제품 이름, 수량, 가격
+  - **요구사항:** 특정 제품의 가격을 수정 후 저장
+1. **문제 이름:** `JSON 데이터 병합`
+  - **파일 이름:** `data1.json`, `data2.json`
+data1.json
+data2.json
 
-원 자료의 문제 목록은 여기서 끊깁니다. JSON 문제 5~10(데이터 수정·병합·정렬·시각화·조건 삭제·중복 제거)의 상세 요구사항은 풀이 절(→ 5.9-1)에 풀이와 함께 실려 있습니다.
+  - **데이터:** 서로 다른 JSON 구조
+  - **요구사항:** 데이터를 병합해 새로운 JSON 파일 생성
+1. **문제 이름:** `JSON 데이터 정렬`
+  - **파일 이름:** `movies.json`
+movies.json
+
+  - **데이터:** 영화 제목, 평점
+  - **요구사항:** 평점을 기준으로 영화 데이터를 정렬
+1. **문제 이름:** `JSON 데이터 시각화`
+  - **파일 이름:** `population.json`
+population.json
+
+  - **데이터:** 국가별 인구 데이터
+  - **요구사항:** 데이터를 막대그래프로 시각화
+1. **문제 이름:** `특정 조건의 데이터 삭제`
+  - **파일 이름:** `customers.json`
+customers.json
+
+  - **데이터:** 고객 이름, 나이, 주소
+  - **요구사항:** 나이가 18 미만인 고객 데이터를 삭제 후 저장
+1. **문제 이름:** `JSON 데이터에서 중복 제거`
+  - **파일 이름:** `orders.json`
+orders.json
+
+  - **데이터:** 주문 ID, 제품, 수량
+  - **요구사항:** 중복된 주문 ID 제거 후 저장
+
+JSON 문제도 엑셀과 마찬가지로 1번부터 10번까지 모든 풀이가 다음 절(→ 5.9-1)에 문제 순서대로 실려 있습니다.
 
 ## 5.9-1 형식별 파일 처리 실전문제 풀이
 
@@ -4558,7 +4639,7 @@ class Order {
 위 풀이들이 공통으로 지킨 설계 기준을 정리합니다.
 
 1. **단일 책임 원칙 (SRP)**: 각 풀이에서 실행 진입점(main)과 실제 처리 로직을 별도 클래스(`ProductReader`, `SurveyCleaner` 등)로 나눠, 한 클래스가 한 가지 이유로만 바뀌게 했습니다.
-1. **확장성**: 검색 키, 필터 기준값, 채움 문자열 같은 조건을 메서드 파라미터로 받아, 요구사항이 바뀌어도 호출부만 고치면 되게 했습니다.
+1. **확장성**: 검색 키, 필터 기준값, 채움 문자열 같은 조건을 메서드 파라미터로 받아, 요구사항이 바뀌어도 호출부만 고치면 되게 했습니다. 새 형식의 문제가 늘어나면 기존 클래스를 수정하지 않고 새 처리 클래스를 추가하는 방식으로 확장합니다.
 1. **재사용성**: 데이터 클래스(`Product`, `User` 등)와 읽기·쓰기 로직을 분리해, 같은 데이터 구조를 여러 문제에서 반복해 쓸 수 있게 했습니다.
 
 ---

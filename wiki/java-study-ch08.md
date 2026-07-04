@@ -254,6 +254,30 @@ chmod +x $CATALINA_HOME/bin/*.sh
 우선 확인:
 
 - 애플리케이션 자체 메모리 문제인지
+- Tomcat 프로세스 JVM 옵션이 부족한지
+- 스레드 수, 요청량, 캐시 구조가 비정상적인지
+
+여기서 중요한 점은 "Tomcat이 문제인가"보다, Tomcat 위에서 도는 Java 프로세스 전체를 같이 봐야 한다는 것입니다.
+
+#### 11. 인증 절로 넘어가기 전에 잡아야 할 연결점
+
+이 절(8.0)을 인증 절들보다 앞에 둔 이유는 다음과 같습니다.
+
+- 인증 요청도 결국 HTTP 요청입니다.
+- HTTP 요청은 Tomcat 같은 컨테이너를 먼저 통과합니다.
+- 필터 체인과 보안 설정도 이 실행 흐름 위에서 동작합니다.
+- 포트, 컨텍스트 경로, 프록시 환경을 모르면 인증 이슈를 잘못 해석하기 쉽습니다.
+
+즉, 서버 실행 구조를 이해해야 뒤 절(8.1~8.3)의 Spring Security 인증 흐름, 필터, 토큰 기반 인증 내용이 더 잘 읽힙니다.
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [Tomcat Introduction](https://tomcat.apache.org/tomcat-10.1-doc/introduction.html)
+- [Tomcat Setup](https://tomcat.apache.org/tomcat-10.1-doc/setup.html)
+- [Tomcat RUNNING.txt](https://tomcat.apache.org/tomcat-10.1-doc/RUNNING.txt)
+- [Tomcat Configuration Reference](https://tomcat.apache.org/tomcat-10.1-doc/config/index.html)
+- [Spring Boot Reference: Servlet Web Applications](https://docs.spring.io/spring-boot/reference/web/servlet.html)
+- [Spring Boot How-to: Traditional Deployment](https://docs.spring.io/spring-boot/how-to/deployment/traditional-deployment.html)
 
 ---
 
@@ -267,6 +291,17 @@ chmod +x $CATALINA_HOME/bin/*.sh
     2. **수정** — `server.port=9090` 한 줄을 추가합니다.
     3. **재실행** — 위 4.1의 `./mvnw spring-boot:run`으로 다시 실행합니다.
     4. **확인** — 로그에 `Tomcat started on port(s): 9090`이 찍히는지 보고, 새 터미널에서 `curl -i http://localhost:9090/`이 응답하는지 확인합니다.
+
+
+#### 정리
+
+Tomcat을 배우는 목적은 별도 WAS 설치법을 외우는 데 있지 않습니다. Java 웹 애플리케이션이 어떤 서버 위에서 요청을 받고, 어떤 설정 파일과 JVM 옵션 아래에서 동작하는지 이해하는 데 있습니다. 이 구조를 알고 있어야 내장 톰캣 기반 Spring Boot도 더 깊게 이해할 수 있습니다.
+
+#### 한 줄 정리
+
+Tomcat 입문의 핵심은 설치법이 아니라, HTTP 요청이 Java 애플리케이션으로 들어오는 실행 경로를 서버 관점에서 보는 것입니다.
+
+---
 
 ## 8.1 Spring Security 인증 흐름
 

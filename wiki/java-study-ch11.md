@@ -1383,12 +1383,28 @@ JSP 예제의 핵심은 최신 기술을 익히는 것보다, Java 웹 개발의
 #### 1. 실습 프로세스 개요
 
 1. **환경 설정**
-1. **프로젝트 생성**
-1. **데이터베이스 설계 및 구축**
-1. **모델(Model) 구현 (Java)**
-1. **뷰(View) 및 로직 처리 구현 (JSP)**
-1. **테스트 및 디버깅**
-1. **배포 (선택 사항)**
+    - IntelliJ IDEA, JDK 17, Apache Tomcat 10, MySQL Server 설치 및 연동
+    - DB 관리 도구 설치 (선택 사항)
+2. **프로젝트 생성**
+    - IntelliJ에서 Dynamic Web Project 또는 Maven/Gradle 웹 프로젝트 생성
+    - `pom.xml` 또는 `build.gradle`에 의존성 추가 (8번 절의 build.gradle 예시 참고)
+3. **데이터베이스 설계 및 구축**
+    - 테이블 스키마 설계 (4번 절의 데이터베이스 스키마 예시 참고)
+    - SQL 스크립트 실행하여 테이블 생성
+4. **모델(Model) 구현 (Java)**
+    - DTO/VO: 데이터 전송 객체 (`User.java`, `Post.java`, `Session.java` 등), Java Bean 규약 준수
+    - DAO: 데이터베이스 접근 로직 (JDBC 활용), 별도 Java 클래스로 분리 권장
+    - Util: DB 연결, 비밀번호 해싱, 세션 관리 등 유틸리티 클래스, 별도 Java 클래스 권장
+    - Service: 인증 로직, 세션 관리 로직 등 비즈니스 로직 (선택 사항)
+5. **뷰(View) 및 로직 처리 구현 (JSP)**
+    - JSP 페이지 작성: 기능별 JSP 파일 생성 (`login_form.jsp`, `login_action.jsp` 등)
+    - 인증 필터: 로그인 필요 페이지 접근 제어
+    - 세션 관리: 로그인 상태 유지 및 자동 로그아웃 처리
+6. **테스트 및 디버깅**
+    - Tomcat 서버 실행 및 IntelliJ 디버거 활용
+7. **배포 (선택 사항)**
+    - WAR 파일 생성 및 배포
+
 #### 2. 프로젝트 구조 예시 (Maven 기준)
 
 이 가이드 전체에서 만들 파일의 배치입니다. 이후 5~9번 절의 코드 파일 경로는 모두 이 트리를 기준으로 합니다.
@@ -2845,6 +2861,7 @@ test {
 ##### DB 스크립트:
 
 - 테이블 생성 SQL
+- 초기 데이터 삽입 SQL
 
 #### 11. 빌드·실행
 
@@ -2874,6 +2891,284 @@ http://localhost:8080/my-blog/user/login_form.jsp 접속 → 로그인 폼(이�
 | 404 Not Found | war 파일명(=컨텍스트 경로)과 접속 URL이 일치하는지, `webapps/my-blog/` 디렉터리로 압축이 풀렸는지 확인합니다. |
 | JSTL 태그가 글자 그대로 출력되거나 taglib 오류 | JSTL 의존성 2개가 `implementation`(war에 포함)으로 선언됐는지, Tomcat 버전이 10.1 이상인지 확인합니다. |
 | DB 연결 오류 (`Communications link failure` 등) | MySQL 기동 여부, `DBConnection.java`의 URL·계정, `mini_blog` 스키마 생성 여부를 확인합니다. |
+
+#### 12. 보안 고려사항 및 권장사항
+
+배포 전에 점검할 보안 항목 4가지입니다. 5번 절의 구현을 학습용으로는 그대로 써도 되지만, 실제 서비스로 이어 갈 때는 아래 권장사항으로 교체·보강합니다.
+
+##### 비밀번호 보안
+
+5번 절의 `PasswordUtil`은 SHA-256 + Salt 방식입니다. SHA-256 같은 범용 해시는 계산이 빨라 무차별 대입 공격에 상대적으로 약하므로, 실제 서비스에서는 의도적으로 느리게 설계된 전용 알고리즘인 BCrypt 사용을 권장합니다. 아래는 jBCrypt 라이브러리로 교체한 참고 코드입니다.
+
+```java
+// 더 강력한 비밀번호 해싱을 위해 BCrypt 사용 권장
+// build.gradle에 추가: implementation 'org.mindrot:jbcrypt:0.4'
+
+public class PasswordUtil {
+    public static String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt(12));
+    }
+
+    public static boolean verifyPassword(String password, String hashedPassword) {
+        return BCrypt.checkpw(password, hashedPassword);
+    }
+}
+```
+
+##### XSS 방지
+
+사용자가 입력한 값을 화면에 그대로 출력하면 입력에 섞인 스크립트가 다른 사용자의 브라우저에서 실행될 수 있습니다. JSTL의 `<c:out>`은 기본으로 HTML 특수문자를 이스케이핑하므로, 사용자 입력 출력에는 EL 직접 출력 대신 `<c:out>`을 사용합니다.
+
+```java
+<%-- JSTL을 사용하여 출력값 자동 이스케이핑 --%>
+<c:out value="${user.name}" />
+
+<%-- 또는 커스텀 유틸리티 함수 사용 --%>
+<%=com.myblog.util.SecurityUtil.escapeHtml(user.getName())%>
+```
+
+##### CSRF 방지
+
+로그인된 사용자의 브라우저를 속여 의도하지 않은 폼 전송을 일으키는 공격을 막으려면, 세션에 발급해 둔 토큰을 폼에 숨겨 보내고 처리 페이지에서 세션 값과 대조합니다.
+
+```java
+<%-- 폼에 CSRF 토큰 추가 --%>
+<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
+```
+
+##### SQL 인젝션 방지
+
+SQL 문자열에 사용자 입력을 직접 이어 붙이면 입력에 섞인 SQL 조각이 그대로 실행될 수 있습니다. 항상 `PreparedStatement`의 파라미터 바인딩(`?`)을 사용합니다.
+
+```java
+// 항상 PreparedStatement 사용
+String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+PreparedStatement pstmt = conn.prepareStatement(sql);
+pstmt.setString(1, email);
+pstmt.setString(2, password);
+```
+
+#### 13. 실습 단계별 가이드
+
+1~9번 절의 산출물을 어떤 순서로 만들어 가면 되는지 정리한 로드맵입니다.
+
+##### 1단계: 기본 환경 설정
+
+1. IntelliJ IDEA에서 새 프로젝트 생성 (Maven 또는 Gradle)
+2. build.gradle 설정 및 의존성 추가
+3. Tomcat 서버 설정
+4. MySQL 데이터베이스 생성 및 연결
+
+##### 2단계: 도메인 모델 구현
+
+데이터 중심에서 시작하여 도메인 객체들을 설계합니다.
+
+1. User 도메인: 사용자 계정, 인증, 권한 관리
+2. Post 도메인: 게시글 작성, 수정, 삭제, 조회
+3. Category 도메인: 게시글 분류 관리
+4. Comment 도메인: 댓글 시스템
+5. Session 도메인: 로그인 상태 관리
+
+##### 3단계: 데이터 계층 구현
+
+1. DBConnection 유틸리티 구현
+2. 각 도메인별 DAO 클래스 구현
+3. 기본 CRUD 메소드 구현
+4. 도메인별 특화 메소드 구현 (검색, 통계 등)
+
+##### 4단계: 인증 시스템 구현
+
+1. 비밀번호 해싱 유틸리티 구현
+2. 세션 관리 유틸리티 구현
+3. 로그인/로그아웃 JSP 페이지 구현
+4. 인증 체크 공통 로직 구현
+
+##### 5단계: 게시판 기능 구현
+
+1. 게시글 목록, 상세보기 구현
+2. 게시글 작성, 수정, 삭제 구현
+3. 댓글 시스템 구현
+4. 파일 업로드 기능 구현
+
+##### 6단계: 관리자 기능 구현
+
+1. 사용자 관리 페이지
+2. 카테고리 관리 페이지
+3. 권한 체크 로직 구현
+
+##### 7단계: UI/UX 개선
+
+1. CSS 스타일링
+2. JavaScript 인터랙션 추가
+3. 반응형 디자인 적용 (선택사항)
+
+#### 14. 확장 기능 아이디어
+
+기본 기능을 완성한 뒤 도전할 만한 확장 주제입니다.
+
+##### 고급 인증 기능
+
+- 이메일 인증
+- 소셜 로그인 (OAuth)
+- 2단계 인증 (2FA)
+- 비밀번호 재설정
+
+##### 게시판 고급 기능
+
+- 게시글 좋아요/싫어요
+- 태그 시스템
+- 게시글 공유 기능
+- 첨부파일 다중 업로드
+
+##### 관리 기능
+
+- 통계 대시보드
+- 로그 관리
+- 백업/복원 기능
+- API 엔드포인트 제공
+
+#### 15. 성능 최적화 팁
+
+##### 데이터베이스 최적화
+
+조회 조건으로 자주 쓰는 컬럼에는 인덱스를 둡니다. 원문이 제시한 인덱스 추가 스크립트입니다.
+
+```sql
+-- 인덱스 추가
+CREATE INDEX idx_posts_user_id ON posts(user_id);
+CREATE INDEX idx_posts_category_id ON posts(category_id);
+CREATE INDEX idx_comments_post_id ON comments(post_id);
+CREATE INDEX idx_users_email ON users(email);
+```
+
+> **검증 노트**: 이 프로젝트의 4번 절 스키마에서는 위 4개가 사실상 중복입니다. `users.email`은 UNIQUE 제약이 유니크 인덱스를 이미 만들고, MySQL InnoDB는 FOREIGN KEY 컬럼(`posts.user_id`, `posts.category_id`, `comments.post_id`)에 인덱스가 없으면 자동으로 만들어 줍니다. "자주 조회하는 컬럼에 인덱스를 건다"는 패턴 자체는 유효하므로, 제약이 걸리지 않은 일반 컬럼(예: 최신순 정렬에 쓰는 `posts.created_at`)에 적용하는 예로 이해합니다.
+
+##### 페이징 구현
+
+게시글이 쌓이면 전체 조회 대신 `LIMIT`/`OFFSET`으로 페이지 단위로 잘라 읽습니다. 참고 코드:
+
+```java
+public class PostDAO {
+    public List<Post> getPostsWithPaging(int page, int pageSize) {
+        String sql = "SELECT * FROM posts ORDER BY created_at DESC LIMIT ? OFFSET ?";
+        // 구현...
+    }
+
+    public int getTotalPostCount() {
+        String sql = "SELECT COUNT(*) FROM posts";
+        // 구현...
+    }
+}
+```
+
+##### 캐싱 전략
+
+거의 바뀌지 않는 데이터는 매 요청마다 DB에서 읽지 않고 메모리에 올려 둡니다. 참고 코드:
+
+```java
+// 카테고리 목록은 자주 변경되지 않으므로 캐싱 적용
+public class CategoryDAO {
+    private static List<Category> cachedCategories = null;
+    private static long lastCacheTime = 0;
+    private static final long CACHE_DURATION = 30 * 60 * 1000; // 30분
+
+    public List<Category> getAllCategories() {
+        long currentTime = System.currentTimeMillis();
+        if (cachedCategories == null || (currentTime - lastCacheTime) > CACHE_DURATION) {
+            cachedCategories = loadCategoriesFromDB();
+            lastCacheTime = currentTime;
+        }
+        return new ArrayList<>(cachedCategories);
+    }
+}
+```
+
+> **검증 노트**: 서블릿 컨테이너는 요청을 여러 스레드로 동시에 처리하므로 static 캐시 필드는 여러 스레드가 함께 접근합니다. 위 코드는 동기화가 없어 캐시를 중복 로드하거나 갱신이 다른 스레드에 늦게 보일 수 있습니다(학습용 단순화). 실무에서는 필드를 `volatile`로 선언하거나 `synchronized` 블록으로 감싸는 보완이 필요합니다.
+
+#### 16. 디버깅 및 트러블슈팅
+
+##### 일반적인 문제들
+
+**1. 한글 깨짐 문제** — 페이지 지시자와 요청·응답 인코딩을 모두 UTF-8로 통일합니다.
+
+```java
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    request.setCharacterEncoding("UTF-8");
+    response.setCharacterEncoding("UTF-8");
+%>
+```
+
+**2. 세션 유지 문제** — 로그인이 예상보다 일찍 풀리면 세션 타임아웃 값부터 확인합니다.
+
+```java
+// 세션 타임아웃 확인
+HttpSession session = request.getSession(false);
+if (session != null) {
+    int timeout = session.getMaxInactiveInterval();
+    System.out.println("Session timeout: " + timeout + " seconds");
+}
+```
+
+**3. DB 연결 문제** — DAO를 의심하기 전에 연결 자체가 되는지 확인하는 테스트 메소드를 둡니다.
+
+```java
+public class DBConnection {
+    public static void testConnection() {
+        try (Connection conn = getConnection()) {
+            System.out.println("DB 연결 성공: " + conn.getMetaData().getURL());
+        } catch (SQLException e) {
+            System.err.println("DB 연결 실패: " + e.getMessage());
+        }
+    }
+}
+```
+
+**4. JSP 컴파일 에러** — 다음을 순서대로 확인합니다.
+
+- Tomcat logs 디렉터리의 catalina.out 파일 확인 (`startup.sh`로 시작한 Unix 계열 기준 — Windows에서는 `catalina.<날짜>.log`)
+- JSP 파일의 import 문 확인
+- 클래스패스 설정 확인
+
+#### 17. 프로젝트 구조 비유
+
+JSP Model 1 아키텍처는 사서 한 명이 모든 일을 맡는 작은 도서관과 같습니다. 손님이 책을 빌리러 오면 사서가 직접 요청을 받고, 서가에서 책을 찾고, 대출카드에 기록을 남기는 것까지 혼자서 처리합니다.
+
+이 프로젝트의 구성 요소도 같은 배역으로 움직입니다. JSP 페이지가 바로 이 사서로, 사용자 요청을 받는 일부터 데이터를 찾고 처리 결과를 보여 주는 일까지 한 파일 안에서 수행합니다. DAO는 도서 창고 관리자처럼 실제 데이터의 저장·검색·관리를 담당하고, DTO는 도서 대출카드처럼 계층 사이에서 정보를 실어 나르는 전달 수단이며, Util 클래스들은 라벨프린터나 바코드스캐너처럼 어느 업무에서나 꺼내 쓰는 도서관 비품에 해당합니다.
+
+이 구조는 작은 도서관에서는 효율적이지만, 대형 도서관에서는 사서 한 사람이 너무 많은 일을 떠안아 복잡해집니다. 그래서 대규모 프로젝트에서는 요청을 받는 역할과 업무를 지휘하는 역할과 창고를 관리하는 역할을 분리하는 MVC 패턴으로 전환합니다.
+
+#### 18. 최종 체크리스트
+
+마무리 전에 기능·보안·성능 세 축으로 점검합니다.
+
+##### 기능 완성도 체크
+
+- [ ] 회원가입/로그인/로그아웃
+- [ ] 비밀번호 해싱 및 검증
+- [ ] 세션 관리 및 자동 로그인
+- [ ] 게시글 CRUD 기능
+- [ ] 댓글 시스템
+- [ ] 파일 업로드
+- [ ] 권한 기반 접근 제어
+- [ ] 관리자 기능
+
+##### 보안 체크
+
+- [ ] SQL 인젝션 방지 (PreparedStatement 사용)
+- [ ] XSS 방지 (출력값 이스케이핑)
+- [ ] 세션 하이재킹 방지
+- [ ] 비밀번호 강도 검증
+- [ ] 파일 업로드 보안
+
+##### 성능 체크
+
+- [ ] DB 인덱스 설정
+- [ ] 페이징 구현
+- [ ] 이미지 최적화
+- [ ] 캐싱 전략 적용
+
+이 가이드를 통해 JSP Model 1 기반의 완전한 블로그 시스템을 구현할 수 있습니다. 각 단계를 차근차근 따라 하면서 웹 개발의 기초를 탄탄히 다지기를 권합니다.
 
 ---
 

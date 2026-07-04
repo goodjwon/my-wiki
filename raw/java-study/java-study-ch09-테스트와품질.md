@@ -324,6 +324,18 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 #### 공식 문서
 
 - [everything curl](https://everything.curl.dev/)
+- [curl Documentation](https://curl.se/docs/)
+- [Spring Boot Testing Reference](https://docs.spring.io/spring-boot/reference/testing/index.html)
+- [HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
+#### 정리
+
+`curl` 기반 수동 검증의 핵심은 명령을 많이 아는 것이 아니라, 어떤 요청을 어떤 순서로 보내야 API의 정상 흐름과 실패 흐름을 빠르게 확인할 수 있는지 아는 것입니다. 자동화 테스트와 충돌하는 작업이 아니라, 자동화 전에 경계 문제를 빨리 드러내는 실무 도구로 보는 편이 맞습니다.
+
+#### 한 줄 정리
+
+`curl` 수동 검증의 핵심은 사전 조건, 요청, 상태 코드, 기대 결과를 한 세트로 관리하는 것입니다.
+
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 -->
 
 ---
 

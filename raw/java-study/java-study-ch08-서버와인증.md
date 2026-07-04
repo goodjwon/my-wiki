@@ -218,6 +218,37 @@ chmod +x $CATALINA_HOME/bin/*.sh
 우선 확인:
 
 - 애플리케이션 자체 메모리 문제인지
+- Tomcat 프로세스 JVM 옵션이 부족한지
+- 스레드 수, 요청량, 캐시 구조가 비정상적인지
+여기서 중요한 점은 "Tomcat이 문제인가"보다, Tomcat 위에서 도는 Java 프로세스 전체를 같이 봐야 한다는 것입니다.
+
+#### 11. 인증 장으로 넘어가기 전에 잡아야 할 연결점
+
+이 문서를 인증 앞에 두는 이유는 다음과 같습니다.
+
+- 인증 요청도 결국 HTTP 요청이다.
+- HTTP 요청은 Tomcat 같은 컨테이너를 먼저 통과한다.
+- 필터 체인과 보안 설정도 이 실행 흐름 위에서 동작한다.
+- 포트, 컨텍스트 경로, 프록시 환경을 모르면 인증 이슈를 잘못 해석하기 쉽다.
+즉, 서버 실행 구조를 이해해야 토큰 기반 인증, Spring Security, 필터, 세션/헤더 문서가 더 잘 읽힙니다.
+
+#### 공식 문서 기준으로 더 보면 좋은 자료
+
+- [Tomcat Introduction](https://tomcat.apache.org/tomcat-10.1-doc/introduction.html)
+- [Tomcat Setup](https://tomcat.apache.org/tomcat-10.1-doc/setup.html)
+- [Tomcat RUNNING.txt](https://tomcat.apache.org/tomcat-10.1-doc/RUNNING.txt)
+- [Tomcat Configuration Reference](https://tomcat.apache.org/tomcat-10.1-doc/config/index.html)
+- [Spring Boot Reference: Servlet Web Applications](https://docs.spring.io/spring-boot/reference/web/servlet.html)
+- [Spring Boot How-to: Traditional Deployment](https://docs.spring.io/spring-boot/how-to/deployment/traditional-deployment.html)
+#### 정리
+
+Tomcat을 배우는 목적은 별도 WAS 설치법을 외우는 데 있지 않습니다. Java 웹 애플리케이션이 어떤 서버 위에서 요청을 받고, 어떤 설정 파일과 JVM 옵션 아래에서 동작하는지 이해하는 데 있습니다. 이 구조를 알고 있어야 내장 톰캣 기반 Spring Boot도 더 깊게 이해할 수 있습니다.
+
+#### 한 줄 정리
+
+Tomcat 입문의 핵심은 설치법이 아니라, HTTP 요청이 Java 애플리케이션으로 들어오는 실행 경로를 서버 관점에서 보는 것입니다.
+
+<!-- 복구 노트: 2026-07-04 Notion 재수집으로 원본 개정분 병합 -->
 
 ---
 
