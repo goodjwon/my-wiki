@@ -221,7 +221,7 @@ updated: 2026-07-04
 | 로컬 프리뷰 | `.venv/bin/mkdocs serve` (docs/만 watch) |
 | 배포 | `firebase deploy --only hosting` |
 | Git 원격 | `git@github.com:goodjwon/my-wiki.git` |
-| 로컬 path | PC별 상이 (예: `/Users/jungwonpark/Documents/my-wiki/`, `/Users/jwon/VsCodeProjects/my-wiki/`) |
+| 로컬 path | PC별 상이 (예: `/Users/jungwonpark/VsCodeProjects/my-wiki/`, `/Users/jwon/VsCodeProjects/my-wiki/`) |
 | 품질 게이트 | `scripts/style-lint.sh`(§7 문체) · `scripts/scaffold-lint.sh`(§7-7 실습 스캐폴드) — 토큰 0 |
 
 ## 📊 위키 규모 (2026-07-04 기준)
