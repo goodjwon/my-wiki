@@ -13,7 +13,7 @@ external:
   - https://arxiv.org/abs/2303.17651
   - https://code.claude.com/docs/en/headless
 created: 2026-06-26
-updated: 2026-07-02
+updated: 2026-07-04
 ---
 
 # Loop 엔지니어링 실습 — 메아리방 vs 거부 신호 루프
@@ -21,6 +21,8 @@ updated: 2026-07-02
 > **이 실습의 목적**: [[concept-loop-engineering]] 의 핵심 한 문장 — **"거부할 수 있는 무언가(테스트·타입체크·에러)가 없는 루프는 메아리방"** — 을 **직접 코드로 짜서 체험**합니다. "루프를 작성한다"는 감각을 손에 익히는 게 핵심입니다.
 
 **시간**: 8분 (셋업 2분 + Before 메아리방 2분 + 거부 신호 추가 1분 + After 검증 루프 2분 + 실제 Claude 연결 1분)
+
+**진행 흐름**: 1분 이론으로 "관찰(Observe)이 무엇이냐"의 두 갈래를 확인 → 비교 실험용 공통 재료 만들기(Step 1) → 거부 신호 없는 메아리방 체험(Step 2) → 종료 조건 교체(Step 3) → 검증 루프 체험(Step 4) → 차이 정리(Step 5) → 가짜 에이전트를 진짜 Claude로 교체(Step 6) → 토큰 비용 심화(Step 6.5).
 
 **언제 보면 좋은가**: [[concept-loop-engineering]] 를 읽은 직후. [[guide-harness-demo]](하네스 5분 데모)의 다음 단계 — 하네스가 "환경"을 설계했다면, 루프는 "메커니즘 자체"를 설계합니다.
 
@@ -43,13 +45,19 @@ updated: 2026-07-02
 - 관찰이 **에이전트 자기 보고**("다 됐어요")면 → 모델이 자기 출력에 동의하는 **메아리방**입니다. Sonar의 표현대로 *"두 낙관주의자가 서로 동의하는 것"*.
 - 관찰이 **객관적 거부 신호**(테스트·타입체크·빌드)면 → 사실에 부딪혀 교정됩니다. *"A failing build is a fact; an opinion is a starting point"* (실패한 빌드는 사실이고, 의견은 출발점일 뿐).
 
-이 실습은 같은 루프를 **거부 신호 없이 / 있게** 두 번 돌려 그 차이를 눈으로 봅니다.
+이 실습은 같은 루프를 **거부 신호 없이 / 있게** 두 번 실행해 그 차이를 눈으로 봅니다.
 
 ---
 
 ## Step 1 — 데모 디렉터리 + 검증 대상 (2분)
 
-풀 문제: **회문(palindrome) 검사 함수**. 가짜 "에이전트"가 후보 구현을 내놓고, 테스트가 그것을 채점합니다.
+위 이론의 두 루프를 같은 조건에서 비교하려면 공통 재료가 필요합니다 — 코드를 내놓는 "에이전트"와, 그 코드를 채점하는 "검증자"입니다. 이 Step에서 그 둘을 만듭니다. 풀 문제는 **회문(palindrome) 검사 함수** — 가짜 "에이전트"가 후보 구현을 내놓고, 테스트가 그것을 채점합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/loop-demo` (이 Step에서 새로 만드는 데모 디렉터리)
+    - **만들 파일**: `agent.js` — 후보 구현을 무작위로 내놓는 가짜 에이전트 / `test.js` — pass/fail을 종료 코드로 돌려주는 거부 신호
+    - **실행**: 아래 코드블록 3개를 차례로 붙여넣어 실행합니다.
 
 ```bash
 mkdir -p ~/loop-demo && cd ~/loop-demo
@@ -106,7 +114,13 @@ EOF
 
 ## Step 2 — Before: 거부 신호 없는 루프 (메아리방) (2분)
 
-에이전트를 1회 호출하고, **검증 없이** 그 말을 믿고 끝냅니다.
+재료가 준비됐으니 먼저 나쁜 쪽부터 체험합니다. 에이전트를 1회 호출하고, **검증 없이** 그 말을 믿고 끝냅니다 — 종료 조건이 "에이전트의 자기 보고"인 루프입니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/loop-demo` (Step 1에서 만든 디렉터리)
+    - **만들 파일**: `solution.js` — 에이전트가 내놓은 후보 구현 (아래 명령이 자동 생성)
+    - **실행**: 아래 블록을 그대로 붙여넣고, 확률 차이가 보이도록 여러 번 반복 실행합니다.
 
 ```bash
 cd ~/loop-demo
@@ -118,17 +132,24 @@ echo "--- 그런데 실제로 돌려보면? ---"
 node test.js || echo "💥 깨져 있다 — 그러나 루프는 이미 '완료'라고 보고했다 (= 메아리방)"
 ```
 
-여러 번 실행해 보라. 약 2/3 확률로 **깨진 코드인데 "완료"로 종료**됩니다. 종료 조건이 *자기 보고*이기 때문 — [[concept-loop-engineering]] 의 "8번 전 실패를 기억 못 하고 같은 길을 가는" 나쁜 루프입니다.
+여러 번 실행해 보면 약 2/3 확률로 **깨진 코드인데 "완료"로 종료**됩니다. 종료 조건이 *자기 보고*이기 때문입니다 — [[concept-loop-engineering]] 의 "8번 전 실패를 기억 못 하고 같은 길을 가는" 나쁜 루프입니다.
 
 ---
 
 ## Step 3 — 거부 신호를 루프에 넣기 (1분)
 
-바꿀 것은 단 하나: **종료 조건을 "에이전트의 말" → "테스트의 종료 코드"로**. `node test.js` 가 `exit 0` 이어야만 끝냅니다. 이게 ReAct 의 *관찰(Observe)* 을 객관화하는 것입니다.
+Step 2가 무너진 지점은 코드 생성이 아니라 **종료 조건**이었습니다. 그래서 바꿀 것도 단 하나입니다: **종료 조건을 "에이전트의 말" → "테스트의 종료 코드"로**. `node test.js` 가 `exit 0` 이어야만 끝냅니다. 이게 ReAct 의 *관찰(Observe)* 을 객관화하는 것입니다.
 
 ---
 
 ## Step 4 — After: 검증 루프 (통과까지 재시도) (2분)
+
+Step 3의 한 줄짜리 결정을 실제 루프로 옮깁니다. 재료는 Step 1의 두 파일 그대로이고, 종료 조건만 테스트의 종료 코드로 바뀌었습니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/loop-demo` (Step 1의 `agent.js`·`test.js` 그대로 사용)
+    - **실행**: 아래 for 루프를 붙여넣어 실행합니다.
 
 ```bash
 cd ~/loop-demo
@@ -143,15 +164,17 @@ for i in $(seq 1 8); do
 done
 ```
 
-이번엔 **통과하는 구현이 나올 때까지** 루프가 돕니다. 거부 신호(테스트의 exit code)가 사이클을 제어합니다.
+이번엔 **통과하는 구현이 나올 때까지** 루프가 반복됩니다. 거부 신호(테스트의 exit code)가 사이클을 제어합니다.
 
 > 가짜 에이전트가 무작위라, 드물게(약 4%) 8 사이클 안에 (C)가 안 나올 수 있습니다 — 그땐 다시 실행하세요. 실제 에이전트라면 **실패를 피드백받아** 다음 시도가 개선됩니다 → Step 6.
 
-`max 8` 이라는 **반복 상한**에 주목합니다. 업계 권고는 보통 15~25 스텝이며, 상한 없는 루프는 토큰·시간을 폭주시킵니다. 종료 조건은 ① 검증 통과(goal) ② 반복 상한(resource) 둘 다 있어야 합니다.
+`seq 1 8` 이라는 **반복 상한**(최대 8사이클)에 주목합니다. 업계 권고는 보통 15~25 스텝이며, 상한 없는 루프는 토큰·시간을 폭주시킵니다. 종료 조건은 ① 검증 통과(goal) ② 반복 상한(resource) 둘 다 있어야 합니다.
 
 ---
 
 ## Step 5 — 차이 표 (직접 채워보기, 30초)
+
+두 루프를 모두 실행해 봤으니, 관찰한 차이를 직접 채워 넣으며 정리합니다. 요약을 읽는 것보다 방금 본 것을 스스로 언어화해야 기억에 남습니다.
 
 |  | Before (거부 신호 없음) | After (테스트 = 거부 신호) |
 |---|---|---|
@@ -166,7 +189,13 @@ done
 
 ## Step 6 — 실제 Claude로 (선택, 1분)
 
-가짜 에이전트를 **진짜 Claude Code 헤드리스 호출**로 바꿉니다. 핵심은 **실패한 테스트 출력을 stdin 으로 피드백**하는 것입니다 (공식 패턴: `cat … | claude -p "…"`).
+Step 4의 가짜 에이전트는 무작위라 실패해도 다음 시도가 나아지지 않고 주사위를 다시 던질 뿐입니다. 이제 가짜 에이전트를 **진짜 Claude Code 헤드리스 호출**로 바꿉니다. 핵심은 **실패한 테스트 출력을 stdin 으로 피드백**해 다음 시도가 실제로 개선되게 하는 것입니다 (공식 패턴: `cat … | claude -p "…"`).
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/loop-demo` (Step 1의 `test.js` 그대로 사용)
+    - **만들 파일**: `solution.js` — 일부러 틀린 구현으로 덮어쓰고 루프가 고치게 합니다
+    - **실행**: Claude Code 로그인 상태에서 아래 블록을 붙여넣어 실행합니다 (토큰이 소모됩니다).
 
 ```bash
 cd ~/loop-demo
@@ -184,11 +213,11 @@ for i in $(seq 1 5); do
 done
 ```
 
-- `claude -p`(=`--print`)는 **비대화형으로 1회 실행 후 종료**하므로 `for` 루프로 감싸기에 딱 맞다 ([공식 docs](https://code.claude.com/docs/en/headless)).
-- `--allowedTools` 로 도구를 좁혀 자동 승인 — 프롬프트 없이 무인 실행.
-- 이게 **Reflexion·Self-Refine** 의 핵심: 실패 신호를 언어로 받아 다음 시도를 개선 ([Reflexion](https://arxiv.org/abs/2303.11366) · [Self-Refine](https://arxiv.org/abs/2303.17651)).
+- `claude -p`(=`--print`)는 **비대화형으로 1회 실행 후 종료**하므로 `for` 루프로 감싸기에 딱 맞습니다 ([공식 docs](https://code.claude.com/docs/en/headless)).
+- `--allowedTools` 로 도구를 좁혀 자동 승인합니다 — 프롬프트 없이 무인 실행됩니다.
+- 이게 **Reflexion·Self-Refine** 의 핵심입니다: 실패 신호를 언어로 받아 다음 시도를 개선 ([Reflexion](https://arxiv.org/abs/2303.11366) · [Self-Refine](https://arxiv.org/abs/2303.17651)).
 
-> ⚠️ **토큰 비용**: 사이클마다 모델을 호출합니다. Addy Osmani 의 신중론 — *"토큰 비용에 절대적으로 주의"*. 반드시 반복 상한(`max 5`)과 검증 게이트를 두고, 무인 루프는 비용을 모니터링해야 합니다. [[src-copilot-token-pricing]] 의 종량제 전환과 같은 맥락입니다.
+> ⚠️ **토큰 비용**: 사이클마다 모델을 호출합니다. Addy Osmani 의 신중론 — *"토큰 비용에 절대적으로 주의"*. 반드시 반복 상한(위 코드의 `seq 1 5`)과 검증 게이트를 두고, 무인 루프는 비용을 모니터링해야 합니다. [[src-copilot-token-pricing]] 의 종량제 전환과 같은 맥락입니다.
 
 ---
 
@@ -211,7 +240,7 @@ done
 
 ### 핵심 완화책 — 게이트를 모델 앞에 두기
 
-이 실습 Step 6의 형태가 이미 정답을 담고 있습니다: **결정적 검증(`node test.js`)을 먼저 돌리고, 실패할 때만 모델을 호출**합니다. 로컬 테스트·타입체크·린트는 **토큰 0**입니다.
+이 실습 Step 6의 형태가 이미 정답을 담고 있습니다: **결정적 검증(`node test.js`)을 먼저 실행하고, 실패할 때만 모델을 호출**합니다. 로컬 테스트·타입체크·린트는 **토큰 0**입니다.
 
 ```bash
 # 비용 최적 패턴: 무료 게이트 통과면 모델을 아예 안 부른다
@@ -229,6 +258,8 @@ fi
 ---
 
 ## 정리 (30초)
+
+실습이 끝났으면 데모 디렉터리를 삭제합니다. 다시 해보고 싶으면 Step 1부터 2분이면 재구성됩니다.
 
 ```bash
 cd ~ && rm -rf ~/loop-demo
@@ -266,16 +297,19 @@ cd ~ && rm -rf ~/loop-demo
 
 ## 원본·외부 출처
 
-**개념·발화 (2026-06)**: [[concept-loop-engineering]] / [[src-loop-engineering]] · 1차 출처 검증본 `raw/loop-engineering/primary-sources.md` (2026-06-29)
+**개념·발화 (2026-06)**: [[concept-loop-engineering]] / [[src-loop-engineering]] (1차 출처 검증 2026-06-29)
+
 - Addy Osmani [Loop Engineering](https://addyosmani.com/blog/loop-engineering/) (2026-06-07, ✅용어 명명 1차 글) · Boris Cherny [Acquired](https://www.youtube.com/watch?v=RkQQ7WEor7w) "write loops" (⚠️자구·날짜 매체별 편차) · Peter Steinberger [X](https://x.com/steipete/status/2063697162748260627) (⚠️402, "650만 조회"는 2차 주장)
 
 **이론 (1차 출처)**:
+
 - ReAct — Yao et al. 2022, [arXiv 2210.03629](https://arxiv.org/abs/2210.03629)
 - Reflexion — Shinn et al. 2023, [arXiv 2303.11366](https://arxiv.org/abs/2303.11366)
 - Self-Refine — Madaan et al. 2023, [arXiv 2303.17651](https://arxiv.org/abs/2303.17651)
 - "검증 없는 루프 = 단순 자동화" — [Sonar 블로그](https://www.sonarsource.com/blog/loop-engineering-without-verification-is-just-automation/)
 
 **구현 (공식)**:
+
 - Claude Code 헤드리스 모드 — [code.claude.com/docs/headless](https://code.claude.com/docs/en/headless)
 - 모범 사례 (검증 게이트·Stop 훅) — [code.claude.com/docs/best-practices](https://code.claude.com/docs/en/best-practices)
 

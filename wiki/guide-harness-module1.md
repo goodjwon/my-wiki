@@ -7,20 +7,25 @@ sources:
   - harness-engineering/harness-kit/module1/02_baseline_prompt.md
   - harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-07-02
+updated: 2026-07-04
 ---
 
 # 하네스 Module 01 — 베이스라인 측정 + 실패 패턴 감사
 
 > **이 가이드 보기 전에**: [[guide-harness-00-prerequisites]] 의 [실습용 미니 프로젝트 만들기](guide-harness-00-prerequisites.md#실습용-미니-프로젝트-만들기-react--express-풀스택)를 끝내세요. `~/harness-playground` 디렉터리에 api/ + web/ 가 만들어져 있고, `git log`로 3~4개 커밋이 보여야 합니다.
 
+**왜 측정부터 시작하나**: 하네스는 "에이전트의 반복 실수를 시스템으로 막는 장치"입니다. 그런데 무엇을 막을지 모르면 규칙을 만들 수 없고, 적용 전 상태를 기록해 두지 않으면 나중에 하네스가 효과 있었는지 증명할 수 없습니다. 그래서 첫 모듈은 규칙 작성이 아니라 **측정과 기록**입니다.
+
 **이 모듈에서 얻을 것**:
+
 1. `.claude/baseline.md` — 하네스 적용 **전** 성능 기록 (Module 05에서 After와 비교)
 2. **실패 패턴 표 3개 이상** — Module 02에서 CLAUDE.md STOP 트리거로 전환할 재료
 
+**진행 흐름**: 환경 확인(Step 1) → 과거 이력에서 실수 찾기(Step 2) → 지금의 "맨몸 성능" 측정(Step 3) → 한 파일로 기록(Step 4) → 다음 모듈로 넘길 재료 선별(Step 5).
+
 **시간**: 약 1시간 (Failure Audit 20분 + 베이스라인 태스크 3개 30분 + 정리 10분)
 
-**실습 대상**: `~/harness-playground` (prerequisites에서 만든 React + Express 풀스택). **본인 기존 프로젝트는 이 시점에 쓰지 않습니다** — 5모듈 종료 후 이식합니다.
+**실습 대상**: `~/harness-playground` (prerequisites에서 만든 React + Express 풀스택)에서만 진행합니다. 본인의 실제 프로젝트는 아직 쓰지 않습니다 — 이 커리큘럼은 에이전트가 실수하는 상황을 일부러 만들어 보면서 배우기 때문에, 아끼는 코드에 바로 적용하면 위험합니다. 5개 모듈을 마친 뒤 완성된 하네스를 실제 프로젝트로 이식합니다.
 
 이론 배경: [[concept-harness-engineering]]
 
@@ -28,7 +33,12 @@ updated: 2026-07-02
 
 ## Step 1 — 실습 환경 확인 — 3분
 
-prerequisites에서 만든 playground로 이동해 환경 확인:
+측정은 같은 출발선에서 시작해야 나중에 비교할 수 있습니다. 본격적으로 시작하기 전에 playground가 측정 가능한 상태(git 이력 있음, 테스트 통과)인지 확인합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground` (prerequisites에서 만든 프로젝트)
+    - **실행**: 아래 확인 명령 4개를 차례로 실행합니다.
 
 ```bash
 cd ~/harness-playground
@@ -40,7 +50,7 @@ git log --oneline
 # 2. Claude Code 실행 가능한지
 claude --version
 
-# 3. baseline 저장할 폴더
+# 3. baseline 저장할 디렉터리
 mkdir -p .claude
 
 # 4. 테스트 통과 확인 (출발선)
@@ -56,9 +66,15 @@ npm test
 
 ## Step 2 — Failure Audit (실패 패턴 감사) — 20분
 
-> 원본: `raw/harness-engineering/harness-kit/module1/01_failure_audit_prompt.md`
+환경이 준비됐으니 이제 "무엇을 막을지" 재료를 모읍니다. 하네스 규칙은 상상으로 만드는 것이 아니라 **실제로 반복된 실수**에서 나옵니다 — 그 실수는 git 이력에 흔적(revert, fix, hotfix 커밋, 쌓인 TODO)으로 남아 있습니다.
 
 **목적**: AI와 작업하면서 반복된 실수를 git log에서 찾고, **프롬프트 문제** vs **시스템 문제**로 분류해 Module 02에서 막을 재료를 모읍니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.claude/failure-audit.md` — Claude가 출력한 실패 패턴 표 저장
+    - **실행**: `claude` 대화 세션에서 아래 분석 프롬프트를 붙여넣습니다.
 
 > **먼저 알아둘 것 — 이 감사의 진짜 대상은 "본인이 AI와 오래 작업해 온 실제 프로젝트"입니다.** 거기엔 반복된 revert·재발한 버그·쌓인 TODO가 git 이력에 남아 분석거리가 풍부합니다. 반면 지금 실습하는 `~/harness-playground`는 방금 만든 신규라 커밋이 3~4개뿐이고 그런 이력이 없습니다. **그래서 아래 분석을 실습 프로젝트에 돌리면 표가 거의 비는 게 정상입니다.** 여기서는 "claude 실행 → 분석 프롬프트 → 표"라는 흐름과 도구 사용법만 익히세요. 진짜 반복 패턴은 Step 3에서 직접 만들어 냅니다. 이 프롬프트를 나중에 본인 실제 프로젝트에 그대로 옮겨 돌리면 그때 진가가 드러납니다.
 
@@ -141,13 +157,17 @@ git commit -m "harness(M1): 초기 실패 패턴 감사"
 
 ## Step 3 — 베이스라인 측정 — 30분
 
-> 원본: `raw/harness-engineering/harness-kit/module1/02_baseline_prompt.md` (Node 친화로 치환)
+Step 2가 **과거** 이력에서 실수를 찾았다면, 이번에는 **현재**의 에이전트에게 실제 태스크 3개를 시켜 보며 실수가 일어나는 순간을 직접 관찰합니다. playground는 이력이 짧아 Step 2 표가 비었을 텐데, 여기서 나온 관찰이 그 빈 표를 채우는 진짜 재료가 됩니다.
 
-**목적**: 하네스 적용 **전** 에이전트 성능을 수치로 기록합니다. Module 05에서 After와 비교해서 효과를 확인합니다.
+**목적**: 하네스 적용 **전** 에이전트 성능을 수치로 기록합니다. Module 05에서 같은 태스크를 다시 시켜 After와 비교합니다.
 
 **중요**: 이 Step은 `CLAUDE.md`도 hooks도 **없는 상태**에서 진행합니다. Claude의 "맨몸 성능"을 봅니다.
 
-실습 대상: 이미 만들어진 `~/harness-playground` (api/ + web/). 별도 셋업은 불필요합니다.
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground` (별도 셋업 불필요, 하네스 없는 상태 그대로)
+    - **만들 것**: 태스크 A·B·C 각각 측정 시트 1장 + 커밋 1개 (`baseline(M1-A/B/C)`)
+    - **실행**: `claude` 세션에 태스크 프롬프트를 붙여넣고, 끝나면 측정 시트를 채우고 커밋합니다.
 
 각 태스크 후 결과를 `git commit`으로 남겨 Module 5에서 diff 비교 가능하게 합니다.
 
@@ -246,7 +266,13 @@ git commit -m "baseline(M1-C): 빈 phone 검증 버그 수정 (하네스 없이)
 
 ## Step 4 — baseline.md 저장 — 5분
 
-위 측정 결과를 `.claude/baseline.md` 한 파일로 합쳐서 저장합니다.
+측정은 기록으로 남겨야 비교할 수 있습니다. Step 2의 감사 표와 Step 3의 측정 시트를 `.claude/baseline.md` 한 파일로 합칩니다 — Module 05에서 이 파일을 열어 놓고 같은 태스크를 재실행하며 Before/After를 대조하게 됩니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.claude/baseline.md` — Step 2·3 결과를 합친 Before 기록
+    - **실행**: 아래 명령으로 템플릿을 만들고, 빈칸을 측정값으로 채운 뒤 커밋합니다.
 
 ```bash
 cat > .claude/baseline.md << 'EOF'
@@ -310,6 +336,14 @@ git commit -m "harness(M1): 베이스라인 측정 결과 저장"
 
 ## Step 5 — 회고 + Module 02 입력 정리 — 5분
 
+마지막으로, 지금까지 모은 실수들을 다음 모듈에서 바로 쓸 수 있는 형태로 좁힙니다. Module 02는 CLAUDE.md의 STOP 트리거(에이전트가 멈춰야 하는 조건)를 작성하는 모듈인데, 트리거가 너무 많으면 에이전트가 규칙을 무시하기 시작하므로 **상위 3~5개**만 골라냅니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 것**: `.claude/baseline.md` 맨 아래에 "Module 02로 넘길 우선순위 표" 추가
+    - **실행**: 아래 표를 본인 결과로 채운 뒤, 이어지는 명령으로 덧붙이고 커밋합니다.
+
 발견한 시스템 문제 중 **상위 3~5개**를 다음 표로 골라냅니다. Module 02에서 CLAUDE.md STOP 트리거로 옮길 후보:
 
 | 우선순위 | 시스템 문제 | Module 02에서 옮길 곳 | 향후 module 03 hook 가능? |
@@ -355,6 +389,7 @@ git commit -m "harness(M1): Module 02 입력용 시스템 문제 우선순위 �
 
 ### Q. 베이스라인 측정 중 Claude가 너무 잘 해서 "문제"가 안 나와요
 모델이 좋아서 그렇습니다. 그러면 **태스크를 더 모호하게** 다시 던집니다:
+
 - "phone 필드 추가해줘" → "사용자 정보 보강해줘" (모호한 표현)
 - 또는 태스크 범위를 더 크게 ("페이징 + 정렬 + 검색 + 통계 같이")
 - 이렇게 해야 에이전트가 자유롭게 행동하면서 어떤 기본 습관을 갖는지 보입니다

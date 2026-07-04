@@ -7,22 +7,25 @@ sources:
   - harness-engineering/harness-kit/module5/01_repo_and_rippable_prompt.md
   - harness-engineering/harness-kit/module5/02_weekly_review_prompt.md
 created: 2026-05-31
-updated: 2026-07-02
+updated: 2026-07-04
 ---
 
 # 하네스 Module 05 — 진화·주간 리뷰·Rippable
 
 > **이 가이드 보기 전에**: [[guide-harness-module4]] 까지 완료. CLAUDE.md + hooks + AGENTS.md가 모두 작동 중이어야 합니다.
 
+**왜 마지막 모듈이 리뷰·비교인가**: Module 01~04로 하네스의 부품 — 측정 기록, CLAUDE.md, hooks, 멀티 에이전트 — 은 모두 완성됐습니다. 그러나 하네스는 만든 순간이 정점이 아닙니다. 모델과 프로젝트가 바뀌는 동안 규칙은 낡아가고, 효과를 수치로 증명하지 못하면 팀을 설득할 수도 없습니다. 그래서 마지막 모듈은 새 부품 제작이 아니라 **효과를 증명하고(Before/After) 매주 갱신하는(주간 리뷰) 운영 루프**를 만듭니다. 이때 규칙은 더하기만 하는 게 아니라 **빼기도 합니다**(Rippable) — 모델이 이미 잘하는 일을 계속 명령하면 하네스만 무거워집니다.
+
 **이 모듈에서 얻을 것**:
+
 1. 정리된 `.claude/` 구조 + README 온보딩 섹션
 2. **첫 주간 리뷰** (`weekly-review-2026-MM-DD.md`)
 3. **Rippable 점검** — 불필요해진 규칙 식별
 4. **Module 01 ↔ Module 05 Before/After 비교** — 5모듈 효과 수치 확인
 
-**시간**: 약 1시간 (구조화 20분 + 주간 리뷰 20분 + Rippable 10분 + Before/After 10분). **이후 매주 30분/회 반복**.
+**진행 흐름**: 하네스 자산 구조 정리(Step 1) → 신규 팀원 온보딩 문서화(Step 2) → 첫 주간 리뷰 실행(Step 3) → 불필요 규칙 빼기(Step 4) → Module 01 대비 효과 측정(Step 5) → 루틴을 캘린더에 고정(Step 6).
 
-**핵심 인식**: 하네스는 만든 순간이 정점이 아닙니다. 매주 진화해야 삽니다. 규칙은 **더하기만 하는 게 아니라 빼기도 합니다** (Rippable).
+**시간**: 약 1시간 (구조화 20분 + 주간 리뷰 20분 + Rippable 10분 + Before/After 10분). **이후 매주 30분/회 반복**.
 
 이론 배경: [[concept-harness-engineering]] (Rippable 섹션)
 
@@ -30,7 +33,15 @@ updated: 2026-07-02
 
 ## Step 1 — 저장소 구조 정리 — 15분
 
-지금까지 만든 파일을 한 번에 점검:
+운영 루프의 출발점은 자산 파악입니다. 네 모듈에 걸쳐 파일이 하나씩 늘어났기 때문에, 매주 리뷰에서 무엇을 갱신하고 커밋할지 헷갈리지 않으려면 전체 구조를 한 번 정돈해 둬야 합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.gitignore` 추가 항목 — 개인 캐시 제외·인계 파일 추적 여부 결정
+    - **실행**: `find` 점검 명령으로 현재 파일을 확인하고, 이상적인 구조와 대조한 뒤 `.gitignore`를 갱신합니다.
+
+지금까지 만든 파일을 한 번에 점검합니다:
 
 ```bash
 cd ~/harness-playground
@@ -85,6 +96,14 @@ EOF
 
 ## Step 2 — README.md에 온보딩 섹션 추가 — 10분
 
+구조를 정돈했으니 이제 그 구조를 남에게 설명할 차례입니다. 하네스는 팀 공유 자산인데, 신규 팀원이 `.claude/` 안을 스스로 해독해야 한다면 결국 하네스를 우회하게 됩니다 — README 온보딩 한 섹션이 그 진입 장벽을 없앱니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `README.md` 온보딩 섹션 — 신규 팀원용 5분 시작 가이드
+    - **실행**: 아래 명령으로 섹션을 덧붙이고 `.gitignore`와 함께 커밋합니다.
+
 ````bash
 cat >> README.md << 'EOF'
 
@@ -122,6 +141,14 @@ git commit -m "docs(M5): Claude Code 하네스 온보딩 섹션 추가"
 ---
 
 ## Step 3 — 첫 주간 리뷰 — 20분
+
+여기서부터가 이 모듈의 본체입니다. Module 01에서 한 번 했던 실패 수집·규칙 전환을, 이번에는 매주 반복할 수 있는 고정 형식으로 굳힙니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.claude/weekly-review-YYYY-MM-DD.md` — 이번 주 실패·규칙 변경·효과 기록
+    - **실행**: `claude` 세션에 3-1 수집 프롬프트를 붙여넣고, 결과를 3-2 템플릿에 옮긴 뒤 3-3에서 규칙 반영·커밋합니다.
 
 주간 리뷰는 세 단계로 진행합니다. 실패 흔적을 **수집**(3-1)하고, 그 결과를 리뷰 파일에 **분류·정리**(3-2)한 뒤, 정리된 패턴을 **규칙으로 전환해 커밋**(3-3)합니다. 앞 단계의 산출물이 다음 단계의 입력이 되는 피드백 루프입니다.
 
@@ -189,11 +216,10 @@ cat > .claude/weekly-review-$WEEK.md << 'EOF'
 ...
 
 ## 2. CLAUDE.md 이번 주 변경
-```diff
-+ 추가:
+
+- 추가:
 - 제거:
-~ 수정:
-```
+- 수정:
 
 ## 3. guard.sh 이번 주 추가 규칙
 ```bash
@@ -241,7 +267,13 @@ Reviewed-by: Critic Agent"
 
 ## Step 4 — Rippable 점검 — 10분
 
-> 모델이 좋아져서 이미 자연스럽게 지키는 규칙은 **버립니다**. 하네스 군살 빼기입니다.
+주간 리뷰(Step 3)가 규칙을 더하는 루프라면, Rippable 점검은 빼는 루프입니다. 규칙이 쌓이기만 하면 CLAUDE.md가 길어져 에이전트가 정작 중요한 규칙을 놓치기 시작하므로, 모델이 좋아져서 이미 자연스럽게 지키는 규칙은 주기적으로 걷어냅니다. 하네스 군살 빼기입니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **수정 파일**: `CLAUDE.md` · `.claude/hooks/guard.sh` — 미사용 규칙 제거
+    - **실행**: `claude` 세션에 아래 분석 프롬프트를 붙여넣고, 권고에 따라 규칙을 제거한 뒤 커밋합니다.
 
 ### Step 4-1: Claude에게 분석 요청
 
@@ -288,13 +320,32 @@ git commit -m "harness(M5): 미사용 규칙 정리 (Rippable cleanup)
 
 ## Step 5 — Module 01 ↔ Module 05 Before/After 비교 — 10분
 
-5모듈 누적 효과를 수치로 봅니다.
+마지막 측정입니다. Module 01 Step 3에서 하네스 없이 태스크 A·B·C를 실행해 `.claude/baseline.md`에 Before 수치를 기록하고 `baseline(M1-A/B/C)` 커밋으로 남겨 뒀습니다. 이제 같은 태스크를 하네스가 모두 걸린 상태로 재실행해 그 기록과 대조하면, 5모듈의 누적 효과가 수치로 드러납니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 것**: `.claude/baseline.md` 맨 아래 "Module 05 After" 비교 표 + 커밋 1개
+    - **실행**: 출발선을 revert로 되돌린 뒤, 새 `claude` 세션에 Module 01 태스크 A 프롬프트 원문을 붙여넣고 결과를 표에 채워 커밋합니다.
 
 ### Step 5-1: Module 01의 베이스라인 태스크 재실행
 
 `.claude/baseline.md`의 태스크 A를 **현재 상태(CLAUDE.md + hooks + AGENTS.md 모두 적용)** 로 재실행합니다 (B·C도 반복하면 더 좋지만 시간이 빠듯하면 A 하나로 누적 효과 확인이 가능합니다).
 
-새 세션에서 **Module 1 태스크 A 본문을 표현 그대로** 다시 던집니다 (api/+web/ 모노레포 — Before와 같은 작업·표현이어야 비교 유효):
+먼저 출발선을 되돌립니다. Module 02 Step 5에서 태스크 A를 재실행했기 때문에 playground에는 phone 필드가 다시 들어가 있고, 이 상태로 같은 태스크를 던지면 "이미 구현돼 있다"로 끝나 비교가 성립하지 않습니다. Module 02 때와 같은 방식으로 재실행 커밋을 revert합니다 (이력은 보존되므로 비교용 커밋들은 그대로 남습니다):
+
+```bash
+cd ~/harness-playground
+
+# Module 02의 태스크 A 재실행 커밋 확인
+git log --oneline | grep "harness(M2-A)"
+
+# 되돌리기 → 테스트로 출발선 확인
+git revert --no-edit <M2-A 해시>
+npm test
+```
+
+되돌렸으면 새 세션에서 **Module 1 태스크 A 본문을 표현 그대로** 다시 던집니다 (api/+web/ 모노레포). 프롬프트 표현이 달라지면 결과 차이가 하네스 효과인지 요청 차이인지 구분할 수 없으므로, **원문 그대로 재사용하는 것이 비교 유효성의 조건**입니다:
 
 ```
 이 모노레포에 User에 'phone' 필드를 추가해줘.
@@ -305,9 +356,11 @@ git commit -m "harness(M5): 미사용 규칙 정리 (Rippable cleanup)
 - 가능하면 api 테스트도
 ```
 
-자기검증 루프가 자동으로 작동합니다. 검증 완료 보고까지 확인합니다.
+Module 01과 달리 이번에는 Module 03에서 설치한 자기검증 루프(CLAUDE.md 섹션 5)가 걸린 상태이므로, Claude가 스스로 `npm test`를 실행하고 **검증 완료 보고**로 마치는지까지 확인합니다.
 
 ### Step 5-2: 비교 표 작성
+
+재실행 결과를 Module 01·02 때와 같은 항목으로 측정해, Before 기록이 있는 `.claude/baseline.md` 맨 아래에 이어 붙입니다:
 
 ```bash
 cat >> .claude/baseline.md << 'EOF'
@@ -342,7 +395,8 @@ git commit -m "harness(M5): M1↔M5 Before/After 비교"
 
 ## Step 6 — 주간 루틴 캘린더 등록 — 1분
 
-매주 금요일 30분 블록 캘린더에 추가:
+도구는 다 갖췄지만, 루틴은 의지만으로 유지되지 않습니다. 매주 금요일 30분 블록을 캘린더에 추가합니다:
+
 - 제목: "하네스 주간 리뷰"
 - 반복: 매주 금요일
 - 알림: 30분 전
@@ -355,6 +409,7 @@ git commit -m "harness(M5): M1↔M5 Before/After 비교"
 ## 막힐 때 (Module 5 전용 FAQ)
 
 ### Q. 첫 주간 리뷰에서 실패 패턴이 잘 안 나와요
+
 - 일주일이 짧으면 다음 주에 더 명확해집니다.
 - 의도적으로 베이스라인 태스크를 다시 던져 보는 것도 방법입니다 (Module 01의 태스크 A·B·C).
 - guard.sh 차단 로그를 별도 파일에 남기도록 수정하면 분석이 쉬워집니다:
@@ -369,6 +424,7 @@ echo "$(date '+%Y-%m-%d %H:%M') BLOCKED: $1 — $COMMAND" >> .claude/guard-block
 
 ### Q. Module 05 After가 Module 01 Before와 거의 같아요 (효과가 미미)
 가능성:
+
 1. 하네스가 동작 안 함 — `.claude/settings.json`의 hooks 등록 다시 확인
 2. CLAUDE.md를 Claude가 안 읽음 — 세션 시작 시 "CLAUDE.md 섹션 7 STOP 첫 3개 인용해줘" 테스트
 3. 베이스라인 태스크가 너무 쉬워서 모델이 원래 잘 함 — 더 까다로운 태스크로 비교
@@ -377,6 +433,7 @@ echo "$(date '+%Y-%m-%d %H:%M') BLOCKED: $1 — $COMMAND" >> .claude/guard-block
 처음에는 10분만이라도 좋습니다. 핵심은 **새 STOP 트리거 1개 추가 + 1개 평가**입니다. 형식보다 지속이 중요합니다.
 
 ### Q. 팀원이 하네스 안 따르고 우회해요 (`--no-verify`로 hook 무시 등)
+
 - 정책적으로 PR 리뷰 단계에서 차단합니다.
 - guard.sh에 `git commit.*--no-verify` 차단을 추가합니다 (자기 차단).
 - 결국은 문화 문제입니다 — 하네스가 **도움이 됨**을 데이터로 보여주는 게 답입니다.
@@ -402,6 +459,7 @@ echo "$(date '+%Y-%m-%d %H:%M') BLOCKED: $1 — $COMMAND" >> .claude/guard-block
 > "모델을 탓하기 전에 하네스를 점검하라" — Mitchell Hashimoto
 
 자가 점검 3가지를 매주 묻습니다:
+
 - CLAUDE.md가 이번 주의 실패를 반영합니까?
 - Hooks가 새 위험을 차단합니까?
 - 피드백 루프(주간 리뷰)가 돌고 있습니까?

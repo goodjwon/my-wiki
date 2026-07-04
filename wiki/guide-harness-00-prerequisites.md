@@ -6,12 +6,14 @@ sources:
   - harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
   - harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-07-02
+updated: 2026-07-04
 ---
 
 # 하네스 실습 사전 안내 (Module 00 — Prerequisites)
 
-[[src-harness-engineering|5모듈 커리큘럼]]을 실제로 따라 하기 전에 읽어야 하는 페이지. **이 페이지에서 막히면 module1을 시작하지 말 것.**
+[[src-harness-engineering|5모듈 커리큘럼]]을 실제로 따라 하기 전에 읽는 페이지입니다. 이후 5개 모듈 전부가 여기서 확인하는 도구(Node·git·Claude Code)와 여기서 만드는 미니 프로젝트(`~/harness-playground`)를 전제로 진행되므로, **이 페이지에서 막히는 항목이 있으면 module1로 넘어가기 전에 먼저 해결하세요.**
+
+**진행 흐름**: 대상·시간 확인 → 도구 사전 조건 점검 → 실습용 미니 프로젝트 만들기(Step A-1~A-5, 약 10분) → 용어 사전·치환표는 필요할 때 돌아와 참조.
 
 ## 대상 학습자 (이 위키 기준)
 
@@ -19,7 +21,7 @@ updated: 2026-07-02
 - 나중에 **GCP — App Engine / Cloud Run / Cloud Functions** 로 배포할 계획
 - AI 코딩 도구(Claude Code) 사용 중, 같은 실수가 반복돼 답답함을 느낌
 
-> 원본 자료(`raw/harness-engineering/`)는 **Spring Boot + DDD** 기준으로 작성됨. 이 위키의 guide는 그 원본을 **Node 학습자용 step-by-step**으로 옮긴 것. 원칙은 스택 무관.
+> 이 커리큘럼의 원본 강의 자료는 **Spring Boot + DDD** 프로젝트 기준으로 작성됐고, 이 가이드 시리즈는 그것을 **Node 학습자용 step-by-step**으로 옮긴 것입니다. 하네스의 원칙 자체는 스택과 무관하므로, 간혹 Spring 용어가 보여도 아래 [명령어 치환표](#명령어-치환표-spring-원본--node)와 [DDD 용어표](#원본의-ddd-용어-참고만)로 읽어 내면 됩니다.
 
 ## 권장 학습 흐름
 
@@ -43,7 +45,7 @@ updated: 2026-07-02
 
 | 모듈 | 학습 + 실습 | 비고 |
 |------|-----------|------|
-| 00 (이 페이지) | 30분 | 사전 조건 + 용어 |
+| 00 (이 페이지) | 30분 | 사전 조건 + 미니 프로젝트(10분) + 용어 |
 | 01 Failure Audit·베이스라인 | 1시간 | git log 분석 + 태스크 3개 실행 |
 | 02 CLAUDE.md 작성 | 1.5시간 | 템플릿 커스터마이징 + Before/After |
 | 03 Hooks | 1.5시간 | 스크립트 설치·검증 + 자기검증 루프 |
@@ -94,7 +96,9 @@ npm install --save-dev eslint prettier jest
 
 ## 실습용 미니 프로젝트 만들기 (React + Express 풀스택)
 
-5모듈 학습 동안 **깨져도 부담 없는** 미니 풀스택 프로젝트. 다음 Step을 그대로 따라가면 약 10분에 완성. **각 Step 끝에 git commit 메시지 제공.**
+5모듈 학습 동안 **깨져도 부담 없는** 미니 풀스택 프로젝트를 만듭니다. module1의 베이스라인 측정이 "이미 코드와 git 이력이 있는 프로젝트"를 전제로 하기 때문에, 측정 대상이 될 최소한의 api + web 코드를 여기서 미리 만들어 둡니다. 다음 Step을 그대로 따라가면 약 10분에 완성되고, **각 Step 끝의 git commit까지 따라 하면** module1이 요구하는 커밋 이력도 함께 생깁니다.
+
+**진행 흐름**: 모노레포 골격 + git 초기화(A-1) → Express 백엔드(A-2) → React 프론트(A-3) → 동작 확인(A-4) → Claude Code 첫 실행(A-5).
 
 최종 구조:
 ```
@@ -105,6 +109,14 @@ npm install --save-dev eslint prettier jest
 ```
 
 ### Step A-1: 모노레포 골격 + git 초기화 (1분)
+
+가장 먼저 프로젝트 뼈대를 잡고 git을 초기화합니다. git을 첫 단계에 두는 이유는 module1의 Failure Audit이 git 이력을 분석 재료로 쓰기 때문입니다 — 지금부터 만드는 커밋 하나하나가 그대로 측정 데이터가 됩니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground` (이 Step에서 새로 만듭니다)
+    - **만들 파일**: `package.json`, `.gitignore`, `README.md` — 모노레포 최상위 메타 3개
+    - **실행**: 아래 블록을 통째로 붙여넣으면 디렉터리 생성부터 첫 커밋까지 끝납니다.
 
 ```bash
 mkdir -p ~/harness-playground && cd ~/harness-playground
@@ -157,6 +169,14 @@ git commit -m "chore: harness-playground 모노레포 초기화"
 ```
 
 ### Step A-2: api/ — Express 백엔드 (3분)
+
+골격이 생겼으니 측정 대상이 될 첫 코드를 넣습니다. 이 User CRUD API는 module1의 베이스라인 태스크 3개(필드 추가·검색 API·버그 수정)가 전부 대상으로 삼는 코드이므로, 아래 내용을 그대로 만들어야 이후 모듈과 정확히 맞물립니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground/api` (이 Step에서 새로 만듭니다)
+    - **만들 파일**: `src/app.js`, `src/server.js`, `src/app.test.js` + 설정 4개 — Express User CRUD 백엔드
+    - **실행**: 아래 블록을 통째로 붙여넣습니다. 중간 `npm install` 이 끝날 때까지 기다립니다.
 
 ```bash
 cd ~/harness-playground
@@ -278,6 +298,14 @@ git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
 
 ### Step A-3: web/ — React 프론트 (3분)
 
+백엔드가 준비됐으니 그 API를 호출하는 화면을 만듭니다. 프론트까지 만들어 두는 이유는 module1의 베이스라인 태스크가 "api와 web을 함께 고치는" 풀스택 요청이라, 에이전트가 두 워크스페이스를 오가며 작업할 때의 습관까지 관찰해야 하기 때문입니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground/web` (블록 1a의 Vite 스캐폴딩이 만듭니다)
+    - **만들 파일**: `src/App.jsx` — 사용자 목록 + 추가 폼 화면 (나머지는 Vite 기본 생성)
+    - **실행**: 블록 1a → 1b → 2 순서로 나눠 붙여넣습니다. 이유는 아래 경고를 참고하세요.
+
 > ⚠️ **한 번에 붙여넣지 말 것.** 첫 줄 `npm create vite` 는 대화형 프롬프트(패키지 설치 확인 `Ok to proceed? (y)`, Vite 버전·롤다운 선택 등)가 뜰 수 있다. 아래 `cat ... << EOF` heredoc·`npm install` 과 한꺼번에 붙여넣으면 **프롬프트 대기 중 뒷줄이 응답으로 먹혀** 스캐폴딩이 깨진다. **블록 1을 먼저 끝내고(프롬프트엔 Enter / y), 그다음 블록 2를 붙여넣을 것.**
 
 **블록 1a — React 스캐폴딩** (이 한 줄만 먼저. 프롬프트 `Ok to proceed? (y)` 가 뜨면 `y` / Enter)
@@ -377,6 +405,14 @@ git commit -m "feat(web): React 사용자 목록 + 추가 폼"
 
 ### Step A-4: 동작 확인 (2분)
 
+코드가 다 만들어졌으니 실제로 떠서 서로 통신하는지 확인합니다. 이 확인을 지금 통과해 두지 않으면, 이후 모듈에서 무언가 실패했을 때 그것이 에이전트의 실수인지 원래 깨져 있던 환경인지 구분할 수 없게 됩니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground` (터미널 2개 사용)
+    - **만들 것**: 없음 — API 응답·테스트·화면이 정상인지 확인만 합니다.
+    - **실행**: 터미널 ①에서 블록 1, 터미널 ②에서 블록 2, 다시 터미널 ①에서 블록 3을 실행합니다.
+
 > ⚠️ **API와 프론트는 두 터미널에서 동시에 떠 있어야 한다.** `npm run dev:web` 은 포그라운드 장기 실행 서버라, 같은 블록에 두고 붙여넣으면 거기서 멈춰 뒷줄(서버 정리 등)이 실행되지 않는다. 아래처럼 **블록 1(API 검증) → 블록 2(프론트, 다른 터미널) → 블록 3(정리)** 순서로.
 
 **블록 1 — 의존성 설치 + API 검증** (터미널 ①)
@@ -412,6 +448,13 @@ kill %1 2>/dev/null                   # 백그라운드 API 종료
 
 ### Step A-5: Claude Code 한 번 실행 (1분)
 
+마지막으로 이 프로젝트에서 Claude Code가 정상 동작하는지 확인합니다. module1의 첫 Step이 바로 `claude` 실행이므로, 로그인·응답 문제는 여기서 미리 털어 두어야 다음 모듈을 막힘 없이 시작할 수 있습니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **실행**: `claude` 를 실행해 확인 프롬프트를 한 번 주고받고, `/exit` 후 커밋 3개를 확인합니다.
+
 ```bash
 cd ~/harness-playground
 claude
@@ -423,7 +466,7 @@ claude
 이 프로젝트 구조를 확인하고 api/와 web/이 각각 어떤 역할인지 한 줄씩 요약해줘.
 ```
 
-응답이 오면 정상. `/exit` 으로 종료.
+응답이 오면 정상입니다. `/exit` 으로 종료합니다.
 
 ```bash
 git log --oneline
@@ -442,9 +485,10 @@ git log --oneline
 
 ---
 
-### 미래 (Module 05 이후 GCP 배포)
+## 미래 (Module 05 이후 GCP 배포)
 
-이 커리큘럼 자체에서는 GCP 명령을 쓰지 않지만, 나중을 위해 알아두면 좋은 것:
+하네스 학습에는 배포 과정이 필요 없으므로, 이 커리큘럼 자체에서는 GCP 명령을 쓰지 않습니다. 다만 나중에 배포할 계획이라면 다음 세 가지 이름만 미리 알아두면 좋습니다.
+
 - **Cloud Functions** (서버리스 함수)
 - **Cloud Run** (컨테이너 기반)
 - **App Engine** (PaaS)
@@ -458,6 +502,7 @@ git log --oneline
 **왜 필요한가**: 프롬프트(부탁)는 무시될 수 있지만, hook(코드 실행 직전 검사)은 **물리적으로 막는다**. "표지판 vs 중앙분리대"의 차이.
 
 **Node + GCP 학습자에게 구체적으로**:
+
 - "`.env` 파일을 commit하지 마"라고 매번 부탁할 필요 없음 → guard.sh가 차단
 - "테스트 없이 함수 추가하지 마"라고 매번 부탁할 필요 없음 → CLAUDE.md + 자기검증 루프
 - "GCP 시크릿 키를 console.log 하지 마" → guard.sh가 차단
@@ -572,7 +617,13 @@ Module 1 (실패 패턴 찾기)
 
 ## 5모듈 종료 후 — 본인 기존 프로젝트로 이식
 
-임시 프로젝트(`~/harness-playground`)에서 5모듈을 다 돌렸다면 다음 흐름으로 본인 프로젝트에 적용:
+임시 프로젝트(`~/harness-playground`)에서 5모듈을 다 돌렸다면, playground에서 검증한 하네스 자산을 본인 프로젝트로 옮길 차례입니다. 지금 읽어 두되 **실행은 module5까지 마친 뒤에** 하세요.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: 본인 기존 프로젝트 (module5 종료 후 진행)
+    - **만들 파일**: `CLAUDE.md`, `AGENTS.md`, `.claude/` — playground에서 복사한 뒤 커스터마이즈
+    - **실행**: 별도 브랜치(`harness-bootstrap`)에서 아래 흐름을 진행합니다.
 
 ```bash
 # 1. 본인 프로젝트로 이동, 안전한 별도 브랜치
@@ -635,6 +686,7 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 두 항목을 그대로 인용해줘.
 
 ### Q. 자기검증 루프에서 `npm test`가 환경 문제로 실패해요
 환경 문제 vs 코드 문제를 먼저 분리:
+
 1. 본인이 직접 명령 실행 → 환경 OK?
 2. 환경 문제면 ▶ Claude에게 위임 X (먼저 환경 고치기)
 3. 코드 문제면 ▶ 자기검증 루프가 잡아야 함

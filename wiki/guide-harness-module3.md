@@ -9,21 +9,26 @@ sources:
   - harness-engineering/harness-kit/module3/01_hooks_setup_prompt.md
   - harness-engineering/harness-kit/module3/02_self_verify_prompt.md
 created: 2026-05-31
-updated: 2026-07-02
+updated: 2026-07-04
 ---
 
 # 하네스 Module 03 — Hooks 시스템 강제
 
 > **이 가이드 보기 전에**: [[guide-harness-module2]] 까지 완료합니다. CLAUDE.md 섹션 7 STOP 트리거가 있어야 합니다 (hooks가 강제할 대상).
 
+**왜 CLAUDE.md 다음이 hooks인가**: Module 02에서 만든 STOP 트리거는 결국 "말로 하는 권고"입니다. 에이전트는 대화가 길어지면 규칙을 잊고, 급하면 어깁니다 — 실제로 CLAUDE.md에 적어 둔 금지 사항을 그대로 수행하는 장면을 베이스라인 측정에서 이미 봤을 것입니다. hooks는 다릅니다. Claude Code가 도구를 실행하는 경로 자체에 끼어들어, 에이전트가 규칙을 어긴 순간에도 **물리적으로 차단**합니다. 규칙(권고) 위에 강제 층을 한 겹 더 얹는 것 — 그래서 CLAUDE.md 다음 모듈이 hooks입니다.
+
 **이 모듈에서 얻을 것**:
+
 1. `.claude/hooks/guard.sh` — 위험 명령 차단 (PreToolUse)
 2. `.claude/hooks/lint-fix.sh` — 자동 포맷·린트 (PostToolUse)
 3. `.claude/settings.json` — hooks 등록
 4. **차단 검증 표** — 실제로 막혔는지 확인
 5. **자기검증 루프** — Claude가 "완료" 선언 전에 `npm test` 자동 실행
 
-**시간**: 약 1.5시간 (설치 20분 + 차단 검증 20분 + 자기검증 루프 30분 + 커스텀 20분)
+**진행 흐름**: 파싱 도구 준비(Step 1) → 차단 스크립트 작성(Step 2~3) → hooks 등록(Step 4) → 터미널에서 단독 검증(Step 5) → Claude Code 안에서 실전 검증(Step 6) → 자기검증 루프 추가(Step 7) → 커밋(Step 8).
+
+**시간**: 약 1시간 40분 (설치 40분 + 차단 검증 25분 + 자기검증 루프 30분 + 커밋 5분)
 
 이론 배경: [[concept-claude-hooks]]
 
@@ -31,7 +36,13 @@ updated: 2026-07-02
 
 ## Step 1 — `.claude/hooks/` 디렉터리 + jq 준비 — 5분
 
-guard.sh / lint-fix.sh는 Claude Code가 stdin으로 보내는 **JSON 입력을 `jq`로 파싱**합니다. jq부터 설치합니다:
+hooks의 실체는 평범한 셸 스크립트입니다. 스크립트를 쓰기 전에 도구와 자리부터 준비합니다 — guard.sh / lint-fix.sh는 Claude Code가 stdin으로 보내는 **JSON 입력을 `jq`로 파싱**하므로 jq가 먼저 필요합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 것**: jq 설치 + `.claude/hooks/` 디렉터리
+    - **실행**: 아래 명령을 차례로 실행합니다.
 
 ```bash
 # jq 설치 (Claude Code hook 입력 JSON 파싱용)
@@ -47,6 +58,14 @@ mkdir -p .claude/hooks
 ---
 
 ## Step 2 — guard.sh 설치 (Node 친화) — 20분
+
+준비가 끝났으니 첫 번째 강제 장치를 만듭니다. guard.sh는 **PreToolUse** 시점 — Claude가 Bash 명령을 실행하기 직전 — 에 호출되어, Module 02 STOP 트리거 중 정규식으로 잡을 수 있는 것들을 실행 전에 차단합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.claude/hooks/guard.sh` — 위험 명령을 실행 직전에 차단하는 PreToolUse hook
+    - **실행**: 아래 명령으로 파일을 생성하고 실행 권한을 부여합니다.
 
 `.claude/hooks/guard.sh` 파일을 다음 내용으로 생성:
 
@@ -146,6 +165,14 @@ chmod +x .claude/hooks/guard.sh
 
 ## Step 3 — lint-fix.sh 설치 (Node 친화) — 10분
 
+guard.sh가 "실행 전 차단"이라면 lint-fix.sh는 "수정 후 교정"입니다. **PostToolUse** 시점 — Claude가 파일을 수정한 직후 — 에 자동으로 포맷·린트를 실행하고, 남은 오류는 Claude에게 되돌려 스스로 고치게 합니다. 정규식으로 잡기 어려운 코드 품질 문제를 이 층이 맡습니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.claude/hooks/lint-fix.sh` — 파일 수정 직후 자동 포맷·린트하는 PostToolUse hook
+    - **실행**: 아래 명령으로 파일을 생성하고 실행 권한을 부여합니다.
+
 ```bash
 cat > .claude/hooks/lint-fix.sh << 'EOF'
 #!/bin/bash
@@ -208,6 +235,14 @@ chmod +x .claude/hooks/lint-fix.sh
 
 ## Step 4 — `.claude/settings.json`에 hooks 등록 — 5분
 
+스크립트 두 개는 만들어 두는 것만으로는 아무 일도 하지 않습니다. Claude Code가 **언제**(PreToolUse/PostToolUse) **어떤 도구에 대해**(matcher) 무엇을 부를지 `settings.json`에 등록해야 비로소 hooks로 작동합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.claude/settings.json` — 두 hook의 실행 시점·대상 등록
+    - **실행**: 아래 명령으로 새로 생성합니다. 기존 설정이 있는 프로젝트라면 코드블록 아래 머지 안내를 따릅니다.
+
 실습 playground는 `.claude/settings.json`이 아직 없으므로 아래처럼 **새로 만들면 됩니다**. (이미 다른 설정이 있는 본인 프로젝트라면 아래 명령으로 통째 덮어쓰지 말고, `hooks` 블록만 머지합니다 — jq 또는 수동. 머지 방법은 코드블록 아래 참조.)
 
 ```bash
@@ -241,6 +276,14 @@ EOF
 ---
 
 ## Step 5 — 차단 검증 — 15분
+
+등록까지 마쳤지만, 하네스에서 "작동한다고 믿는 것"과 "작동을 확인한 것"은 다릅니다. Claude Code에 들어가기 전에 먼저 일반 터미널에서 guard.sh 단독으로 검증합니다 — 여기서 통과해야 Step 6에서 문제가 생겼을 때 원인을 스크립트가 아닌 등록·권한 쪽으로 좁힐 수 있습니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground` — Claude Code 밖, 일반 터미널
+    - **만들 것**: 차단 검증 표 (아래 표의 "실제" 칸 채우기)
+    - **실행**: 아래 stdin JSON 테스트 9개를 실행하고 exit 코드를 표에 기록합니다.
 
 본인이 직접 명령을 실행해서 차단되는지 확인합니다. **Claude Code 안에서가 아니라 일반 터미널에서**. Claude Code가 실제로 보내는 것과 동일하게 **stdin JSON**으로 넣어 테스트합니다 (argv가 아니라 stdin이 진짜 hook 경로):
 
@@ -279,7 +322,14 @@ echo '{"tool_input":{"command":"npm install zod"}}'             | bash .claude/h
 
 ## Step 6 — Claude Code 안에서 실제 차단 테스트 — 10분
 
-Step 5에서 검증한 guard.sh를 이번엔 Claude Code가 실제로 호출하는지 확인합니다. settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)합니다. 그다음:
+Step 5의 터미널 검증은 스크립트 자체의 정확성만 보장합니다. 이번에는 Claude Code가 실제로 guard.sh를 호출하는지 — 등록(settings.json)·경로·실행 권한까지 포함한 전체 경로를 확인합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground` — Claude Code **새 세션** (settings.json 반영을 위해 완전 종료 후 재실행)
+    - **실행**: 새 세션에서 아래 프롬프트를 붙여넣고 BLOCKED 메시지가 나오는지 확인합니다.
+
+settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)합니다. 그다음:
 
 ```
 git push origin main 명령을 실행해봐.
@@ -299,9 +349,13 @@ settings.json의 `"matcher": "Bash"`와 권한(`x`)을 확인합니다.
 
 ## Step 7 — 자기검증 루프 — 30분
 
-> 원본: `raw/harness-engineering/harness-kit/module3/02_self_verify_prompt.md`
+지금까지 만든 것은 전부 "나쁜 행동 차단"이었습니다. 하네스의 나머지 절반은 "좋은 행동 강제" — Claude가 코드 작성 후 "완료"를 선언하기 전에 **스스로 npm test를 실행하고, 실패하면 스스로 수정**하게 만드는 자기검증 루프입니다. hooks가 아니라 CLAUDE.md 규칙으로 구현하는 이유는, "테스트를 돌려라"는 특정 명령 차단이 아니라 작업 절차 전체에 걸친 지시라 정규식 hook으로 표현할 수 없기 때문입니다.
 
-**목적**: Claude가 코드 작성 후 "완료" 선언하기 전에 **자동으로 npm test를 돌리고, 실패 시 스스로 수정**합니다.
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 것**: CLAUDE.md 섹션 5 끝에 자기검증 루프 규칙 추가
+    - **실행**: 규칙 블록을 붙여 넣어 저장한 뒤, 새 세션에서 Step 7-2 프롬프트로 적용을 확인합니다.
 
 ### Step 7-1: CLAUDE.md 섹션 5에 자기검증 규칙 추가
 
@@ -350,6 +404,7 @@ CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드됩니다. 
 ```
 
 기대 동작:
+
 1. Claude가 계획 제시
 2. 라우트 + 테스트 작성
 3. **스스로** `npm test` 실행
@@ -360,6 +415,13 @@ CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드됩니다. 
 ---
 
 ## Step 8 — 커밋 — 5분
+
+이번 모듈의 산출물을 커밋으로 남깁니다. Module 05에서 하네스 전/후를 비교할 때 "hooks가 언제부터 있었는지"를 git 이력으로 추적하는 기준점이 됩니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **실행**: 아래 명령으로 산출물 3종(hooks, settings.json, CLAUDE.md)을 커밋합니다.
 
 ```bash
 git add .claude/hooks/ .claude/settings.json CLAUDE.md
@@ -373,6 +435,7 @@ git commit -m "harness(M3): guard.sh + lint-fix.sh + 자기검증 루프 설치"
 ## 막힐 때 (Module 3 전용 FAQ)
 
 ### Q. guard.sh가 직접 실행은 되는데 Claude Code 안에서 안 걸려요
+
 1. `.claude/settings.json`의 `"matcher": "Bash"` 정확한지 (대소문자)
 2. `chmod +x .claude/hooks/guard.sh` 실행 권한 확인
 3. Claude Code를 **완전 종료 후 재실행** (설정 재로드)
@@ -399,7 +462,7 @@ PostToolUse의 lint-fix가 매 Edit마다 실행되면 답답할 수 있습니�
 
 | 파일 | 내용 |
 |------|------|
-| `.claude/hooks/guard.sh` | 시크릿/마이그레이션/main push 등 8종 차단 |
+| `.claude/hooks/guard.sh` | 시크릿/마이그레이션/main push 등 6종 차단 + 2종 경고 |
 | `.claude/hooks/lint-fix.sh` | Prettier + ESLint + 금지 패턴 경고 |
 | `.claude/settings.json` | PreToolUse + PostToolUse 등록 |
 | `CLAUDE.md` 섹션 5 (확장) | 자기검증 루프 4단계 |

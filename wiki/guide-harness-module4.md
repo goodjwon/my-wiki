@@ -8,22 +8,25 @@ sources:
   - harness-engineering/harness-kit/module4/claude-progress.txt
   - harness-engineering/harness-kit/module4/01_threettier_workflow_prompt.md
 created: 2026-05-31
-updated: 2026-07-02
+updated: 2026-07-04
 ---
 
 # 하네스 Module 04 — 멀티 에이전트 + 컨텍스트
 
 > **이 가이드 보기 전에**: [[guide-harness-module3]] 까지 완료. CLAUDE.md + hooks가 작동 중이어야 합니다.
 
+**왜 Module 3 다음이 역할 분담인가**: Module 2의 CLAUDE.md가 규칙을, Module 3의 hooks가 차단을 맡으면서 한 세션 안의 실수는 상당 부분 잡히게 됐습니다. 그런데 기능 하나를 통째로 맡기는 큰 작업에서는 다른 문제가 나타납니다 — 한 세션이 계획·구현·검증을 전부 겸하면 탐색·실패·재시도의 잡음이 컨텍스트에 쌓여 중요 지시가 밀리고, 검증할 때쯤에는 자기가 짠 코드를 스스로 옹호하게 됩니다. 그래서 이번 모듈은 규칙 추가가 아니라 **역할 분리**입니다. 여러 에이전트를 쓰는 목적은 분업이 아니라 **컨텍스트 윈도우 오염 방지** — 역할 분리는 그 잡음을 격리하는 방화벽입니다.
+
 **이 모듈에서 얻을 것**:
+
 1. `AGENTS.md` — 3개 역할(Planner/Coder/Critic) 정의
 2. `task-list.md` — Planner가 분해한 태스크 목록
 3. `claude-progress.txt` — 세션 인계 파일 (Stop hook으로 자동 갱신)
 4. **첫 Planner-Coder-Critic 사이클** 경험
 
-**시간**: 약 2시간 (파일 설치 30분 + Planner 30분 + Coder 30분 + Critic 30분)
+**진행 흐름**: 역할 헌법 작성(Step 1) → 공유 대장·인계 파일 준비(Step 2~3) → Planner로 태스크 분해(Step 4) → Coder로 한 태스크 구현(Step 5) → Critic으로 독립 검증(Step 6) → 사이클 반복 정착(Step 7).
 
-**핵심 개념**: 여러 에이전트는 **분업**이 아니라 **컨텍스트 윈도우 오염 방지**가 목적. 한 에이전트가 탐색·실패·재시도를 반복하면 "잡음"이 쌓여 중요 지시가 밀립니다. 역할 분리는 그 잡음을 격리하는 방화벽.
+**시간**: 약 2시간 (파일 설치 30분 + Planner 30분 + Coder 30분 + Critic 30분)
 
 이론 배경: [[concept-multi-agent-pattern]]
 
@@ -31,9 +34,15 @@ updated: 2026-07-02
 
 ## Step 1 — `AGENTS.md` 만들기 — 15분
 
-`AGENTS.md`는 CLAUDE.md의 모델 불가지론적(model-agnostic) 버전 — Planner/Coder/Critic 역할 정의를 한 곳에 모읍니다.
+역할을 분리하려면 먼저 각 역할이 무엇을 하고 무엇을 하면 안 되는지를 문서로 고정해야 합니다. `AGENTS.md`는 CLAUDE.md의 모델 불가지론적(model-agnostic) 버전으로, Planner/Coder/Critic 역할 정의를 한 곳에 모읍니다.
 
 > ⚠️ **Claude Code는 AGENTS.md를 자동으로 읽지 않습니다** (자동 로드 대상은 CLAUDE.md뿐). 이 실습은 각 역할 프롬프트에서 "AGENTS.md를 먼저 읽어줘"라고 **명시**해 Read 도구로 직접 읽게 만듭니다 — 그래서 워크플로는 정상 동작합니다. 매번 명시가 번거로우면 ① CLAUDE.md 맨 위에 `@AGENTS.md` 한 줄로 import(자동 포함됨), ② `ln -s CLAUDE.md AGENTS.md` 심링크, ③ `/init`이 AGENTS.md를 CLAUDE.md로 흡수 — 셋 중 하나를 씁니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `AGENTS.md` — 3개 역할 정의 + 세션 인계 프로토콜 + 컨텍스트 규칙
+    - **실행**: 아래 명령으로 파일을 만들고 커밋합니다.
 
 ```bash
 cd ~/harness-playground
@@ -119,6 +128,14 @@ git commit -m "harness(M4): AGENTS.md 추가 (Planner/Coder/Critic)"
 
 ## Step 2 — `task-list.md` 템플릿 — 5분
 
+역할이 정해졌으니 이제 역할들이 주고받을 공유 대장을 준비합니다. `task-list.md`는 Planner가 채우고 Coder가 상태를 갱신하며 Critic이 판정을 기록하는 파일입니다. 지금은 빈 템플릿만 만들어 두고, Step 4에서 Planner가 실제 태스크로 채웁니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `task-list.md` — 태스크 상태·verify·의존 관계를 기록하는 공유 대장 템플릿
+    - **실행**: 아래 명령으로 템플릿을 만듭니다. 커밋은 Step 3 끝에서 Step 2~3 산출물을 함께 합니다.
+
 ```bash
 cd ~/harness-playground
 cat > task-list.md << 'EOF'
@@ -159,6 +176,14 @@ EOF
 ---
 
 ## Step 3 — `claude-progress.txt` 템플릿 + Stop hook 자동화 — 10분
+
+task-list.md가 "무엇을 할지"의 대장이라면 `claude-progress.txt`는 "어디까지 했는지"의 인계장입니다. 역할마다 새 세션을 여는 이 워크플로에서는 세션 간 기억이 끊기므로, 다음 세션이 가장 먼저 읽을 인계 파일이 필요합니다. Module 3에서 만든 hook 인프라를 재사용해, 세션이 끝날 때마다(Stop hook) 자동 갱신되게 만듭니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `claude-progress.txt` — 세션 인계 메모, `.claude/hooks/update-progress.sh` — Stop hook 자동 갱신 스크립트
+    - **실행**: 템플릿과 스크립트를 만들고, `.claude/settings.json`에 Stop hook을 등록한 뒤 커밋합니다.
 
 ### Step 3-1: 초기 progress 파일
 
@@ -243,11 +268,25 @@ chmod +x .claude/hooks/update-progress.sh
 ]
 ```
 
+등록까지 끝났으면 Step 2~3 산출물을 커밋합니다:
+
+```bash
+cd ~/harness-playground
+git add task-list.md claude-progress.txt .claude/hooks/update-progress.sh .claude/settings.json
+git commit -m "harness(M4): task-list·progress 템플릿 + Stop hook 등록"
+```
+
 ---
 
 ## Step 4 — Planner Agent 시연 — 30분
 
-본인 프로젝트에서 실제로 만들 작은 기능을 골라 Planner로 시킵니다.
+파일 3개가 준비됐으니 첫 역할인 Planner를 실제로 돌려 봅니다. Planner의 일은 코드가 아니라 분해입니다 — 요구사항을 받아 task-list.md 형식의 원자 단위 태스크로 쪼개는 것까지만 맡깁니다. 실습 기능은 playground에 새로 붙일 사용자 인증(회원가입·로그인·내 정보)입니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `task-list.md` — Step 2에서 만든 템플릿을 Planner의 분해 결과로 채웁니다.
+    - **실행**: `claude`를 새 세션으로 열고 아래 Planner 프롬프트를 붙여넣은 뒤, 출력받은 태스크 목록을 평가·저장·커밋합니다.
 
 ### Step 4-1: 새 세션에서 Planner 호출
 
@@ -279,20 +318,21 @@ DDD 레이어 순서 대신 Node 흐름 (route → controller → service → re
 ### Step 4-2: 받은 task-list 평가
 
 좋은 분해의 표지:
+
 - ✅ 5~8개 태스크 (너무 적으면 한 태스크가 큼, 너무 많으면 잘게 쪼개짐)
 - ✅ 각 태스크에 verify (예: `npm test -- auth.register`)
 - ✅ 의존 순서 (schema → repository → service → controller → route → middleware)
 - ✅ 한 태스크 = 한 파일 또는 한 모듈
 
 나쁜 분해의 표지:
+
 - ❌ "회원가입 구현" 같이 한 줄짜리 거대 태스크
 - ❌ verify 없음
 - ❌ "그리고 ~도 같이" 같은 끼워넣기
 
-위 Step 4-1에서 Planner가 출력한 task-list 형식 결과를 그대로 `task-list.md`에 저장:
+위 표지를 통과하면, Step 4-1에서 Planner가 출력한 task-list 형식 결과를 에디터로 `task-list.md`에 붙여넣어 저장한 뒤 커밋합니다:
 
 ```bash
-# Planner 출력을 그대로 task-list.md에 붙여넣기
 git add task-list.md
 git commit -m "plan(M4): 인증 기능 태스크 분해"
 ```
@@ -301,7 +341,13 @@ git commit -m "plan(M4): 인증 기능 태스크 분해"
 
 ## Step 5 — Coder Agent 시연 (TASK-001만) — 30분
 
-Step 4에서 만든 `task-list.md`의 첫 태스크(TASK-001)를 Coder에게 입력으로 넘깁니다.
+계획이 생겼으니 이제 구현입니다. Planner 세션은 그대로 닫고, Step 4에서 만든 `task-list.md`의 첫 태스크(TASK-001)만 새 Coder 세션에 넘깁니다 — 계획 과정의 잡음이 구현 컨텍스트에 섞이지 않게 하기 위해서입니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 것**: TASK-001 구현 코드 + 테스트, `task-list.md` 상태 갱신
+    - **실행**: `claude`를 새 세션으로 열고 아래 Coder 프롬프트를 붙여넣은 뒤, 작업을 관찰하고 완료되면 커밋합니다.
 
 ### Step 5-1: 새 세션에서 Coder 호출
 
@@ -346,7 +392,13 @@ git commit -m "feat(M4): TASK-001 User 스키마 + 리포지토리"
 
 ## Step 6 — Critic Agent 시연 — 30분
 
-Step 5에서 Coder가 구현한 TASK-001 결과(코드 + 커밋)를 Critic이 독립적으로 검증합니다.
+구현이 끝났다고 Coder의 "완료" 선언을 그대로 믿으면 자기 코드를 자기가 채점하는 셈입니다. 그래서 Step 5에서 Coder가 구현한 TASK-001 결과(코드 + 커밋)를 Critic이 독립적으로 검증합니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/harness-playground`
+    - **만들 파일**: `.claude/critic-log.md` — Critic 판정 기록 (옵션)
+    - **실행**: `claude`를 새 세션으로 열고 아래 Critic 프롬프트를 붙여넣은 뒤, 판정에 따라 처리하고 커밋합니다.
 
 ### Step 6-1: 새 세션에서 Critic 호출
 
@@ -397,7 +449,7 @@ git commit -m "review(M4): TASK-001 APPROVE"
 
 ## Step 7 — 사이클 반복 정착 — (시간 외)
 
-TASK-002 → Coder → Critic → TASK-003 → ... 반복. 처음에는 세션 전환이 번거롭지만, 한 사이클이 익숙해지면 컨텍스트가 깨끗해서 오히려 빠릅니다.
+첫 사이클(계획 → 구현 → 검증)을 완주했습니다. 남은 태스크에도 같은 사이클을 반복하며 몸에 익힙니다: TASK-002 → Coder → Critic → TASK-003 → ... 처음에는 세션 전환이 번거롭지만, 한 사이클이 익숙해지면 컨텍스트가 깨끗해서 오히려 빠릅니다.
 
 **한 세션에서 다 하지 않습니다**. Planner도 Coder도 Critic도 같은 컨텍스트면 잡음으로 서로 영향을 줍니다.
 
@@ -412,19 +464,23 @@ TASK-002 → Coder → Critic → TASK-003 → ... 반복. 처음에는 세션 �
 가능하고, 수동 세션 전환보다 깔끔합니다. `.claude/agents/` 디렉터리에 역할별 정의 파일(시스템 프롬프트·허용 도구)을 두고 `/agents`로 관리하면 Planner/Coder/Critic을 **독립 컨텍스트로 격리** 실행할 수 있습니다 (서브에이전트는 결과만 본체로 반환 → 잡음 차단이라는 이 모듈의 목적과 정확히 일치합니다). 이 실습은 개념 이해를 위해 수동 전환으로 진행하지만, 익숙해지면 네이티브 서브에이전트로 옮기는 걸 권합니다.
 
 ### Q. Critic이 자꾸 APPROVE만 해요
+
 - 체크리스트가 너무 추상적일 수 있음 → 본인 프로젝트 특화 항목 추가
 - 한 가지 시도: "지금 구현에서 **가장 약한 부분 3개**를 지적해줘" 같이 비판 강요
 
 ### Q. Critic이 너무 깐깐해서 무한 반려돼요
+
 - CONDITIONAL REJECT 사유가 "스타일·취향"이면 무시 가능 (Critic에게 명시: "취향 X, 기능·보안·테스트만")
 - 정말 근본적 결함이면 Planner로 돌아가 재분해
 
 ### Q. claude-progress.txt가 자동 갱신 안 돼요
+
 - Stop hook 등록 확인: `cat .claude/settings.json | jq '.hooks.Stop'`
 - 실행 권한: `ls -la .claude/hooks/update-progress.sh`
 - 직접 호출 테스트: `bash .claude/hooks/update-progress.sh`
 
 ### Q. AGENTS.md와 CLAUDE.md의 중복이 부담스러워요
+
 - CLAUDE.md = 코딩 규칙·STOP·체크리스트 (모든 작업 공통)
 - AGENTS.md = 역할 정의·세션 인계 프로토콜 (멀티 에이전트 운영)
 - 겹치는 부분은 한 곳에만 두고 다른 쪽은 링크.
