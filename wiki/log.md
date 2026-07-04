@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-04] fix | ch01 [참고 1] 2.1 빈 절 복구 — Java vs C/C++ 특징 비교표 (raw+wiki)
+- ch11 복구와 같은 방법(Notion published API loadPageChunk)으로 [참고 1] 원본 페이지 대조 — 빈 절의 정체는 **8행 Notion 표 유실**(ch07 표 유실과 같은 계열). 표 블록의 `format.table_block_column_order`로 컬럼 ID를 얻어 행별 셀 텍스트 추출.
+- 특징 7행(컴파일 과정·플랫폼 독립성·메모리 관리·포인터·속도·멀티스레딩·객체 지향) 비교표를 raw(+복구 노트)와 wiki에 동시 복원. 두 lint 0건, 빌드 통과.
+- 이로써 §7-8 점검에서 나온 결손 후보(ch01 빈 절, ch11 3종) **전부 종결**.
+
 ## [2026-07-04] fix | ch11 Notion 변환 결손 복구 — 11.90 잘림·11.23 코드 유실·‣ 링크 (raw+wiki 동시)
 - **복구 방법**: Notion published API 재수집. queryCollection(spaceId 필수, `value.value` 중첩 주의)으로 페이지 ID 특정 → loadPageChunk **커서 페이지네이션**(cursor.stack 재전달, chunkNumber만 올리면 같은 청크 반복)으로 전체 블록 수집. 접힌 토글은 토글 블록 ID를 pageId로 재요청. syncRecordValues는 익명 403.
 - **11.90 JVM 워크북 잘림**: 2026-06-29 추출 때 "시나리오 1 문제"에서 파일이 끊겨 있던 것(raw도 동일) → 시나리오 1 해결 + 시나리오 2~5(파일 리소스·캐시 상한·StringBuilder·컬렉션 초기 크기) + "4. 핵심 정리"(5대 원칙·체크리스트·다음 단계) 전량 복원. wiki에는 §7-8 리드인 부착, raw에는 원문 그대로 + 복구 노트 주석.
