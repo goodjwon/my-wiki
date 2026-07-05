@@ -154,7 +154,11 @@ updated: 2026-07-05
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **§2-6 기존 위반 소탕 — 코드블록 ASCII 대응표 → 마크다운 표** (2026-07-05 정책 신설의 후속). 1차 스캔(`grep '[가-힣].*   *→' wiki/*.md`)에서 후보 ~12파일 검출: lecture-effective-java-ch10(예외 선택 4행)·entity-jvm(GC 생애주기)·lecture-object-ch4/5/15·lecture-tdd-ch2/6/8·lecture-effective-java-ch3·concept-claude-md 등. **주의**: concept-claude-md·guide-harness-module2의 매치는 복붙용 CLAUDE.md 템플릿 내부(§2-6 예외 — 코드블록 유지, 단 한글 열 맞춤 공백만 단일 공백으로 축소). 건별로 "설명이냐 복붙 산출물이냐" 판별 필요.
+- [ ] **§2-6 기존 위반 소탕 — 코드블록 ASCII 대응표 → 마크다운 표** (2026-07-05 정책 신설의 후속, 정밀 스캔 완료 — 코드펜스 파서로 트리·박스 다이어그램 제외 후 분류):
+  - **① 표 전환 대상 ~31곳 / ~25파일**. 최대 가족은 lecture-* "0.2 큰 그림" **다열 비교를 공백 정렬로 그린 블록 26곳**(clean-code ch2·4·6·9·13 / effective-java ch2·3·7·8·10 / object ch6·7·9·10·11·13·14·15·appendixB·C / refactoring ch5 / tdd ch4·6·9·12·29). 화살표 대응 5곳: entity-jvm(GC 흐름)·lecture-effective-java-ch10 L231(예외 결정 가이드)·lecture-object-ch5(RDD 사고 순서)·lecture-tdd-ch2·entity-spring-boot(스택 비교, 경계).
+  - **② 예외지만 한글 열 맞춤 공백 축소 2곳**: concept-claude-md L42·guide-harness-module2 L44 — 복붙용 CLAUDE.md 템플릿 내부(코드블록 유지, 정렬 공백만 단일 공백으로).
+  - **③ 유지(예외 확정)**: 디렉터리 트리 ~12곳, ASCII 텍스트 다이어그램 6곳(concept-http-hol-blocking 3·lecture-refactoring-ch2 2·lecture-tdd-ch1 1 — §2-6 아닌 §1 다이어그램 영역, 한글 정렬 포함이라 장기적으로 HTML flexbox 전환 후보), 코드 주석 내 화살표.
+  - 검출 스크립트: 세션 스크래치패드 `scan26.py`(화살표 정렬·박스 표)·`scan26b.py`(다열 한글 칼럼, 트리 제외) — 방법: 펜스 추적 후 `[가-힣]…3+공백…[가-힣]` 2줄 이상.
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 
