@@ -84,6 +84,7 @@ Worker 쪽 규율이 게이트를 받칩니다: 보고 전 완료 기준 명령�
 
 ## 관련 페이지
 
+- [[guide-advisor-worker-demo]] — 이 모델을 데모 프로젝트에서 직접 실행하는 실습
 - [[concept-multi-agent-pattern]] — 3-tier(Planner/Coder/Critic) 패턴과의 비교
 - [[concept-harness-engineering]] — 부탁 대신 구조(tools 제한·게이트)로 제어하는 상위 개념
 - [[concept-loop-engineering]] — 검증 게이트 = 루프 안의 거부 신호

@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-06] guide | Advisor–Worker 실습 페이지 (판단·구현 분리 직접 체험)
+- **생성**: [[guide-advisor-worker-demo]] — 데모 프로젝트(`~/advisor-demo`, cart 할인 테스트)에 축약판 advisor/worker 에이전트를 설치하고 `claude --agent advisor`로 위임·검증 게이트를 관찰하는 15분 실습. 관찰 포인트 4장면·차이 표·역할 분리 체크리스트 포함.
+- **패턴 누적**: "보고를 믿지 말고 재검증하라" 비교표 (Advisor–Worker · Loop 실습 · Critic REJECT · guard.sh) — [[src-ai-advisor-worker]]·[[guide-loop-engineering-demo]]와 양방향.
+- index.md·mkdocs.yml nav(하네스·AI 에이전트 > 실습) 등록. a.md 삭제·ingest분 커밋(8e63285) 후속.
+
 ## [2026-07-06] ingest | Advisor–Worker 에이전트 스크립트 (raw/ai-advisor/)
 - **소스**: `raw/ai-advisor/` — advisor_script.md(Advisor 에이전트 정의, Fable 5), worker_script.md(Worker 에이전트 정의, Opus 4.8), claude_script.md(프로젝트 CLAUDE.md 템플릿). 판단·구현 분리 협업 모델.
 - **생성**: [[src-ai-advisor-worker]] (frontmatter tools 제한, 6항목 브리프, 검증 게이트, Planner/Coder/Critic 비교표), `raw/ai-advisor/README.md`(자료 인덱스)
