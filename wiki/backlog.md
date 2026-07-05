@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-07-05
+updated: 2026-07-06
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-07-05
 
 ## 📅 마지막 업데이트
 
-2026-07-05
+2026-07-06
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -37,6 +37,12 @@ updated: 2026-07-05
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
 ## ✅ 최근 완료 작업 (2026-06~07 누적)
+
+### 2026-07-06 — Advisor–Worker ingest + 실습 신설 + 실행 검증 (전부 배포 완료)
+
+- ✅ **`raw/ai-advisor/` ingest** — advisor/worker 에이전트 정의 + 프로젝트 CLAUDE.md 템플릿 (판단·구현 분리, 역할별 이종 모델). [[src-ai-advisor-worker]] 신설, [[concept-multi-agent-pattern]]에 "2-역할 변형" 절, 빈 파일 a.md 삭제.
+- ✅ **[[guide-advisor-worker-demo]] 실습 신설** — `~/advisor-demo` cart 할인 테스트를 완료 기준으로 축약판 에이전트 설치 → `claude --agent advisor` → 관찰 포인트 4장면·차이 표·역할 분리 체크리스트. "보고를 믿지 말고 재검증하라" 패턴 비교표 4행.
+- ✅ **실행 검증** — 헤드리스(`claude --agent advisor -p` + stream-json 도구 호출 감사)로 4장면 전부 재현: 6항목 브리프 위임 / Write는 Worker만 / Advisor가 diff·테스트 직접 재실행 / 검증 후 Advisor 커밋. 1사이클 3/3 통과. 페이지에 "✅ 실행 검증됨" 배너.
 
 ### 2026-07-05 — "§2-6 코드블록 ASCII 대응표 금지" 정책 신설 + 전면 소탕
 
@@ -163,7 +169,12 @@ updated: 2026-07-05
 
 ### 다음 세션 최우선 (Pending)
 
-(비어 있음 — §2-6 소탕까지 2026-07-05 완료. 남은 것은 사용자 입력·필요 증명 대기.)
+- [ ] **Advisor–Worker 실습 심화편** ([[guide-advisor-worker-demo]] 후속, 2026-07-06 등록) — 기본편은 1사이클 성공 경로만 체험. 심화편 후보 4장면 (원본 raw/ai-advisor/ 스크립트에 있으나 기본편이 다루지 않은 규율):
+  - ① **병렬 위임** — 서로 독립인 작업 2개(예: cart + coupon 모듈)를 한 턴에 여러 Task로 동시 위임, 의존 관계가 있으면 순차인 것과 대비.
+  - ② **검증 실패 → 수정 브리프 재위임** — 브리프에 함정(숨은 엣지 케이스 테스트)을 심어 Advisor 게이트가 실제로 거부하고 "무엇이 왜 실패했는지" 담긴 수정 브리프로 재위임하는 장면. 기본편에서 재현 안 된 유일한 규율.
+  - ③ **역할별 이종 모델 고정** — frontmatter `model:`(Fable 5 / Opus 4.8) 활성화 + `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 Worker 지정을 덮어쓰는 함정 실측.
+  - ④ **위임 오버헤드 예외** — 한두 줄 수정을 시켜 Advisor가 브리프 없이 직접 Edit하는지(예외 규정 작동) 관찰.
+  - 형식은 기본편과 동일(관찰 포인트·실행 검증 배너). 토큰 비용이 기본편보다 큼(사이클 2회 이상) — [[guide-loop-engineering-demo]] Step 6.5의 비용 주의 문구 재사용.
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 

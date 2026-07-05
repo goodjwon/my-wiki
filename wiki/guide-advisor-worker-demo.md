@@ -26,7 +26,7 @@ updated: 2026-07-06
 
 ## 왜 이 실습인가 — 1분 이론
 
-역할을 "부탁"으로 나누면 새면서 섞입니다. "너는 검증만 해"라고 말해도 모델은 결국 직접 고치기 시작합니다. 이 모델의 답은 [[concept-harness-engineering]] 식 구조 강제입니다:
+역할을 "부탁"으로 나누면 경계가 새고 결국 섞입니다. "너는 검증만 해"라고 말해도 모델은 결국 직접 고치기 시작합니다. 이 모델의 답은 [[concept-harness-engineering]] 식 구조 강제입니다:
 
 - Advisor의 `tools`에는 `Write`가 없습니다 → 파일을 새로 만들 수 없으니 구현 노동이 물리적으로 막힙니다.
 - Worker의 `tools`에는 `Task`가 없습니다 → 재위임이 물리적으로 막힙니다.
@@ -61,6 +61,8 @@ assert.strictEqual(totalPrice([]), 0);
 console.log('PASS — 3개 케이스 전부 통과');
 EOF
 ```
+
+방금 만든 테스트를 실행해 봅니다:
 
 ```bash
 node cart.test.js

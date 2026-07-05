@@ -4,6 +4,10 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-06] backlog·style | 심화편 후속 등록 + 새 페이지 톤앤매너 점검
+- [[backlog]] Pending에 **Advisor–Worker 실습 심화편** 등록 — 후보 4장면: ① 병렬 위임 ② 검증 실패→수정 브리프 재위임(기본편에서 재현 안 된 유일한 규율) ③ 이종 모델 고정+`CLAUDE_CODE_SUBAGENT_MODEL` 함정 실측 ④ 위임 오버헤드 예외. 완료 섹션에 2026-07-06 3건(ingest·실습·실행 검증) 기록.
+- **톤앤매너 점검** (src-ai-advisor-worker·guide-advisor-worker-demo, §7 대조): src 검증 게이트 목록 4행 한다체→합니다체, 금칙어 "돌리다" 2건 교정(§7-5), guide Step 1 `node cart.test.js` 블록 리드인 추가(§7-8), "새면서 섞입니다" 문장 정돈. 배너 안 "돌려"는 blockquote 허용 슬롯이라 유지. 두 파일 style-lint 0건.
+
 ## [2026-07-06] verify | Advisor–Worker 실습 실행 검증 (헤드리스)
 - [[guide-advisor-worker-demo]] Step 1~4를 실제 실행해 검증 — Step 3은 `claude --agent advisor -p` + `--output-format stream-json`으로 돌려 도구 호출 시퀀스 감사.
 - **4장면 전부 재현**: ① 브리프 6항목([목표]~[범위 경계]) 완비 + `subagent_type: worker` 위임 ② cart.js Write는 Worker만 수행 (Advisor는 탐색·Read만) ③ Worker 보고 후 Advisor가 변경 확인과 `node cart.test.js` 재실행을 직접 수행 ④ 검증 후 Advisor가 커밋. 1사이클 3/3 통과, 재위임 불필요.
