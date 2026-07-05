@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-05] fix | harness module2 Step 2 "변환 공식" 개연성 보강 (§7-8)
+- 사용자 피드백 "Step 2에서 설명이 막힘 — 변환 공식이 왜 나오는거야?". 원인: Module 01 Step 5 표에 이미 `STOP: 환경 파일 커밋` 메모 열이 있어 "이미 STOP인데 왜 또 변환?"이 되는데, 두 STOP의 차이(회고용 한 줄 메모 vs 에이전트가 판정할 완성형 조건)를 문서가 설명하지 않았음.
+- 수정: ① "### 변환 공식" → "### 변환 예시"로 개명(실제 내용은 예시 대응표 5쌍 — "공식"이 오해 유발) ② 새 절 "왜 그대로 복사하지 않고 '변환'하는가" 신설 — 읽는 주체 차이(사람 회고 vs 에이전트 판정) + 변환 시 붙이는 2요소(판정 가능한 패턴·멈춘 뒤의 대안) ③ 본문 "변환 공식" 지칭 2곳 정합 ④ 사용자 추가 지적("줄이 안 맞음")으로 ASCII 대응표(코드블록·한글 폭 때문에 정렬 불가) → 마크다운 2열 표로 전환.
+- raw에는 해당 표현 없음(wiki 서술층) — wiki만 수정. style-lint 0건, 빌드 통과.
+- 부수: 프로젝트 이동(Documents/→VsCodeProjects/) 여파로 깨진 `.venv` 재생성 (bad interpreter).
+
 ## [2026-07-04] ingest | Clean Code 3 + 오브젝트 4 concept 신설 — 책 기반 concept 11개 완성
 - backlog "즉시 가능" 잔여 7개 실행(7병렬 에이전트, 재료: lecture 교재 발췌 + 원전 검증). EJ 4개와 합쳐 책 기반 concept 페이지 11개 전부 완성.
 - **Clean Code**: [[concept-naming-conventions]](158줄, Spring Data JPA 쿼리 메서드=이름이 계약 — 공식 문서 검증) / [[concept-tdd-laws-and-first]](169줄, **귀속 오류 발견·교정**: 교재의 "Kent Beck의 3법칙"은 Martin 정식화가 정확 — Martin 본인 술회 확인, lecture-ch9·raw 동시 교정) / [[concept-simple-design-rules]](162줄, Fowler 순서 논쟁·4번 규칙 오독 주의).

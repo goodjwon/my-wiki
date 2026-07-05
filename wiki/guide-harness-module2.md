@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
   - harness-engineering/harness-kit/module2/02_before_after_prompt.md
 created: 2026-05-31
-updated: 2026-07-04
+updated: 2026-07-05
 ---
 
 # 하네스 Module 02 — CLAUDE.md 작성
@@ -136,26 +136,32 @@ Step 1 골격에서 비워 둔 섹션 7을 채울 차례입니다. Module 01 Ste
 
     - **위치**: `~/harness-playground`
     - **수정할 파일**: `CLAUDE.md` 섹션 7 — `.claude/baseline.md` 우선순위 표를 STOP 항목으로 변환
-    - **실행**: 아래 변환 공식대로 기본 목록을 붙여넣고, 본인 항목을 추가합니다.
+    - **실행**: 아래 변환 예시대로 기본 목록을 붙여넣고, 본인 항목을 추가합니다.
 
-### 변환 공식
+### 왜 그대로 복사하지 않고 "변환"하는가
 
-우선순위 표의 시스템 문제(왼쪽)가 섹션 7의 STOP 항목(오른쪽)으로 어떻게 바뀌는지 보여 주는 대응표입니다:
+Module 01 우선순위 표에도 이미 `STOP: 환경 파일 커밋` 같은 메모가 적혀 있어서, 그 열을 그대로 복사하면 될 것처럼 보입니다. 하지만 두 문서는 읽는 주체가 다릅니다. 우선순위 표는 사람이 회고할 때 읽는 기록이라 "무슨 사고였는지" 떠올릴 짧은 이름이면 충분하지만, CLAUDE.md 섹션 7은 에이전트가 작업 도중 자기 행동과 대조하는 판정 조건이라 그 이름만으로는 판정이 안 됩니다. "환경 파일 커밋"이라고만 적으면 `.env.local`이나 `credentials.json` 커밋은 걸리지 않고, "내부 모델 직접 노출"이라고만 적으면 에이전트가 멈춘 뒤 대신 무엇을 해야 하는지가 없습니다.
 
-```
-[Module 01 시스템 문제]   →  [CLAUDE.md 섹션 7 STOP 항목]
-.env 커밋               →  STOP: .env, .env.*, *credentials.json, *.pem 커밋
-DB 모델 응답 노출        →  STOP: ORM 모델(Prisma User, Mongoose Document)을
-                              API 응답에 직접 반환 (DTO/Zod 스키마 변환 필수)
-테스트 없이 라우트 추가  →  STOP: 라우트 핸들러를 *.test.js 없이 추가
-시크릿 로깅             →  STOP: console.log(process.env.*) 또는
-                              logger에 password/token/secret 키 노출
-silent try/catch        →  STOP: catch 블록을 비우거나 console.log만
-```
+그래서 표의 각 행을 옮길 때 두 가지를 붙입니다:
+
+1. **판정 가능한 패턴** — 파일 글롭(`.env.*`, `*.pem`)이나 호출 형태(`console.log(process.env.*)`)처럼, 에이전트가 지금 하려는 행동과 기계적으로 대조할 수 있는 표현으로 범위를 넓혀 적습니다.
+2. **멈춘 뒤의 대안** — 금지만 있으면 에이전트가 어중간하게 우회하므로, 대신 할 일(DTO 변환 필수, 새 마이그레이션 추가만)을 같은 줄에 명시합니다.
+
+### 변환 예시
+
+Module 01 표의 시스템 문제(왼쪽)에 위 두 가지가 붙어 섹션 7의 STOP 항목(오른쪽)으로 바뀌는 모습입니다:
+
+| Module 01 시스템 문제 | CLAUDE.md 섹션 7 STOP 항목 |
+|----------------------|---------------------------|
+| `.env` 커밋 | STOP: `.env`, `.env.*`, `*credentials.json`, `*.pem` 커밋 |
+| DB 모델 응답 노출 | STOP: ORM 모델(Prisma User, Mongoose Document)을 API 응답에 직접 반환 — DTO/Zod 스키마 변환 필수 |
+| 테스트 없이 라우트 추가 | STOP: 라우트 핸들러를 `*.test.js` 없이 추가 |
+| 시크릿 로깅 | STOP: `console.log(process.env.*)` 또는 logger에 password/token/secret 키 노출 |
+| silent try/catch | STOP: catch 블록을 비우거나 `console.log`만 |
 
 ### Node + 일반 추천 STOP 트리거 (기본)
 
-변환 공식을 항목마다 손으로 적용할 필요는 없습니다. 자주 나오는 시스템 문제를 미리 변환해 둔 Node 공통 기본 목록이 아래에 있으므로, CLAUDE.md 섹션 7을 다음으로 교체합니다:
+이 변환을 항목마다 손으로 할 필요는 없습니다. 자주 나오는 시스템 문제를 미리 변환해 둔 Node 공통 기본 목록이 아래에 있으므로, CLAUDE.md 섹션 7을 다음으로 교체합니다:
 
 ```markdown
 ## 7. ⛔ 절대 금지 트리거 (STOP)
