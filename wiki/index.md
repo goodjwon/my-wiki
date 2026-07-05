@@ -1,6 +1,6 @@
 ---
 title: Wons Wiki 인덱스
-updated: 2026-06-26
+updated: 2026-07-06
 
 ---
 
@@ -21,6 +21,7 @@ updated: 2026-06-26
 - [[src-harness-engineering]] — 하네스 엔지니어링 실습 키트 (Karpathy × OpenAI × Hashimoto, 5모듈 커리큘럼)
 - [[src-copilot-token-pricing]] — GitHub Copilot 토큰 종량제 전환 (2026-06-01) — 비용 폭증·예산 상한·하네스 적용 후보
 - [[src-loop-engineering]] — Loop 엔지니어링 (2026-06 Steinberger·Cherny·Osmani 발화 정리)
+- [[src-ai-advisor-worker]] — Advisor–Worker 에이전트 스크립트 (판단·구현 분리, 역할별 이종 모델)
 - [[src-effective-java-lecture]] — 📚 *Effective Java* 실전 강의 교재 11장 인덱스 (5,200+줄)
 - [[src-refactoring-lecture]] — 📚 *리팩터링 2판* 실전 강의 교재 12장 인덱스 (약 5,000줄)
 - [[src-clean-code-lecture]] — 📚 *Clean Code* 실전 강의 교재 17장 인덱스

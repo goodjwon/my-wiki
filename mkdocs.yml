@@ -120,6 +120,7 @@ nav:
       - Claude Design 리뷰: src-claude-design-review.md
       - Copilot 토큰 종량제 전환 (2026-06): src-copilot-token-pricing.md
       - "Loop 엔지니어링 커뮤니티 발화 (2026-06)": src-loop-engineering.md
+      - "🆕 Advisor–Worker 에이전트 스크립트": src-ai-advisor-worker.md
     - 실습:
       - 사전 안내 (Module 00): guide-harness-00-prerequisites.md
       - 5분 데모: guide-harness-demo.md

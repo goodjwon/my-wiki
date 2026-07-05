@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-06] ingest | Advisor–Worker 에이전트 스크립트 (raw/ai-advisor/)
+- **소스**: `raw/ai-advisor/` — advisor_script.md(Advisor 에이전트 정의, Fable 5), worker_script.md(Worker 에이전트 정의, Opus 4.8), claude_script.md(프로젝트 CLAUDE.md 템플릿). 판단·구현 분리 협업 모델.
+- **생성**: [[src-ai-advisor-worker]] (frontmatter tools 제한, 6항목 브리프, 검증 게이트, Planner/Coder/Critic 비교표), `raw/ai-advisor/README.md`(자료 인덱스)
+- **교차참조**: [[concept-multi-agent-pattern]]에 "2-역할 변형: Advisor–Worker" 절 + 관련 페이지 링크, [[concept-claude-md]] 관련 페이지 링크 (모두 양방향)
+- **index.md·mkdocs.yml nav** (하네스·AI 에이전트 > 소스) 등록
+- **보류**: `raw/ai-advisor/a.md`는 빈 파일 — 삭제 여부 사용자 확인 필요
+
 ## [2026-07-05] lint | §2-6 전면 소탕 — 코드블록 ASCII 대응표 36곳 → 마크다운 표 (35파일)
 - 사용자 지시 "비슷한 부분 더 찾아봐" + "스텝별로 맥락이 중요" → §2-6에 **전환 지침 표 신설**(비교형=열이 대안 / 진행형=행이 단계 / 대응형=조건|결과 — 블록이 담던 의미 축을 보존해야 함) 후 인벤토리 전체 소탕.
 - **강의 교재 32곳 (4계열 에이전트 병렬)**: Clean Code 5(전부 비교형) / EJ 6(진행형 3 — 생애주기·입구몸통출구·예외 라이프사이클은 "단계|해당 아이템" 축, 대응형 1 — 예외 결정 가이드 "상황|던질 예외") / 오브젝트 13(사다리형은 열 순서=단계 의미를 리드인에 명시, ch5·ch14는 굵은 리드인 번호 목록, appendixC "영화 예매" 추가 발견분 포함) / TDD·리팩터링 8(tdd-ch6·9 진행형 "단계|내용", ch29 용어 대응).

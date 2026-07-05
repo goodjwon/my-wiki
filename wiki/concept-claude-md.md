@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, claude-md, karpathy]
 sources: [harness-engineering/harness-kit/module2/CLAUDE.md, harness-engineering/harness-engineering-tutor-prompt.md, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-07-05
+updated: 2026-07-06
 ---
 
 # CLAUDE.md — 에이전트 헌법
@@ -116,4 +116,5 @@ CLAUDE.md 하단에는 반드시 다음 표를 둡니다 — 에이전트가 같
 - [[concept-multi-agent-pattern]] — AGENTS.md (모델 불가지론적 버전)
 - [[src-harness-engineering]] — 5모듈 커리큘럼
 - [[guide-project-docs-setup]] — CLAUDE.md 템플릿 + 셋업 절차
+- [[src-ai-advisor-worker]] — 협업 모델(Advisor–Worker)을 CLAUDE.md에 심는 템플릿 사례
 - [[src-kakaopay-ddd]] — DDD 모델링 근거 (Entity/VO/Aggregate)
