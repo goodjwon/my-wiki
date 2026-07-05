@@ -20,6 +20,8 @@ updated: 2026-07-06
 
 **전제**: Claude Code 설치·로그인, Node 18+. Step 3부터는 실제 모델을 호출하므로 **토큰이 소모됩니다** — Advisor(메인) + Worker(서브에이전트) 이중 호출이라 일반 세션보다 비쌉니다.
 
+> ✅ **실행 검증됨 (2026-07-06, Node v26)**: Step 1~4를 실제로 돌려 확인했습니다 (Step 3은 헤드리스 `claude --agent advisor -p`로 실행, 도구 호출 로그 감사). 관찰 포인트 4장면 전부 재현 — ① Advisor가 [목표]~[범위 경계] 6항목을 모두 채운 브리프로 `worker`에 위임 ② cart.js의 Write는 Worker(서브에이전트)만 수행 ③ Worker의 완료 보고 후 Advisor가 변경 확인(`git status` + `cat cart.js`)과 `node cart.test.js` 재실행을 자기 손으로 다시 수행 ④ 커밋은 Advisor가 검증 후 실행. 1사이클에 3/3 케이스 통과.
+
 ---
 
 ## 왜 이 실습인가 — 1분 이론

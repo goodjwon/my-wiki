@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-06] verify | Advisor–Worker 실습 실행 검증 (헤드리스)
+- [[guide-advisor-worker-demo]] Step 1~4를 실제 실행해 검증 — Step 3은 `claude --agent advisor -p` + `--output-format stream-json`으로 돌려 도구 호출 시퀀스 감사.
+- **4장면 전부 재현**: ① 브리프 6항목([목표]~[범위 경계]) 완비 + `subagent_type: worker` 위임 ② cart.js Write는 Worker만 수행 (Advisor는 탐색·Read만) ③ Worker 보고 후 Advisor가 변경 확인과 `node cart.test.js` 재실행을 직접 수행 ④ 검증 후 Advisor가 커밋. 1사이클 3/3 통과, 재위임 불필요.
+- 페이지에 "✅ 실행 검증됨 (2026-07-06)" 배너 추가. 데모 디렉터리 정리 완료.
+
 ## [2026-07-06] guide | Advisor–Worker 실습 페이지 (판단·구현 분리 직접 체험)
 - **생성**: [[guide-advisor-worker-demo]] — 데모 프로젝트(`~/advisor-demo`, cart 할인 테스트)에 축약판 advisor/worker 에이전트를 설치하고 `claude --agent advisor`로 위임·검증 게이트를 관찰하는 15분 실습. 관찰 포인트 4장면·차이 표·역할 분리 체크리스트 포함.
 - **패턴 누적**: "보고를 믿지 말고 재검증하라" 비교표 (Advisor–Worker · Loop 실습 · Critic REJECT · guard.sh) — [[src-ai-advisor-worker]]·[[guide-loop-engineering-demo]]와 양방향.
