@@ -10,6 +10,12 @@ title: Wons Wiki 로그
 - raw에는 해당 표현 없음(wiki 서술층) — wiki만 수정. style-lint 0건, 빌드 통과.
 - 부수: 프로젝트 이동(Documents/→VsCodeProjects/) 여파로 깨진 `.venv` 재생성 (bad interpreter).
 
+## [2026-07-05] policy | §2-6 신설 — 대응·비교는 마크다운 표로 (코드블록 ASCII 정렬 금지)
+- 위 module2 수정에서 일반화(사용자 "줄 맞추는 것도 대응표면 표로 만들면 좋겠지? 정책에 적용해줘"). 근거: 한글은 고정폭 폰트에서도 영문 폭 정수배가 아니라 코드블록 열 맞춤이 폰트·환경마다 어긋남.
+- [[guide-wiki-authoring-standards]] §2-6 신설(규칙·이유·판별 기준·예외) + §8 셀프체크 1행. 예외: 실행 명령·출력 로그·트리·diff 등 모노스페이스 산출물은 코드블록 유지(단 한글 열 맞춤 시도 금지).
+- CLAUDE.md 요약(다이어그램 기준)·셀프체크에도 1행씩 반영.
+- 1차 스캔으로 기존 위반 후보 ~12파일 검출 → backlog Pending 등록(복붙 템플릿 내부는 예외 판별 필요).
+
 ## [2026-07-04] ingest | Clean Code 3 + 오브젝트 4 concept 신설 — 책 기반 concept 11개 완성
 - backlog "즉시 가능" 잔여 7개 실행(7병렬 에이전트, 재료: lecture 교재 발췌 + 원전 검증). EJ 4개와 합쳐 책 기반 concept 페이지 11개 전부 완성.
 - **Clean Code**: [[concept-naming-conventions]](158줄, Spring Data JPA 쿼리 메서드=이름이 계약 — 공식 문서 검증) / [[concept-tdd-laws-and-first]](169줄, **귀속 오류 발견·교정**: 교재의 "Kent Beck의 3법칙"은 Martin 정식화가 정확 — Martin 본인 술회 확인, lecture-ch9·raw 동시 교정) / [[concept-simple-design-rules]](162줄, Fowler 순서 논쟁·4번 규칙 오독 주의).

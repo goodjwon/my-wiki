@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-07-04
+updated: 2026-07-05
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-07-04
 
 ## 📅 마지막 업데이트
 
-2026-07-04
+2026-07-05
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -154,7 +154,7 @@ updated: 2026-07-04
 
 ### 다음 세션 최우선 (Pending)
 
-(비어 있음 — 2026-07-04 기준 자율 진행 가능한 백로그 소진: 글쓰기 2차·책 기반 concept 11개까지 완료. 남은 것은 전부 사용자 입력·필요 증명 대기.)
+- [ ] **§2-6 기존 위반 소탕 — 코드블록 ASCII 대응표 → 마크다운 표** (2026-07-05 정책 신설의 후속). 1차 스캔(`grep '[가-힣].*   *→' wiki/*.md`)에서 후보 ~12파일 검출: lecture-effective-java-ch10(예외 선택 4행)·entity-jvm(GC 생애주기)·lecture-object-ch4/5/15·lecture-tdd-ch2/6/8·lecture-effective-java-ch3·concept-claude-md 등. **주의**: concept-claude-md·guide-harness-module2의 매치는 복붙용 CLAUDE.md 템플릿 내부(§2-6 예외 — 코드블록 유지, 단 한글 열 맞춤 공백만 단일 공백으로 축소). 건별로 "설명이냐 복붙 산출물이냐" 판별 필요.
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 
