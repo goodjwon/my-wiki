@@ -4,7 +4,7 @@ type: source
 tags: [book, object, cho-young-ho, lecture]
 sources: [object/오브젝트 실전 강의 교재 부록C.md]
 created: 2026-06-21
-updated: 2026-06-27
+updated: 2026-07-05
 ---
 
 # 오브젝트 실전 강의 교재
@@ -62,28 +62,21 @@ updated: 2026-06-27
 
 #### 거꾸로 사고하는 함정
 
-```
-[ 잘못된 순서 ]            [ 올바른 순서 ]
- 클래스 그리기              협력 시나리오 그리기
-   ↓                        ↓
- 필드·메서드 설계            메시지·책임 분배
-   ↓                        ↓
- 협력 발견 안 됨            클래스·필드는 협력의 결과
-```
+두 순서를 단계별로 나란히 비교:
+
+| 단계 | 잘못된 순서 | 올바른 순서 |
+|------|-------------|-------------|
+| 1 | 클래스 그리기 | 협력 시나리오 그리기 |
+| 2 | 필드·메서드 설계 | 메시지·책임 분배 |
+| 3 | 협력 발견 안 됨 | 클래스·필드는 협력의 결과 |
 
 #### 사례 — 영화 예매
 
-```
-[ 잘못된 사고 ]            [ 올바른 사고 ]
- "Movie 가 있어야"          "예매 시나리오:"
- "Movie.title·fee·..."      "  사용자 → Screening.reserve()"
- "Movie.getFee()"          "    Screening → Movie.calculateFee()"
- "Service 가 호출"            "      Movie → DiscountPolicy.calculate()"
-                            ↓
-                           "이 협력에 필요한 객체 + 메시지가 도출"
-                            ↓
-                           "Movie·Screening·DiscountPolicy + calculateFee/reserve"
-```
+같은 요구사항에서 두 사고가 어떻게 갈라지는지:
+
+| 잘못된 사고 | 올바른 사고 |
+|------------|------------|
+| "Movie 가 있어야"<br>"Movie.title·fee·..."<br>"Movie.getFee()"<br>"Service 가 호출" | "예매 시나리오:"<br>사용자 → `Screening.reserve()`<br>Screening → `Movie.calculateFee()`<br>Movie → `DiscountPolicy.calculate()`<br>↓ 이 협력에 필요한 객체 + 메시지가 도출<br>↓ Movie·Screening·DiscountPolicy + `calculateFee`/`reserve` |
 
 → 4·5장 책임 주도 설계의 핵심.
 

@@ -7,7 +7,7 @@ external:
   - https://docs.oracle.com/en/java/javase/21/vm/java-virtual-machine-technology-overview.html
   - https://docs.oracle.com/en/java/javase/21/gctuning/
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-05
 ---
 
 # JVM (Java Virtual Machine)
@@ -73,14 +73,16 @@ Old Generation (Tenured) — Survivor 왕복 후 Promotion
 
 ### Young → Old 흐름
 
-```
-1. new Object()       → Eden 할당
-2. Eden 가득          → Minor GC 발생
-3. 살아남음           → Survivor (S0 또는 S1)으로 이동
-4. Survivor 왕복      → MaxTenuringThreshold(기본 15) 도달
-5. Old로 승격(Promotion)
-6. Old 가득           → Major GC (또는 Full GC) 발생
-```
+객체가 태어나서 Old 영역까지 가는 여정은 여섯 단계로 진행됩니다:
+
+| 단계 | 사건·조건 | 결과 |
+|------|----------|------|
+| 1 | `new Object()` | Eden 할당 |
+| 2 | Eden 가득 | Minor GC 발생 |
+| 3 | 살아남음 | Survivor (S0 또는 S1)으로 이동 |
+| 4 | Survivor 왕복 | MaxTenuringThreshold(기본 15) 도달 |
+| 5 | 임계값 도달 | Old로 승격(Promotion) |
+| 6 | Old 가득 | Major GC (또는 Full GC) 발생 |
 
 ### 주요 GC 알고리즘
 

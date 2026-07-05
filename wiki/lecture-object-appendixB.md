@@ -4,7 +4,7 @@ type: source
 tags: [book, object, cho-young-ho, lecture]
 sources: [object/오브젝트 실전 강의 교재 부록B.md]
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-07-05
 ---
 
 # 오브젝트 실전 강의 교재
@@ -26,13 +26,13 @@ updated: 2026-06-21
 
 ### 0.2 큰 그림 — 6 가지 메커니즘 비교
 
-```
-[ 단일 ]                          [ 결합 ]                      [ 동적 ]
- 클래스 상속                       인터페이스 + 추상 클래스          덕 타이핑
- 인터페이스                       (Java Collection 패턴)          (Ruby·Python)
- 추상 클래스                                                     믹스인
-                                                                (Scala trait·Kotlin)
-```
+메커니즘을 세 그룹으로 나눈 비교:
+
+| 단일 | 결합 | 동적 |
+|------|------|------|
+| 클래스 상속 | 인터페이스 + 추상 클래스 (Java Collection 패턴) | 덕 타이핑 (Ruby·Python) |
+| 인터페이스 | | 믹스인 (Scala trait·Kotlin) |
+| 추상 클래스 | | |
 
 > **비유 — "조직 구조"**
 >

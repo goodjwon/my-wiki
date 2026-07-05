@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 10장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-07-05
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -27,14 +27,13 @@ updated: 2026-06-20
 
 ### 0.2 큰 그림 — 예외 라이프사이클
 
-```
-[ 던지기 결정 ]                    [ 종류 선택 ]                  [ 처리·문서 ]
- 아이템 69  진짜 예외 상황만 ⭐     아이템 70  checked vs unchecked  아이템 73  추상화 수준 ⭐
-                                    아이템 71  checked 남용 회피     아이템 74  Javadoc 문서화
-                                    아이템 72  표준 예외 사용         아이템 75  상세 메시지
-                                                                       아이템 76  실패 원자성
-                                                                       아이템 77  예외 무시 금지 ⭐
-```
+10장의 아이템은 예외 라이프사이클 세 단계로 묶입니다.
+
+| 단계 | 해당 아이템 |
+|------|------------|
+| 던지기 결정 | 아이템 69 진짜 예외 상황만 ⭐ |
+| 종류 선택 | 아이템 70 checked vs unchecked<br>아이템 71 checked 남용 회피<br>아이템 72 표준 예외 사용 |
+| 처리·문서 | 아이템 73 추상화 수준 ⭐<br>아이템 74 Javadoc 문서화<br>아이템 75 상세 메시지<br>아이템 76 실패 원자성<br>아이템 77 예외 무시 금지 ⭐ |
 
 > **비유 — 예외는 "병원 응급실 트리아지"입니다.**
 >
@@ -227,12 +226,14 @@ obj.action();   // 이제 안 던짐
 
 ### 결정 가이드
 
-```
-인자가 잘못됐다?       → IllegalArgumentException (단, null이면 NullPointerException)
-객체 상태가 잘못됐다?  → IllegalStateException
-인덱스가 범위 밖?      → IndexOutOfBoundsException
-미지원 연산?            → UnsupportedOperationException
-```
+상황별로 어떤 표준 예외를 던질지 다음 기준으로 고릅니다.
+
+| 상황 | 던질 예외 |
+|------|----------|
+| 인자가 잘못됐다? | `IllegalArgumentException` (단, null이면 `NullPointerException`) |
+| 객체 상태가 잘못됐다? | `IllegalStateException` |
+| 인덱스가 범위 밖? | `IndexOutOfBoundsException` |
+| 미지원 연산? | `UnsupportedOperationException` |
 
 ### 안티패턴 — 무지성 RuntimeException
 

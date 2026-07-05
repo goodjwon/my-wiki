@@ -4,7 +4,7 @@ type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 9장.md]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-07-05
 ---
 
 # 테스트 주도 개발 실전 강의 교재
@@ -26,11 +26,13 @@ updated: 2026-06-21
 
 ### 0.2 큰 그림 — "타입 코드 → 데이터"
 
-```
-[ 현재 ]                              [ 9장 후 ]                       [ 11장 ]
- Dollar.times → Dollar 생성           Money.times + currency 필드      자식 클래스 제거
- Franc.times → Franc 생성             (자식이 거의 빈 껍데기)            Money 한 클래스만
-```
+타입으로 표현하던 차이가 데이터로 환원되는 진행:
+
+| 단계 | 내용 |
+|------|------|
+| 현재 | `Dollar.times` → `Dollar` 생성, `Franc.times` → `Franc` 생성 |
+| 9장 후 | `Money.times` + `currency` 필드 (자식이 거의 빈 껍데기) |
+| 11장 | 자식 클래스 제거 — `Money` 한 클래스만 |
 
 > **비유 — "공장 라인 통합"**
 >

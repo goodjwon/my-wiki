@@ -4,7 +4,7 @@ type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 9장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-07-05
 ---
 
 # 클린 코드 실전 강의 교재
@@ -26,14 +26,15 @@ updated: 2026-06-20
 
 ### 0.2 큰 그림
 
-```
-[ TDD 3법칙 ]                  [ 깨끗한 테스트 ]              [ F.I.R.S.T. ]
- 실패 테스트 먼저               도메인 특화 언어 (DSL)         Fast
- 통과 최소 코드                  이중 표준 (테스트는 가독성)    Independent
- 정련 후 다음                                                   Repeatable
-                                                                Self-validating
-                                                                Timely
-```
+이 장이 다루는 내용을 세 묶음으로 정리하면 다음과 같습니다.
+
+| TDD 3법칙 | 깨끗한 테스트 | F.I.R.S.T. |
+|-----------|--------------|------------|
+| 실패 테스트 먼저 | 도메인 특화 언어 (DSL) | Fast |
+| 통과 최소 코드 | 이중 표준 (테스트는 가독성) | Independent |
+| 정련 후 다음 | | Repeatable |
+| | | Self-validating |
+| | | Timely |
 
 > **비유 — 단위 테스트는 "코드의 헬스장"입니다.**
 >

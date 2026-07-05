@@ -4,7 +4,7 @@ type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 12장.md]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-07-05
 ---
 
 # 테스트 주도 개발 실전 강의 교재
@@ -26,14 +26,12 @@ updated: 2026-06-21
 
 ### 0.2 큰 그림 — "결과 객체 vs 표현 객체"
 
-```
-[ 즉시 계산 ]                     [ 지연 평가 (12장 도입) ]
- Money.plus(Money) → Money         Money.plus(Money) → Expression (Sum)
-                                   Expression.reduce(rate) → Money
+즉시 계산과 지연 평가의 대비:
 
-문제: $5 + 10 CHF 는?              해법: Sum 으로 표현 후 환율 적용 시 계산
-       (환율 모름)                       (관심사 분리 — 더하기 vs 환산)
-```
+| 즉시 계산 | 지연 평가 (12장 도입) |
+|----------|----------------------|
+| `Money.plus(Money)` → `Money` | `Money.plus(Money)` → `Expression` (Sum)<br>`Expression.reduce(rate)` → `Money` |
+| 문제: $5 + 10 CHF 는? (환율 모름) | 해법: Sum 으로 표현 후 환율 적용 시 계산 (관심사 분리 — 더하기 vs 환산) |
 
 > **비유 — "주문서 vs 음식"**
 >

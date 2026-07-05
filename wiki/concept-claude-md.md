@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, claude-md, karpathy]
 sources: [harness-engineering/harness-kit/module2/CLAUDE.md, harness-engineering/harness-engineering-tutor-prompt.md, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-07-02
+updated: 2026-07-05
 ---
 
 # CLAUDE.md — 에이전트 헌법
@@ -39,10 +39,10 @@ updated: 2026-07-02
 - 태스크를 검증 가능한 목표로 변환: `"버그 고쳐줘" → "재현 테스트 작성 → 테스트 통과시키기"`
 - 멀티스텝 작업 시 계획 먼저:
 ```
-1. Domain 모델 정의   → verify: 단위 테스트 통과
+1. Domain 모델 정의 → verify: 단위 테스트 통과
 2. Repository 인터페이스 → verify: 컴파일 성공
-3. UseCase 구현       → verify: 통합 테스트 통과
-4. Controller         → verify: API 테스트 통과
+3. UseCase 구현 → verify: 통합 테스트 통과
+4. Controller → verify: API 테스트 통과
 ```
 
 ## 절대 금지 트리거 (STOP 조건)

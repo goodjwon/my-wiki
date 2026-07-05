@@ -4,7 +4,7 @@ type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 6장.md]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-07-05
 ---
 
 # 테스트 주도 개발 실전 강의 교재
@@ -26,12 +26,13 @@ updated: 2026-06-21
 
 ### 0.2 큰 그림 — "추출 + 새 빨강"
 
-```
-[ 5장 끝 ]                    [ 6장: 추출 ]                     [ 6장 끝: 새 빨강 ]
- Dollar / Franc 평행 코드      → Money 슈퍼클래스 추출           → equals 가 Money 비교
- (equals 두 곳에 중복)         (equals 부모로 끌어올림)            → Franc(5) == Dollar(5) ❌
-                                                                  (7장에서 해결)
-```
+추출이 새 빨강을 드러내는 진행 순서:
+
+| 단계 | 내용 |
+|------|------|
+| 5장 끝 | `Dollar` / `Franc` 평행 코드 (`equals` 두 곳에 중복) |
+| 6장: 추출 | `Money` 슈퍼클래스 추출 (`equals` 부모로 끌어올림) |
+| 6장 끝: 새 빨강 | `equals` 가 `Money` 비교 → `Franc(5) == Dollar(5)` ❌ (7장에서 해결) |
 
 > **비유 — "두 가게의 공통 주방 만들기"**
 >

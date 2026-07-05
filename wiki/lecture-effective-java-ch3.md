@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 3장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-07-05
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -27,11 +27,10 @@ updated: 2026-06-20
 
 `Object`의 메서드들은 그냥 오버라이드 가능한 메서드가 아니라, **일반 규약(general contract)**이라는 계약이 걸려 있습니다.
 
-```
-[ 같음을 정의 ]                 [ 표현/정렬 ]               [ 복제 ]
- 아이템 10  equals 규약          아이템 12  toString          아이템 13  clone (가급적 회피)
- 아이템 11  hashCode 동반        아이템 14  Comparable        → 복사 생성자/팩터리 권장
-```
+| 같음을 정의 | 표현/정렬 | 복제 |
+|------------|----------|------|
+| 아이템 10 equals 규약 | 아이템 12 toString | 아이템 13 clone (가급적 회피) |
+| 아이템 11 hashCode 동반 | 아이템 14 Comparable | → 복사 생성자/팩터리 권장 |
 
 > **비유 — `equals`/`hashCode`는 "주민등록 시스템"입니다.**
 > 

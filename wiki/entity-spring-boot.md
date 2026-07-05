@@ -7,7 +7,7 @@ external:
   - https://spring.io/projects/spring-boot
   - https://docs.spring.io/spring-boot/reference/
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-07-05
 ---
 
 # Spring Boot
@@ -185,13 +185,13 @@ cd demo && ./gradlew bootRun
 
 ## Spring Boot vs 다른 Spring
 
-```
-Spring Framework      ── (가장 아래, IoC/DI/AOP/MVC 기본기)
-   ↓ 위에 쌓임
-Spring Boot           ── 자동 설정 + 내장 서버 + Starter (실무 표준)
-   ↓ 위에 쌓임
-Spring Cloud (선택)    ── 마이크로서비스
-```
+세 층이 아래에서 위로 쌓이는 구조입니다:
+
+| 계층 (아래 → 위) | 역할 |
+|-----------------|------|
+| Spring Framework | 가장 아래 — IoC/DI/AOP/MVC 기본기 |
+| Spring Boot | 자동 설정 + 내장 서버 + Starter (실무 표준) |
+| Spring Cloud (선택) | 마이크로서비스 |
 
 ## 흔한 함정
 

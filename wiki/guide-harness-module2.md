@@ -77,9 +77,9 @@ cat > CLAUDE.md << 'EOF'
 ## 5. Goal-Driven Execution
 - "[단계] → verify: [확인법]" 형식.
 - 멀티스텝은 계획 먼저:
-  1. 라우트 정의      → verify: 컴파일/lint OK
-  2. 핸들러 구현      → verify: 단위 테스트 통과
-  3. 통합 테스트      → verify: supertest 200 OK
+  1. 라우트 정의 → verify: 컴파일/lint OK
+  2. 핸들러 구현 → verify: 단위 테스트 통과
+  3. 통합 테스트 → verify: supertest 200 OK
 
 ## 6. 프로젝트 구조
 (여기는 Step 3에서 채움)
