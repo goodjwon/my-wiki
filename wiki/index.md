@@ -76,6 +76,7 @@ updated: 2026-07-06
 - [[concept-claude-md]] — CLAUDE.md 에이전트 헌법 (Karpathy 4원칙 + STOP 트리거)
 - [[concept-claude-hooks]] — Claude Code Hooks (guard.sh + lint-fix.sh 시스템 강제)
 - [[concept-multi-agent-pattern]] — Planner / Coder / Critic 3-tier 멀티 에이전트
+- [[concept-advisor-worker]] — Advisor–Worker 패턴: 판단·구현 분리 위임 (tools 강제·브리프·검증 게이트·모델 티어링)
 - [[concept-db-connection-pool]] — DB 커넥션 풀: getConnection()이 빠른 이유 + HikariCP 3타이머 + Leak 감지
 - [[concept-keepalive-timeout-race]] — LB ↔ 서버 Keep-Alive 타임아웃 불일치로 인한 새벽 502 race condition
 - [[concept-varchar-length-prefix]] — VARCHAR 길이 프리픽스: 255 신화의 진짜 이유 + utf8mb4 시대의 63 경계

@@ -101,7 +101,7 @@ REJECT: 근본적 재설계 필요
 
 ### 2-역할 변형: Advisor–Worker
 
-역할을 판단/실행 둘로만 나눈 변형이 [[src-ai-advisor-worker]]입니다. Planner와 Critic을 Advisor 하나로 합치고(작업 분해 + 6항목 브리프 작성 + diff·테스트 직접 재검증), Coder에 해당하는 Worker는 `.claude/agents/*.md` frontmatter의 `tools` 제한으로 재위임을 구조적으로 차단합니다. 역할별로 이종 모델(판단 Fable 5, 구현 Opus 4.8)을 고정하는 점도 특징입니다. 상세 비교표는 해당 페이지 참조.
+역할을 판단/실행 둘로만 나눈 변형이 [[concept-advisor-worker]]입니다 (원본 스크립트: [[src-ai-advisor-worker]]). Planner와 Critic을 Advisor 하나로 합치고(작업 분해 + 6항목 브리프 작성 + diff·테스트 직접 재검증), Coder에 해당하는 Worker는 `.claude/agents/*.md` frontmatter의 `tools` 제한으로 재위임을 구조적으로 차단합니다. 역할별로 이종 모델(판단 Fable 5, 구현 Opus 4.8)을 고정하는 점도 특징입니다. 상세 비교표는 해당 페이지 참조.
 
 ### Critic 패턴 변형: 모델 교차 검증
 
@@ -150,4 +150,5 @@ OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL R
 - [[concept-claude-md]] — AGENTS.md / CLAUDE.md 비교
 - [[concept-claude-hooks]] — 세션 인계 자동화 (Stop hook)
 - [[src-harness-engineering]] — Module 04 전체 자료
-- [[src-ai-advisor-worker]] — 2-역할(Advisor–Worker) 변형, 역할별 이종 모델 배치
+- [[concept-advisor-worker]] — 2-역할(Advisor–Worker) 변형 패턴, 역할별 이종 모델 배치
+- [[src-ai-advisor-worker]] — Advisor–Worker 원본 스크립트

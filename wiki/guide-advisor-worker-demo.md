@@ -214,6 +214,7 @@ cd ~ && rm -rf ~/advisor-demo
 
 ## 관련 페이지
 
+- [[concept-advisor-worker]] — 이 실습이 체험하는 패턴의 개념 (원리·적용 기준)
 - [[src-ai-advisor-worker]] — 이 실습의 이론·원본 스크립트 해설
 - [[guide-harness-module4]] — 직전 단계: Planner/Coder/Critic 실습 (문서 규정 방식)
 - [[guide-loop-engineering-demo]] — 거부 신호 루프 실습 (검증 게이트의 루프 버전)

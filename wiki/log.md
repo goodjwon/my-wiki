@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-06] concept | Advisor–Worker 패턴 개념 페이지 신설
+- 사용자 지적 "개념에도 내용이 있어야지" — src(스크립트 요약)·guide(실습)만 있고 개념층이 빠져 있던 것을 보완. [[concept-advisor-worker]] 신설(약 140줄): 정의·부탁 vs 구조·구성 요소 4가지(tools 고정·브리프·검증 게이트·승인 권한)·모델 티어링·적용/비적용 기준·"검증 주체의 독립성" 패턴 비교표 5행·도입 체크리스트.
+- src와 중복 회피 분담: src=스크립트에 뭐가 있나(브리프 6항목 원문·frontmatter 예시·3-tier 비교표), concept=패턴의 원리·언제 쓰나.
+- 교차참조 양방향: src·guide 관련 페이지 최상단, [[concept-multi-agent-pattern]] "2-역할 변형" 절이 concept를 1차 링크로. nav(하네스 > 개념)·index 등록.
+
 ## [2026-07-06] backlog·style | 심화편 후속 등록 + 새 페이지 톤앤매너 점검
 - [[backlog]] Pending에 **Advisor–Worker 실습 심화편** 등록 — 후보 4장면: ① 병렬 위임 ② 검증 실패→수정 브리프 재위임(기본편에서 재현 안 된 유일한 규율) ③ 이종 모델 고정+`CLAUDE_CODE_SUBAGENT_MODEL` 함정 실측 ④ 위임 오버헤드 예외. 완료 섹션에 2026-07-06 3건(ingest·실습·실행 검증) 기록.
 - **톤앤매너 점검** (src-ai-advisor-worker·guide-advisor-worker-demo, §7 대조): src 검증 게이트 목록 4행 한다체→합니다체, 금칙어 "돌리다" 2건 교정(§7-5), guide Step 1 `node cart.test.js` 블록 리드인 추가(§7-8), "새면서 섞입니다" 문장 정돈. 배너 안 "돌려"는 blockquote 허용 슬롯이라 유지. 두 파일 style-lint 0건.

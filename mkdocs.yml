@@ -113,6 +113,7 @@ nav:
       - CLAUDE.md 헌법: concept-claude-md.md
       - Claude Hooks: concept-claude-hooks.md
       - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
+      - "🆕 Advisor–Worker 패턴": concept-advisor-worker.md
     - 도구:
       - Claude Design: entity-claude-design.md
     - 소스:
