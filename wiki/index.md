@@ -103,6 +103,7 @@ updated: 2026-07-06
 - [[guide-harness-module5]] — 하네스 Module 05 실습: 저장소 구조화 + 주간 리뷰 + Rippable + M1↔M5 비교 (Node step-by-step)
 - [[guide-loop-engineering-demo]] — Loop 엔지니어링 실습: 메아리방 vs 거부 신호 루프 직접 체험 (Node mock + claude -p 헤드리스, ReAct·Reflexion 출처)
 - [[guide-advisor-worker-demo]] — Advisor–Worker 실습: 판단·구현 분리 직접 체험 (claude --agent, tools 제한·검증 게이트)
+- [[guide-advisor-worker-advanced]] — Advisor–Worker 실습 심화편: 수정 브리프 재위임·병렬 위임·모델 티어링 실측·오버헤드 예외
 
 ## Comparisons
 _아직 비교 분석이 없습니다._

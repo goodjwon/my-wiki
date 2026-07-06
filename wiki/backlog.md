@@ -43,6 +43,8 @@ updated: 2026-07-06
 - ✅ **`raw/ai-advisor/` ingest** — advisor/worker 에이전트 정의 + 프로젝트 CLAUDE.md 템플릿 (판단·구현 분리, 역할별 이종 모델). [[src-ai-advisor-worker]] 신설, [[concept-multi-agent-pattern]]에 "2-역할 변형" 절, 빈 파일 a.md 삭제.
 - ✅ **[[guide-advisor-worker-demo]] 실습 신설** — `~/advisor-demo` cart 할인 테스트를 완료 기준으로 축약판 에이전트 설치 → `claude --agent advisor` → 관찰 포인트 4장면·차이 표·역할 분리 체크리스트. "보고를 믿지 말고 재검증하라" 패턴 비교표 4행.
 - ✅ **실행 검증** — 헤드리스(`claude --agent advisor -p` + stream-json 도구 호출 감사)로 4장면 전부 재현: 6항목 브리프 위임 / Write는 Worker만 / Advisor가 diff·테스트 직접 재실행 / 검증 후 Advisor 커밋. 1사이클 3/3 통과. 페이지에 "✅ 실행 검증됨" 배너.
+- ✅ **[[concept-advisor-worker]] 개념 페이지 신설** — 사용자 지적("개념에도 내용이 있어야지")으로 src·guide에 빠져 있던 개념층 보완: 구성 요소 4가지·모델 티어링·적용 기준·"검증 주체의 독립성" 비교표 5행.
+- ✅ **[[guide-advisor-worker-advanced]] 심화편 작성** — Pending 4장면 그대로: 장면 1 요구 변경(20% 할인 케이스 추가)으로 확정 실패 → 수정 브리프 재위임, 장면 2 coupon+shipping 병렬 위임, 장면 3 worker frontmatter `model:` 고정 + `CLAUDE_CODE_SUBAGENT_MODEL` 덮어쓰기 grep 실측 절차, 장면 4 오타(Step 0에 "모둘" 심기) 직접 Edit 관찰. "규율이 없으면 생기는 일" 표 4행. 실행 검증은 Pending으로 이월.
 
 ### 2026-07-05 — "§2-6 코드블록 ASCII 대응표 금지" 정책 신설 + 전면 소탕
 
@@ -169,12 +171,7 @@ updated: 2026-07-06
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **Advisor–Worker 실습 심화편** ([[guide-advisor-worker-demo]] 후속, 2026-07-06 등록) — 기본편은 1사이클 성공 경로만 체험. 심화편 후보 4장면 (원본 raw/ai-advisor/ 스크립트에 있으나 기본편이 다루지 않은 규율):
-  - ① **병렬 위임** — 서로 독립인 작업 2개(예: cart + coupon 모듈)를 한 턴에 여러 Task로 동시 위임, 의존 관계가 있으면 순차인 것과 대비.
-  - ② **검증 실패 → 수정 브리프 재위임** — 브리프에 함정(숨은 엣지 케이스 테스트)을 심어 Advisor 게이트가 실제로 거부하고 "무엇이 왜 실패했는지" 담긴 수정 브리프로 재위임하는 장면. 기본편에서 재현 안 된 유일한 규율.
-  - ③ **역할별 이종 모델 고정** — frontmatter `model:`(Fable 5 / Opus 4.8) 활성화 + `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 Worker 지정을 덮어쓰는 함정 실측.
-  - ④ **위임 오버헤드 예외** — 한두 줄 수정을 시켜 Advisor가 브리프 없이 직접 Edit하는지(예외 규정 작동) 관찰.
-  - 형식은 기본편과 동일(관찰 포인트·실행 검증 배너). 토큰 비용이 기본편보다 큼(사이클 2회 이상) — [[guide-loop-engineering-demo]] Step 6.5의 비용 주의 문구 재사용.
+- [ ] **Advisor–Worker 실습 심화편 — 실행 검증** ([[guide-advisor-worker-advanced]], 2026-07-06 작성 완료·배포됨) — 남은 것은 기본편처럼 실제 실행으로 4장면 재현 확인 후 "✅ 실행 검증됨" 배너 부착. 장면 1(재위임)·2(병렬)은 헤드리스 stream-json 감사로, 장면 3(모델 티어링·환경변수 함정)은 본문 grep 절차가 곧 검증. 장면 3 실측 결과에 따라 원본 스크립트의 `CLAUDE_CODE_SUBAGENT_MODEL` 주의 문구 갱신 여부 결정. 토큰 비용: 기본편 검증보다 큼(세션 4회+).
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 

@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-06] guide | Advisor–Worker 실습 심화편 신설
+- [[guide-advisor-worker-advanced]] — backlog Pending 4장면 그대로 25분 실습: ① 요구 변경(5만원 이상 20% 할인 케이스)으로 확정 실패를 만들어 **수정 브리프 재위임** 관찰 ② coupon+shipping 독립 모듈 **병렬 위임**(한 턴 두 Task·브리프 분리) ③ worker frontmatter `model:` 고정 + `CLAUDE_CODE_SUBAGENT_MODEL` 덮어쓰기를 stream-json `model` 필드 grep으로 **실측** ④ Step 0에 심은 오타("모둘")로 **위임 오버헤드 예외**(직접 Edit) 관찰.
+- Step 0은 모델 호출 없이(토큰 0) 기본편 완료 상태 복원 + 축약판 advisor에 규율 2줄(병렬·예외) 추가. "규율이 없으면 생기는 일" 표 4행, 관찰 결과표.
+- 교차참조: 기본편·concept·src 관련 페이지 양방향, nav(실습)·index 등록. backlog Pending은 "실행 검증"으로 이월.
+
 ## [2026-07-06] concept | Advisor–Worker 패턴 개념 페이지 신설
 - 사용자 지적 "개념에도 내용이 있어야지" — src(스크립트 요약)·guide(실습)만 있고 개념층이 빠져 있던 것을 보완. [[concept-advisor-worker]] 신설(약 140줄): 정의·부탁 vs 구조·구성 요소 4가지(tools 고정·브리프·검증 게이트·승인 권한)·모델 티어링·적용/비적용 기준·"검증 주체의 독립성" 패턴 비교표 5행·도입 체크리스트.
 - src와 중복 회피 분담: src=스크립트에 뭐가 있나(브리프 6항목 원문·frontmatter 예시·3-tier 비교표), concept=패턴의 원리·언제 쓰나.

@@ -117,6 +117,7 @@ updated: 2026-07-06
 
 - [[src-ai-advisor-worker]] — 원본 스크립트 해설 (브리프 6항목·frontmatter 예시·3-tier 비교표)
 - [[guide-advisor-worker-demo]] — 이 패턴을 직접 실행하는 15분 실습 (실행 검증됨)
+- [[guide-advisor-worker-advanced]] — 심화 실습 (수정 브리프 재위임·병렬 위임·모델 티어링 실측)
 - [[concept-multi-agent-pattern]] — 3-tier(Planner/Coder/Critic) — 역할 수가 다른 형제 패턴
 - [[concept-harness-engineering]] — "부탁 대신 구조" 상위 원칙
 - [[concept-loop-engineering]] — 검증 게이트 = 루프 안의 거부 신호
