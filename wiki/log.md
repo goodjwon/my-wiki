@@ -4,6 +4,10 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-12] chore | nav 제목 괄호 부연 설명 제거
+- 좌측 메뉴에서 두 줄로 꺾이는 괄호 부연 3건 제거 — "Loop 엔지니어링 실습 (메아리방 vs 거부 신호)" → "Loop 엔지니어링 실습", "Advisor–Worker 실습 (판단·구현 분리)" → "Advisor–Worker 실습", "Advisor–Worker 심화 (재위임·병렬·모델)" → "Advisor–Worker 심화" (모바일 화면 캡처 피드백).
+- 날짜·정식 명칭 괄호(2026-06, OOP, GRASP, HikariCP 등)는 성격이 달라 유지.
+
 ## [2026-07-06] guide | Advisor–Worker 실습 심화편 신설
 - [[guide-advisor-worker-advanced]] — backlog Pending 4장면 그대로 25분 실습: ① 요구 변경(5만원 이상 20% 할인 케이스)으로 확정 실패를 만들어 **수정 브리프 재위임** 관찰 ② coupon+shipping 독립 모듈 **병렬 위임**(한 턴 두 Task·브리프 분리) ③ worker frontmatter `model:` 고정 + `CLAUDE_CODE_SUBAGENT_MODEL` 덮어쓰기를 stream-json `model` 필드 grep으로 **실측** ④ Step 0에 심은 오타("모둘")로 **위임 오버헤드 예외**(직접 Edit) 관찰.
 - Step 0은 모델 호출 없이(토큰 0) 기본편 완료 상태 복원 + 축약판 advisor에 규율 2줄(병렬·예외) 추가. "규율이 없으면 생기는 일" 표 4행, 관찰 결과표.
