@@ -48,6 +48,8 @@ updated: 2026-07-12
 - ✅ **raw 원본 교정 주석 2곳** (원본 불신 검증 정책) — `harness-kit/module1/02_baseline_prompt.md`·`module2/02_before_after_prompt.md`에 재실행 불성립 이유와 위키 대체 방식 주석. 강의교안류 3곳의 한 줄 개념 서술은 원문 유지.
 - ✅ **M2 Step 3 정비** — 프롬프트 중첩 펜스 이스케이프(`\`\`\``) 제거(4-backtick 외부 펜스), 출력 형식 트리를 실제 playground(api/+web/)로 교체, "web/api 분리 모노레포 명시 + 양쪽에 걸치는 변경은 함께 수정" 원칙 추가.
 - ✅ **nav 정리** — 좌측 메뉴 괄호 부연 3건 제거(Loop 실습·Advisor–Worker 실습·심화), 날짜·정식 명칭 괄호는 유지.
+- ✅ **태스크 D·E 실습 실행 검증 + M2·M5 배너** — playground 복사본(원본 무변경)에서 헤드리스 실행: 태스크 D(Zod Address·400 검증·api/web 동시 수정·테스트 5→11), 태스크 E(실존 날짜 refine·자기검증 루프 4단계 작동·테스트 17). 커밋 체인 baseline(M1-A)→harness(M2-D)→harness(M5-E) 새 규약 재현.
+- ✅ **Advisor–Worker 심화편 4장면 실행 검증 완료 (Pending 종결)** — 헤드리스 stream-json 감사로 전 장면 재현 + 배너 부착. **핵심 수확**: ① 오버헤드 예외를 "한두 줄" 크기 기준으로 적으면 장면 1이 재현 안 됨(2/2 직접 수정) → Step 0 규율·raw 원본 2곳을 **동작 변경 기준**으로 교정 ② `CLAUDE_CODE_SUBAGENT_MODEL`이 frontmatter 고정을 덮어씀을 실측(haiku 0건) — 원본 경고에 "실측 확인" 주석 ③ 장면 1 판정 문구 결함(PASS — 4개 케이스는 출력될 수 없음) → 추가 블록에 4번째 케이스 로그 신설 ④ CLI 2.1.197 stream-json에선 Task가 `Agent`로 표기.
 
 ### 2026-07-06 — Advisor–Worker ingest + 실습 신설 + 실행 검증 (전부 배포 완료)
 
@@ -182,7 +184,7 @@ updated: 2026-07-12
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **Advisor–Worker 실습 심화편 — 실행 검증** ([[guide-advisor-worker-advanced]], 2026-07-06 작성 완료·배포됨) — Step 0(복원 절차)은 2026-07-12 수정판(커밋을 규율 append 뒤로 재배열)으로 토큰 0 실행 검증 완료. 남은 것은 기본편처럼 실제 실행으로 4장면 재현 확인 후 "✅ 실행 검증됨" 배너 부착. 장면 1(재위임)·2(병렬)은 헤드리스 stream-json 감사로, 장면 3(모델 티어링·환경변수 함정)은 본문 grep 절차가 곧 검증. 장면 3 실측 결과에 따라 원본 스크립트의 `CLAUDE_CODE_SUBAGENT_MODEL` 주의 문구 갱신 여부 결정. 토큰 비용: 기본편 검증보다 큼(세션 4회+).
+(비어 있음 — Advisor–Worker 심화편 실행 검증은 2026-07-12 완료, 위 완료 섹션 참고)
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 

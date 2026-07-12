@@ -4,6 +4,15 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-12] verify | Advisor–Worker 심화편 장면 1~4 실행 검증 — 규율 교정 + 배너 (Pending 종결)
+- **방법**: Step 0 검증 상태의 스크래치패드 데모에서 장면별 헤드리스 `claude --agent advisor -p` + stream-json 도구 호출 감사 (메인/서브에이전트는 `parent_tool_use_id`로 분리).
+- **장면 1 (재위임)**: 초판 규율("한두 줄 수정은 직접 처리")에서는 **2회 모두 Advisor가 직접 Edit** — 할인 티어 수정이 실제로 1~2줄이라 크기 기준 예외가 정당하게 덮음. 규율을 **동작 변경 기준**("테스트 기대값이 바뀌는 로직 수정은 한두 줄이라도 위임")으로 구체화한 3차에서 재현: 위임 전 실패 확인 → 실패 케이스(40000/45000) 담긴 브리프([목표]~[범위 경계] 5항목) → Worker만 Edit → Advisor가 diff+재테스트 → 커밋.
+- **장면 2 (병렬)**: 한 턴(같은 메시지 id)에 Task 2개 동시 발사, 브리프 모듈별 분리(상대 모듈은 [범위 경계] 제외로만), coupon·shipping 각각 재검증 후 커밋.
+- **장면 3 (모델 티어링)**: frontmatter 고정 → Advisor 17건·Worker(haiku) 14건 분리 집계. `CLAUDE_CODE_SUBAGENT_MODEL` 설정 → Worker 서브에이전트 메시지까지 전부 환경변수 값(haiku 0건). **원본 경고 실측 확인**.
+- **장면 4 (오버헤드 예외)**: Task 0회, Advisor 직접 Edit ('모둘'→'모듈') — 동작 변경 기준 규율에서도 예외 쪽 정상 작동.
+- **문서 교정**: ① Step 0 규율 문구 교체 + 크기 기준 함정 상자 신설 ② 장면 1 판정 결함 수정 — 추가 블록이 console.log를 안 바꿔 "PASS — 4개 케이스" 문구가 출력 불가였던 것 → 4번째 케이스 로그 줄 추가·판정 문구 갱신 ③ raw 원본 교정 주석 3건(advisor_script 크기 기준, claude_script 크기 기준 + 환경변수 경고 실측 확인) ④ CLI 2.1.197 stream-json의 Task→`Agent` 표기 주기.
+- 배너 부착, backlog Pending 종결.
+
 ## [2026-07-12] verify | 태스크 D·E 전환 실습 실제 실행 검증 (헤드리스) — M2·M5 배너 부착
 - **방법**: 사용자 playground(Module 00 상태)를 스크래치패드에 복사(원본 무변경) → M1-A 상태(phone 구현·`baseline(M1-A)` 커밋)와 M2 완성 CLAUDE.md(섹션 6·7 채움)를 토큰 0으로 구성 → 태스크 D·E를 `claude -p` + stream-json으로 실행·감사.
 - **태스크 D (M2 Step 5)**: CLAUDE.md 선독 후 섹션 8·7 대조·계획 제시, Zod Address(roadAddress 필수·detailAddress 선택·zipCode `^\d{5}$`) 400 검증, api·web 동시 수정(섹션 6 모노레포 원칙 작동 확인), 테스트 5→11개 통과.
