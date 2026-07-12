@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module5/01_repo_and_rippable_prompt.md
   - harness-engineering/harness-kit/module5/02_weekly_review_prompt.md
 created: 2026-05-31
-updated: 2026-07-04
+updated: 2026-07-12
 ---
 
 # 하네스 Module 05 — 진화·주간 리뷰·Rippable
@@ -330,39 +330,24 @@ git commit -m "harness(M5): 미사용 규칙 정리 (Rippable cleanup)
 
 ## Step 5 — Module 01 ↔ Module 05 Before/After 비교 — 10분
 
-마지막 측정입니다. Module 01 Step 3에서 하네스 없이 태스크 A·B·C를 실행해 `.claude/baseline.md`에 Before 수치를 기록하고 `baseline(M1-A/B/C)` 커밋으로 남겨 뒀습니다. 이제 같은 태스크를 하네스가 모두 걸린 상태로 재실행해 그 기록과 대조하면, 5모듈의 누적 효과가 수치로 드러납니다.
+마지막 측정입니다. Module 01 Step 3에서 하네스 없이 태스크 A·B·C를 실행해 `.claude/baseline.md`에 Before 수치를 기록하고 `baseline(M1-A/B/C)` 커밋으로 남겨 뒀습니다. 이제 같은 유형의 태스크를 하네스가 모두 걸린 상태로 실행해 그 기록과 대조하면, 5모듈의 누적 효과가 수치로 드러납니다. Module 02가 태스크 A(phone)와 같은 요구 구조의 태스크 D(address)로 비교했던 것과 같은 방식으로, 이번에는 **태스크 E — birthDate 필드 추가**를 사용합니다.
 
 !!! example "실습 위치·실행"
 
     - **위치**: `~/harness-playground`
     - **만들 것**: `.claude/baseline.md` 맨 아래 "Module 05 After" 비교 표 + 커밋 1개
-    - **실행**: 출발선을 revert로 되돌린 뒤, 새 `claude` 세션에 Module 01 태스크 A 프롬프트 원문을 붙여넣고 결과를 표에 채워 커밋합니다.
+    - **실행**: 새 `claude` 세션에 태스크 E 프롬프트를 붙여넣고 결과를 표에 채워 커밋합니다.
 
-### Step 5-1: Module 01의 베이스라인 태스크 재실행
+### Step 5-1: 태스크 E 실행 (하네스 전체 적용)
 
-`.claude/baseline.md`의 태스크 A를 **현재 상태(CLAUDE.md + hooks + AGENTS.md 모두 적용)** 로 재실행합니다 (B·C도 반복하면 더 좋지만 시간이 빠듯하면 A 하나로 누적 효과 확인이 가능합니다).
-
-먼저 출발선을 되돌립니다. Module 02 Step 5에서 태스크 A를 재실행했기 때문에 playground에는 phone 필드가 다시 들어가 있고, 이 상태로 같은 태스크를 던지면 "이미 구현돼 있다"로 끝나 비교가 성립하지 않습니다. 그때의 재실행 결과는 `harness(M2-A)` 커밋으로 남겨 뒀으므로, Module 02에서 M1 커밋들을 되돌렸던 것과 같은 방식으로 이 커밋을 revert합니다 (이력은 보존되므로 비교용 커밋들은 그대로 남습니다):
-
-```bash
-cd ~/harness-playground
-
-# Module 02의 태스크 A 재실행 커밋 확인
-git log --oneline | grep "harness(M2-A)"
-
-# 되돌리기 → 테스트로 출발선 확인
-git revert --no-edit <M2-A 해시>
-npm test
-```
-
-되돌렸으면 새 세션에서 **Module 1 태스크 A 본문을 표현 그대로** 다시 던집니다 (api/+web/ 모노레포). 프롬프트 표현이 달라지면 결과 차이가 하네스 효과인지 요청 차이인지 구분할 수 없으므로, **원문 그대로 재사용하는 것이 비교 유효성의 조건**입니다:
+태스크 E를 **현재 상태(CLAUDE.md + hooks + AGENTS.md 모두 적용)** 로 실행합니다. playground에는 phone(M1)·address(M2) 필드가 이미 들어가 있어 같은 태스크를 재실행할 수 없고, 커밋을 revert해 출발선을 되돌리는 방식은 태스크 커밋에 CLAUDE.md·hooks 변경이 섞여 있으면 하네스까지 함께 초기화되는 함정이 있어 쓰지 않습니다 (Module 02 Step 5-1과 같은 이유). 세 측정(M1 phone · M2 address · M5 birthDate)은 태스크 본문이 아니라 **요구 구조(필드 추가·형식 검증·필수 처리·web 반영·테스트)와 측정 항목을 고정**해 비교합니다:
 
 ```
-이 모노레포에 User에 'phone' 필드를 추가해줘.
-- api/: POST /users 와 GET /users 응답에 phone 포함
-- 형식 검증 (010-XXXX-XXXX 또는 +82-...)
+이 모노레포에 User에 'birthDate' 필드를 추가해줘.
+- api/: POST /users 와 GET /users 응답에 birthDate 포함
+- 형식 검증 (YYYY-MM-DD, 실존하는 날짜만 허용)
 - 필수 항목 (없으면 400)
-- web/: 추가 폼에 phone 입력, 목록에 phone 표시
+- web/: 추가 폼에 birthDate 입력, 목록에 birthDate 표시
 - 가능하면 api 테스트도
 ```
 
@@ -370,7 +355,7 @@ Module 01과 달리 이번에는 Module 03에서 설치한 자기검증 루프(C
 
 ### Step 5-2: 비교 표 작성
 
-재실행 결과를 Module 01·02 때와 같은 항목으로 측정해, Before 기록이 있는 `.claude/baseline.md` 맨 아래에 이어 붙입니다. 표의 **M2 After** 열은 Module 02 Step 5에서 CLAUDE.md만 적용해 재실행했을 때 기록한 수치이니 baseline.md의 기존 표에서 옮겨 적습니다. 마지막 두 행은 이번에 처음 채워집니다 — guard.sh 차단은 Module 03, Critic의 CONDITIONAL REJECT(조건부 반려) 판정은 Module 04에서 생겨 이전 측정에는 없던 항목이기 때문입니다:
+태스크 E 결과를 Module 01·02 때와 같은 항목으로 측정해, Before 기록이 있는 `.claude/baseline.md` 맨 아래에 이어 붙입니다. 표의 **M2 After** 열은 Module 02 Step 5에서 CLAUDE.md만 적용해 태스크 D를 실행했을 때 기록한 수치이니 baseline.md의 기존 표에서 옮겨 적습니다. 마지막 두 행은 이번에 처음 채워집니다 — guard.sh 차단은 Module 03, Critic의 CONDITIONAL REJECT(조건부 반려) 판정은 Module 04에서 생겨 이전 측정에는 없던 항목이기 때문입니다:
 
 ```bash
 cat >> .claude/baseline.md << 'EOF'
@@ -379,7 +364,7 @@ cat >> .claude/baseline.md << 'EOF'
 
 ## Module 05 After — 5모듈 누적 적용 후 (2026-MM-DD)
 
-### 태스크 A 비교
+### 필드 추가 태스크 비교 — M1: phone / M2: address / M5: birthDate
 | 항목 | M1 Before | M2 After | M5 After (5모듈) | 누적 개선 |
 |------|----------|---------|----------------|----------|
 | 내부 모델(in-memory) 노출 | __ | __ | __ | __ |
@@ -397,8 +382,8 @@ cat >> .claude/baseline.md << 'EOF'
 - 다음 주간 리뷰 우선 항목: ____________
 EOF
 
-git add .claude/baseline.md
-git commit -m "harness(M5): M1↔M5 Before/After 비교"
+git add -A
+git commit -m "harness(M5-E): 태스크 E — birthDate 필드 추가 + M1↔M5 비교"
 ```
 
 ---
@@ -421,7 +406,7 @@ git commit -m "harness(M5): M1↔M5 Before/After 비교"
 ### Q. 첫 주간 리뷰에서 실패 패턴이 잘 안 나와요
 
 - 일주일이 짧으면 다음 주에 더 명확해집니다.
-- 의도적으로 베이스라인 태스크를 다시 던져 보는 것도 방법입니다 (Module 01의 태스크 A·B·C).
+- 의도적으로 베이스라인 태스크와 같은 유형의 새 태스크(새 필드 추가 등)를 던져 보는 것도 방법입니다 (Module 01 태스크 A·B·C의 요구 구조 재사용).
 - guard.sh 차단 로그를 별도 파일에 남기도록 수정하면 분석이 쉬워집니다:
 
 ```bash

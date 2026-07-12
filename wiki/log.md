@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-12] fix | harness M2·M5 — Before/After 검증을 revert 재실행에서 "같은 유형 새 태스크"로 전환
+- **문제 (사용자 피드백)**: ① M2 Step 3 프롬프트 안의 중첩 코드펜스가 `\`\`\``로 이스케이프돼 있어 학습자가 복사하면 역슬래시가 그대로 붙음 ② M2 Step 5-1의 `git revert` 출발선 되돌리기가 태스크 커밋에 섞인 CLAUDE.md 변경(`git add -A`)까지 되돌려 방금 만든 CLAUDE.md가 초기화됨 ③ 섹션 6 가이드에 playground가 web/api 분리 모노레포라는 사실이 없음.
+- **수정 (M2)**: Step 3 프롬프트를 4-backtick 외부 펜스로 바꿔 내부 ``` 원문 유지, 출력 형식 트리를 실제 playground 구조(api/+web/)로 교체, 원칙에 "모노레포 분리 명시·양쪽에 걸치는 변경은 함께 수정" 추가. Step 5는 revert 폐기 — 태스크 A(phone)와 요구 구조가 같은 **태스크 D(address 필드, 행정안전부 도로명주소: roadAddress·detailAddress·zipCode 5자리)**를 새로 실행해 비교. 커밋 규약 `harness(M2-A)` → `harness(M2-D)`.
+- **연쇄 수정 (M5)**: M2-A revert 단계 제거, **태스크 E(birthDate 필드)**로 5모듈 누적 측정. 비교표 제목 "필드 추가 태스크 비교 — M1: phone / M2: address / M5: birthDate". [[guide-wiki-authoring-standards]] §7-8 예시 커밋명도 M2-D로 동기화.
+- 비교 유효성 논리 교체: "원문 그대로 재실행" → "요구 구조(필드 추가·형식 검증·필수 처리·web 반영·테스트)와 측정 7항목 고정". 두 파일 style-lint 0건.
+
 ## [2026-07-12] chore | nav 제목 괄호 부연 설명 제거
 - 좌측 메뉴에서 두 줄로 꺾이는 괄호 부연 3건 제거 — "Loop 엔지니어링 실습 (메아리방 vs 거부 신호)" → "Loop 엔지니어링 실습", "Advisor–Worker 실습 (판단·구현 분리)" → "Advisor–Worker 실습", "Advisor–Worker 심화 (재위임·병렬·모델)" → "Advisor–Worker 심화" (모바일 화면 캡처 피드백).
 - 날짜·정식 명칭 괄호(2026-06, OOP, GRASP, HikariCP 등)는 성격이 달라 유지.

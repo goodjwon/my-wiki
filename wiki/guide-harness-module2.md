@@ -7,7 +7,7 @@ sources:
   - harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
   - harness-engineering/harness-kit/module2/02_before_after_prompt.md
 created: 2026-05-31
-updated: 2026-07-05
+updated: 2026-07-12
 ---
 
 # 하네스 Module 02 — CLAUDE.md 작성
@@ -22,7 +22,7 @@ updated: 2026-07-05
 2. **Before/After 비교 표** — Module 01 태스크 재실행 결과
 3. CLAUDE.md 섹션 11에 **누적 실패 패턴 첫 항목**
 
-**진행 흐름**: 12섹션 골격 생성(Step 1) → 우선순위 표를 STOP 트리거로 이전(Step 2) → 프로젝트 구조 섹션 채우기(Step 3) → 분량 점검·커밋(Step 4) → Module 01 태스크 재실행으로 Before/After 검증(Step 5) → 안 지켜진 규칙을 첫 실패 패턴으로 기록(Step 6).
+**진행 흐름**: 12섹션 골격 생성(Step 1) → 우선순위 표를 STOP 트리거로 이전(Step 2) → 프로젝트 구조 섹션 채우기(Step 3) → 분량 점검·커밋(Step 4) → 같은 유형의 새 태스크(태스크 D)로 Before/After 검증(Step 5) → 안 지켜진 규칙을 첫 실패 패턴으로 기록(Step 6).
 
 **시간**: 약 1.5시간 (초안 작성 30분 + Before/After 30분 + 보완 30분)
 
@@ -193,7 +193,7 @@ STOP: 외부 패키지를 사용자 확인 없이 추가 (npm install ___ 전에
     - **수정할 파일**: `CLAUDE.md` 섹션 6 — 디렉터리 트리 + 책임 설명
     - **실행**: `claude` 세션에 아래 프롬프트를 붙여넣고, 받은 결과를 섹션 6에 붙여넣습니다.
 
-```
+````
 프로젝트 구조를 파악해서 CLAUDE.md 섹션 6에 넣을 디렉터리 트리와
 각 폴더의 책임 설명을 작성해줘.
 
@@ -203,25 +203,28 @@ STOP: 외부 패키지를 사용자 확인 없이 추가 (npm install ___ 전에
 2. 각 주요 폴더 안의 파일 종류 1~2개씩 보여주기
 
 출력 형식:
-\`\`\`
-src/
-├── routes/         # Express 라우트 정의
-├── controllers/    # HTTP 핸들러
-├── services/       # 비즈니스 로직
-├── repositories/   # DB 접근
-├── schemas/        # Zod 입력 검증 + DTO
-├── middlewares/    # 인증, 에러 처리
-└── utils/          # 공통 유틸
-\`\`\`
-
-원칙:
-- 라우트는 controller만 호출 (service 직접 X)
-- controller는 service만 호출 (DB 직접 X)
-- service는 repository로 DB 접근
-- API 응답은 schemas의 변환 거침 (모델 직접 X)
+```
+api/                # Express 백엔드 — User CRUD API
+├── src/
+│   ├── app.js      # 라우트 + Zod 스키마
+│   ├── app.test.js # supertest API 테스트
+│   └── server.js   # 서버 기동
+└── package.json
+web/                # React 프론트 — User 목록 화면
+├── src/
+│   └── App.jsx     # User 목록 + 추가 폼
+└── package.json
 ```
 
-받은 결과를 CLAUDE.md 섹션 6에 붙여넣습니다.
+원칙:
+- web/(프론트)과 api/(백엔드)가 분리된 모노레포임을 명시
+- 필드·API 변경이 양쪽에 걸치면 api/와 web/을 함께 수정
+- API 응답은 Zod 스키마의 변환을 거침 (in-memory 모델 직접 반환 X)
+- 계층(controllers/services/repositories)이 생기면: 라우트는 controller만,
+  controller는 service만, service는 repository로 DB 접근
+````
+
+받은 결과를 CLAUDE.md 섹션 6에 붙여넣습니다. 출력 형식의 트리는 예시일 뿐이니 실제 `find` 결과를 따르되, **web/과 api/가 분리된 모노레포라는 사실과 "양쪽에 걸치는 변경은 함께 수정" 원칙은 반드시 들어가야 합니다** — 이 한 줄이 없으면 에이전트가 api만 고치고 web을 빼먹는 Module 01의 실패 패턴이 반복됩니다.
 
 ---
 
@@ -249,33 +252,19 @@ git commit -m "docs(M2): baseline 시스템 문제를 STOP 트리거로 이전"
 
 ## Step 5 — Before/After 비교 — 30분
 
-Step 4까지 만든 CLAUDE.md가 실제로 에이전트 행동을 바꿨는지 검증할 차례입니다. 가장 확실한 방법은 **Module 01 Step 3에서 맨몸 성능 측정에 썼던 태스크 A(phone 필드 추가)·B(검색·페이징)·C(버그 수정)를 CLAUDE.md가 있는 상태에서 다시** 실행해, Module 01의 Before 측정치와 나란히 비교하는 것입니다.
+Step 4까지 만든 CLAUDE.md가 실제로 에이전트 행동을 바꿨는지 검증할 차례입니다. 방법은 Module 01 Step 3에서 맨몸 성능 측정에 썼던 태스크 A(phone 필드 추가)와 **요구 구조가 같은 새 태스크를 CLAUDE.md가 있는 상태에서** 실행해, Module 01의 Before 측정치와 나란히 비교하는 것입니다. 이 새 태스크를 **태스크 D**라고 부릅니다 (A·B·C는 Module 01의 베이스라인 태스크) — User에 address 필드를 추가하는 일로, 필드 추가·형식 검증·필수 처리·web 반영·테스트라는 요구 구조와 측정 7항목이 태스크 A와 같아서 유형 단위 비교가 성립합니다.
 
 !!! example "실습 위치·실행"
 
     - **위치**: `~/harness-playground`
     - **만들 것**: `.claude/baseline.md`에 "Module 02 After" 비교 표 추가
-    - **실행**: 태스크 커밋을 되돌려 출발선을 맞춘 뒤, 새 `claude` 세션에서 태스크 A를 재실행하고 측정합니다.
+    - **실행**: 새 `claude` 세션에서 태스크 D(address 필드 추가)를 실행하고 측정합니다.
 
-### Step 5-1: 출발선 되돌리기 + 새 세션 시작
+### Step 5-1: 왜 재실행이 아니라 새 태스크인가 + 새 세션 시작
 
-Module 01 태스크 A를 이미 실행했기 때문에 playground에는 phone 필드가 들어가 있습니다. 이 상태에서 같은 태스크를 다시 던지면 "이미 구현돼 있다"로 끝나 버려 비교가 성립하지 않으므로, 태스크 커밋 3개(M1-A/B/C)를 되돌려 Before와 같은 코드 상태로 맞춥니다. `git revert`는 이력을 지우지 않고 "되돌리는 커밋"을 새로 쌓는 방식이라, Module 05의 diff 비교에 쓸 원래 커밋들은 그대로 남습니다.
+Module 01 태스크 A를 이미 실행했기 때문에 playground에는 phone 필드가 들어가 있습니다. 이 상태에서 같은 태스크를 다시 던지면 "이미 구현돼 있다"로 끝나 버려 비교가 성립하지 않습니다. 태스크 커밋을 `git revert`로 되돌려 출발선을 맞추는 방법도 있지만, 태스크 커밋에 CLAUDE.md나 `.claude/` 변경이 섞여 있으면(에이전트가 작업 중 CLAUDE.md를 만들거나 고친 것이 `git add -A`에 함께 담긴 경우) 되돌리는 순간 방금 완성한 CLAUDE.md까지 초기화되는 함정이 있습니다. 그래서 이 실습은 되돌리지 않습니다 — phone은 그대로 두고, 같은 유형의 새 필드(address)로 비교합니다.
 
-```bash
-cd ~/harness-playground
-
-# 1. 되돌릴 커밋 3개의 해시 확인
-git log --oneline | grep "baseline(M1-"
-
-# 2. 최신 커밋부터 역순(C → B → A)으로 revert
-#    (CLAUDE.md와 .claude/baseline.md는 건드리지 않음)
-git revert --no-edit <M1-C 해시> <M1-B 해시> <M1-A 해시>
-
-# 3. 되돌린 뒤에도 테스트 통과 확인 (Before와 같은 출발선)
-npm test
-```
-
-되돌렸으면 기존 Claude 세션을 종료하고 다시 `claude`를 실행합니다. 새 세션이어야 방금 만든 CLAUDE.md를 처음부터 읽고 시작합니다.
+기존 Claude 세션을 종료하고 다시 `claude`를 실행합니다. 새 세션이어야 방금 만든 CLAUDE.md를 처음부터 읽고 시작합니다.
 
 ### Step 5-2: CLAUDE.md가 실제 로드됐는지 확인
 
@@ -287,16 +276,18 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 
 3개를 정확히 인용해주면 통과입니다. 못 하면 CLAUDE.md 위치(프로젝트 루트인지)를 다시 확인합니다.
 
-### Step 5-3: 태스크 A 재실행 (Module 1과 같은 표현)
+### Step 5-3: 태스크 D 실행 (태스크 A와 같은 요구 구조)
 
-로드를 확인했으면, 이제 Module 01의 태스크 A 본문을 **표현 하나 바꾸지 않고** 그대로 다시 던집니다. Before(M1)와 다른 곳은 두 군데뿐입니다 — Module 01에서 "규칙 없이 평소처럼 작업하라"는 안내로 프롬프트 머리에 붙였던 `[베이스라인 측정 중 …]` 표시를 빼고, 끝에 CLAUDE.md 확인 지시를 붙입니다. 작업 본문이 동일해야 비교가 유효합니다:
+로드를 확인했으면 태스크 D를 던집니다. Module 01 태스크 A에서 바뀐 곳은 세 군데입니다 — 대상 필드가 phone에서 address로 바뀌었고, Module 01에서 "규칙 없이 평소처럼 작업하라"는 안내로 프롬프트 머리에 붙였던 `[베이스라인 측정 중 …]` 표시를 뺐고, 끝에 CLAUDE.md 확인 지시를 붙였습니다. 요구 구조(필드 추가·형식 검증·필수 처리·web 반영·테스트)는 동일해야 비교가 유효합니다. address는 행정안전부 도로명주소 체계를 따르는 요구사항으로 구체화합니다:
 
 ```
-이 모노레포에 User에 'phone' 필드를 추가해줘.
-- api/: POST /users 와 GET /users 응답에 phone 포함
-- 형식 검증 (010-XXXX-XXXX 또는 +82-...)
-- 필수 항목 (없으면 400)
-- web/: 추가 폼에 phone 입력, 목록에 phone 표시
+이 모노레포에 User에 'address' 필드를 추가해줘.
+- api/: POST /users 와 GET /users 응답에 address 포함
+- 행정안전부 도로명주소 체계에 맞게 구성:
+  roadAddress(도로명주소, 예: "서울특별시 종로구 세종대로 209"),
+  detailAddress(상세주소, 선택), zipCode(우편번호, 숫자 5자리)
+- roadAddress와 zipCode는 필수, 없거나 형식이 틀리면 400
+- web/: 추가 폼에 address 입력, 목록에 address 표시
 - 가능하면 api 테스트도
 
 시작 전 CLAUDE.md의 섹션 8 작업 전 체크리스트와
@@ -306,7 +297,7 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 완료 후 측정 (Module 1 태스크 A와 **같은 7개 항목**):
 
 ```
-[태스크 A — After]
+[태스크 D — After]
 □ 내부 모델(in-memory users) 노출: __
 □ Zod 스키마로 검증: __
 □ api 테스트 작성: __
@@ -316,11 +307,11 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 □ 화면 실제 작동 확인: __
 ```
 
-측정을 마쳤으면 재실행 결과도 커밋해 둡니다. Module 05에서 태스크 A를 한 번 더 재실행할 때 이 커밋을 revert해 다시 출발선을 만들게 됩니다:
+측정을 마쳤으면 결과를 커밋해 둡니다. Module 05에서는 또 다른 같은 유형의 새 태스크(태스크 E)로 5모듈 누적 효과를 측정하므로, 이 커밋을 되돌릴 일은 없습니다:
 
 ```bash
 git add -A
-git commit -m "harness(M2-A): 태스크 A 재실행 (CLAUDE.md 적용)"
+git commit -m "harness(M2-D): 태스크 D — address 필드 추가 (CLAUDE.md 적용)"
 ```
 
 ### Step 5-4: 비교 표 작성
@@ -334,7 +325,7 @@ cat >> .claude/baseline.md << 'EOF'
 
 ## Module 02 After — CLAUDE.md 적용 후 (2026-MM-DD)
 
-### 태스크 A 비교
+### 필드 추가 태스크 비교 — Before: 태스크 A(phone) / After: 태스크 D(address)
 | 항목 | Before (M1) | After (M2) | 개선 |
 |------|------------|-----------|------|
 | 내부 모델(in-memory) 노출 | __ | __ | __ |
@@ -355,7 +346,7 @@ cat >> .claude/baseline.md << 'EOF'
 EOF
 ```
 
-태스크 B·C도 동일하게 반복하면 더 좋지만, 시간이 빠듯하면 A 하나만 해도 효과를 확인할 수 있습니다.
+같은 방식으로 태스크 B(검색·페이징)·C(버그 수정)와 같은 유형의 새 태스크를 만들어 반복하면 더 좋지만, 시간이 빠듯하면 태스크 D 하나만 해도 효과를 확인할 수 있습니다.
 
 ---
 
