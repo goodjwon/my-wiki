@@ -27,6 +27,8 @@ updated: 2026-07-12
 
 **시간**: 약 1시간 (구조화 20분 + 주간 리뷰 20분 + Rippable 10분 + Before/After 10분). **이후 매주 30분/회 반복**.
 
+> ✅ **Step 5 실행 검증됨 (2026-07-12, Node v24)**: 태스크 D까지 완주한 playground 복사본(CLAUDE.md + Module 03 자기검증 루프)에서 태스크 E를 헤드리스로 실행해 확인했습니다 — phone·address가 이미 구현된 상태에서 충돌 없이 birthDate 추가(YYYY-MM-DD 정규식 + 실존 날짜 refine: 윤일 `2000-02-29` 201, `2001-02-30`·13월 400), **자기검증 루프 4단계가 그대로 작동**해 `node --check` → `npm test`를 스스로 실행하고 "---검증 완료 보고---" 형식으로 종료, 테스트 17개 전부 통과. hooks(M3)·AGENTS.md(M4) 설치 자체는 이번 검증 범위 밖입니다.
+
 이론 배경: [[concept-harness-engineering]] (Rippable 섹션)
 
 ---

@@ -26,6 +26,8 @@ updated: 2026-07-12
 
 **시간**: 약 1.5시간 (초안 작성 30분 + Before/After 30분 + 보완 30분)
 
+> ✅ **Step 5 실행 검증됨 (2026-07-12, Node v24)**: Module 01 완료 상태(phone 구현·커밋)를 재현한 playground 복사본에서 태스크 D를 헤드리스(`claude -p` + stream-json 도구 호출 감사)로 실행해 확인했습니다 — CLAUDE.md를 먼저 읽고 섹션 8 체크리스트·섹션 7 STOP 대조 후 계획 제시, Zod Address 스키마(roadAddress 필수·detailAddress 선택·zipCode `^\d{5}$`)로 누락·형식 오류 400, api·web 동시 수정(섹션 6 모노레포 원칙 작동), 테스트 5→11개 전부 통과, `harness(M2-D)` 커밋까지 완주.
+
 이론 배경: [[concept-claude-md]]
 
 ---

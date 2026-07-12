@@ -4,6 +4,14 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-12] verify | 태스크 D·E 전환 실습 실제 실행 검증 (헤드리스) — M2·M5 배너 부착
+- **방법**: 사용자 playground(Module 00 상태)를 스크래치패드에 복사(원본 무변경) → M1-A 상태(phone 구현·`baseline(M1-A)` 커밋)와 M2 완성 CLAUDE.md(섹션 6·7 채움)를 토큰 0으로 구성 → 태스크 D·E를 `claude -p` + stream-json으로 실행·감사.
+- **태스크 D (M2 Step 5)**: CLAUDE.md 선독 후 섹션 8·7 대조·계획 제시, Zod Address(roadAddress 필수·detailAddress 선택·zipCode `^\d{5}$`) 400 검증, api·web 동시 수정(섹션 6 모노레포 원칙 작동 확인), 테스트 5→11개 통과.
+- **태스크 E (M5 Step 5)**: M3 자기검증 루프 블록을 섹션 5에 추가한 상태에서 실행 — phone·address 기구현 상태와 충돌 없음, YYYY-MM-DD+실존 날짜 refine(윤일 201·2001-02-30 400), **자기검증 루프 4단계 작동**(`node --check`→`npm test` 자가 실행→"---검증 완료 보고---" 종료), 테스트 17개 통과. 커밋 체인 baseline(M1-A)→docs(M2)→harness(M2-D)→harness(M3)→harness(M5-E) 새 규약 그대로 재현.
+- **advisor-worker 심화 Step 0 (수정판)**: 토큰 0 실행 — 커밋에 에이전트 파일 2개+규율 2줄 포함, 워킹트리 클린, 테스트 PASS. (장면 1~4 전체 검증은 backlog Pending 유지)
+- **부수 발견**: 사용자 playground의 `web/src/App.jsx` 커밋본에 붙여넣기 아티팩트(`'...3000'\;`)가 있고 미커밋 수정으로 고쳐져 있음 — 위키 원문(module 00)은 정상, 환경 잡음으로 판정.
+- M2·M5에 "✅ Step 5 실행 검증됨 (2026-07-12)" 배너 부착.
+
 ## [2026-07-12] lint | 실습 가이드 12편 절차 결함 전수 점검 (에이전트 3병렬) + 수정
 - **점검 범위**: harness 00·demo·M1~M5, loop 실습, advisor-worker 기본·심화, java-book-study-lab — 오늘 발견한 결함 유형(상태 오염·되돌리기 함정·모듈 간 정합·복붙 안정성) 관점. 이스케이프 펜스(`\`\`\``)는 위키 전체 grep 잔존 0.
 - **수정 3건**: ① [[guide-harness-module5]] 비교표에 "가정 명시" 행 누락(M1·M2는 7항목, M5만 6항목 — 측정 항목 고정 원칙 위반) 추가 ② M5의 "자기검증 루프" 참조에 M3 Step 7 출처·역할 반문장 보강(§7-8) ③ [[guide-advisor-worker-advanced]] Step 0 — advisor 규율 2줄을 커밋 후 append해 미커밋 잔여로 남던 것을 커밋 앞으로 재배열(장면 1 Advisor 커밋에 잡음 섞임 방지).

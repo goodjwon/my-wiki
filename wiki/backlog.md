@@ -182,7 +182,7 @@ updated: 2026-07-12
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **Advisor–Worker 실습 심화편 — 실행 검증** ([[guide-advisor-worker-advanced]], 2026-07-06 작성 완료·배포됨) — 남은 것은 기본편처럼 실제 실행으로 4장면 재현 확인 후 "✅ 실행 검증됨" 배너 부착. 장면 1(재위임)·2(병렬)은 헤드리스 stream-json 감사로, 장면 3(모델 티어링·환경변수 함정)은 본문 grep 절차가 곧 검증. 장면 3 실측 결과에 따라 원본 스크립트의 `CLAUDE_CODE_SUBAGENT_MODEL` 주의 문구 갱신 여부 결정. 토큰 비용: 기본편 검증보다 큼(세션 4회+).
+- [ ] **Advisor–Worker 실습 심화편 — 실행 검증** ([[guide-advisor-worker-advanced]], 2026-07-06 작성 완료·배포됨) — Step 0(복원 절차)은 2026-07-12 수정판(커밋을 규율 append 뒤로 재배열)으로 토큰 0 실행 검증 완료. 남은 것은 기본편처럼 실제 실행으로 4장면 재현 확인 후 "✅ 실행 검증됨" 배너 부착. 장면 1(재위임)·2(병렬)은 헤드리스 stream-json 감사로, 장면 3(모델 티어링·환경변수 함정)은 본문 grep 절차가 곧 검증. 장면 3 실측 결과에 따라 원본 스크립트의 `CLAUDE_CODE_SUBAGENT_MODEL` 주의 문구 갱신 여부 결정. 토큰 비용: 기본편 검증보다 큼(세션 4회+).
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 
