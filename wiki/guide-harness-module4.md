@@ -8,7 +8,7 @@ sources:
   - harness-engineering/harness-kit/module4/claude-progress.txt
   - harness-engineering/harness-kit/module4/01_threettier_workflow_prompt.md
 created: 2026-05-31
-updated: 2026-07-04
+updated: 2026-07-12
 ---
 
 # 하네스 Module 04 — 멀티 에이전트 + 컨텍스트
@@ -286,7 +286,7 @@ git commit -m "harness(M4): task-list·progress 템플릿 + Stop hook 등록"
 
 ## Step 4 — Planner Agent 시연 — 30분
 
-파일 3개가 준비됐으니 첫 역할인 Planner를 실제로 돌려 봅니다. Planner의 일은 코드가 아니라 분해입니다 — 요구사항을 받아 task-list.md 형식의 원자 단위 태스크로 쪼개는 것까지만 맡깁니다. 실습 기능은 playground에 새로 붙일 사용자 인증(회원가입·로그인·내 정보)입니다. 인증을 고른 이유는 크기와 모양 때문입니다 — 스키마·리포지토리·서비스·라우트·미들웨어가 모두 필요해 5~8개 원자 태스크로 자연스럽게 쪼개지고, 태스크 간 의존 순서도 뚜렷해서 Planner의 분해 품질을 평가하기에 알맞습니다.
+파일 3개가 준비됐으니 첫 역할인 Planner를 실제로 돌려 봅니다. Planner의 일은 코드가 아니라 분해입니다 — 요구사항을 받아 task-list.md 형식의 원자 단위 태스크로 쪼개는 것까지만 맡깁니다. 실습 기능은 playground에 새로 붙일 사용자 인증(회원가입·로그인·내 정보)입니다. 인증을 고른 이유는 크기와 모양 때문입니다 — 스키마·리포지토리·서비스·라우트·미들웨어가 모두 필요해 5~8개 원자 태스크로 자연스럽게 쪼개지고, 태스크 간 의존 순서도 뚜렷해서 Planner의 분해 품질을 평가하기에 알맞습니다. Module 01·02의 필드 추가 태스크(A·D)와 달리 새 도메인을 붙이는 작업이라, 기존 User CRUD나 phone·address 필드에는 영향을 주지 않습니다.
 
 !!! example "실습 위치·실행"
 

@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-07-12] lint | 실습 가이드 12편 절차 결함 전수 점검 (에이전트 3병렬) + 수정
+- **점검 범위**: harness 00·demo·M1~M5, loop 실습, advisor-worker 기본·심화, java-book-study-lab — 오늘 발견한 결함 유형(상태 오염·되돌리기 함정·모듈 간 정합·복붙 안정성) 관점. 이스케이프 펜스(`\`\`\``)는 위키 전체 grep 잔존 0.
+- **수정 3건**: ① [[guide-harness-module5]] 비교표에 "가정 명시" 행 누락(M1·M2는 7항목, M5만 6항목 — 측정 항목 고정 원칙 위반) 추가 ② M5의 "자기검증 루프" 참조에 M3 Step 7 출처·역할 반문장 보강(§7-8) ③ [[guide-advisor-worker-advanced]] Step 0 — advisor 규율 2줄을 커밋 후 append해 미커밋 잔여로 남던 것을 커밋 앞으로 재배열(장면 1 Advisor 커밋에 잡음 섞임 방지).
+- **보완 1건**: [[guide-harness-module4]] Planner 시연의 인증 기능이 M1·M2 필드 추가 태스크와 독립(기존 User CRUD 무영향)임을 명시.
+- **기각 2건**: M1 태스크 D·E 선행 정의 부족 지적은 인라인 정의(필드명·유형·이유) 존재로 기각. 심화편 Step 0 "커밋 시점 .claude 비어 있음" 지적은 기본편 Step 1~2 선행 전제로 절반 기각(잔여 결함만 수정). 나머지 8편 이상 없음.
+
 ## [2026-07-12] fix | harness M2·M5 — Before/After 검증을 revert 재실행에서 "같은 유형 새 태스크"로 전환
 - **문제 (사용자 피드백)**: ① M2 Step 3 프롬프트 안의 중첩 코드펜스가 `\`\`\``로 이스케이프돼 있어 학습자가 복사하면 역슬래시가 그대로 붙음 ② M2 Step 5-1의 `git revert` 출발선 되돌리기가 태스크 커밋에 섞인 CLAUDE.md 변경(`git add -A`)까지 되돌려 방금 만든 CLAUDE.md가 초기화됨 ③ 섹션 6 가이드에 playground가 web/api 분리 모노레포라는 사실이 없음.
 - **수정 (M2)**: Step 3 프롬프트를 4-backtick 외부 펜스로 바꿔 내부 ``` 원문 유지, 출력 형식 트리를 실제 playground 구조(api/+web/)로 교체, 원칙에 "모노레포 분리 명시·양쪽에 걸치는 변경은 함께 수정" 추가. Step 5는 revert 폐기 — 태스크 A(phone)와 요구 구조가 같은 **태스크 D(address 필드, 행정안전부 도로명주소: roadAddress·detailAddress·zipCode 5자리)**를 새로 실행해 비교. 커밋 규약 `harness(M2-A)` → `harness(M2-D)`.

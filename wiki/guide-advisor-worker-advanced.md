@@ -7,7 +7,7 @@ sources:
   - ai-advisor/worker_script.md
   - ai-advisor/claude_script.md
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-07-12
 ---
 
 # Advisor–Worker 실습 심화편 — 재위임·병렬·모델 티어링·오버헤드 예외
@@ -39,7 +39,7 @@ function totalPrice(items) {
 }
 module.exports = { totalPrice };
 EOF
-node cart.test.js && git add cart.js cart.test.js package.json .claude && git commit -qm "cart 기본 구현 (기본편 완료 상태 복원)"
+node cart.test.js
 ```
 
 ```text
@@ -54,6 +54,12 @@ cat >> .claude/agents/advisor.md << 'EOF'
 - 서로 독립적인 작업은 한 턴에 여러 Task로 병렬 위임한다. 의존 관계가 있으면 순차로 나눈다.
 - 한두 줄 수정처럼 위임 오버헤드(브리프 작성)가 더 큰 일은 위임하지 말고 직접 처리한다.
 EOF
+```
+
+복원한 구현과 보강한 에이전트 정의를 여기서 함께 커밋합니다 — advisor.md의 규율 추가를 커밋 밖에 남겨 두면, 장면 1에서 Advisor가 검증 통과분을 커밋할 때 에이전트 정의 변경이 잡음으로 섞여 들어갑니다:
+
+```bash
+git add cart.js cart.test.js package.json .claude && git commit -qm "cart 기본 구현 + advisor 규율 2줄 (기본편 완료 상태 복원)"
 ```
 
 ---
