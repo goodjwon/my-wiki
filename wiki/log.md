@@ -10,6 +10,7 @@ title: Wons Wiki 로그
 - **연쇄 수정 (M5)**: M2-A revert 단계 제거, **태스크 E(birthDate 필드)**로 5모듈 누적 측정. 비교표 제목 "필드 추가 태스크 비교 — M1: phone / M2: address / M5: birthDate". [[guide-wiki-authoring-standards]] §7-8 예시 커밋명도 M2-D로 동기화.
 - 비교 유효성 논리 교체: "원문 그대로 재실행" → "요구 구조(필드 추가·형식 검증·필수 처리·web 반영·테스트)와 측정 7항목 고정". 두 파일 style-lint 0건.
 - **후속 소탕 (M1)**: 사용자 확인 요청으로 Module 01의 옛 논리 4곳 발견·교체 — Step 3 목적 문장, `[베이스라인 측정 중]` 해설의 "같은 태스크를 재실행", Step 4 리드인, baseline.md 템플릿 꼬리 주석("동일 태스크를 같은 표현으로 다시 요청해야 비교가 유효"). 모두 태스크 D·E 선행 소개와 "요구 구조·측정 항목 고정" 논리로 갱신. 나머지 하네스 페이지 전수 grep 결과 잔재 없음.
+- **후속 소탕 (raw/)**: 원본 킷 2개 파일에 교정 주석 추가(원문 보존, "원본 불신 검증" 정책) — `raw/harness-engineering/harness-kit/module1/02_baseline_prompt.md` 끝의 "동일 태스크를 다시 실행" 안내, `module2/02_before_after_prompt.md`의 "태스크 A 재실행" 절차. 강의교안·요약본 3곳의 "동일 태스크 실행"은 측정 방법론의 개념 서술이라 원문 유지(절차 아님). module3·5 킷의 "재실행"·"revert"는 테스트 루프·주간 리뷰 grep 용법이라 무관.
 
 ## [2026-07-12] chore | nav 제목 괄호 부연 설명 제거
 - 좌측 메뉴에서 두 줄로 꺾이는 괄호 부연 3건 제거 — "Loop 엔지니어링 실습 (메아리방 vs 거부 신호)" → "Loop 엔지니어링 실습", "Advisor–Worker 실습 (판단·구현 분리)" → "Advisor–Worker 실습", "Advisor–Worker 심화 (재위임·병렬·모델)" → "Advisor–Worker 심화" (모바일 화면 캡처 피드백).
