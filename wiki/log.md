@@ -4,6 +4,15 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-08-02] ingest | raw/object-dependency/ 적재 — 블로그 글에서 영속 개념 3개 추출 (2단계 연동 실전 1회)
+- **배경**: blogger-daemon ↔ my-wiki 2단계 연동. 검수 PASS 블로그 글의 영속 개념을 raw/ 소스 노트로 공급하는 수동 절차 검증. blogger-daemon은 raw 공급자 역할만 — raw→wiki 승격은 이 위키 세션 몫.
+- **출처 글**: [객체 참조의 덫을 깨다: ID 참조와 이벤트로 진화하는 의존성 설계](https://blog.wonslab.dev/2026-07-19-object-dependency-id-reference/) (원 트리거 영상: 조영호 우아한객체지향 세미나 dJ5C4qRqAgA).
+- **생성**: `raw/object-dependency/` — README.md + 소스 노트 3개
+  - `id-reference-vs-object-reference.md` — 경계 넘는 협력은 ID 참조로
+  - `aggregate-boundary-lifecycle.md` — 애그리거트 경계를 라이프사이클로 긋기
+  - `domain-event-eventual-consistency.md` — 도메인 이벤트로 최종 일관성
+- **비고**: 기존 `raw/object/`(오브젝트 강의 교재)와 소스가 달라 디렉터리 분리. wiki/ 승격(concept-* 생성·교차참조)은 후속 위키 세션 대기. 트렌드성 본문 서사(측정 수치 등)는 제외하고 재참조 가능한 영속 개념만 선별.
+
 ## [2026-07-12] verify | Advisor–Worker 심화편 장면 1~4 실행 검증 — 규율 교정 + 배너 (Pending 종결)
 - **방법**: Step 0 검증 상태의 스크래치패드 데모에서 장면별 헤드리스 `claude --agent advisor -p` + stream-json 도구 호출 감사 (메인/서브에이전트는 `parent_tool_use_id`로 분리).
 - **장면 1 (재위임)**: 초판 규율("한두 줄 수정은 직접 처리")에서는 **2회 모두 Advisor가 직접 Edit** — 할인 티어 수정이 실제로 1~2줄이라 크기 기준 예외가 정당하게 덮음. 규율을 **동작 변경 기준**("테스트 기대값이 바뀌는 로직 수정은 한두 줄이라도 위임")으로 구체화한 3차에서 재현: 위임 전 실패 확인 → 실패 케이스(40000/45000) 담긴 브리프([목표]~[범위 경계] 5항목) → Worker만 Edit → Advisor가 diff+재테스트 → 커밋.
