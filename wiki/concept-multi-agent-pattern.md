@@ -152,3 +152,4 @@ OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL R
 - [[src-harness-engineering]] — Module 04 전체 자료
 - [[concept-advisor-worker]] — 2-역할(Advisor–Worker) 변형 패턴, 역할별 이종 모델 배치
 - [[src-ai-advisor-worker]] — Advisor–Worker 원본 스크립트
+- [[concept-graph-engineering]] — 역할 분할(Planner/Coder/Critic)을 노드·엣지 형식으로 명시하는 다음 단계

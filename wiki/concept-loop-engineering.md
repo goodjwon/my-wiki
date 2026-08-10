@@ -25,8 +25,9 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 | 2025 | 컨텍스트 ([[concept-claude-md]]) | 입력 공간 | 시스템 프롬프트·RAG·메모리 설계 |
 | 2026 초 | 하네스 ([[concept-harness-engineering]]) | 환경 | CLAUDE.md·hooks·skills 설계 |
 | **2026 중** | **Loop** | **메커니즘 그 자체** | **루프(코드) 작성 — 프롬프트는 그 안에서 자동 생성** |
+| 다음 | 그래프 ([[concept-graph-engineering]]) | 제어 흐름 구조 | 노드·엣지·스테이트 설계 — 루프 내부의 책임 해체 |
 
-인간 노력의 '단위'가 **단어 → 컨텍스트 → 환경 → 메커니즘** 순으로 한 단계씩 올라갑니다.
+인간 노력의 '단위'가 **단어 → 컨텍스트 → 환경 → 메커니즘 → 구조** 순으로 한 단계씩 올라갑니다.
 
 ## 폭발 계기 — 2026-06
 
@@ -82,6 +83,7 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 | **TDD** | 실패 테스트 없이 코드 작성 → 검증 없는 누적 | 3법칙: 빨강(실패 테스트)이 사이클 안의 거부 신호 | [[concept-tdd-laws-and-first]] |
 | **크론잡** | 잡이 끝났는지 확인 없이 `concurrencyPolicy: Forbid`만 걸어 무한 적체 | `activeDeadlineSeconds` + 실제 종료 신호 | [[concept-cronjob-concurrency-trap]] |
 | **LB ↔ 서버** | Keep-Alive 타임아웃 일치 가정, 종료 신호 없음 → 502 race | LB 타임아웃 < 서버 타임아웃, FIN 명시 | [[concept-keepalive-timeout-race]] |
+| **그래프 엔지니어링** | 프롬프트 지시("3회만 재시도")를 LLM이 무시하고 폭주 | 조건부 엣지·재시도 상한을 코드(컨디션)로 강제 | [[concept-graph-engineering]] |
 
 → **공통 원리**: 자동 사이클·자동 호출에는 반드시 **밀어내는 신호(reject·timeout·exit code)** 가 짝지어 있어야 합니다. 신호 없는 루프는 폭주합니다.
 
@@ -147,6 +149,7 @@ Addy Osmani는 토큰 비용에 **절대적으로 주의**해야 한다고 말�
 
 - [[guide-loop-engineering-demo]] — 🧪 직접 체험하는 실습 (메아리방 vs 거부 신호 루프, ReAct·Reflexion·Self-Refine 출처 포함)
 - [[src-loop-engineering]] — 출처·인용 정리
+- [[concept-graph-engineering]] — 다음 단계 (루프 내부를 노드·엣지로 해체)
 - [[concept-harness-engineering]] — 직전 단계 (환경 설계)
 - [[concept-claude-md]] — 선언 층 / STOP 트리거
 - [[concept-claude-hooks]] — back-pressure가 "거부할 수 있는 무언가" 의 구현

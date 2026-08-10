@@ -114,6 +114,7 @@ nav:
       - Claude Hooks: concept-claude-hooks.md
       - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
       - "🆕 Advisor–Worker 패턴": concept-advisor-worker.md
+      - "🆕 그래프 엔지니어링": concept-graph-engineering.md
     - 도구:
       - Claude Design: entity-claude-design.md
     - 소스:
@@ -122,6 +123,7 @@ nav:
       - Copilot 토큰 종량제 전환 (2026-06): src-copilot-token-pricing.md
       - "Loop 엔지니어링 커뮤니티 발화 (2026-06)": src-loop-engineering.md
       - "🆕 Advisor–Worker 에이전트 스크립트": src-ai-advisor-worker.md
+      - "🆕 그래프 엔지니어링 원문 정리": src-graph-engineering.md
     - 실습:
       - 사전 안내 (Module 00): guide-harness-00-prerequisites.md
       - 5분 데모: guide-harness-demo.md
@@ -142,6 +144,9 @@ nav:
       - 디자인 패턴: concept-design-patterns.md
     - DDD:
       - 카카오페이 DDD: src-kakaopay-ddd.md
+      - "🆕 ID 참조 vs 객체 참조": concept-id-reference-vs-object-reference.md
+      - "🆕 애그리거트 경계": concept-aggregate-boundary.md
+      - "🆕 도메인 이벤트·최종 일관성": concept-domain-event-eventual-consistency.md
     - Object:
       - 책 카드: entity-object.md
       - "강의 인덱스": src-object-lecture.md

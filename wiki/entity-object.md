@@ -168,4 +168,5 @@ OO 설계 핵심 5권이 서로 다른 단위·시점에서 같은 OO 결론을 
 - [[entity-clean-code]] — Robert C. Martin *Clean Code* (객체 단위가 *오브젝트* 라면, 줄·이름 단위가 *Clean Code*. 6장 "객체와 자료 구조"·디미터 법칙 직접 다룸)
 - [[concept-spring-core]] — IoC·DI (책의 9장 의존성 주입)
 - [[src-kakaopay-ddd]] — DDD 실전 사례 (책의 부록 C 도메인 모델 + 본문 책임 주도 설계)
+- [[concept-id-reference-vs-object-reference]] / [[concept-aggregate-boundary]] / [[concept-domain-event-eventual-consistency]] — 저자 조영호의 우아한객체지향 세미나(2019) 유래 개념 3종 (의존성으로 설계 진화시키기)
 - [[concept-db-connection-pool]] / [[concept-varchar-length-prefix]] / [[concept-api-backward-compatibility]] — "데이터 먼저 함정" 패턴 비교

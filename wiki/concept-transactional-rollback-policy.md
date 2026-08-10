@@ -141,6 +141,7 @@ STOP: @Transactional을 rollbackFor 없이 사용 (체크 예외 그냥 commit �
 | [[concept-keepalive-timeout-race]] | 웹 서버 keep-alive 짧음 | 서버 > LB |
 | [[concept-db-connection-pool]] | 무한 수명 커넥션 | `maxLifetime` < DB `wait_timeout` |
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` | utf8mb4에선 `VARCHAR(63)` 또는 도메인 |
+| [[concept-id-reference-vs-object-reference]] | JPA 객체 참조로 애그리거트 경계 관통 | 경계 밖은 ID 참조 |
 
 → 공통 원리: **"프레임워크·인프라의 기본값은 그 시대 설계자가 정답이라 믿었던 값일 뿐입니다."** 시간이 지나면 시대 가정이 깨집니다. 매번 의심해야 합니다.
 

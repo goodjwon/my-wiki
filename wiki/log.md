@@ -4,6 +4,18 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-08-10] ingest | 그래프 엔지니어링 + object-dependency 영속 개념 3종 승격
+- **대상**: ① `raw/ai-engineering/grap-engineering/` 블로그 원고 1건 ② `raw/object-dependency/` 소스 노트 3건 (2026-08-02 적재분의 wiki 승격 — README의 "승격은 위키 세션 몫" 이행).
+- **신규 source**: [[src-graph-engineering]] — 원문 구조 보존 (4단계 진화·4대 구성 요소·4 설계 패턴·하드/소프트 분담·LangGraph 실행 골격).
+- **신규 concept 4건**:
+  - [[concept-graph-engineering]] — Loop의 다음 단계로 계보 연결, "규칙을 확률 모델에 맡기지 말고 구조로 강제" 패턴표 신설(하네스·Hooks·Loop·Advisor–Worker), 위키 기존 자산 매핑표.
+  - [[concept-id-reference-vs-object-reference]] — Before/After JPA 코드 + OrderValidator 도메인 서비스, "편한 기본값은 규모에서 함정" 패턴표 합류(@Transactional·DB풀·VARCHAR·크론잡).
+  - [[concept-aggregate-boundary]] — 라이프사이클 기준 경계·주문 도메인 4분할 사례, "경계를 명시해야 격리가 생긴다" 패턴표 신설(Bounded Context·트랜잭션 경계·Keep-Alive).
+  - [[concept-domain-event-eventual-consistency]] — `@TransactionalEventListener(AFTER_COMMIT)` + `REQUIRES_NEW` 구현·점진 도입 3단계, "직접 참조 대신 신호로 협력" 패턴표 신설(ID 참조·그래프 스테이트 전이·멀티 에이전트 인계).
+- **양방향 교차참조**: [[concept-loop-engineering]] (진화표에 그래프 행 + 거부 신호 패턴표 행), [[concept-multi-agent-pattern]]·[[concept-advisor-worker]] (그래프 링크), [[src-kakaopay-ddd]]·[[entity-object]] (DDD 개념 3종 링크), [[concept-transactional-rollback-policy]] (기본값 패턴표에 객체 참조 행), [[concept-keepalive-timeout-race]] (경계 패턴 링크).
+- **raw 정리**: grap-engineering 중복 파일 2건이 바이트 단위 동일 확인 → `_1786335534427` 1건 삭제 (`_1786315251439` 보존, 사용자 승인).
+- **index.md·mkdocs.yml nav**: Sources 1건 + Concepts 4건 등록 (하네스·AI 에이전트 / 개발방법론 > DDD).
+
 ## [2026-08-10] refactor | AI 트렌드 파편 주제 7개를 raw/ai-engineering/ 우산으로 통합
 - **배경**: 사용자 판단 "트렌드 주제는 각각 글 10개를 못 넘김 — 합치자". 최상위 raw/에 1~8개짜리 AI 관련 디렉터리가 7개로 흩어져 있던 것을 하나로 묶음.
 - **이동** (`git mv`, 파일 내용·파일명 무변경 — raw 불변 원칙 유지, 위치만 이동): `harness-engineering`(7) `2bun-coding`(8) `ai-advisor`(4) `loop-engineering`(2) `grap-engineering`(1, untracked→add) `llm-wiki-pattern`(1) `claude-design`(1) → `raw/ai-engineering/<옛주제명>/`. 출처 그룹은 서브디렉터리로 보존.

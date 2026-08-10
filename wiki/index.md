@@ -1,6 +1,6 @@
 ---
 title: Wons Wiki 인덱스
-updated: 2026-07-06
+updated: 2026-08-10
 
 ---
 
@@ -22,6 +22,7 @@ updated: 2026-07-06
 - [[src-copilot-token-pricing]] — GitHub Copilot 토큰 종량제 전환 (2026-06-01) — 비용 폭증·예산 상한·하네스 적용 후보
 - [[src-loop-engineering]] — Loop 엔지니어링 (2026-06 Steinberger·Cherny·Osmani 발화 정리)
 - [[src-ai-advisor-worker]] — Advisor–Worker 에이전트 스크립트 (판단·구현 분리, 역할별 이종 모델)
+- [[src-graph-engineering]] — 그래프 엔지니어링 원문 정리 (노드·엣지·스테이트·컨디션, 4대 설계 패턴, LangGraph 골격)
 - [[src-effective-java-lecture]] — 📚 *Effective Java* 실전 강의 교재 11장 인덱스 (5,200+줄)
 - [[src-refactoring-lecture]] — 📚 *리팩터링 2판* 실전 강의 교재 12장 인덱스 (약 5,000줄)
 - [[src-clean-code-lecture]] — 📚 *Clean Code* 실전 강의 교재 17장 인덱스
@@ -67,12 +68,16 @@ updated: 2026-07-06
 - [[concept-grasp]] — GRASP 책임 할당 9패턴 (오브젝트 5장)
 - [[concept-design-by-contract]] — 계약 3요소와 Java 실현 수단 (오브젝트 부록 A)
 - [[concept-domain-model-kinds]] — 분석/설계/구현 모델 구분 (오브젝트 부록 C)
+- [[concept-id-reference-vs-object-reference]] — 애그리거트 경계를 넘는 연결은 ID 참조로 (트랜잭션 번짐·N+1 차단)
+- [[concept-aggregate-boundary]] — 애그리거트 경계를 라이프사이클 기준으로 긋기 (경계 선긋기 = 동시성 격리)
+- [[concept-domain-event-eventual-consistency]] — 도메인 이벤트와 최종 일관성 (애그리거트 간 비동기 협력)
 - [[concept-oop]] — 객체지향 프로그래밍 4원칙 (캡슐화·상속·다형성·추상화)
 - [[concept-design-patterns]] — Java 디자인 패턴 8가지 (전략·템플릿·팩토리·싱글톤·옵저버·프록시·어댑터·파사드)
 - [[concept-spring-core]] — Spring 핵심 개념 (IoC, DI, Bean, MVC, AOP)
 - [[concept-transactional-rollback-policy]] — @Transactional 롤백 정책: RuntimeException만 자동 롤백 + rollbackFor 패턴 + Java 예외 철학
 - [[concept-harness-engineering]] — 하네스 엔지니어링: 부탁 대신 구조로 AI 에이전트 제어
 - [[concept-loop-engineering]] — Loop 엔지니어링: 사람을 시스템으로 대체 (하네스의 다음 단계, 2026-06)
+- [[concept-graph-engineering]] — 그래프 엔지니어링: 제어 흐름을 노드·엣지로 명시 (Loop의 다음 단계, 하드 규칙은 코드로)
 - [[concept-claude-md]] — CLAUDE.md 에이전트 헌법 (Karpathy 4원칙 + STOP 트리거)
 - [[concept-claude-hooks]] — Claude Code Hooks (guard.sh + lint-fix.sh 시스템 강제)
 - [[concept-multi-agent-pattern]] — Planner / Coder / Critic 3-tier 멀티 에이전트

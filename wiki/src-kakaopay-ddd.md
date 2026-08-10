@@ -36,6 +36,9 @@ updated: 2026-04-19
 ## 관련 페이지
 
 - [[concept-domain-model-kinds]] — DomainEntity/JpaEntity 분리의 이론 배경 (분석/설계/구현 모델 구분)
+- [[concept-aggregate-boundary]] — Aggregate Root = 트랜잭션 경계의 개념 배경 (라이프사이클 기준 경계 긋기)
+- [[concept-id-reference-vs-object-reference]] — 애그리거트 경계를 넘는 연결 방식 (도메인 기능 독점 원칙과 동일 문제의식)
+- [[concept-domain-event-eventual-consistency]] — 경계로 나뉜 도메인 간 협력 (Biz-component의 대안 축)
 
 - [[concept-oop]] — DDD의 기반이 되는 객체지향 원칙
 - [[concept-spring-core]] — Spring DI/Bean으로 도메인 모듈 조합

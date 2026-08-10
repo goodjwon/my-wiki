@@ -142,3 +142,4 @@ ALB(60s) → **NLB(350s)** 로 마이그레이션할 때 서버 타임아웃을 
 - [[src-java-study-2024-2025]] — Ch10 입출력과 네트워크 (Keep-Alive 기초)
 - [[src-spring-data-access-ref]] — Spring Boot Tomcat 타임아웃 설정 맥락
 - [[concept-harness-engineering]] — 인프라 설정 불일치도 결국 "환경 설계" 문제
+- [[concept-aggregate-boundary]] — 도메인 설계 영역의 같은 "경계를 명시해야 격리가 생긴다" 패턴
