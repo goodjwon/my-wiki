@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-08-10] lint | 깨진 sources 5건 복구 + 고아 1건 해소 (전체 영역 점검)
+- **깨진 frontmatter sources 5건 수정** (ab01187 커밋이 "사전 파손 — 위키 세션 정리 대상"으로 남긴 잔존): concept-compounding-knowledge·concept-ingest·concept-lint·concept-memex의 `llm-wiki-pattern.md` → `ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`, entity-claude-design의 srt 경로에 `ai-engineering/claude-design/` 접두 보강.
+- **고아 페이지**: 별칭 링크(`[[페이지|표시명]]`) 인식 재검사 결과 진짜 고아는 [[src-my-links]] 1건 (entity-vannevar-bush는 오탐 — memex·llm-wiki-pattern에서 별칭으로 인바운드 존재). 사용자 선택 (a) 교차참조 추가 → 나가는 링크가 있던 3페이지(src-java-study-2024-2025·concept-spring-core·concept-design-patterns)에 역링크 부착으로 해소.
+- **이상 없음 판정**: ① index 누락으로 검출된 lecture-*·java-study-* 챕터 ~110건은 설계상 부모 인덱스 페이지(src-*-lecture)로 대표 — 정상 ② 깨진 `[[링크]]` 검출분은 전부 작성 표준 문서의 예시 표기·log/backlog의 메모리 파일 참조 — 정상 ③ stale 검출 대부분은 8/10 우산 rename·7/4 아티팩트 정리 커밋(내용 무변경)의 날짜 오탐.
+
 ## [2026-08-10] verify+guide | 그래프 엔지니어링 실습 가이드 + 첫 comparison 페이지
 - **[[guide-graph-engineering-demo]]** 신규 — [[guide-loop-engineering-demo]] 패턴 준수 (Node mock 토큰 0 재현 + 선택적 claude -p, Step 구조·차이표·비용 경고·정리 절차). raw 실습 키트 없이 원문 개념에서 직접 설계.
 - **실행 검증 (2026-08-10, Node v26, 스크래치패드)**: 블랙박스 20회 중 13회 오답인데 "완료" 보고 (이론 70%) / 그래프 20회 통과 14·에스컬레이션 6 — **오답-완료 구조적 0회** (이론 ABORT ≈ 18%). 실측 수치·실제 전이 로그를 본문에 반영, 배너 부착. (Step 6 claude 연결은 토큰 사유로 본 검증 제외 — loop 데모 전례 준수)

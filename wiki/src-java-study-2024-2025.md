@@ -52,3 +52,4 @@ updated: 2026-07-03
 - [[concept-oop]] — 객체지향 프로그래밍 핵심
 - [[concept-design-patterns]] — 디자인 패턴 8가지
 - [[concept-spring-core]] — IoC, DI, Bean, MVC
+- [[src-my-links]] — Java/Spring 관련 북마크 모음 (교재와 상호 보완)

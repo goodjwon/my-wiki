@@ -359,6 +359,7 @@ curl -s http://localhost:8080/actuator/metrics/jvm.memory.used
 - [[src-spring-data-access-ref]] — `@Repository`, `@Transactional` 자세히
 - [[src-spring-web-mvc-ref]] — DispatcherServlet, MVC 자세히
 - [[src-spring-guide]] — 실무 디렉터리·계층 구조 가이드
+- [[src-my-links]] — Spring 관련 북마크 모음 (스레드 풀·Modulith·FixtureMonkey 등)
 - [[concept-design-patterns]] — Spring에서 활용되는 패턴 (프록시·팩토리·싱글톤)
 - [[src-java-study-2024-2025]] — Java 스터디 Ch5~Ch8
 - [[src-kakaopay-ddd]] — DDD 레이어와 Spring Bean 책임 분리

@@ -2,7 +2,7 @@
 title: Lint (위키 정비)
 type: concept
 tags: [워크플로, 위키운영]
-sources: [llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
 updated: 2026-07-02
 ---

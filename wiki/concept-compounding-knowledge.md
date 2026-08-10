@@ -2,7 +2,7 @@
 title: 복리 지식 (Compounding Knowledge)
 type: concept
 tags: [지식관리, PKM, 세컨드브레인]
-sources: [llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
 updated: 2026-04-18
 ---

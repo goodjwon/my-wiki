@@ -2,7 +2,7 @@
 title: Claude Design
 type: entity
 tags: [anthropic, claude, 디자인, 프로토타이핑, AI-디자인]
-sources: [클로드 디자인! 디자인 스타트업 폐업시켜 버리기~.ko-orig.srt]
+sources: [ai-engineering/claude-design/클로드 디자인! 디자인 스타트업 폐업시켜 버리기~.ko-orig.srt]
 created: 2026-04-18
 updated: 2026-07-02
 ---
