@@ -109,6 +109,7 @@ updated: 2026-08-10
 - [[guide-loop-engineering-demo]] — Loop 엔지니어링 실습: 메아리방 vs 거부 신호 루프 직접 체험 (Node mock + claude -p 헤드리스, ReAct·Reflexion 출처)
 - [[guide-advisor-worker-demo]] — Advisor–Worker 실습: 판단·구현 분리 직접 체험 (claude --agent, tools 제한·검증 게이트)
 - [[guide-advisor-worker-advanced]] — Advisor–Worker 실습 심화편: 수정 브리프 재위임·병렬 위임·모델 티어링 실측·오버헤드 예외
+- [[guide-graph-engineering-demo]] — 그래프 엔지니어링 실습: 블랙박스 vs 노드·엣지 그래프 직접 체험 (Node mock + claude -p, 실행 검증됨)
 
 ## Comparisons
-_아직 비교 분석이 없습니다._
+- [[comparison-advisor-worker-vs-graph]] — Advisor–Worker vs 그래프 엔지니어링: 개선이 아니라 축이 다름 (역할 분할 vs 제어 흐름 강제)

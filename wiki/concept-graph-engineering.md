@@ -53,6 +53,8 @@ graph.add_conditional_edges("evaluate", should_retry,
 
 전체 실행 가능한 골격은 [[src-graph-engineering]]의 LangGraph 예제를 참조합니다.
 
+> 🧪 **직접 해보기**: [[guide-graph-engineering-demo]] — 블랙박스 에이전트와 노드·엣지 그래프를 순수 Node 40줄로 짜서 8분 만에 비교 체험 (실행 검증됨).
+
 ## 4가지 설계 패턴과 적용 시나리오
 
 | 패턴 | 언제 쓰는가 | 구조 |
@@ -123,6 +125,8 @@ graph.add_conditional_edges("evaluate", should_retry,
 ## 관련 페이지
 
 - [[src-graph-engineering]] — 원문 구조·LangGraph 실행 골격
+- [[guide-graph-engineering-demo]] — 🧪 직접 체험하는 실습 (블랙박스 vs 그래프, 실행 검증됨)
+- [[comparison-advisor-worker-vs-graph]] — "Advisor–Worker에서 개선된 건가?" 질문에 대한 비교 분석
 - [[concept-loop-engineering]] — 직전 단계 (사이클 설계) — 이 페이지는 그 사이클의 내부 해체
 - [[concept-harness-engineering]] — "부탁 대신 구조" 원리의 시작점
 - [[concept-multi-agent-pattern]] — 노드 분할의 선행 실천 (Planner/Coder/Critic)

@@ -106,6 +106,7 @@ app = graph.compile()
 ## 관련 페이지
 
 - [[concept-graph-engineering]] — 개념 본체 (위키 자산 매핑·패턴 비교)
+- [[guide-graph-engineering-demo]] — 🧪 직접 체험하는 실습 (블랙박스 vs 그래프)
 - [[concept-loop-engineering]] — 직전 단계 (원문 서사의 3단계)
 - [[concept-multi-agent-pattern]] — Planner/Coder/Critic = 노드 분할의 선행 사례
 - [[concept-advisor-worker]] — 2노드 + 검증 게이트의 최소 그래프

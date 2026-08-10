@@ -115,6 +115,7 @@ nav:
       - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
       - "🆕 Advisor–Worker 패턴": concept-advisor-worker.md
       - "🆕 그래프 엔지니어링": concept-graph-engineering.md
+      - "🆕 Advisor–Worker vs 그래프 (비교)": comparison-advisor-worker-vs-graph.md
     - 도구:
       - Claude Design: entity-claude-design.md
     - 소스:
@@ -135,6 +136,7 @@ nav:
       - "🆕 Loop 엔지니어링 실습": guide-loop-engineering-demo.md
       - "🆕 Advisor–Worker 실습": guide-advisor-worker-demo.md
       - "🆕 Advisor–Worker 심화": guide-advisor-worker-advanced.md
+      - "🆕 그래프 엔지니어링 실습": guide-graph-engineering-demo.md
   - 개발방법론:
     - 가이드:
       - 실습 환경 (5권 공통): guide-java-book-study-lab.md

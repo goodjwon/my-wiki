@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-08-10] verify+guide | 그래프 엔지니어링 실습 가이드 + 첫 comparison 페이지
+- **[[guide-graph-engineering-demo]]** 신규 — [[guide-loop-engineering-demo]] 패턴 준수 (Node mock 토큰 0 재현 + 선택적 claude -p, Step 구조·차이표·비용 경고·정리 절차). raw 실습 키트 없이 원문 개념에서 직접 설계.
+- **실행 검증 (2026-08-10, Node v26, 스크래치패드)**: 블랙박스 20회 중 13회 오답인데 "완료" 보고 (이론 70%) / 그래프 20회 통과 14·에스컬레이션 6 — **오답-완료 구조적 0회** (이론 ABORT ≈ 18%). 실측 수치·실제 전이 로그를 본문에 반영, 배너 부착. (Step 6 claude 연결은 토큰 사유로 본 검증 제외 — loop 데모 전례 준수)
+- **[[comparison-advisor-worker-vs-graph]]** 신규 — 위키 첫 comparison 페이지. 사용자 질문 "Advisor–Worker에서 개선된 건가?"를 보존: 개선 아닌 축 차이(역할 분할 vs 제어 흐름 강제), 포함 관계(2노드 최소 그래프), 유일한 델타 = 규율 위반 사후 검출 vs 사전 불가능 (심화편 장면 1 실측 ↔ 데모 실측 대조표), 선택 기준.
+- **교차참조**: concept-graph-engineering (🧪 직접 해보기 + 관련 2건), src-graph-engineering, concept-advisor-worker (comparison 링크). index.md Comparisons 섹션 개시, mkdocs nav 2건.
+
 ## [2026-08-10] ingest | 그래프 엔지니어링 + object-dependency 영속 개념 3종 승격
 - **대상**: ① `raw/ai-engineering/grap-engineering/` 블로그 원고 1건 ② `raw/object-dependency/` 소스 노트 3건 (2026-08-02 적재분의 wiki 승격 — README의 "승격은 위키 세션 몫" 이행).
 - **신규 source**: [[src-graph-engineering]] — 원문 구조 보존 (4단계 진화·4대 구성 요소·4 설계 패턴·하드/소프트 분담·LangGraph 실행 골격).
