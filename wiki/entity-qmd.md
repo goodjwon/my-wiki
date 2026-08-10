@@ -2,7 +2,7 @@
 title: qmd
 type: entity
 tags: [도구, 검색, CLI, MCP, 온디바이스]
-sources: [llm-wiki-pattern/llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://github.com/tobi/qmd]
 created: 2026-04-18
 updated: 2026-05-31
@@ -62,7 +62,7 @@ MCP 노출 도구: `query`, `get`, `multi_get`, `status`
 
 [[src-llm-wiki-pattern|LLM Wiki 패턴]]은 위키가 커져 `index.md` 기반 탐색이 한계에 다다랐을 때의 **선택지**로 qmd를 추천. CLI(LLM이 shell out)와 MCP(LLM의 네이티브 도구로) 양쪽 진입점을 가져 LLM 친화적.
 
-> 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
+> 원본 인용 (`raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "[qmd](https://github.com/tobi/qmd) is a good option: it's a local search engine for markdown files with hybrid BM25/vector search and LLM re-ranking, all on-device. It has both a CLI (so the LLM can shell out to it) and an MCP server (so the LLM can use it as a native tool)."
 
 ## 적용 시점
@@ -72,7 +72,7 @@ MCP 노출 도구: `query`, `get`, `multi_get`, `status`
 
 ## 원본 출처
 
-- raw: `raw/llm-wiki-pattern/llm-wiki-pattern.md` (Optional: CLI tools 섹션)
+- raw: `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md` (Optional: CLI tools 섹션)
 - 외부: [github.com/tobi/qmd](https://github.com/tobi/qmd)
 
 ## 관련

@@ -3,7 +3,7 @@ title: DB 커넥션 풀 (Connection Pool)
 type: concept
 tags: [database, jdbc, hikaricp, performance, spring-data]
 sources:
-  - 2bun-coding/getconnection-pool.md
+  - ai-engineering/2bun-coding/getconnection-pool.md
 external:
   - https://www.youtube.com/shorts/El5lOXM1r5E
   - https://github.com/brettwooldridge/HikariCP
@@ -59,7 +59,7 @@ spring.datasource.hikari.leak-detection-threshold=10000  # 10초
 - 어느 코드 경로에서 누수가 시작됐는지 추적 가능
 - 운영 환경에서는 약간의 오버헤드가 있으므로 개발·스테이징에서 켜고 패턴 확인 후 운영 임계값 결정
 
-> 출처 인용 (`raw/2bun-coding/getconnection-pool.md`):
+> 출처 인용 (`raw/ai-engineering/2bun-coding/getconnection-pool.md`):
 > "이 옵션을 설정하면 커넥션을 빌려 간 뒤 일정 시간이 지나도 반환되지 않을 때 경고 로그를 남기며, 어디서 누수가 발생했는지 스택 트레이스까지 찍어줍니다."
 
 ## Spring Boot 설정 예시 (HikariCP)
@@ -106,7 +106,7 @@ spring:
 
 ## 원본 출처
 
-- raw: `raw/2bun-coding/getconnection-pool.md`
+- raw: `raw/ai-engineering/2bun-coding/getconnection-pool.md`
 - 외부: [2분코딩 — getConnection()이 빠른 이유, 풀 안에서 벌어지는 일](https://www.youtube.com/shorts/El5lOXM1r5E)
 - 공식: [HikariCP GitHub](https://github.com/brettwooldridge/HikariCP)
 

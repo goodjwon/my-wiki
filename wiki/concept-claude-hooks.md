@@ -2,7 +2,7 @@
 title: Claude Code Hooks — 시스템 레벨 강제
 type: concept
 tags: [claude-code, hooks, harness, automation]
-sources: [harness-engineering/harness-kit/module3/, harness-engineering/harness_engineering.md, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
+sources: [ai-engineering/harness-engineering/harness-kit/module3/, ai-engineering/harness-engineering/harness_engineering.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
 updated: 2026-07-02
 ---
@@ -107,7 +107,7 @@ fi
 exit 0
 ```
 
-전체 구현은 `raw/harness-engineering/harness-kit/module3/guard.sh`를 참조하십시오.
+전체 구현은 `raw/ai-engineering/harness-engineering/harness-kit/module3/guard.sh`를 참조하십시오.
 
 ## lint-fix.sh — Post-Tool Hook
 

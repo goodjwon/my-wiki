@@ -2,7 +2,7 @@
 title: Marp
 type: entity
 tags: [도구, 프레젠테이션, 마크다운, 슬라이드]
-sources: [llm-wiki-pattern/llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://marp.app]
 created: 2026-04-18
 updated: 2026-07-02
@@ -69,12 +69,12 @@ footer: '© 2026'
 
 [[src-llm-wiki-pattern|LLM Wiki 패턴]]은 [[concept-query|Query]] 결과의 출력 형식 중 하나로 Marp 슬라이드를 제안합니다. 위키 콘텐츠를 그대로 슬라이드로 출력할 수 있습니다.
 
-> 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
+> 원본 인용 (`raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "Marp is a markdown-based slide deck format. Obsidian has a plugin for it. Useful for generating presentations directly from wiki content."
 
 ## 원본 출처
 
-- raw: `raw/llm-wiki-pattern/llm-wiki-pattern.md` (Tips and tricks 섹션)
+- raw: `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md` (Tips and tricks 섹션)
 - 외부: [marp.app](https://marp.app)
 
 ## 관련

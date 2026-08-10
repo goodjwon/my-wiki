@@ -3,7 +3,7 @@ title: API 하위 호환성과 JSON Tolerant Reader 계약
 type: concept
 tags: [api, json, backward-compatibility, breaking-change, kotlinx-serialization, gson, jackson]
 sources:
-  - 2bun-coding/api-breaking-change-json.md
+  - ai-engineering/2bun-coding/api-breaking-change-json.md
 external:
   - https://www.youtube.com/watch?v=LBWefG5zjxk
   - https://martinfowler.com/bliki/TolerantReader.html
@@ -175,7 +175,7 @@ grep -rn "ignoreUnknownKeys\s*=\s*false\|FAIL_ON_UNKNOWN_PROPERTIES.*true\|deny_
 
 ## 원본 출처
 
-- raw: `raw/2bun-coding/api-breaking-change-json.md`
+- raw: `raw/ai-engineering/2bun-coding/api-breaking-change-json.md`
 - 외부: [2분코딩 — 응답 필드 하나 추가했을 뿐인데, 앱이 전부 에러났어요](https://www.youtube.com/watch?v=LBWefG5zjxk)
 - 이론: [Martin Fowler — Tolerant Reader](https://martinfowler.com/bliki/TolerantReader.html)
 

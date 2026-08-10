@@ -3,9 +3,9 @@ title: 하네스 Module 01 — 베이스라인 측정 + 실패 패턴 감사 (No
 type: synthesis
 tags: [harness, claude-code, guide, module1, baseline, failure-audit, node, step-by-step]
 sources:
-  - harness-engineering/harness-kit/module1/01_failure_audit_prompt.md
-  - harness-engineering/harness-kit/module1/02_baseline_prompt.md
-  - harness-engineering/harness_engineering.md
+  - ai-engineering/harness-engineering/harness-kit/module1/01_failure_audit_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module1/02_baseline_prompt.md
+  - ai-engineering/harness-engineering/harness_engineering.md
 created: 2026-05-31
 updated: 2026-07-12
 ---

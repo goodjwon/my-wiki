@@ -2,7 +2,7 @@
 title: Obsidian Web Clipper
 type: entity
 tags: [도구, Obsidian, 브라우저확장, 클리핑]
-sources: [llm-wiki-pattern/llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://obsidian.md/clipper]
 created: 2026-04-18
 updated: 2026-07-02
@@ -45,7 +45,7 @@ Chrome · Safari · Firefox · Edge · Brave · Arc · Orion · Vivaldi
   → LLM에게 "ingest 해줘" → wiki/ 페이지 생성
 ```
 
-> 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
+> 원본 인용 (`raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "Obsidian Web Clipper is a browser extension that converts web articles to markdown. Very useful for quickly getting sources into your raw collection."
 
 ## 비공식 vs 공식
@@ -54,7 +54,7 @@ Chrome · Safari · Firefox · Edge · Brave · Arc · Orion · Vivaldi
 
 ## 원본 출처
 
-- raw: `raw/llm-wiki-pattern/llm-wiki-pattern.md` (Tips and tricks 섹션)
+- raw: `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md` (Tips and tricks 섹션)
 - 외부: [obsidian.md/clipper](https://obsidian.md/clipper)
 
 ## 관련

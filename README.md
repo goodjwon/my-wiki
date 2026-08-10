@@ -35,11 +35,9 @@ my-wiki/
 ├── raw/               # 원본 소스 (불변, 주제별 디렉터리)
 │   ├── java-study/           # Notion Java 스터디 (12챕터, 91페이지)
 │   ├── spring/               # Spring Boot·Framework·Guide·Reference (7개)
-│   ├── harness-engineering/  # 하네스 엔지니어링 키트 + PDF/DOCX + 변환본
+│   ├── ai-engineering/       # AI 트렌드 우산 (harness·ai-advisor·2bun-coding 등 7개 서브 + blog/ 공장 피드)
 │   ├── kakaopay-ddd/         # DDD 구축기
-│   ├── llm-wiki-pattern/     # LLM 위키 패턴
 │   ├── my-links/             # Notion 북마크 DB
-│   ├── claude-design/        # Claude Design 영상 자막
 │   └── assets/               # 이미지·첨부
 ├── wiki/              # LLM이 생성·유지하는 위키 페이지
 │   ├── index.md       # 위키 전체 목록

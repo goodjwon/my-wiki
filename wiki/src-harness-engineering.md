@@ -8,11 +8,11 @@ tags:
   - ddd
   - spring-boot
 sources:
-  - harness-engineering/
-  - harness-engineering/harness_engineering.md
-  - harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
-  - harness-engineering/harness-engineering-tutor-prompt.md
-  - harness-engineering/harness-kit/
+  - ai-engineering/harness-engineering/
+  - ai-engineering/harness-engineering/harness_engineering.md
+  - ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
+  - ai-engineering/harness-engineering/harness-engineering-tutor-prompt.md
+  - ai-engineering/harness-engineering/harness-kit/
 created: 2026-05-30
 updated: 2026-05-30
 ---
@@ -103,18 +103,18 @@ harness-kit/
 #    module1/02_baseline_prompt.md 열기 → 태스크 A,B,C 하네스 없이 실행 후 기록
 
 # 2. CLAUDE.md 배포
-cp raw/harness-engineering/harness-kit/module2/CLAUDE.md <프로젝트루트>/
+cp raw/ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md <프로젝트루트>/
 git commit -m "feat: add CLAUDE.md agent constitution"
 
 # 3. Hooks 설치
 mkdir -p .claude/hooks
-cp raw/harness-engineering/harness-kit/module3/guard.sh .claude/hooks/
-cp raw/harness-engineering/harness-kit/module3/lint-fix.sh .claude/hooks/
+cp raw/ai-engineering/harness-engineering/harness-kit/module3/guard.sh .claude/hooks/
+cp raw/ai-engineering/harness-engineering/harness-kit/module3/lint-fix.sh .claude/hooks/
 chmod +x .claude/hooks/*.sh
 # hooks-config.json 내용을 .claude/settings.json에 머지
 
 # 4. 멀티 에이전트 구조
-cp raw/harness-engineering/harness-kit/module4/{AGENTS.md,task-list.md,claude-progress.txt} <프로젝트루트>/
+cp raw/ai-engineering/harness-engineering/harness-kit/module4/{AGENTS.md,task-list.md,claude-progress.txt} <프로젝트루트>/
 
 # 5. 주간 루틴
 #    매주 금요일 module5/02_weekly_review_prompt.md 실행
@@ -139,16 +139,16 @@ cp raw/harness-engineering/harness-kit/module4/{AGENTS.md,task-list.md,claude-pr
 
 ## 원본 파일 위치
 
-`raw/harness-engineering/` 디렉터리. 자세한 자료 구성과 추천 읽기 순서는 `raw/harness-engineering/README.md` 참고.
+`raw/ai-engineering/harness-engineering/` 디렉터리. 자세한 자료 구성과 추천 읽기 순서는 `raw/ai-engineering/harness-engineering/README.md` 참고.
 
 | 파일 | 용도 |
 |------|------|
-| `raw/harness-engineering/harness_engineering.md` | 슬라이드 압축본 (10페이지 한눈에) |
-| `raw/harness-engineering/harness_engineering.pdf` | PDF 원본 |
-| `raw/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md` | 강의 해설 + 용어 + 이론 (가장 풍부) |
-| `raw/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.docx` | DOCX 원본 |
-| `raw/harness-engineering/harness-engineering-tutor-prompt.md` | LLM 튜터 진행 프롬프트 |
-| `raw/harness-engineering/harness-kit/` | 5모듈 실습 키트 (템플릿·스크립트) |
+| `raw/ai-engineering/harness-engineering/harness_engineering.md` | 슬라이드 압축본 (10페이지 한눈에) |
+| `raw/ai-engineering/harness-engineering/harness_engineering.pdf` | PDF 원본 |
+| `raw/ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md` | 강의 해설 + 용어 + 이론 (가장 풍부) |
+| `raw/ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.docx` | DOCX 원본 |
+| `raw/ai-engineering/harness-engineering/harness-engineering-tutor-prompt.md` | LLM 튜터 진행 프롬프트 |
+| `raw/ai-engineering/harness-engineering/harness-kit/` | 5모듈 실습 키트 (템플릿·스크립트) |
 
 ## 관련 페이지
 

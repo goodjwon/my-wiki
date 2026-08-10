@@ -3,9 +3,9 @@ title: 하네스 Module 02 — CLAUDE.md 작성 (Node 친화 step-by-step)
 type: synthesis
 tags: [harness, claude-code, guide, module2, claude-md, karpathy, node, step-by-step]
 sources:
-  - harness-engineering/harness-kit/module2/CLAUDE.md
-  - harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
-  - harness-engineering/harness-kit/module2/02_before_after_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md
+  - ai-engineering/harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module2/02_before_after_prompt.md
 created: 2026-05-31
 updated: 2026-07-12
 ---

@@ -2,7 +2,7 @@
 title: Advisor–Worker 패턴 — 판단·구현 분리 위임
 type: concept
 tags: [claude-code, multi-agent, subagent, delegation, harness, context-engineering]
-sources: [ai-advisor/]
+sources: [ai-engineering/ai-advisor/]
 created: 2026-07-06
 updated: 2026-07-06
 ---
@@ -110,8 +110,8 @@ updated: 2026-07-06
 
 ## 원본 출처
 
-- raw/ai-advisor/advisor_script.md · raw/ai-advisor/worker_script.md — 역할 정의 원문
-- raw/ai-advisor/claude_script.md — 프로젝트 CLAUDE.md 템플릿 (팀 규율 버전)
+- raw/ai-engineering/ai-advisor/advisor_script.md · raw/ai-engineering/ai-advisor/worker_script.md — 역할 정의 원문
+- raw/ai-engineering/ai-advisor/claude_script.md — 프로젝트 CLAUDE.md 템플릿 (팀 규율 버전)
 
 ## 관련 페이지
 

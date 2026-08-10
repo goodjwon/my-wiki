@@ -3,8 +3,8 @@ title: Loop 엔지니어링 (2026-06 커뮤니티 발화)
 type: source
 tags: [loop-engineering, harness, ai-agent, claude-code, react-pattern]
 sources:
-  - loop-engineering/loop-engineering-notes.md
-  - loop-engineering/primary-sources.md
+  - ai-engineering/loop-engineering/loop-engineering-notes.md
+  - ai-engineering/loop-engineering/primary-sources.md
 external:
   - https://addyosmani.com/blog/loop-engineering/
   - https://www.sonarsource.com/blog/loop-engineering-without-verification-is-just-automation/
@@ -16,7 +16,7 @@ updated: 2026-06-29
 
 ## 출처
 
-최초 입력은 외부 AI 어시스턴트가 전달한 **2차 정리본**(2026-06-13): `raw/loop-engineering/loop-engineering-notes.md`. 이후 2026-06-29에 **1차 출처를 직접 검증**해 `raw/loop-engineering/primary-sources.md`에 보존했다(아래 표의 출처·교정 반영).
+최초 입력은 외부 AI 어시스턴트가 전달한 **2차 정리본**(2026-06-13): `raw/ai-engineering/loop-engineering/loop-engineering-notes.md`. 이후 2026-06-29에 **1차 출처를 직접 검증**해 `raw/ai-engineering/loop-engineering/primary-sources.md`에 보존했다(아래 표의 출처·교정 반영).
 
 ## 무엇이 일어났는가
 
@@ -72,7 +72,7 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 
 ## 외부 1차 출처 (2026-06-29 검증)
 
-검증 상세·교정 체크리스트: `raw/loop-engineering/primary-sources.md`
+검증 상세·교정 체크리스트: `raw/ai-engineering/loop-engineering/primary-sources.md`
 
 | 출처 | URL | 상태 |
 |------|-----|------|

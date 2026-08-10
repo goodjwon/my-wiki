@@ -3,11 +3,11 @@ title: 하네스 Module 03 — Hooks 시스템 강제 (Node 친화 step-by-step)
 type: synthesis
 tags: [harness, claude-code, guide, module3, hooks, guard-sh, lint-fix, node, step-by-step]
 sources:
-  - harness-engineering/harness-kit/module3/guard.sh
-  - harness-engineering/harness-kit/module3/lint-fix.sh
-  - harness-engineering/harness-kit/module3/hooks-config.json
-  - harness-engineering/harness-kit/module3/01_hooks_setup_prompt.md
-  - harness-engineering/harness-kit/module3/02_self_verify_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module3/guard.sh
+  - ai-engineering/harness-engineering/harness-kit/module3/lint-fix.sh
+  - ai-engineering/harness-engineering/harness-kit/module3/hooks-config.json
+  - ai-engineering/harness-engineering/harness-kit/module3/01_hooks_setup_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module3/02_self_verify_prompt.md
 created: 2026-05-31
 updated: 2026-07-04
 ---

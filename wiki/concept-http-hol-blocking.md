@@ -3,7 +3,7 @@ title: HTTP 진화와 HOL 블로킹 (1.1 → 2 → 3/QUIC)
 type: concept
 tags: [http, networking, protocol, quic, hol-blocking, tcp, udp, performance]
 sources:
-  - 2bun-coding/http-evolution-quic.md
+  - ai-engineering/2bun-coding/http-evolution-quic.md
 external:
   - https://www.youtube.com/watch?v=RZTsrCjpoZc
   - https://www.rfc-editor.org/rfc/rfc9114.html
@@ -146,7 +146,7 @@ nghttp -nv --version=h3 https://example.com
 
 ## 원본 출처
 
-- raw: `raw/2bun-coding/http-evolution-quic.md`
+- raw: `raw/ai-engineering/2bun-coding/http-evolution-quic.md`
 - 외부: [2분코딩 — 왜 HTTP는 세 번이나 다시 만들어졌을까요?](https://www.youtube.com/watch?v=RZTsrCjpoZc)
 - RFC: [RFC 9114 — HTTP/3](https://www.rfc-editor.org/rfc/rfc9114.html) · [RFC 9000 — QUIC](https://www.rfc-editor.org/rfc/rfc9000.html)
 

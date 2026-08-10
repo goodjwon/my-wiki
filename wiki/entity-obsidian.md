@@ -2,7 +2,7 @@
 title: Obsidian
 type: entity
 tags: [도구, PKM, 에디터, 마크다운]
-sources: [llm-wiki-pattern/llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://obsidian.md]
 created: 2026-04-18
 updated: 2026-07-02
@@ -43,7 +43,7 @@ Windows · macOS · Linux · iOS · Android (전 플랫폼 동일 vault 사용 �
 [[src-llm-wiki-pattern|LLM Wiki 패턴]]에서 Obsidian은 **위키 뷰어**:
 
 > "Obsidian is the IDE; the LLM is the programmer; the wiki is the codebase."
-> — `raw/llm-wiki-pattern/llm-wiki-pattern.md`
+> — `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`
 
 LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서 실시간으로 결과를 봅니다 — 링크 따라가기, 그래프 뷰 확인, 페이지 읽기.
 
@@ -70,7 +70,7 @@ LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서
 
 ## 원본 출처
 
-- raw: `raw/llm-wiki-pattern/llm-wiki-pattern.md` (전반 + Tips and tricks)
+- raw: `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md` (전반 + Tips and tricks)
 - 외부: [obsidian.md](https://obsidian.md)
 
 ## 관련

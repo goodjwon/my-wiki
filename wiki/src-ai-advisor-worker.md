@@ -2,7 +2,7 @@
 title: Advisor–Worker 에이전트 스크립트 (판단·구현 분리)
 type: source
 tags: [claude-code, multi-agent, subagent, harness, delegation]
-sources: [ai-advisor/]
+sources: [ai-engineering/ai-advisor/]
 created: 2026-07-06
 updated: 2026-07-06
 ---
@@ -15,10 +15,10 @@ Claude Code에서 **메인 세션(Advisor)이 판단·설계·검증을 맡고, 
 
 | 역할 | 담당 | 모델 | 원본 파일 |
 |------|------|------|-----------|
-| **Advisor** | 요구사항 분석 · 작업 분해 · 설계 결정 · 브리프 작성 · 검증 · 커밋 승인 · 사용자 보고 | Fable 5 (`claude-fable-5`) | raw/ai-advisor/advisor_script.md |
-| **Worker** | 코드 작성·수정 · 테스트 작성 등 구현 노동 · 자체 검증 · 구조화 보고 | Opus 4.8 (`claude-opus-4-8`) | raw/ai-advisor/worker_script.md |
+| **Advisor** | 요구사항 분석 · 작업 분해 · 설계 결정 · 브리프 작성 · 검증 · 커밋 승인 · 사용자 보고 | Fable 5 (`claude-fable-5`) | raw/ai-engineering/ai-advisor/advisor_script.md |
+| **Worker** | 코드 작성·수정 · 테스트 작성 등 구현 노동 · 자체 검증 · 구조화 보고 | Opus 4.8 (`claude-opus-4-8`) | raw/ai-engineering/ai-advisor/worker_script.md |
 
-프로젝트 지침 템플릿(raw/ai-advisor/claude_script.md)은 이 모델을 프로젝트 `CLAUDE.md`에 심는 버전입니다. 자료 구성은 raw/ai-advisor/README.md 참조.
+프로젝트 지침 템플릿(raw/ai-engineering/ai-advisor/claude_script.md)은 이 모델을 프로젝트 `CLAUDE.md`에 심는 버전입니다. 자료 구성은 raw/ai-engineering/ai-advisor/README.md 참조.
 
 ## 에이전트 정의 — frontmatter로 역할·모델 고정
 
@@ -77,10 +77,10 @@ Worker 쪽 규율이 게이트를 받칩니다: 보고 전 완료 기준 명령�
 
 ## 원본 출처
 
-- raw/ai-advisor/advisor_script.md — Advisor 에이전트 정의
-- raw/ai-advisor/worker_script.md — Worker 에이전트 정의
-- raw/ai-advisor/claude_script.md — 프로젝트 CLAUDE.md 템플릿
-- raw/ai-advisor/README.md — 자료 구성·읽기 순서
+- raw/ai-engineering/ai-advisor/advisor_script.md — Advisor 에이전트 정의
+- raw/ai-engineering/ai-advisor/worker_script.md — Worker 에이전트 정의
+- raw/ai-engineering/ai-advisor/claude_script.md — 프로젝트 CLAUDE.md 템플릿
+- raw/ai-engineering/ai-advisor/README.md — 자료 구성·읽기 순서
 
 ## 관련 페이지
 

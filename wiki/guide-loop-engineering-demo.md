@@ -3,8 +3,8 @@ title: Loop 엔지니어링 실습 — 메아리방 vs 거부 신호 루프 (Nod
 type: synthesis
 tags: [loop-engineering, harness, demo, react-pattern, claude-code, hands-on, node]
 sources:
-  - loop-engineering/loop-engineering-notes.md
-  - loop-engineering/primary-sources.md
+  - ai-engineering/loop-engineering/loop-engineering-notes.md
+  - ai-engineering/loop-engineering/primary-sources.md
 external:
   - https://addyosmani.com/blog/loop-engineering/
   - https://www.sonarsource.com/blog/loop-engineering-without-verification-is-just-automation/

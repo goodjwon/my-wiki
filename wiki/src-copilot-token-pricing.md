@@ -3,7 +3,7 @@ title: GitHub Copilot 토큰 종량제 전환 (2026-06-01)
 type: source
 tags: [github-copilot, pricing, ai-coding, cost, agent-mode]
 sources:
-  - 2bun-coding/copilot-token-pricing.md
+  - ai-engineering/2bun-coding/copilot-token-pricing.md
 external:
   - https://www.youtube.com/watch?v=Ujuy6cSYa6g
 created: 2026-06-06
@@ -15,7 +15,7 @@ updated: 2026-06-06
 ## 출처
 
 - 영상: [2분코딩 — Copilot 요금이 25배 뛰었습니다 💸](https://www.youtube.com/watch?v=Ujuy6cSYa6g)
-- raw: `raw/2bun-coding/copilot-token-pricing.md`
+- raw: `raw/ai-engineering/2bun-coding/copilot-token-pricing.md`
 
 ## 핵심 사건
 

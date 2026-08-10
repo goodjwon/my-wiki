@@ -3,10 +3,10 @@ title: 하네스 Module 04 — 멀티 에이전트 + 컨텍스트 (Node 친화 s
 type: synthesis
 tags: [harness, claude-code, guide, module4, multi-agent, agents-md, planner-coder-critic, node, step-by-step]
 sources:
-  - harness-engineering/harness-kit/module4/AGENTS.md
-  - harness-engineering/harness-kit/module4/task-list.md
-  - harness-engineering/harness-kit/module4/claude-progress.txt
-  - harness-engineering/harness-kit/module4/01_threettier_workflow_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module4/AGENTS.md
+  - ai-engineering/harness-engineering/harness-kit/module4/task-list.md
+  - ai-engineering/harness-engineering/harness-kit/module4/claude-progress.txt
+  - ai-engineering/harness-engineering/harness-kit/module4/01_threettier_workflow_prompt.md
 created: 2026-05-31
 updated: 2026-07-12
 ---

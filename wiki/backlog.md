@@ -53,7 +53,7 @@ updated: 2026-07-12
 
 ### 2026-07-06 — Advisor–Worker ingest + 실습 신설 + 실행 검증 (전부 배포 완료)
 
-- ✅ **`raw/ai-advisor/` ingest** — advisor/worker 에이전트 정의 + 프로젝트 CLAUDE.md 템플릿 (판단·구현 분리, 역할별 이종 모델). [[src-ai-advisor-worker]] 신설, [[concept-multi-agent-pattern]]에 "2-역할 변형" 절, 빈 파일 a.md 삭제.
+- ✅ **`raw/ai-engineering/ai-advisor/` ingest** — advisor/worker 에이전트 정의 + 프로젝트 CLAUDE.md 템플릿 (판단·구현 분리, 역할별 이종 모델). [[src-ai-advisor-worker]] 신설, [[concept-multi-agent-pattern]]에 "2-역할 변형" 절, 빈 파일 a.md 삭제.
 - ✅ **[[guide-advisor-worker-demo]] 실습 신설** — `~/advisor-demo` cart 할인 테스트를 완료 기준으로 축약판 에이전트 설치 → `claude --agent advisor` → 관찰 포인트 4장면·차이 표·역할 분리 체크리스트. "보고를 믿지 말고 재검증하라" 패턴 비교표 4행.
 - ✅ **실행 검증** — 헤드리스(`claude --agent advisor -p` + stream-json 도구 호출 감사)로 4장면 전부 재현: 6항목 브리프 위임 / Write는 Worker만 / Advisor가 diff·테스트 직접 재실행 / 검증 후 Advisor 커밋. 1사이클 3/3 통과. 페이지에 "✅ 실행 검증됨" 배너.
 - ✅ **[[concept-advisor-worker]] 개념 페이지 신설** — 사용자 지적("개념에도 내용이 있어야지")으로 src·guide에 빠져 있던 개념층 보완: 구성 요소 4가지·모델 티어링·적용 기준·"검증 주체의 독립성" 비교표 5행.
@@ -120,7 +120,7 @@ updated: 2026-07-12
 - ✅ **CLAUDE.md 규칙 #1 갱신**(사용자) — "raw 불변" → "단 내용에 **오류가 있을 경우 수정 가능**" (위 Module 3 raw 교정의 근거).
 - ✅ **Loop 실습 후속 3종 종결** ([[guide-loop-engineering-demo]]):
   - ① **실행 검증**(Node v26 실측) — 후보 (A)(B)실패·(C)통과, 메아리방 13/20≈⅔, 검증 루프 정상 종료, "약4%"=이론 (2/3)⁸=3.9% 정확. demo에 "✅실행 검증됨" 노트.
-  - ② **1차 출처 검증·보존** — `raw/loop-engineering/primary-sources.md` 신설. Osmani(✅)·Sonar(✅)·arXiv 3편 verbatim, Steinberger "650만 조회"는 2차 주장·OpenAI 소속 교정. src 페이지 반영.
+  - ② **1차 출처 검증·보존** — `raw/ai-engineering/loop-engineering/primary-sources.md` 신설. Osmani(✅)·Sonar(✅)·arXiv 3편 verbatim, Steinberger "650만 조회"는 2차 주장·OpenAI 소속 교정. src 페이지 반영.
   - ③ **토큰 비용 심화** — demo "Step 6.5" 신설(비용모델·무료 게이트 우선·종료조건 3종 goal/resource/budget).
 - ✅ **커밋·배포 완료** — `ea49634`·`b98b6cc` (Firebase `wiki.wonslab.dev` 라이브). *(Loop 후속분은 별도 커밋 예정)*
 
@@ -165,7 +165,7 @@ updated: 2026-07-12
 - ✅ Firebase 배포 (`wons-wiki.web.app` 정상화)
 
 ### 2026-06-06
-- ✅ **2분코딩 영상 8편 ingest** (`raw/2bun-coding/`)
+- ✅ **2분코딩 영상 8편 ingest** (`raw/ai-engineering/2bun-coding/`)
   - getConnection / Copilot 토큰 / 502 Keep-Alive / VARCHAR / 크론잡 / @Transactional / API 호환성 / HTTP HOL
 - ✅ **mkdocs.yml에 "DB·운영·인프라" 카테고리 신규**
 - ✅ **"기본값과 가정의 함정" 인사이트 패턴 비교표 누적** (6개 페이지에 양방향 연결)

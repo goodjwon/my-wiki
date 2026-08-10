@@ -2,7 +2,7 @@
 title: Query (질의)
 type: concept
 tags: [워크플로, 위키운영, 질의응답]
-sources: [llm-wiki-pattern/llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
 updated: 2026-07-02
 ---
@@ -35,7 +35,7 @@ Query는 다릅니다 — 이미 [[concept-ingest|Ingest]]를 통해 위키에 �
 
 ## 핵심 인사이트: 답변을 다시 위키로
 
-> 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
+> 원본 인용 (`raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "**good answers can be filed back into the wiki as new pages.** A comparison you asked for, an analysis, a connection you discovered — these are valuable and shouldn't disappear into chat history."
 
 가치 있는 Query 응답은 채팅 히스토리에서 사라지지 않게 **synthesis / comparison 페이지로 다시 위키에 저장**합니다. 이 과정에서 탐구 자체가 [[concept-compounding-knowledge|복리 지식]]에 기여합니다.

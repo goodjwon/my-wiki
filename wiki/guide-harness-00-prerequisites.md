@@ -3,8 +3,8 @@ title: 하네스 실습 사전 안내 (Module 00 — Prerequisites)
 type: synthesis
 tags: [harness, claude-code, guide, prerequisites, onboarding, glossary, node, gcp]
 sources:
-  - harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
-  - harness-engineering/harness_engineering.md
+  - ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
+  - ai-engineering/harness-engineering/harness_engineering.md
 created: 2026-05-31
 updated: 2026-07-04
 ---

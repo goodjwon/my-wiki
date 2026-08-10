@@ -2,7 +2,7 @@
 title: CLAUDE.md — 에이전트 헌법
 type: concept
 tags: [claude-code, harness, claude-md, karpathy]
-sources: [harness-engineering/harness-kit/module2/CLAUDE.md, harness-engineering/harness-engineering-tutor-prompt.md, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
+sources: [ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md, ai-engineering/harness-engineering/harness-engineering-tutor-prompt.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
 updated: 2026-07-06
 ---
@@ -73,7 +73,7 @@ CLAUDE.md 하단에는 반드시 다음 표를 둡니다 — 에이전트가 같
 
 ## Spring Boot DDD 통합 예시
 
-`raw/harness-engineering/harness-kit/module2/CLAUDE.md`는 다음 섹션을 포함:
+`raw/ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md`는 다음 섹션을 포함:
 
 1. **Tech Stack** — Java 17 / Spring Boot 3.x / JPA + QueryDSL / Oracle / Gradle
 2. **Karpathy 4원칙** — 위 4원칙을 DDD 관점에서 구체화 (Entity/VO/Aggregate Root 확인 등)

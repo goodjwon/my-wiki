@@ -3,9 +3,9 @@ title: 하네스 Module 05 — 진화·주간 리뷰·Rippable (Node 친화 step
 type: synthesis
 tags: [harness, claude-code, guide, module5, weekly-review, rippable, drift, node, step-by-step]
 sources:
-  - harness-engineering/harness-kit/module5/weekly-harness-review.md
-  - harness-engineering/harness-kit/module5/01_repo_and_rippable_prompt.md
-  - harness-engineering/harness-kit/module5/02_weekly_review_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module5/weekly-harness-review.md
+  - ai-engineering/harness-engineering/harness-kit/module5/01_repo_and_rippable_prompt.md
+  - ai-engineering/harness-engineering/harness-kit/module5/02_weekly_review_prompt.md
 created: 2026-05-31
 updated: 2026-07-12
 ---

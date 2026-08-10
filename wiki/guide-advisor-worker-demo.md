@@ -3,9 +3,9 @@ title: Advisor–Worker 실습 — 판단·구현 분리 직접 체험 (claude -
 type: synthesis
 tags: [claude-code, multi-agent, subagent, delegation, demo, hands-on]
 sources:
-  - ai-advisor/advisor_script.md
-  - ai-advisor/worker_script.md
-  - ai-advisor/claude_script.md
+  - ai-engineering/ai-advisor/advisor_script.md
+  - ai-engineering/ai-advisor/worker_script.md
+  - ai-engineering/ai-advisor/claude_script.md
 created: 2026-07-06
 updated: 2026-07-06
 ---
@@ -74,7 +74,7 @@ node cart.test.js
 
 ## Step 2 — 에이전트 정의 설치 (3분)
 
-핵심 규율만 담은 축약판을 설치합니다. 전문(全文)은 raw/ai-advisor/advisor_script.md · raw/ai-advisor/worker_script.md 참조.
+핵심 규율만 담은 축약판을 설치합니다. 전문(全文)은 raw/ai-engineering/ai-advisor/advisor_script.md · raw/ai-engineering/ai-advisor/worker_script.md 참조.
 
 **Advisor** — 판단 역할. `Write` 없음, `Task` 있음:
 
@@ -206,9 +206,9 @@ cd ~ && rm -rf ~/advisor-demo
 
 ## 원본 출처
 
-- raw/ai-advisor/advisor_script.md — Advisor 전문 (설계 접근·병렬 위임·사용자 보고 규율 포함)
-- raw/ai-advisor/worker_script.md — Worker 전문 (보고 형식 원판)
-- raw/ai-advisor/claude_script.md — 프로젝트 CLAUDE.md 템플릿 (팀 공통 규율 버전)
+- raw/ai-engineering/ai-advisor/advisor_script.md — Advisor 전문 (설계 접근·병렬 위임·사용자 보고 규율 포함)
+- raw/ai-engineering/ai-advisor/worker_script.md — Worker 전문 (보고 형식 원판)
+- raw/ai-engineering/ai-advisor/claude_script.md — 프로젝트 CLAUDE.md 템플릿 (팀 공통 규율 버전)
 
 ---
 

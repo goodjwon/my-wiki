@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-08-10] refactor | AI 트렌드 파편 주제 7개를 raw/ai-engineering/ 우산으로 통합
+- **배경**: 사용자 판단 "트렌드 주제는 각각 글 10개를 못 넘김 — 합치자". 최상위 raw/에 1~8개짜리 AI 관련 디렉터리가 7개로 흩어져 있던 것을 하나로 묶음.
+- **이동** (`git mv`, 파일 내용·파일명 무변경 — raw 불변 원칙 유지, 위치만 이동): `harness-engineering`(7) `2bun-coding`(8) `ai-advisor`(4) `loop-engineering`(2) `grap-engineering`(1, untracked→add) `llm-wiki-pattern`(1) `claude-design`(1) → `raw/ai-engineering/<옛주제명>/`. 출처 그룹은 서브디렉터리로 보존.
+- **`raw/ai-engineering/README.md` 신설**: 우산 취지 + 서브디렉터리 7개별 주제·자료 수 표. 각 서브디렉터리의 기존 README는 그대로 유지.
+- **경로 참조 일괄 치환**: wiki/ 26개 파일의 `raw/<옛주제>` 85건을 `raw/ai-engineering/<옛주제>`로 치환 (frontmatter `sources` 포함). 경로가 아닌 본문 산문의 주제명은 무변경.
+- **무영향 확인**: `mkdocs.yml`·`wiki/index.md`에는 raw/ 경로 노출 없음 (raw/는 비공개, 빌드 대상 아님).
+
 ## [2026-08-02] ingest | raw/object-dependency/ 적재 — 블로그 글에서 영속 개념 3개 추출 (2단계 연동 실전 1회)
 - **배경**: blogger-daemon ↔ my-wiki 2단계 연동. 검수 PASS 블로그 글의 영속 개념을 raw/ 소스 노트로 공급하는 수동 절차 검증. blogger-daemon은 raw 공급자 역할만 — raw→wiki 승격은 이 위키 세션 몫.
 - **출처 글**: [객체 참조의 덫을 깨다: ID 참조와 이벤트로 진화하는 의존성 설계](https://blog.wonslab.dev/2026-07-19-object-dependency-id-reference/) (원 트리거 영상: 조영호 우아한객체지향 세미나 dJ5C4qRqAgA).

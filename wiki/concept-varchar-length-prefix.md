@@ -3,7 +3,7 @@ title: VARCHAR 길이 프리픽스 (InnoDB 255 신화 + utf8mb4 시대의 63)
 type: concept
 tags: [database, mysql, innodb, varchar, utf8mb4, schema-design, performance]
 sources:
-  - 2bun-coding/varchar-255-prefix.md
+  - ai-engineering/2bun-coding/varchar-255-prefix.md
 external:
   - https://www.youtube.com/watch?v=EbeSOshOgX4
   - https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html
@@ -120,7 +120,7 @@ ORDER BY CHARACTER_OCTET_LENGTH DESC;
 
 ## 원본 출처
 
-- raw: `raw/2bun-coding/varchar-255-prefix.md`
+- raw: `raw/ai-engineering/2bun-coding/varchar-255-prefix.md`
 - 외부: [2분코딩 — DB 컬럼을 255로 잡는 진짜 이유](https://www.youtube.com/watch?v=EbeSOshOgX4)
 - 공식: [MySQL — Data Type Storage Requirements](https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html)
 

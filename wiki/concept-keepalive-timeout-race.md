@@ -3,7 +3,7 @@ title: Keep-Alive 타임아웃 race condition (LB ↔ 서버 502)
 type: concept
 tags: [networking, load-balancer, keep-alive, race-condition, troubleshooting, aws]
 sources:
-  - 2bun-coding/502-keepalive-timeout-race.md
+  - ai-engineering/2bun-coding/502-keepalive-timeout-race.md
 external:
   - https://www.youtube.com/watch?v=a-KFzdW_Ybw
 created: 2026-06-06
@@ -132,7 +132,7 @@ ALB(60s) → **NLB(350s)** 로 마이그레이션할 때 서버 타임아웃을 
 
 ## 원본 출처
 
-- raw: `raw/2bun-coding/502-keepalive-timeout-race.md`
+- raw: `raw/ai-engineering/2bun-coding/502-keepalive-timeout-race.md`
 - 외부: [2분코딩 — 새벽마다 502가 뜨는데 서버는 멀쩡해요](https://www.youtube.com/watch?v=a-KFzdW_Ybw)
 - AWS 공식: [ALB target group attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-attributes.html)
 

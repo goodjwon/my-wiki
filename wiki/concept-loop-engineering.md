@@ -2,7 +2,7 @@
 title: Loop 엔지니어링 — 사람을 시스템으로 대체하기
 type: concept
 tags: [loop-engineering, harness, ai-agent, react-pattern, claude-code]
-sources: [loop-engineering/loop-engineering-notes.md]
+sources: [ai-engineering/loop-engineering/loop-engineering-notes.md]
 created: 2026-06-13
 updated: 2026-07-02
 ---
@@ -140,7 +140,7 @@ Addy Osmani는 토큰 비용에 **절대적으로 주의**해야 한다고 말�
 
 ## 원본 출처
 
-- `raw/loop-engineering/loop-engineering-notes.md` — 외부 AI 어시스턴트에게 전달받은 정리본 (2026-06-13)
+- `raw/ai-engineering/loop-engineering/loop-engineering-notes.md` — 외부 AI 어시스턴트에게 전달받은 정리본 (2026-06-13)
 - 원전(Peter Steinberger X, Boris Cherny 발언, Addy Osmani 글, ReAct 논문) 직접 확보는 후속 과제
 
 ## 관련 페이지

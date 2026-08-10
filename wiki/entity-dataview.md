@@ -2,7 +2,7 @@
 title: Dataview
 type: entity
 tags: [도구, Obsidian, 플러그인, 쿼리]
-sources: [llm-wiki-pattern/llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://blacksmithgu.github.io/obsidian-dataview/]
 created: 2026-04-18
 updated: 2026-07-02
@@ -72,12 +72,12 @@ LIST FROM #poems WHERE author = "Edgar Allan Poe"
 
 이 위키의 frontmatter 컨벤션(`type`, `tags`, `sources`, `created`, `updated`)도 Dataview 친화적으로 설계되었습니다.
 
-> 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
+> 원본 인용 (`raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "Dataview is an Obsidian plugin that runs queries over page frontmatter. If your LLM adds YAML frontmatter to wiki pages (tags, dates, source counts), Dataview can generate dynamic tables and lists."
 
 ## 원본 출처
 
-- raw: `raw/llm-wiki-pattern/llm-wiki-pattern.md` (Tips and tricks 섹션)
+- raw: `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md` (Tips and tricks 섹션)
 - 외부: [blacksmithgu.github.io/obsidian-dataview](https://blacksmithgu.github.io/obsidian-dataview/)
 
 ## 관련

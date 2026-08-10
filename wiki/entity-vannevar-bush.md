@@ -2,7 +2,7 @@
 title: Vannevar Bush
 type: entity
 tags: [인물, 역사, 컴퓨터과학, 하이퍼텍스트]
-sources: [llm-wiki-pattern/llm-wiki-pattern.md]
+sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://en.wikipedia.org/wiki/Vannevar_Bush, https://en.wikipedia.org/wiki/As_We_May_Think]
 created: 2026-04-18
 updated: 2026-07-02
@@ -49,12 +49,12 @@ updated: 2026-07-02
 
 [[src-llm-wiki-pattern|LLM Wiki 패턴]]은 Bush의 Memex 비전 — 개인이 큐레이팅하는 지식 저장소, 문서 간 연상적 연결 — 을 LLM으로 실용적으로 구현한 것으로 위치시킵니다. **Bush가 해결하지 못한 유지보수 문제를 LLM이 담당합니다.**
 
-> 원본 인용 (`raw/llm-wiki-pattern/llm-wiki-pattern.md`):
+> 원본 인용 (`raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`):
 > "The part he couldn't solve was who does the maintenance. The LLM handles that."
 
 ## 원본 출처
 
-- raw: `raw/llm-wiki-pattern/llm-wiki-pattern.md` (마지막 단락)
+- raw: `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md` (마지막 단락)
 - 외부: [Wikipedia — Vannevar Bush](https://en.wikipedia.org/wiki/Vannevar_Bush) / [Wikipedia — As We May Think](https://en.wikipedia.org/wiki/As_We_May_Think)
 
 ## 관련

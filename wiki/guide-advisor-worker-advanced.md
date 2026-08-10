@@ -3,9 +3,9 @@ title: Advisor–Worker 실습 심화편 — 재위임·병렬·모델 티어링
 type: synthesis
 tags: [claude-code, multi-agent, subagent, delegation, demo, hands-on]
 sources:
-  - ai-advisor/advisor_script.md
-  - ai-advisor/worker_script.md
-  - ai-advisor/claude_script.md
+  - ai-engineering/ai-advisor/advisor_script.md
+  - ai-engineering/ai-advisor/worker_script.md
+  - ai-engineering/ai-advisor/claude_script.md
 created: 2026-07-06
 updated: 2026-07-12
 ---
@@ -257,9 +257,9 @@ cd ~ && rm -rf ~/advisor-demo
 
 ## 원본 출처
 
-- raw/ai-advisor/advisor_script.md — 병렬 위임·수정 브리프·오버헤드 예외 규율 원문
-- raw/ai-advisor/worker_script.md — Worker 보고 규율 원문
-- raw/ai-advisor/claude_script.md — `CLAUDE_CODE_SUBAGENT_MODEL` 주의 문구 원문
+- raw/ai-engineering/ai-advisor/advisor_script.md — 병렬 위임·수정 브리프·오버헤드 예외 규율 원문
+- raw/ai-engineering/ai-advisor/worker_script.md — Worker 보고 규율 원문
+- raw/ai-engineering/ai-advisor/claude_script.md — `CLAUDE_CODE_SUBAGENT_MODEL` 주의 문구 원문
 
 ## 관련 페이지
 

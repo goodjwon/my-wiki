@@ -3,8 +3,8 @@ title: 하네스 5분 데모 — 있을 때 vs 없을 때 (Node 친화 step-by-s
 type: synthesis
 tags: [harness, claude-code, guide, demo, before-after, node]
 sources:
-  - harness-engineering/harness_engineering.md
-  - harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
+  - ai-engineering/harness-engineering/harness_engineering.md
+  - ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
 created: 2026-05-31
 updated: 2026-07-04
 ---

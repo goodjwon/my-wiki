@@ -3,7 +3,7 @@ title: "@Transactional 롤백 정책 — 왜 RuntimeException에만 롤백할까
 type: concept
 tags: [spring, transaction, exception, java, checked-exception, rollback]
 sources:
-  - 2bun-coding/transactional-rollback-exception.md
+  - ai-engineering/2bun-coding/transactional-rollback-exception.md
 external:
   - https://www.youtube.com/watch?v=L3IFezsV5VI
   - https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html
@@ -158,7 +158,7 @@ grep -rn "@Transactional" src/main/java/ \
 
 ## 원본 출처
 
-- raw: `raw/2bun-coding/transactional-rollback-exception.md`
+- raw: `raw/ai-engineering/2bun-coding/transactional-rollback-exception.md`
 - 외부: [2분코딩 — @Transactional은 왜 RuntimeException에만 롤백할까요?](https://www.youtube.com/watch?v=L3IFezsV5VI)
 - 공식: [Spring — Rolling back a declarative transaction](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html)
 

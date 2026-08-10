@@ -2,7 +2,7 @@
 title: 멀티 에이전트 — Planner / Coder / Critic
 type: concept
 tags: [claude-code, harness, multi-agent, agents-md, context-engineering]
-sources: [harness-engineering/harness-kit/module4/, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
+sources: [ai-engineering/harness-engineering/harness-kit/module4/, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
 updated: 2026-07-06
 ---

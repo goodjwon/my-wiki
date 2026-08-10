@@ -3,7 +3,7 @@ title: 크론잡 중복 실행과 Forbid 함정 (concurrencyPolicy + activeDeadl
 type: concept
 tags: [kubernetes, cronjob, batch, concurrency, sre, troubleshooting]
 sources:
-  - 2bun-coding/cronjob-concurrency-trap.md
+  - ai-engineering/2bun-coding/cronjob-concurrency-trap.md
 external:
   - https://www.youtube.com/watch?v=JhBiSdXpvk4
   - https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
@@ -179,7 +179,7 @@ spec:
 
 ## 원본 출처
 
-- raw: `raw/2bun-coding/cronjob-concurrency-trap.md`
+- raw: `raw/ai-engineering/2bun-coding/cronjob-concurrency-trap.md`
 - 외부: [2분코딩 — 배치가 두 번 돌았는데, 아무도 몰랐어요](https://www.youtube.com/watch?v=JhBiSdXpvk4)
 - 공식: [Kubernetes CronJob 문서](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
 

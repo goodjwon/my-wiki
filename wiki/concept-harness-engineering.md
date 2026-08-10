@@ -2,7 +2,7 @@
 title: 하네스 엔지니어링
 type: concept
 tags: [harness, ai-agent, claude-code, infrastructure]
-sources: [harness-engineering/harness_engineering.md, harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md, harness-engineering/harness-kit/]
+sources: [ai-engineering/harness-engineering/harness_engineering.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md, ai-engineering/harness-engineering/harness-kit/]
 created: 2026-05-30
 updated: 2026-07-02
 ---
