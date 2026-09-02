@@ -156,3 +156,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 - [[concept-design-patterns]] — 패턴 이름 = 팀 공용어 (같은 인사이트 패턴)
 - [[entity-refactoring]] — 악취 3.1 기이한 이름, 기법 6.5·6.7 이름 바꾸기
 - [[entity-effective-java]] — Item 1 정적 팩터리, 표준 명명 관례
+- [[src-workout-history-launch]] — 실전 적용: 용어 사전으로 동의어를 금지해 에이전트 6개의 코드 분기를 막은 사례

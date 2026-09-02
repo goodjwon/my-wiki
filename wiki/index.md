@@ -1,6 +1,6 @@
 ---
 title: Wons Wiki 인덱스
-updated: 2026-08-10
+updated: 2026-09-03
 
 ---
 
@@ -28,6 +28,7 @@ updated: 2026-08-10
 - [[src-clean-code-lecture]] — 📚 *Clean Code* 실전 강의 교재 17장 인덱스
 - [[src-tdd-lecture]] — 📚 *TDD* 실전 강의 교재 35편 인덱스
 - [[src-object-lecture]] — 📚 *오브젝트* 실전 강의 교재 18편 인덱스
+- [[src-workout-history-launch]] — Workout History 앱 출시 여정 (2026-07~09): 이정표·설계 원칙 6·삽질 로그·6역할 에이전트 개발
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원
@@ -87,6 +88,9 @@ updated: 2026-08-10
 - [[concept-varchar-length-prefix]] — VARCHAR 길이 프리픽스: 255 신화의 진짜 이유 + utf8mb4 시대의 63 경계
 - [[concept-cronjob-concurrency-trap]] — 크론잡 중복 실행과 Forbid 함정: concurrencyPolicy + activeDeadlineSeconds 조합
 - [[concept-http-hol-blocking]] — HTTP 진화와 HOL 블로킹: 1.1 Keep-Alive → 2 멀티플렉싱 → 3 QUIC over UDP
+- [[concept-local-first-append-only]] — Local-first + Append-only: 기록이 진실, 스트릭·통계는 파생 (하루 경계·시계 주입 함정)
+- [[concept-wall-clock-state-machine]] — 벽시계 앵커 타이머 상태기계: 세그먼트 인덱스 + 앵커만 상태, 계획만 바꿔 끼우는 단일 엔진
+- [[concept-thin-client-idempotent-sync]] — 얇은 클라이언트 + 멱등 동기화: 진실은 폰 DB, 워치는 캐시 + 큐, UUIDv7 멱등 수신, 증분 앵커 함정
 
 ## Guides
 - [[guide-deploy-mkdocs-firebase]] — 위키 외부 배포 가이드 (MkDocs Material + Firebase Hosting, 무료)

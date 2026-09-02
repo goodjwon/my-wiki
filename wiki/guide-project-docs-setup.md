@@ -270,3 +270,4 @@ updated: YYYY-MM-DD
 - [[concept-ingest]] — Ingest 워크플로
 - [[concept-query]] — Query 워크플로
 - [[concept-lint]] — Lint 워크플로
+- [[src-workout-history-launch]] — 실전 적용: PLANNING·CONCEPTS·ARCHITECTURE·BACKLOG 체계로 앱을 출시한 사례

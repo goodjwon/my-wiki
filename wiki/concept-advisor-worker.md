@@ -124,3 +124,4 @@ updated: 2026-07-06
 - [[concept-claude-hooks]] — 도구 수준의 결정적 거부 (게이트의 또 다른 층)
 - [[concept-graph-engineering]] — 이 패턴을 "2노드 + 조건부 엣지 최소 그래프"로 보는 형식화
 - [[comparison-advisor-worker-vs-graph]] — 두 패턴의 축 차이·선택 기준 비교 분석
+- [[src-workout-history-launch]] — 실전 적용: 앱 출시에 6역할(advisor·app/ui-developer·qa-reviewer·tester·release-manager)로 확장한 사례

@@ -99,6 +99,7 @@ public class OrderValidator {          // 도메인 서비스 — 여러 애그�
 | [[concept-db-connection-pool]] | 무한 수명 커넥션 | DB `wait_timeout`과 충돌 | `maxLifetime` < `wait_timeout` |
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` | utf8mb4에서 인덱스 한계 초과 | `VARCHAR(63)` 또는 도메인 길이 |
 | [[concept-cronjob-concurrency-trap]] | `concurrencyPolicy` 기본 `Allow` | 중복 실행 | `Forbid` + `activeDeadlineSeconds` |
+| [[concept-local-first-append-only]] | "하루 = UTC 날짜" | 자정·타임존 경계에서 스트릭 오판 | 저장은 UTC, 판정은 로컬 자정, 시계 단일 seam |
 
 → 공통 원리: **직관적이라서 선택되는 기본 연결·기본 설정은 소규모에서만 무해합니다.** 규모의 어느 지점에서 무너지는지 알고, 무너지기 전에 경계를 다시 긋습니다.
 

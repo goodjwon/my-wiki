@@ -118,3 +118,4 @@ CLAUDE.md 하단에는 반드시 다음 표를 둡니다 — 에이전트가 같
 - [[guide-project-docs-setup]] — CLAUDE.md 템플릿 + 셋업 절차
 - [[src-ai-advisor-worker]] — 협업 모델(Advisor–Worker)을 CLAUDE.md에 심는 템플릿 사례
 - [[src-kakaopay-ddd]] — DDD 모델링 근거 (Entity/VO/Aggregate)
+- [[src-workout-history-launch]] — 실전 적용: "문서가 진실, 충돌 시 문서 수정부터" 규칙으로 앱 출시까지 운용한 사례

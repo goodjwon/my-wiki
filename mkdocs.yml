@@ -319,6 +319,13 @@ nav:
       - Keep-Alive 타임아웃 race (LB 502): concept-keepalive-timeout-race.md
       - 크론잡 중복 실행 + Forbid 함정: concept-cronjob-concurrency-trap.md
       - HTTP 진화와 HOL 블로킹 (1.1 → 2 → 3/QUIC): concept-http-hol-blocking.md
+  - 앱 개발·출시:
+    - 개념:
+      - "🆕 Local-first + Append-only": concept-local-first-append-only.md
+      - "🆕 벽시계 앵커 타이머 상태기계": concept-wall-clock-state-machine.md
+      - "🆕 얇은 클라이언트 + 멱등 동기화": concept-thin-client-idempotent-sync.md
+    - 출시 회고:
+      - "🆕 Workout History 출시 여정 (2026-07~09)": src-workout-history-launch.md
 
 extra:
   generator: false

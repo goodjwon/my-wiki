@@ -75,6 +75,8 @@ public class DeliveryEventHandler {
 | 애그리거트 연결 | 객체 참조로 메모리 주소 공유 | 식별자(ID)만 보관 | [[concept-id-reference-vs-object-reference]] |
 | 에이전트 오케스트레이션 | 단일 에이전트가 전 단계 직접 수행 | 노드 간 스테이트 전이로 협력 | [[concept-graph-engineering]] |
 | 멀티 에이전트 인계 | 대화 컨텍스트 통짜 공유 | progress 파일·브리프로 신호 전달 | [[concept-multi-agent-pattern]] |
+| 폰↔워치 동기화 | 워치가 DB를 갖고 양방향 동기화 | 멱등 ID 메시지 + 큐 + 스냅샷 푸시 | [[concept-thin-client-idempotent-sync]] |
+| 타이머 큐 | 엔진이 햅틱·소리 API 직접 호출 | 큐 이벤트 발행 → 별도 서비스 소비 | [[concept-wall-clock-state-machine]] |
 
 → 공통 원리: **협력자끼리 내부(메모리·트랜잭션·컨텍스트)를 직접 공유하면 한쪽의 실패·잠금이 전체로 전파됩니다.** 명시적 신호(이벤트·ID·스테이트)로만 잇면 각자의 실패가 각자의 경계 안에 갇힙니다.
 

@@ -4,6 +4,18 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-03] ingest | Workout History 출시 여정 + 앱 설계 개념 3종 (새 카테고리 "앱 개발·출시")
+- **대상**: `raw/workout-history/` — TECH_NOTES.md(신규, 설계 원칙 6·함정 공개 요약) · TIMELINE.md(출시 후 표 추가) · README.md. 공유 기준선(2026-08-19) 준수 — 클래스·테이블·파일명 없이 개념만.
+- **신규 source**: [[src-workout-history-launch]] — 이정표(07-20~09-03)·6원칙→개념 승격표·삽질 로그 표·6역할 에이전트 프로세스↔위키 원리 대응표·in-flight 가드 코드.
+- **신규 concept 3건**:
+  - [[concept-local-first-append-only]] — Local-first·Append-only·파생값 계산·행위의 산물 원칙 + "하루" 경계(UTC 저장·로컬 자정 판정·시계 단일 seam) 함정. "편한 기본값은 규모에서 함정" 표 합류(id-reference에 행 추가), "진실은 하나, 나머지는 파생" 패턴표 신설.
+  - [[concept-wall-clock-state-machine]] — 세그먼트 인덱스 + 앵커만 상태, 계획만 교체하는 단일 엔진, catchUp 상한, 큐 이벤트 분리. mermaid stateDiagram + 글 풀이.
+  - [[concept-thin-client-idempotent-sync]] — 폰 DB 진실·워치 캐시+큐, UUIDv7 멱등 수신(Dart/Swift), 2초 디바운스, 증분 가져오기 앵커 전진 규칙. mermaid flowchart + 글 풀이.
+- **패턴 누적**: "직접 참조 대신 신호로 협력" 표(domain-event)에 폰↔워치·타이머 큐 2행 추가(양방향).
+- **역링크 5곳**: concept-advisor-worker·concept-claude-md·guide-project-docs-setup·concept-naming-conventions·concept-multi-agent-pattern에 "실전 적용" 링크.
+- **nav**: 첫 등장 콘텐츠 유형(자기 제품 출시 회고)이라 최상위 메뉴 "앱 개발·출시" 신설(개념 3 / 출시 회고 1). index Sources·Concepts 등록.
+- **병렬 세션 정합**: 같은 시각 다른 세션이 동일 ingest를 진행하다 handoff 커밋(35e433b)으로 wiki 몫을 이 세션에 넘김. 그 세션이 만든 페이지 5장은 철회됐고 이 세션 산출물만 남김.
+
 ## [2026-08-10] lint | 깨진 sources 5건 복구 + 고아 1건 해소 (전체 영역 점검)
 - **깨진 frontmatter sources 5건 수정** (ab01187 커밋이 "사전 파손 — 위키 세션 정리 대상"으로 남긴 잔존): concept-compounding-knowledge·concept-ingest·concept-lint·concept-memex의 `llm-wiki-pattern.md` → `ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`, entity-claude-design의 srt 경로에 `ai-engineering/claude-design/` 접두 보강.
 - **고아 페이지**: 별칭 링크(`[[페이지|표시명]]`) 인식 재검사 결과 진짜 고아는 [[src-my-links]] 1건 (entity-vannevar-bush는 오탐 — memex·llm-wiki-pattern에서 별칭으로 인바운드 존재). 사용자 선택 (a) 교차참조 추가 → 나가는 링크가 있던 3페이지(src-java-study-2024-2025·concept-spring-core·concept-design-patterns)에 역링크 부착으로 해소.
