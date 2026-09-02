@@ -54,6 +54,37 @@ updated: 2026-09-03
                  (한 틱당 자동 전진 상한이 있어 하루 뒤 재실행해도 수백 세그먼트를 한 번에 넘기지 않음)
 ```
 
+같은 시나리오를 코드로 옮기면 복원 로직은 "앵커에서 다시 계산 + 상한 있는 자동 전진" 두 줄기로 끝납니다.
+
+```dart
+class TimerEngine {
+  TimerEngine(this.plan, {required this.clock});
+  final List<Segment> plan;
+  final Clock clock;                 // now()를 직접 부르지 않습니다
+
+  int index = 0;
+  late DateTime anchor;              // 현재 세그먼트 시작 시각
+
+  Duration get remaining =>
+      plan[index].length - clock.now().difference(anchor);
+
+  /// 복원 직후·매 틱 호출. 다운타임이 세그먼트보다 길면 자동 전진.
+  void catchUp({int maxAdvance = 8}) {
+    var advanced = 0;
+    while (remaining.isNegative && advanced < maxAdvance && index < plan.length - 1) {
+      anchor = anchor.add(plan[index].length);   // 만료 시각이 다음 앵커
+      index++;
+      advanced++;
+      cues.add(Cue.segmentStarted(plan[index]));
+    }
+  }
+
+  Snapshot snapshot() => Snapshot(index, anchor);   // 이것만 저장하면 복원 가능
+}
+```
+
+앵커를 `now`가 아니라 "이전 세그먼트의 만료 시각"으로 옮기는 것이 요점입니다. 그래야 앱이 잠들었던 시간만큼 다음 세그먼트가 밀리지 않습니다.
+
 [[concept-local-first-append-only]]의 "파생값은 계산한다"와 같은 원리입니다 — 남은 시간은 파생값이고, 앵커가 사실입니다.
 
 ## 큐(cue)는 이벤트로
