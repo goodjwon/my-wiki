@@ -28,8 +28,6 @@ updated: 2026-08-10
 - [[src-clean-code-lecture]] — 📚 *Clean Code* 실전 강의 교재 17장 인덱스
 - [[src-tdd-lecture]] — 📚 *TDD* 실전 강의 교재 35편 인덱스
 - [[src-object-lecture]] — 📚 *오브젝트* 실전 강의 교재 18편 인덱스
-- [[src-workout-history-launch]] — Workout History 출시 여정 (2026-07~09): 이정표·삽질 로그·설계 원칙 6개 회고
-- [[src-workout-history-tech-notes]] — Workout History 기술 노트: 설계 원칙 6개·함정 4가지 요약 (2026-09)
 
 ## Entities
 - [[entity-vannevar-bush]] — Memex를 제안한 공학자, 개인 지식 관리의 사상적 기원
@@ -49,7 +47,6 @@ updated: 2026-08-10
 - [[entity-refactoring]] — 📚 *리팩터링 2판* (Martin Fowler, 2018) — 24 코드 악취 + 66+ 리팩터링 카탈로그
 - [[entity-clean-code]] — 📚 *Clean Code* (Robert C. Martin, 2008) — 이름·함수·클래스 가독성 + 17장 휴리스틱 66개
 - [[entity-tdd]] — 📚 *테스트 주도 개발* (Kent Beck, 2002) — 빨강→초록→리팩터 + 화폐 예제 + xUnit + 패턴 카탈로그
-- [[entity-workout-history]] — 📱 *Workout History* (운동기록 - 3초 홈트 트래커, 2026-08 출시) — Flutter + SwiftUI/Compose 워치, 설계 원칙 6·성능 예산·6역할 에이전트 개발
 
 ## Concepts
 - [[concept-compounding-knowledge]] — 새 정보가 기존 지식과 결합하며 복리적으로 가치 증가
@@ -90,10 +87,6 @@ updated: 2026-08-10
 - [[concept-varchar-length-prefix]] — VARCHAR 길이 프리픽스: 255 신화의 진짜 이유 + utf8mb4 시대의 63 경계
 - [[concept-cronjob-concurrency-trap]] — 크론잡 중복 실행과 Forbid 함정: concurrencyPolicy + activeDeadlineSeconds 조합
 - [[concept-http-hol-blocking]] — HTTP 진화와 HOL 블로킹: 1.1 Keep-Alive → 2 멀티플렉싱 → 3 QUIC over UDP
-- [[concept-local-first-append-only]] — Local-first + Append-only + 파생값 계산: 저장하지 않는 것이 정합성을 만든다 (로컬 자정·증분 앵커 함정)
-- [[concept-single-timer-state-machine]] — 단일 타이머 상태기계: 세그먼트 3종(work/rest/openEnded)으로 세트·인터벌·런을 한 엔진에, 벽시계 복원
-- [[concept-thin-watch-client]] — 얇은 워치 클라이언트: 진실은 폰, 워치는 스냅샷 캐시 + 미전송 큐, UUIDv7 멱등 수신
-- [[concept-record-as-product-of-action]] — 기록은 행위의 산물: 수동 입력을 막아 데이터 품질(스트릭 정직성)을 설계, 보정 경계·우회 통로
 
 ## Guides
 - [[guide-deploy-mkdocs-firebase]] — 위키 외부 배포 가이드 (MkDocs Material + Firebase Hosting, 무료)

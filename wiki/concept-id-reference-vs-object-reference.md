@@ -121,4 +121,3 @@ public class OrderValidator {          // 도메인 서비스 — 여러 애그�
 - [[src-kakaopay-ddd]] — Aggregate Root = 트랜잭션 경계의 실무 사례
 - [[entity-object]] — 조영호 *오브젝트* — 의존성 관리(8장)의 책 배경
 - [[concept-db-connection-pool]] — 잠금 대기가 커넥션 풀 고갈로 이어지는 인프라 측면
-- [[concept-thin-watch-client]] — 워치는 폰 DB를 참조하지 않고 ID(UUIDv7)가 붙은 기록만 보냄

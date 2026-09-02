@@ -106,8 +106,8 @@ test('자정 직전 기록과 직후 기록은 다른 날', () {
 | 영역 | 진실 | 파생 | 참조 |
 |------|------|------|------|
 | **기록 앱** | append-only 기록 | 스트릭·통계·뱃지 | (이 페이지) |
-| 타이머 | 세그먼트 인덱스 + 시작 앵커 | 남은 시간 | [[concept-single-timer-state-machine]] |
-| 폰↔워치 | 폰 DB | 워치 스냅샷 캐시 | [[concept-thin-watch-client]] |
+| 타이머 | 세그먼트 인덱스 + 시작 앵커 | 남은 시간 | [[concept-wall-clock-state-machine]] |
+| 폰↔워치 | 폰 DB | 워치 스냅샷 캐시 | [[concept-thin-client-idempotent-sync]] |
 | 도메인 이벤트 | 원본 트랜잭션 | 구독자의 반영 | [[concept-domain-event-eventual-consistency]] |
 
 → 공통 원리: **파생값을 저장하면 두 개의 진실이 생기고, 둘이 어긋나는 순간이 반드시 옵니다.** 진실을 하나로 두고 나머지는 계산하거나, 계산이 무거우면 저장 대신 범위를 자릅니다.
@@ -126,7 +126,7 @@ test('자정 직전 기록과 직후 기록은 다른 날', () {
 ## 관련 페이지
 
 - [[src-workout-history-launch]] — 이 원칙이 나온 앱의 출시 여정
-- [[concept-single-timer-state-machine]] — 같은 앱의 시계 주입 원칙을 타이머에 적용
-- [[concept-thin-watch-client]] — 진실(폰 DB)과 캐시(워치)의 분리
+- [[concept-wall-clock-state-machine]] — 같은 앱의 시계 주입 원칙을 타이머에 적용
+- [[concept-thin-client-idempotent-sync]] — 진실(폰 DB)과 캐시(워치)의 분리
 - [[concept-domain-event-eventual-consistency]] — 원본 트랜잭션이 진실, 구독자는 파생
 - [[concept-id-reference-vs-object-reference]] — "편한 기본값" 패턴표의 본가

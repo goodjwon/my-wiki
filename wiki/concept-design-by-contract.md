@@ -192,4 +192,3 @@ public class UserService {
 - [[concept-jspecify-null-safety]] — null 계약의 컴파일 시점 강제
 - [[concept-tdd-laws-and-first]] — 테스트 = 실행 가능한 명세 (같은 패턴)
 - [[concept-solid]] — LSP를 포함한 SOLID 5원칙
-- [[concept-record-as-product-of-action]] — 전제조건으로 상태 공간을 줄이는 원리를 제품 입력 설계에 적용한 사례

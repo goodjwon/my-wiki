@@ -274,7 +274,7 @@ updated: YYYY-MM-DD                  # 필수 (수정 시 갱신)
 
 ## 4. mkdocs nav 분류 기준
 
-### 4-1. 현재 카테고리 5개
+### 4-1. 현재 카테고리 4개
 
 | 카테고리 | 들어가는 주제 |
 |----------|--------------|
@@ -282,7 +282,6 @@ updated: YYYY-MM-DD                  # 필수 (수정 시 갱신)
 | **하네스·AI 에이전트** | Claude Code, CLAUDE.md, Hooks, 멀티 에이전트, AI 도구 비용 |
 | **Java·Spring·DDD** | Spring 코어/Boot/Framework, JPA, DDD, 디자인 패턴, 자바 |
 | **DB·운영·인프라** | DB 운영, 네트워크, K8s, 인프라 함정 |
-| **프로덕트·앱 설계** | 직접 만든 앱의 설계 원칙·엔진·데이터 모델 개념 (2026-09 신설, Workout History 6장) |
 
 ### 4-2. 새 카테고리 추가 기준
 

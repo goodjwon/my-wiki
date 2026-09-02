@@ -158,4 +158,3 @@ DDD의 유비쿼터스 언어(Ubiquitous Language)는 세 모델이 따로 놀�
 - [[src-kakaopay-ddd]] — 유비쿼터스 언어·DomainEntity/JpaEntity 분리의 실전 사례
 - [[concept-jpa-enum-mapping]] — 자바 층과 DB 층의 연결을 이름으로 유지하는 같은 패턴
 - [[concept-api-backward-compatibility]] — 서버·클라이언트 층의 연결을 계약으로 유지하는 같은 패턴
-- [[concept-single-timer-state-machine]] — 세트·인터벌·런이 한 개념(세그먼트)을 공유하는 모바일 사례

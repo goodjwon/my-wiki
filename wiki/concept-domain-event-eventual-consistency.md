@@ -98,4 +98,3 @@ public class DeliveryEventHandler {
 - [[concept-transactional-rollback-policy]] — 커밋·롤백 시점 이해가 `AFTER_COMMIT` 설계의 전제
 - [[src-kakaopay-ddd]] — 도메인 간 협력의 실무 맥락 (Biz-component)
 - [[concept-graph-engineering]] — 에이전트 세계의 같은 구조 (스테이트 전이 협력)
-- [[concept-thin-watch-client]] — 워치→폰 기록을 ID 기반 멱등 수신하는 기기 간 버전 · [[concept-local-first-append-only]] — 추가 전용 기록 + 파생값 계산의 클라이언트 버전

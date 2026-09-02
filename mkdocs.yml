@@ -320,18 +320,6 @@ nav:
       - 크론잡 중복 실행 + Forbid 함정: concept-cronjob-concurrency-trap.md
       - HTTP 진화와 HOL 블로킹 (1.1 → 2 → 3/QUIC): concept-http-hol-blocking.md
 
-  - 프로덕트·앱 설계:
-    - 개념:
-      - "🆕 Local-first + Append-only + 파생값": concept-local-first-append-only.md
-      - "🆕 단일 타이머 상태기계": concept-single-timer-state-machine.md
-      - "🆕 얇은 워치 클라이언트": concept-thin-watch-client.md
-      - "🆕 기록은 행위의 산물": concept-record-as-product-of-action.md
-    - 프로덕트:
-      - "📱 Workout History (운동기록 앱)": entity-workout-history.md
-    - 소스:
-      - Workout History 출시 여정: src-workout-history-launch.md
-      - Workout History 기술 노트: src-workout-history-tech-notes.md
-
 extra:
   generator: false
 
