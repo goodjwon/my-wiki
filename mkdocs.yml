@@ -329,6 +329,7 @@ nav:
     - 프로덕트:
       - "📱 Workout History (운동기록 앱)": entity-workout-history.md
     - 소스:
+      - Workout History 출시 여정: src-workout-history-launch.md
       - Workout History 기술 노트: src-workout-history-tech-notes.md
 
 extra:

@@ -53,8 +53,8 @@ updated: 2026-09-03
 |---|------|-------|-----------------|
 | 1 | Local-first | 모든 읽기·쓰기는 로컬 DB에서 즉시, 네트워크는 전부 백그라운드 | [[concept-local-first-append-only]] |
 | 2 | Append-only + 파생값 | 기록은 추가만, 삭제는 tombstone, 스트릭·통계는 저장 않고 계산 | [[concept-local-first-append-only]] |
-| 3 | 단일 타이머 상태기계 | 세트 휴식·루틴 인터벌·달리기가 한 엔진, 벽시계 앵커 | [[concept-wall-clock-state-machine]] |
-| 4 | 워치는 얇은 클라이언트 | 진실은 폰 DB, 워치는 스냅샷 캐시 + 미전송 큐 | [[concept-thin-client-idempotent-sync]] |
+| 3 | 단일 타이머 상태기계 | 세트 휴식·루틴 인터벌·달리기가 한 엔진, 벽시계 앵커 | [[concept-single-timer-state-machine]] |
+| 4 | 워치는 얇은 클라이언트 | 진실은 폰 DB, 워치는 스냅샷 캐시 + 미전송 큐 | [[concept-thin-watch-client]] |
 | 5 | 성능 예산 | 콜드 스타트 <1.5s, 저장 탭→햅틱 <100ms, 위반은 리뷰 블로커 | (이 페이지 아래) |
 | 6 | 기록은 행위의 산물 | 탭·타이머·센서·헬스 가져오기만 기록을 만들고 타이핑 UI는 없음 | [[concept-local-first-append-only]] |
 
@@ -108,7 +108,9 @@ Claude Code 에이전트를 advisor(판단·범위·문서 정합) · app-develo
 ## 관련 페이지
 
 - [[concept-local-first-append-only]] — 원칙 1·2·6의 영속 개념
-- [[concept-wall-clock-state-machine]] — 원칙 3의 영속 개념
-- [[concept-thin-client-idempotent-sync]] — 원칙 4의 영속 개념 + 증분 가져오기 앵커 함정
+- [[concept-single-timer-state-machine]] — 원칙 3의 영속 개념
+- [[concept-thin-watch-client]] — 원칙 4의 영속 개념 + 증분 가져오기 앵커 함정
 - [[concept-advisor-worker]] — 6역할 프로세스의 원형
 - [[guide-project-docs-setup]] — PLANNING·ARCHITECTURE·BACKLOG 문서 체계의 템플릿
+- [[src-workout-history-tech-notes]] — 같은 raw의 기술 노트 축 요약(원칙 6개·함정 표)
+- [[entity-workout-history]] — 앱 카드

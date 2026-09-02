@@ -168,6 +168,7 @@ Hibernate 6 공식 문서 기준으로 `@Enumerated(STRING)`은 대부분의 DB�
 | [[concept-keepalive-timeout-race]] | 웹 서버 keep-alive 짧음 |
 | [[concept-db-connection-pool]] | 무한 수명 커넥션 |
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` |
+| [[concept-local-first-append-only]] | "저장 시각 = 판정 시각" · 배치가 돌면 앵커 전진 → 판정은 로컬 자정(시계 주입), 앵커는 imported > 0일 때만 |
 
 → 공통 교훈: **기본값은 "무난한 값"이 아니라 "역사적 이유가 있는 값"입니다.** `ORDINAL`이 기본인 것도 초기 JPA가 공간 효율을 우선한 결과일 뿐, 오늘의 안전한 선택이라는 뜻이 아닙니다.
 

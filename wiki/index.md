@@ -28,6 +28,7 @@ updated: 2026-08-10
 - [[src-clean-code-lecture]] — 📚 *Clean Code* 실전 강의 교재 17장 인덱스
 - [[src-tdd-lecture]] — 📚 *TDD* 실전 강의 교재 35편 인덱스
 - [[src-object-lecture]] — 📚 *오브젝트* 실전 강의 교재 18편 인덱스
+- [[src-workout-history-launch]] — Workout History 출시 여정 (2026-07~09): 이정표·삽질 로그·설계 원칙 6개 회고
 - [[src-workout-history-tech-notes]] — Workout History 기술 노트: 설계 원칙 6개·함정 4가지 요약 (2026-09)
 
 ## Entities

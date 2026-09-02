@@ -170,6 +170,7 @@ grep -rn "ignoreUnknownKeys\s*=\s*false\|FAIL_ON_UNKNOWN_PROPERTIES.*true\|deny_
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` |
 | [[concept-jpa-enum-mapping]] | JPA `@Enumerated` 기본 ORDINAL |
 | [[concept-java-serialization-risk]] | 기본 제공 직렬화의 암묵적 신뢰 |
+| [[concept-local-first-append-only]] | "저장 시각 = 판정 시각" · 배치가 돌면 앵커 전진 → 판정은 로컬 자정(시계 주입), 앵커는 imported > 0일 때만 |
 
 → **"가장 엄격한 구현이 사실상의 표준이 됩니다"** — 서버 개발자가 자기 기준으로만 "안전한 변경"을 판단하면 안 됩니다.
 
