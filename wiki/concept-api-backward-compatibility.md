@@ -186,3 +186,4 @@ grep -rn "ignoreUnknownKeys\s*=\s*false\|FAIL_ON_UNKNOWN_PROPERTIES.*true\|deny_
 - [[src-spring-data-access-ref]] — Spring Data 응답 매핑 맥락
 - [[concept-transactional-rollback-policy]] / [[concept-cronjob-concurrency-trap]] — 같은 "기본값 함정" 패턴
 - [[concept-claude-md]] — STOP 트리거 후보: "응답 구조 wrapping 변경 금지"
+- [[concept-record-as-product-of-action]] — 무엇을 막고 무엇을 허용할지 명시하는 같은 원리(제품 입력 쪽)

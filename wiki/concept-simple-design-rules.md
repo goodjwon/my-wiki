@@ -160,3 +160,4 @@ public class OrderService {
 - [[entity-tdd]] — 규칙 1을 사이클로 만든 원전, "설계가 창발"의 실습판
 - [[entity-object]] — 4규칙의 종착지인 책임 주도 설계
 - [[concept-loop-engineering]] — "안전망(거부 신호) 없는 자동 루프는 발산" 패턴의 AI 확장
+- [[concept-single-timer-state-machine]] — "세 번째 타이머를 만들다 멈춘" 중복 제거 사례

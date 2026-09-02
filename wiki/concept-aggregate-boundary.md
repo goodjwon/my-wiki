@@ -82,3 +82,4 @@ public class Order {                       // 애그리거트 루트
 - [[concept-domain-event-eventual-consistency]] — 경계로 나뉜 애그리거트 간 협력
 - [[src-kakaopay-ddd]] — Aggregate Root·Bounded Context 실무 구현 (Kotlin + Spring Boot)
 - [[entity-object]] — 조영호 *오브젝트* — 책임 주도 설계의 책 배경
+- [[concept-thin-watch-client]] — 진실을 폰 하나에 두어 경계 밖(워치) 수정을 막는 사례 · [[concept-record-as-product-of-action]] — 허용 입력을 줄여 불변식(기록=행위)을 지키는 제품 원칙

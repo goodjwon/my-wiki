@@ -4,6 +4,14 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-03] ingest | Workout History 앱 — 기술 노트 ingest + 개념 4장 + 프로덕트·앱 설계 카테고리 신설
+- **raw 추가**: `raw/workout-history/TECH_NOTES.md`(설계 원칙 6개·함정, 개념 수준 공개 요약), `TIMELINE.md`에 출시 후 이정표 표(2026-08-21~09-03) 추가, README 갱신. 공유 기준선(2026-08-19) 유지 — 클래스·테이블·파일명 비공개.
+- **신설 6장**: [[src-workout-history-tech-notes]] · [[entity-workout-history]] · [[concept-local-first-append-only]] · [[concept-single-timer-state-machine]] · [[concept-thin-watch-client]] · [[concept-record-as-product-of-action]]. 전부 합니다체·표 위주·"같은 인사이트 패턴" 비교표·체크리스트·원본 출처·관련 페이지 표준 구조.
+- **패턴 누적**: "기본값과 가정의 함정" 표에 로컬 자정·증분 앵커 행 추가(cronjob·keepalive·db-pool·jpa-enum·varchar 5페이지 양방향). 신규 패턴 3개 개시 — "변형은 설정으로, 엔진은 하나"(design-patterns·simple-design-rules·domain-model-kinds), "진실은 하나, 나머지는 멱등"(domain-event·id-reference·aggregate-boundary), "허용을 줄여 불변식을 지킨다"(design-by-contract·aggregate-boundary·api-backward-compatibility).
+- **역링크**: concept-advisor-worker·concept-claude-md에 6역할 확장 사례 링크.
+- **nav**: 새 카테고리 "프로덕트·앱 설계"(§4-2 기준 — 동일 주제 6장 누적) — 개념 4 / 프로덕트 1 / 소스 1.
+- 배포는 사용자 승인 대기.
+
 ## [2026-08-10] lint | 깨진 sources 5건 복구 + 고아 1건 해소 (전체 영역 점검)
 - **깨진 frontmatter sources 5건 수정** (ab01187 커밋이 "사전 파손 — 위키 세션 정리 대상"으로 남긴 잔존): concept-compounding-knowledge·concept-ingest·concept-lint·concept-memex의 `llm-wiki-pattern.md` → `ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`, entity-claude-design의 srt 경로에 `ai-engineering/claude-design/` 접두 보강.
 - **고아 페이지**: 별칭 링크(`[[페이지|표시명]]`) 인식 재검사 결과 진짜 고아는 [[src-my-links]] 1건 (entity-vannevar-bush는 오탐 — memex·llm-wiki-pattern에서 별칭으로 인바운드 존재). 사용자 선택 (a) 교차참조 추가 → 나가는 링크가 있던 3페이지(src-java-study-2024-2025·concept-spring-core·concept-design-patterns)에 역링크 부착으로 해소.

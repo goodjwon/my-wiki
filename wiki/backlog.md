@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-07-12
+updated: 2026-09-03
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-07-12
 
 ## 📅 마지막 업데이트
 
-2026-07-12
+2026-09-03
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -36,7 +36,14 @@ updated: 2026-07-12
 - **"복리 지식"** (Karpathy/Hashimoto) — 위키가 누적될수록 페이지 간 교차참조 가치 ↑
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
-## ✅ 최근 완료 작업 (2026-06~07 누적)
+## ✅ 최근 완료 작업 (2026-06~09 누적)
+
+### 2026-09-03 — Workout History 앱 기술 노트 ingest (빌드 통과, 배포 대기)
+
+- ✅ **raw/workout-history/TECH_NOTES.md** 신설 + TIMELINE 출시 후 표. 공개 위키엔 개념 수준만(공유 기준선 2026-08-19).
+- ✅ **6장 신설** — src 1·entity 1·concept 4([[concept-local-first-append-only]]·[[concept-single-timer-state-machine]]·[[concept-thin-watch-client]]·[[concept-record-as-product-of-action]]). 새 nav 카테고리 "프로덕트·앱 설계".
+- ✅ **패턴 누적** — "기본값과 가정의 함정" 5페이지 양방향 + 신규 패턴 3개 개시.
+- ⏳ 후속: 블로그 여정 글(blog.wonslab.dev) 게시 후 entity 하단에 "이 개념을 다룬 글" 역링크 · 5번째 카테고리이므로 §4-1 표에 등재.
 
 ### 2026-07-12 — harness Before/After 검증 방식 전환: revert 재실행 → 같은 유형 새 태스크 (전부 배포 완료)
 

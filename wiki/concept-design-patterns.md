@@ -252,3 +252,4 @@ public class OrderFacade {
 - [[src-java-study-2024-2025]] — Ch04 객체지향 설계와 패턴
 - [[src-kakaopay-ddd]] — DDD에서 패턴 활용
 - [[concept-transactional-rollback-policy]] — 프록시 패턴의 함정 사례
+- [[concept-single-timer-state-machine]] — 전략 패턴의 실전형: 세그먼트 배열(계획)만 바꾸고 타이머 엔진은 하나
