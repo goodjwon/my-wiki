@@ -470,6 +470,7 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 - [ ] 다이어그램이 필요하다면 mermaid 한계 점검했나?
 - [ ] 같은 인사이트 패턴 비교표가 있나? (양방향 연결?)
 - [ ] 원본 출처 / 관련 페이지 섹션이 있나?
+- [ ] mkdocs.yml nav 제목은 괄호 설명 없이 한 줄에 들어가게 짧게 했나? (부연·날짜·원어는 페이지 H1에만)
 - [ ] mkdocs.yml nav에 추가했나? (🆕는 직접 붙이지 않음 — `scripts/new_badge.py` hook이 `created` 30일 이내 페이지에 빌드 시 자동 부착)
 - [ ] index.md에 추가했나?
 - [ ] log.md에 작업 기록했나?

@@ -101,9 +101,9 @@ nav:
       - Vannevar Bush: entity-vannevar-bush.md
     - 소스:
       - LLM Wiki 패턴: src-llm-wiki-pattern.md
-      - 나의 링크 (북마크): src-my-links.md
+      - 나의 링크: src-my-links.md
     - 환경설정:
-      - 위키 배포 (MkDocs + Firebase): guide-deploy-mkdocs-firebase.md
+      - 위키 배포: guide-deploy-mkdocs-firebase.md
       - 프로젝트 문서 시스템: guide-project-docs-setup.md
       - "📐 위키 작성 표준": guide-wiki-authoring-standards.md
       - "📋 백로그·진행 상태": backlog.md
@@ -115,21 +115,21 @@ nav:
       - CLAUDE.md 헌법: concept-claude-md.md
       - Claude Hooks: concept-claude-hooks.md
       - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
-      - "Loop 엔지니어링 (2026-06)": concept-loop-engineering.md
+      - "Loop 엔지니어링": concept-loop-engineering.md
       - "Advisor–Worker 패턴": concept-advisor-worker.md
       - "그래프 엔지니어링": concept-graph-engineering.md
-      - "Advisor–Worker vs 그래프 (비교)": comparison-advisor-worker-vs-graph.md
+      - "Advisor–Worker vs 그래프": comparison-advisor-worker-vs-graph.md
     - 도구:
       - Claude Design: entity-claude-design.md
     - 소스:
       - 하네스 엔지니어링 키트: src-harness-engineering.md
-      - "Loop 엔지니어링 커뮤니티 발화 (2026-06)": src-loop-engineering.md
+      - "Loop 엔지니어링 커뮤니티 발화": src-loop-engineering.md
       - "Advisor–Worker 에이전트 스크립트": src-ai-advisor-worker.md
       - "그래프 엔지니어링 원문 정리": src-graph-engineering.md
       - Claude Design 리뷰: src-claude-design-review.md
-      - Copilot 토큰 종량제 전환 (2026-06): src-copilot-token-pricing.md
+      - Copilot 토큰 종량제 전환: src-copilot-token-pricing.md
     - 실습:
-      - 사전 안내 (Module 00): guide-harness-00-prerequisites.md
+      - 사전 안내: guide-harness-00-prerequisites.md
       - 5분 데모: guide-harness-demo.md
       - Module 1 — Failure Audit: guide-harness-module1.md
       - Module 2 — CLAUDE.md: guide-harness-module2.md
@@ -142,7 +142,7 @@ nav:
       - "그래프 엔지니어링 실습": guide-graph-engineering-demo.md
   - 개발방법론:
     - 개념:
-      - 객체지향 (OOP): concept-oop.md
+      - 객체지향: concept-oop.md
       - 디자인 패턴: concept-design-patterns.md
       - "네이밍 규약": concept-naming-conventions.md
       - "TDD 3법칙과 F.I.R.S.T.": concept-tdd-laws-and-first.md
@@ -207,7 +207,7 @@ nav:
       - "2장 객체지향 프로그래밍": lecture-object-ch2.md
       - "3장 역할·책임·협력": lecture-object-ch3.md
       - "4장 설계 품질·트레이드오프": lecture-object-ch4.md
-      - "5장 책임 할당하기 (GRASP)": lecture-object-ch5.md
+      - "5장 책임 할당하기": lecture-object-ch5.md
       - "6장 메시지와 인터페이스": lecture-object-ch6.md
       - "7장 객체 분해": lecture-object-ch7.md
       - "8장 의존성 관리하기": lecture-object-ch8.md
@@ -236,8 +236,8 @@ nav:
       - "10장 흥미로운 times": lecture-tdd-ch10.md
       - "11장 자식 클래스 제거": lecture-tdd-ch11.md
       - "12장 드디어 더하기": lecture-tdd-ch12.md
-      - "13장 진짜로 만들기 (Bank)": lecture-tdd-ch13.md
-      - "14장 바꾸기 (Pair)": lecture-tdd-ch14.md
+      - "13장 진짜로 만들기": lecture-tdd-ch13.md
+      - "14장 바꾸기": lecture-tdd-ch14.md
       - "15장 $5 + 10 CHF": lecture-tdd-ch15.md
       - "16장 드디어 추상화": lecture-tdd-ch16.md
       - "17장 Money 회고": lecture-tdd-ch17.md
@@ -258,17 +258,17 @@ nav:
       - "32장 TDD 마스터하기": lecture-tdd-ch32.md
       - "부록 A — 영향도": lecture-tdd-appendixA.md
       - "부록 B — 피보나치": lecture-tdd-appendixB.md
-      - "마치는 글 (Fowler)": lecture-tdd-afterword.md
+      - "마치는 글": lecture-tdd-afterword.md
     - DDD:
       - 카카오페이 DDD: src-kakaopay-ddd.md
       - "ID 참조 vs 객체 참조": concept-id-reference-vs-object-reference.md
       - "애그리거트 경계": concept-aggregate-boundary.md
       - "도메인 이벤트·최종 일관성": concept-domain-event-eventual-consistency.md
     - 실습:
-      - 실습 환경 (5권 공통): guide-java-book-study-lab.md
+      - 실습 환경: guide-java-book-study-lab.md
       - 코드 작성·점검 가이드: guide-code-authoring-and-review.md
   - Java·Spring:
-    - "학습 경로 (전체 지도)": guide-java-learning-path.md
+    - "학습 경로": guide-java-learning-path.md
     - 1단계 — Java Core:
       - 안내: java-study-ch00.md
       - 환경과 실행: java-study-ch01.md
@@ -284,22 +284,21 @@ nav:
       - 테스트와 품질: java-study-ch09.md
       - JVM과 성능: java-study-ch10.md
       - 부록: java-study-ch11.md
-    - "학습 코스 (미니프로젝트 동선)":
+    - "학습 코스":
       - "T1. Java 기초 다지기": guide-java-track1-basics.md
       - "T2. 객체지향 설계로 응용": guide-java-track2-design.md
+      - "과제 1. 주문 처리 콘솔 앱": guide-java-practice-core.md
       - "T3. 입출력과 네트워크": guide-java-track3-io-network.md
       - "T4. Spring 웹 애플리케이션": guide-java-track4-spring-web.md
+      - "과제 2. 도서 대여 REST API": guide-java-practice-spring-library.md
       - "T5. 심화·워크북·종합": guide-java-track5-deep-dive.md
-    - "실습 과제 (H2 실행·스크린샷)":
-      - "과제 1. 주문 처리 콘솔 앱 (Java 핵심)": guide-java-practice-core.md
-      - "과제 2. 도서 대여 REST API (Spring + JPA)": guide-java-practice-spring-library.md
-      - "과제 3. 견적·계약 업무 (4계층 + CQRS + MyBatis)": guide-java-practice-layered-quotation.md
-    - "📚 레퍼런스 (필요할 때 찾아보기)":
+      - "과제 3. 견적·계약 업무": guide-java-practice-layered-quotation.md
+    - "📚 레퍼런스":
       - 개념 — 심화 주제:
         - Spring Core: concept-spring-core.md
         - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md
         - API Versioning: concept-api-versioning.md
-        - API 하위 호환성 (Tolerant Reader): concept-api-backward-compatibility.md
+        - API 하위 호환성: concept-api-backward-compatibility.md
         - JSpecify Null Safety: concept-jspecify-null-safety.md
         - "JPA Enum 매핑 함정": concept-jpa-enum-mapping.md
         - 표준 함수형 인터페이스: concept-functional-interfaces.md
@@ -314,25 +313,25 @@ nav:
       - 원본 소스:
         - Spring Boot 소개: src-spring-boot.md
         - Spring Framework 7: src-spring-framework-7.md
-        - Spring Guide (cheese10yun): src-spring-guide.md
+        - Spring Guide: src-spring-guide.md
         - Spring Data Access Ref: src-spring-data-access-ref.md
         - Spring Web MVC Ref: src-spring-web-mvc-ref.md
         - Spring Testing Ref: src-spring-testing-ref.md
         - Java 스터디 2024-2025: src-java-study-2024-2025.md
   - DB·운영·인프라:
     - 개념:
-      - DB 커넥션 풀 (HikariCP): concept-db-connection-pool.md
-      - VARCHAR 길이 프리픽스 (255 신화): concept-varchar-length-prefix.md
-      - Keep-Alive 타임아웃 race (LB 502): concept-keepalive-timeout-race.md
+      - DB 커넥션 풀: concept-db-connection-pool.md
+      - VARCHAR 길이 프리픽스: concept-varchar-length-prefix.md
+      - Keep-Alive 타임아웃 race: concept-keepalive-timeout-race.md
       - 크론잡 중복 실행 + Forbid 함정: concept-cronjob-concurrency-trap.md
-      - HTTP 진화와 HOL 블로킹 (1.1 → 2 → 3/QUIC): concept-http-hol-blocking.md
+      - HTTP HOL 블로킹: concept-http-hol-blocking.md
   - 앱 개발·출시:
     - 개념:
       - "Local-first + Append-only": concept-local-first-append-only.md
       - "벽시계 앵커 타이머 상태기계": concept-wall-clock-state-machine.md
       - "얇은 클라이언트 + 멱등 동기화": concept-thin-client-idempotent-sync.md
     - 출시 회고:
-      - "Workout History 출시 여정 (2026-07~09)": src-workout-history-launch.md
+      - "Workout History 출시 여정": src-workout-history-launch.md
 
 extra:
   generator: false
