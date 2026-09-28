@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, practice, spring, jpa, h2, rest-api, validation, swagger, test]
 sources: [java-study/practice/]
 created: 2026-09-28
-updated: 2026-09-28
+updated: 2026-09-29
 ---
 
 # Spring 실습 과제 — 도서 대여 REST API
@@ -1629,3 +1629,5 @@ curl -s -w '\n%{http_code}\n' -X POST http://localhost:8090/api/loans/999/return
 - [[entity-spring-boot]] — Spring Boot 자동 구성·스타터
 - [[concept-transactional-rollback-policy]] — 런타임 예외만 자동 롤백되는 이유
 - [[concept-jpa-enum-mapping]] — `@Enumerated(STRING)`을 써야 하는 이유
+- [[guide-java-practice-library-ui]] — 다음 과제: 이 API를 쓰는 화면(React + Vite)
+- [[guide-java-practice-library-merge]] — 다음 과제: API와 화면 병합·한 jar 배포

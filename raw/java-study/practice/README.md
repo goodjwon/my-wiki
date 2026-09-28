@@ -21,3 +21,14 @@
 | 과제 1 | day-by-java · `practice/order-console/` | `ff82a51` |
 | 과제 2 | day_by_spring · `practice/library-api/` (Boot 4.1.1) | `8a993a4` |
 | 과제 3 | s2b-prototype-orm · `practice/quotation-layered/` (Boot 4.1.1 + MyBatis 4.1.0) | `38c3d59` |
+
+## 과제 2-2·2-3 추가 (2026-09-29)
+
+| 위키 페이지 | 원본 저장소 | 기준 커밋 | 비고 |
+|-------------|-------------|-----------|------|
+| `wiki/guide-java-practice-library-ui.md` | https://github.com/goodjwon/day_by_spring_sm_ui (비공개) | `9f0a0b6` | React 19 + Vite + TS + Tailwind UI를 과제 2 API 범위로 축약. 원본 `.env.production`(시크릿 포함)은 사용하지 않음 |
+| `wiki/guide-java-practice-library-merge.md` | 위 UI + day_by_spring | — | API 추가 `GET /api/members/{id}/loans`, Vite 프록시·CORS·Playwright·한 jar 배포 |
+
+모범 답안 소스 보관 (2026-09-29, main에 커밋·푸시):
+- 과제 2-2: day_by_spring_sm_ui · `practice/library-ui/` — `6a11200`
+- 과제 2-3: day_by_spring · `practice/library-fullstack/` (API `library/` + 화면 `library-ui/`) — `a111b34`

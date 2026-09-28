@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, learning-path, track4, spring, jpa, security, test]
 sources: [java-study/]
 created: 2026-06-29
-updated: 2026-09-28
+updated: 2026-09-29
 ---
 
 # Java 학습 경로 T4 — Spring 웹 애플리케이션
@@ -92,6 +92,8 @@ updated: 2026-09-28
 
 이 트랙의 Spring·JPA·트랜잭션·예외 처리·테스트를 [[guide-java-practice-spring-library]]에서 프로젝트 하나로 확인합니다. 도서·회원·대출 REST API를 계층별로 구현하고, 대출 업무 규칙(중복 대출·연체·권수 제한)을 409 응답으로 표현한 뒤, H2 콘솔·Swagger·curl 시나리오와 테스트 9개로 검증합니다.
 
+이어서 [[guide-java-practice-library-ui]]에서 이 API를 쓰는 화면을 만들고, [[guide-java-practice-library-merge]]에서 둘을 합쳐 한 jar로 배포합니다.
+
 **보충 연습** (챕터 실전문제, 시간이 남으면):
 
 - 11.22 도서 주문 및 대여 시스템 — 주문 생성과 재고 차감을 한 트랜잭션으로 → [[java-study-ch11]]
@@ -121,3 +123,4 @@ updated: 2026-09-28
 - [[concept-db-connection-pool]] · [[concept-varchar-length-prefix]] — DB 운영 함정
 - [[concept-api-versioning]] · [[concept-api-backward-compatibility]] — API 진화
 - [[guide-java-track3-io-network]] · [[guide-java-track5-deep-dive]] — 이전·다음 트랙
+- [[guide-java-practice-library-ui]] · [[guide-java-practice-library-merge]] — 과제 2 이어서: 화면 만들기와 API 병합

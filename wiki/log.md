@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-29] feat+verify | 과제 2-2 도서 대여 화면 + 과제 2-3 API·화면 병합 (실행 검증·스크린샷)
+- [[guide-java-practice-library-ui]] (1101줄): React 19 + Vite 8 + TS 6 + Tailwind 4 + react-router, `LibraryApi` 인터페이스로 실제 서버/목업(`npm run dev:mock`) 교체, 오류 코드 → 한글 안내, Vitest 7개. 스샷 4장(`raw/assets/practice/ui/`).
+- [[guide-java-practice-library-merge]] (893줄): API 추가 `GET /api/members/{id}/loans`(+테스트 2, 총 11), Vite 프록시(권장)·CORS(`WebMvcConfigurer`) 병기, 실제 대출 201→409→반납 200, Playwright 3 spec(2회 연속 통과), exec-maven-plugin + resources 복사로 한 jar 배포 + SPA 새로고침 대응. 스샷 5장(`raw/assets/practice/merge/`).
+- 페이지 코드 블록만으로 새로 만들어 전 단계 실측. 메뉴 T4 그룹에 2-2·2-3 추가, index·역링크·원본 추적 갱신. 모범 답안은 원본 저장소 2곳 `practice/`.
+- 원본 UI 저장소의 `.env.production`에 시크릿이 커밋돼 있음(비공개 저장소) — 과제에는 사용 안 함, 공개 시 교체 필요.
+
 ## [2026-09-29] nav | 학습 코스 계층 정리 — 과제를 소속 트랙 아래로
 - 사용자 지적("과제는 트랙에 속한 것") → T2·T4·T5를 그룹화해 "코스 안내 + 과제 N" 2항목으로, 과제 없는 T1·T3는 단일 페이지 유지.
 
