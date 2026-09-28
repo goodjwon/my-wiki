@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 8장.md]
 created: 2026-06-20
-updated: 2026-07-05
+updated: 2026-09-28
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -672,5 +672,3 @@ public Money calculateDiscount(Order order, Coupon coupon) { ... }
 ## 다음 장 예고 — 9장: 일반적인 프로그래밍 원칙
 
 지역 변수·반복문·표준 라이브러리·실수 정밀도·박싱·문자열 사용·인터페이스 참조·리플렉션·최적화·명명 규칙까지 — **하루에 한 번 이상 마주치는 12가지 기본 원칙**을 다룹니다 (Item 57~68). "이미 알고 있다" 싶지만 의외로 실수가 잦은 영역입니다.
-
-> 이어서 만들까요? (9장으로 진행 / 10장 예외로 점프 / 지금까지 만든 장들을 통합 교재로 묶기)

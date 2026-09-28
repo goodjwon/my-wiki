@@ -5,7 +5,7 @@ tags: [인물, 역사, 컴퓨터과학, 하이퍼텍스트]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://en.wikipedia.org/wiki/Vannevar_Bush, https://en.wikipedia.org/wiki/As_We_May_Think]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Vannevar Bush
@@ -25,17 +25,17 @@ updated: 2026-07-02
 
 ## "As We May Think" (1945)
 
-전후, 과학자들이 파괴에서 **지식 접근성 향상**으로 방향을 돌려야 한다는 호소문입니다. 핵심 진단:
+전후, 과학자들이 파괴에서 **지식 접근성 향상**으로 방향을 돌려야 한다는 호소문입니다. 핵심 진단은 다음과 같습니다.
 
 > "When data of any sort are placed in storage, they are filed alphabetically or numerically, and information is found (when it is) by tracing it down from subclass to subclass."
 
-→ 알파벳·계층적 인덱싱은 인간 사고 방식과 맞지 않습니다. **연상적(associative) 연결**이 필요합니다.
+알파벳·계층적 인덱싱은 인간 사고 방식과 맞지 않습니다. **연상적(associative) 연결**이 필요합니다.
 
 ## Memex 구상
 
 마이크로필름 기반 책상 크기 장치입니다. 두 개의 뷰어 화면, 마이크로필름 상에 부호화된 점으로 항목을 연결합니다. 사용자는 임의의 두 항목 사이에 **trail(연상의 길)** 을 만들고 나중에 이름을 붙여 다시 호출할 수 있습니다 — 이것이 **하이퍼링크의 직접적 선조**입니다.
 
-자세한 개념 분리: [[concept-memex]]
+개념 자체는 [[concept-memex]]에서 자세히 다룹니다.
 
 ## 후세에 미친 영향
 
@@ -43,7 +43,7 @@ updated: 2026-07-02
 - **Ted Nelson** — Xanadu 프로젝트 / "hypertext" 용어의 출발점으로 As We May Think를 명시 인용했습니다.
 - **Tim Berners-Lee** — WWW 설계의 사상적 배경 중 하나입니다.
 
-→ 개인 컴퓨터·인터넷·위키피디아 자체를 예언한 글로 평가됩니다.
+이 때문에 개인 컴퓨터·인터넷·위키피디아를 예언한 글로 평가됩니다.
 
 ## LLM Wiki와의 관계
 

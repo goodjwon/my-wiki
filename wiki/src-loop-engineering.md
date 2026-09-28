@@ -16,7 +16,7 @@ updated: 2026-09-28
 
 ## 출처
 
-최초 입력은 외부 AI 어시스턴트가 전달한 **2차 정리본**(2026-06-13): `raw/ai-engineering/loop-engineering/loop-engineering-notes.md`. 이후 2026-06-29에 **1차 출처를 직접 검증**해 `raw/ai-engineering/loop-engineering/primary-sources.md`에 보존했다(아래 표의 출처·교정 반영).
+최초 입력은 외부 AI 어시스턴트가 전달한 **2차 정리본**(2026-06-13): `raw/ai-engineering/loop-engineering/loop-engineering-notes.md`. 이후 2026-06-29에 **1차 출처를 직접 검증**해 `raw/ai-engineering/loop-engineering/primary-sources.md`에 보존했습니다(아래 표의 출처·교정 반영).
 
 ## 무엇이 일어났는가
 
@@ -27,11 +27,11 @@ updated: 2026-09-28
 | **2026-06-07** | Addy Osmani | 미래의 방식일 수 있지만 초기 단계·회의적, **토큰 비용 절대 주의** | ✅ [블로그 원문](https://addyosmani.com/blog/loop-engineering/) 직접 확인 — 용어 명명 1차 글 |
 | 2026-06-11 | Sonar (P. Sarkar) | "검증 없는 루프는 단순 자동화" · "A failing build is a fact" | ✅ [블로그 원문](https://www.sonarsource.com/blog/loop-engineering-without-verification-is-just-automation/) 직접 확인 |
 
-> *Steinberger 게시물은 "2026-06-08·**650만 조회수**"로 회자됐으나, 이 날짜·조회수는 **2차 매체 주장이며 X 원본에서 직접 검증되지 않았다**. 본인은 Anthropic이 아니라 OpenAI 소속(OpenClaw 제작자). 다이어그램·저장소 링크 없이 개념만 던져진 채 일주일간 논쟁거리가 됨.
+> *Steinberger 게시물은 "2026-06-08·**650만 조회수**"로 회자됐으나, 이 날짜·조회수는 **2차 매체 주장이며 X 원본에서 직접 검증되지 않았습니다**. 본인은 Anthropic이 아니라 OpenAI 소속(OpenClaw 제작자)입니다. 다이어그램·저장소 링크 없이 개념만 던져진 채 일주일간 논쟁거리가 됐습니다.
 
 ## 한 줄 정의
 
-Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당신 자신'을 시스템으로 대체**하는 일.
+Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당신 자신'을 시스템으로 대체**하는 일입니다.
 
 ## 비유 — 주방 시스템
 
@@ -42,12 +42,7 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 
 ## 패러다임 진화 — 인간 노력의 '단위'
 
-| 시기 | 단위 | 패러다임 |
-|------|------|----------|
-| 초기 | 단어 | 프롬프트 엔지니어링 |
-| 2025 | 컨텍스트 | 컨텍스트 엔지니어링 |
-| 2026 초 | 환경 | 하네스 엔지니어링 |
-| **2026 중** | **메커니즘 그 자체** | **Loop 엔지니어링** |
+단어(프롬프트) → 컨텍스트 → 환경(하네스) → **메커니즘 그 자체(Loop, 2026 중)** 순으로 인간 노력의 단위가 올라갑니다. 전체 진화 표는 [[concept-graph-engineering]]을 참조합니다.
 
 → 자세한 의미·구조는 [[concept-loop-engineering]].
 → 직전 단계 비교는 [[concept-harness-engineering]].
@@ -63,12 +58,12 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 - **토큰 비용에 절대적으로 주의**: *"you absolutely have to be careful about token costs (usage patterns can vary wildly if you are token rich or poor)"*
 - **검증 책임은 여전히 사람에게**: *"Verification is still on you. A loop running unattended is also a loop making mistakes unattended."*
 - **서브에이전트는 토큰을 더 태운다**: *"spend them where a second opinion is worth paying for."*
-- 비용 폭증 경고는 [[src-copilot-token-pricing]]의 종량제 전환 맥락과 직결
+- 비용 폭증 경고는 [[src-copilot-token-pricing]]의 종량제 전환 맥락과 직결됩니다.
 
 ## 골격 — ReAct 패턴의 확장
 
 > 행동 → 환경 피드백 → 다음 행동 결정 → 종료 조건 충족까지 반복.
-> 대부분의 현대 에이전트 루프는 **Princeton + Google의 ReAct(Reason + Act)** 패턴에 뿌리.
+> 대부분의 현대 에이전트 루프는 **Princeton + Google의 ReAct(Reason + Act)** 패턴에 뿌리를 둡니다.
 
 ## 외부 1차 출처 (2026-06-29 검증)
 

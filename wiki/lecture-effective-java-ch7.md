@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 7장.md]
 created: 2026-06-20
-updated: 2026-07-05
+updated: 2026-09-28
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -548,5 +548,3 @@ long count = IntStream.rangeClosed(1, 1_000_000)
 ## 다음 장 예고 — 8장: 메서드
 
 `equals`/`hashCode`/`toString` 같은 객체의 공통 메서드(3장)는 다뤘으니, 8장은 **여러분이 직접 작성할 메서드**의 설계 원칙입니다 — 매개변수 검증, 방어적 복사, 시그니처 설계, 다중정의의 함정, 가변인수, `null`을 반환하지 마라, Optional 활용, 문서화 등 **API 표면을 다듬는 12개 아이템(Item 49~56)**.
-
-> 이어서 만들까요? (8장으로 진행 / 9장 일반적인 프로그래밍 원칙으로 점프 / 지금까지 만든 장들을 통합 교재로 묶기)

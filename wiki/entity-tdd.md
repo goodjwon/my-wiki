@@ -6,7 +6,7 @@ sources: [tdd/]
 external:
   - https://www.oreilly.com/library/view/test-driven-development/0321146530/
 created: 2026-06-20
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 테스트 주도 개발 — Kent Beck
@@ -23,7 +23,7 @@ Kent Beck 이 정리한 **TDD 의 원전**입니다. 화폐 예제 하나로 빨
 |------|----|
 | 저자 | Kent Beck (XP·JUnit 창시자) |
 | 원서 | *Test-Driven Development: By Example* (Addison-Wesley, 2002) |
-| 한국어판(추정) | *테스트 주도 개발* (인사이트, 2014, 김창준·강규영 옮김) |
+| 한국어판 | *테스트 주도 개발* (인사이트, 2014, 김창준·강규영 옮김) |
 | 분량 | 3부 32장 + 부록 A·B + 마치는 글 (Fowler) |
 | 언어 예제 | Java (1부), Python (2부) |
 | 관련작 | *XP Explained* (Beck), *Extreme Programming Adventures in C#* |
@@ -106,17 +106,9 @@ TDD 개발자는 코드를 짜기 전에 먼저 실패하는 테스트를 작성
 
 → **공통 원리**: 자동 사이클은 **거부 신호** 가 있어야 발산하지 않습니다. TDD 가 가장 오래된 사례입니다.
 
-## 5권 도서 오각형 — OO 설계 학습의 5권 세트
+## 5권 도서 오각형에서의 자리
 
-같은 OO/품질 결론을 5권이 서로 다른 단위·시점으로 가리킵니다.
-
-| 책 | 관점 | 단위 | 시점 | 언어 |
-|----|------|------|------|------|
-| [[entity-object]] *오브젝트* | 책임 주도 설계 (목적지) | 객체·협력·역할 | 처음부터 잘 설계 | Java |
-| [[entity-effective-java]] *Effective Java* | 90 권고 (매뉴얼) | 메서드·필드·생성자 | 매번 짤 때 | Java |
-| [[entity-refactoring]] *리팩터링 2판* | 카탈로그 (가는 길) | 1단계 변환 | 이미 짠 코드 | JS (2판) |
-| [[entity-clean-code]] *Clean Code* | 미시 규칙 + 휴리스틱 | 줄·이름·함수 | 매 라인 | Java |
-| **(이 책) [[entity-tdd]] *TDD*** | **사이클 (만드는 과정)** | **사이클 1회 (분)** | **코드 짜기 전** | **Java + Python** |
+5권의 관점·단위·시점 비교표(오각형)와 추천 학습 순서(*Clean Code* → *Effective Java* → *리팩터링* → *오브젝트* → *TDD*)는 [[guide-java-book-study-lab]] 한 곳에서 관리합니다.
 
 > ***TDD* 의 독특함**: 다른 4권이 코드의 **결과** (객체·메서드·줄·1단계 변환) 를 다룬다면, *TDD* 는 코드를 **만드는 과정** 자체를 다룹니다. 다른 4권은 "잘 쓰인 코드는 어떤 모습" 을 그리고, *TDD* 는 "그 모습에 어떻게 도달할까" 를 그립니다. 5권이 자연스럽게 한 세트입니다.
 
@@ -158,8 +150,8 @@ TDD 개발자는 코드를 짜기 전에 먼저 실패하는 테스트를 작성
 ## 관련 페이지
 
 - [[concept-tdd-laws-and-first]] — Clean Code 9장 관점의 3법칙 + F.I.R.S.T. (사이클 안의 거부 신호 패턴 공유)
-
 - [[src-tdd-lecture]] — 실전 강의 교재 통합 인덱스
+- [[guide-java-book-study-lab]] — 5권 오각형·추천 학습 순서·공통 실습 환경
 - [[entity-object]] — *오브젝트* (OO 설계 큰 그림)
 - [[entity-effective-java]] — *Effective Java* (Java 권고 90개)
 - [[entity-refactoring]] — *리팩터링* (개선 카탈로그)

@@ -4,7 +4,7 @@ type: source
 tags: [book, refactoring, fowler, lecture]
 sources: [refactoring/리팩터링 실전 강의 교재 1장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-28
 ---
 
 # 리팩터링 실전 강의 교재
@@ -485,5 +485,3 @@ public interface PerformanceCalculator {
 ## 다음 장 예고 — 2장: 리팩터링 원칙
 
 1장이 "맛보기 실습"이었다면, 2장은 그 원칙을 언어화합니다. **리팩터링의 정의, 두 개의 모자, 언제/왜 리팩터링하는가, YAGNI, 성능과의 관계**를 다룹니다. 1장에서 손으로 느낀 감각에 이론적 뼈대를 붙이는 장입니다.
-
-> 이어서 만들까요? (2장으로 진행 / 악취 카탈로그인 3장으로 점프 / 1장을 Java·Spring 버전으로 다시 써서 강의용으로 묶기)

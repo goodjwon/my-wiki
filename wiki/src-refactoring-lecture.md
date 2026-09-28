@@ -4,33 +4,25 @@ type: source
 tags: [book, refactoring, fowler, lecture, curriculum]
 sources: [refactoring/]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-09-28
 ---
 
 # 리팩터링 2판 실전 강의 교재 — 12장 인덱스
 
 ## 무엇인가
 
-Martin Fowler *리팩터링 2판(2018)* 의 **1~12장(예시·원칙·24 악취·테스트·카탈로그 보는 법·6~12장 카탈로그 약 66개 기법)** 을 Java/Spring 백엔드 입문~중급 수강생용 강의 교재로 풀어 쓴 자료. 총 **약 5,000줄**. 각 장마다:
+Martin Fowler *리팩터링 2판(2018)* 의 **1~12장(예시·원칙·24 악취·테스트·카탈로그 보는 법·6~12장 카탈로그 약 66개 기법)** 을 Java/Spring 백엔드 입문~중급 수강생용 강의 교재로 풀어 쓴 자료입니다. 총 **약 5,000줄**이며, 각 장은 다음 형식을 따릅니다.
 
 - 0. 도입 (학습 목표·큰 그림 ASCII·시그니처 비유·현업에서 왜 중요한가)
 - 본문 (각 절·기법 별 한 줄 정의 → 비유 → Before/After → 동기 → 절차 → 함정 → Spring 현업)
 - 종합 (결정 가이드 표 + 종합 체크리스트 + Q/A 분리 형식 퀴즈)
 - 다음 장 예고
 
-→ 책 카드는 [[entity-refactoring]].
+→ 책 카드는 [[entity-refactoring]]입니다.
 
 ## 실습 환경과 장별 루틴
 
-먼저 [[guide-java-book-study-lab]]의 Java 17 + JUnit 5 환경을 준비한다. 1장 JavaScript 예제는 Node.js로 실행해도 되고, Java로 옮겨도 된다. 리팩터링 강의의 핵심은 **작은 변경 뒤 테스트**다.
-
-각 기법은 같은 순서로 따라간다.
-
-1. Before 코드를 그대로 둔 채 자가 테스트를 먼저 만든다.
-2. 기법 이름을 확인한다. 예: 함수 추출, 변수 추출, 단계 쪼개기.
-3. 한 번에 한 단계만 바꾼다.
-4. 매 단계 테스트를 실행한다.
-5. After 코드가 “다음 기능을 넣기 쉬운 구조”인지 확인한다.
+실습 환경(Java 17 + JUnit 5)과 5권 공통 루틴(읽기 → 빨강 → 초록 → 정련 → 기록)은 [[guide-java-book-study-lab]]에 있습니다. 리팩터링 강의의 핵심은 **작은 변경 뒤 테스트**이며, 1장 JavaScript 예제는 Node.js로 실행하거나 Java로 옮겨 따라 해도 됩니다.
 
 ## 12편 인덱스 — 각 장 본문으로 바로 진입
 
@@ -58,7 +50,7 @@ Martin Fowler *리팩터링 2판(2018)* 의 **1~12장(예시·원칙·24 악취�
 
 > 대상: Java/Spring 백엔드 입문~중급
 > 형식: 개념 → 비유 → Before/After → 절차 → 함정 → 체크리스트 → 퀴즈
-> 전제: Java 17+, Spring Boot 3.x
+> 전제: Java 17+, Spring Boot 4.x (start.spring.io 기본값)
 
 ## 0. 이 장을 시작하기 전에
   0.1 학습 목표
@@ -121,7 +113,7 @@ Martin Fowler *리팩터링 2판(2018)* 의 **1~12장(예시·원칙·24 악취�
 5. **CQS·불변 우선** (11·12장)
 6. **상속보다 합성** (12.10·12.11)
 
-→ 90 권고 *Effective Java* 6원칙, 9 메시지 *오브젝트* 와 결합하면 OO 설계 큰 그림이 완성.
+→ *Effective Java*의 6원칙, *오브젝트*의 9 메시지와 결합하면 OO 설계의 큰 그림이 완성됩니다.
 
 ## 활용 가이드
 
@@ -144,17 +136,17 @@ Martin Fowler *리팩터링 2판(2018)* 의 **1~12장(예시·원칙·24 악취�
 - [[concept-transactional-rollback-policy]] — 예외 처리와 직결
 - [[concept-db-connection-pool]] — try-with-resources 패턴
 - [[src-spring-testing-ref]] — 4장 자가 테스트 실무
-- [[guide-java-book-study-lab]] — 5권 공통 실습 환경
 
 ## 한계·주의
 
-- **사용자 강사용 내부 교재** 성격 — 인용·재배포 전 확인 필요
-- **Java 17 + Spring Boot 3.x** 가정
-- 책 본문 자체는 raw에 미보유 — **교재 본문이 책의 직접 인용은 아님** (강의용 재구성)
-- 22~23 같은 일부 절차는 책 원본보다 단순화될 수 있음 — 실무 적용 시 책 본문 직접 확인 권장
+- **사용자 강사용 내부 교재** 성격입니다 — 인용·재배포 전에 확인합니다
+- **Java 17+** 가정 — 각 장 본문의 전제 환경 표기는 Spring Boot 3.x이며, 현재 기준(Spring Boot 4.x)과 다른 부분은 조정해 읽습니다
+- 책 본문 자체는 raw에 보유하지 않습니다 — **교재 본문은 책의 직접 인용이 아닌** 강의용 재구성입니다
+- 일부 절차는 책 원본보다 단순화되어 있을 수 있습니다 — 실무에 적용할 때는 책 본문을 직접 확인합니다
 
 ## 관련 페이지
 
 - [[entity-refactoring]] — 책 카드 (상위)
 - [[entity-effective-java]] / [[src-effective-java-lecture]] — 같은 패턴의 자매 강의 교재
 - [[entity-object]] — *오브젝트* (같은 OO 주제, 다른 관점)
+- [[guide-java-book-study-lab]] — 5권 오각형·추천 학습 순서·공통 실습 환경

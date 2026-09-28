@@ -5,7 +5,7 @@ tags: [local-first, append-only, event-sourcing, derived-state, tombstone, timez
 sources:
   - workout-history/TECH_NOTES.md
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-28
 ---
 
 # Local-first + Append-only — 기록이 진실, 나머지는 파생
@@ -99,7 +99,7 @@ test('자정 직전 기록과 직후 기록은 다른 날', () {
 | **이 페이지** | "하루 = UTC 날짜" 또는 "서버 시각" | 자정·타임존 경계에서 스트릭 오판 | 저장은 UTC, 판정은 로컬 자정, 시계는 단일 seam으로 주입 |
 | [[concept-id-reference-vs-object-reference]] | JPA 객체 참조 | 트랜잭션 번짐·N+1 | 경계 밖은 ID 참조 |
 | [[concept-cronjob-concurrency-trap]] | `concurrencyPolicy` 기본 `Allow` | 중복 실행 | `Forbid` + `activeDeadlineSeconds` |
-| [[concept-db-connection-pool]] | 무한 수명 커넥션 | DB `wait_timeout`과 충돌 | `maxLifetime` < `wait_timeout` |
+| [[concept-db-connection-pool]] | 커넥션이 계속 유효하다는 가정 (`maxLifetime`이 인프라 idle 제한보다 김) | DB·방화벽이 먼저 끊은 커넥션 대여 | `maxLifetime` < 가장 짧은 인프라 제한 + `keepaliveTime` |
 
 ## 같은 인사이트 패턴 — "진실은 하나, 나머지는 파생"
 

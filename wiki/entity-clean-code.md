@@ -6,7 +6,7 @@ sources: [clean-code/toc.md]
 external:
   - https://www.oreilly.com/library/view/clean-code/9780136083238/
 created: 2026-06-20
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # Clean Code — 깨끗한 코드를 어떻게 알아보고 만드는가
@@ -23,7 +23,7 @@ Robert C. Martin(Uncle Bob)이 정리한 **코드를 "깨끗하게" 만드는 �
 |------|----|
 | 저자 | Robert C. Martin (Uncle Bob) — 공동저자 다수 (Michael Feathers, Tim Ottinger, Jeff Langr, Brett Schuchert, Kyle Brown 등) |
 | 원서 | *Clean Code: A Handbook of Agile Software Craftsmanship* (Prentice Hall, 2008) |
-| 한국어판(추정) | *클린 코드 — 애자일 소프트웨어 장인 정신* (인사이트, 2013, 박재호·이해영 옮김) |
+| 한국어판 | *클린 코드 — 애자일 소프트웨어 장인 정신* (인사이트, 2013, 박재호·이해영 옮김) |
 | 분량 | 17장 + 부록 A·B·C, 약 580페이지 |
 | 언어 예제 | Java (전반), JUnit·log4j 사례 |
 | 후속작 | *The Clean Coder*(2011, 태도·전문성), *Clean Architecture*(2017, 아키텍처), *Clean Agile*(2019) |
@@ -101,7 +101,7 @@ Robert C. Martin(Uncle Bob)이 정리한 **코드를 "깨끗하게" 만드는 �
 | 17장 휴리스틱 G25 (매직 숫자→상수) | 17장 | [[entity-refactoring]] 9.6 |
 | 17장 휴리스틱 N1 (서술적 이름) | 17장 | [[entity-refactoring]] 6.5·6.7 |
 
-→ **신규 concept 후보 3개**(작명 규약·TDD 3법칙·단순한 설계 4규칙)는 본문 노트가 입력되면 ingest합니다. 백로그에 등록되어 있습니다.
+→ 이 책에서 파생된 전용 concept 페이지는 [[concept-naming-conventions]]·[[concept-tdd-laws-and-first]]·[[concept-simple-design-rules]]입니다.
 
 ## 같은 인사이트 패턴 — "사람이 읽기 위한 코드"
 
@@ -121,34 +121,11 @@ Clean Code 전반을 관통하는 원리: **코드의 1차 독자는 컴파일�
 
 → **공통 원리**: **암묵 < 명시**. 가독성·안전성·진화 가능성은 모두 "다음에 보는 사람이 한 번에 알 수 있는가"에 달려 있습니다.
 
-## 5권 도서 오각형 — OO 설계 학습의 5권 세트
+## 5권 도서 오각형에서의 자리
 
-같은 OO/품질 결론을 5권이 서로 다른 단위·시점으로 가리킵니다.
-
-| 책 | 관점 | 단위 | 시점 | 언어 |
-|----|------|------|------|------|
-| [[entity-object]] *오브젝트* | 책임 주도 설계 (목적지) | 객체·협력·역할 | 처음부터 잘 설계 | Java |
-| [[entity-effective-java]] *Effective Java* | 90 권고 (매뉴얼) | 메서드·필드·생성자 | 매번 짤 때 | Java |
-| [[entity-refactoring]] *리팩터링 2판* | 카탈로그 (가는 길) | 1단계 변환 | 이미 짠 코드 | JS (2판) |
-| **(이 책) [[entity-clean-code]] *Clean Code*** | **미시 규칙 + 휴리스틱** | **줄·이름·함수** | **매 라인** | **Java** |
-| [[entity-tdd]] *TDD* | 사이클 (만드는 과정) | 사이클 1회 (분) | 코드 짜기 전 | Java + Python |
+5권의 관점·단위·시점 비교표(오각형)와 추천 학습 순서(*Clean Code* → *Effective Java* → *리팩터링* → *오브젝트* → *TDD*)는 [[guide-java-book-study-lab]] 한 곳에서 관리합니다.
 
 > ***Clean Code* 의 자리** : OO 원칙을 **줄·이름·함수 단위 가독성** + 17장 휴리스틱으로 정형화합니다. 다른 4권이 객체 (오브젝트), 메서드·필드 (EJ), 1단계 변환 (리팩터링), 1사이클 (TDD) 이라면 *Clean Code* 는 **가장 작은 단위인 줄·이름 + 매 라인 적용**입니다.
-
-**누구에게**:
-- *오브젝트* — 3~10년차 설계자
-- *Effective Java* — 1~5년차 권고
-- *리팩터링* — 레거시 다루는 사람
-- ***Clean Code*** — **신입~3년차 가독성 (가장 빠른 효과)**
-- *TDD* — 테스트 안 짜는 습관 깨고 싶은 모두
-
-**추천 학습 순서** (5권 전체):
-1. ***Clean Code* 2·3·4·10장** — 줄·이름·함수·클래스의 기본기 (가장 빠른 효과)
-2. *Effective Java* 2·3·8·10장 — Java 권고 90 개
-3. *리팩터링* 3장 (24 악취) + 6장 (기본) — 기존 코드 개선 어휘
-4. *오브젝트* 1~5장 — OO 설계 큰 그림
-5. *TDD* 1·2부 — 테스트가 설계 끌어내기
-6. 5권 교차 참조
 
 ## 누구에게·언제 권할 책인가
 
@@ -192,6 +169,7 @@ Clean Code 전반을 관통하는 원리: **코드의 1차 독자는 컴파일�
 ## 관련 페이지
 
 - [[src-clean-code-lecture]] — 실전 강의 교재 17장 통합 인덱스 (각 장 본문 진입)
+- [[guide-java-book-study-lab]] — 5권 오각형·추천 학습 순서·공통 실습 환경
 - [[entity-object]] — *오브젝트* (OO 설계 큰 그림)
 - [[entity-effective-java]] — *Effective Java* (Java 권고 90개)
 - [[entity-refactoring]] — *리팩터링 2판* (코드 개선 카탈로그)

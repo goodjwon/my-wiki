@@ -292,17 +292,15 @@ cd ~ && rm -rf ~/loop-demo
 
 ## 같은 인사이트 패턴 — "거부 신호 없는 자동화는 폭주한다"
 
-이 실습이 보여준 원리는 위키 전반에 반복됩니다 ([[concept-loop-engineering]] 에 누적):
+이 실습과 직접 맞닿은 행만 추렸습니다.
 
 | 영역 | 폭주 시나리오 | 거부 메커니즘 | 참조 |
 |------|---------------|---------------|------|
 | **AI 루프** | 검증 없이 자기 출력에 동의 → 메아리방 | 테스트·타입체크를 루프 안에 (이 실습) | [[concept-loop-engineering]] |
 | **Hooks** | 위험 명령 자유 실행 → 사고 | `guard.sh` exit 2 → 도구 차단 | [[concept-claude-hooks]] |
-| **멀티 에이전트** | 단일 에이전트 자기검증 통과 편향 | Critic 의 `CONDITIONAL REJECT` | [[concept-multi-agent-pattern]] |
-| **선언 층** | 부정 명령이 잊힘 | STOP 트리거 → 명시적 중단 조건 | [[concept-claude-md]] |
 | **그래프 엔지니어링** | 프롬프트 지시("3회만 재시도")를 LLM이 무시 | 재시도 상한을 코드로 강제 (이 실습의 `seq 1 8`과 같은 원리) | [[concept-graph-engineering]] |
 
-전체 누적 표(TDD·크론잡·Keep-Alive 포함)는 [[concept-loop-engineering]] 에 있습니다.
+전체 표(멀티 에이전트·선언 층·TDD·크론잡 포함)는 [[concept-loop-engineering]]에 있습니다.
 
 → **공통 원리**: 자동 사이클에는 반드시 **밀어내는 신호(reject·timeout·exit code)** 가 짝지어 있어야 합니다.
 

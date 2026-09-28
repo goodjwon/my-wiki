@@ -7,7 +7,7 @@ external:
   - https://www.oreilly.com/library/view/effective-java-3rd/9780134686097/
   - https://ekis.github.io/effective-java-3rd-edition
 created: 2026-06-20
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # Effective Java — 자바를 "잘" 쓰는 90가지 원칙
@@ -46,7 +46,7 @@ Joshua Bloch(JDK 컬렉션·`java.lang` 핵심 설계자)가 자바 API를 만�
 | 5 | **합성 > 상속** | Item 18(상속 대신 컴포지션), 87(커스텀 직렬화), 4장 |
 | 6 | **측정 후 최적화** | Item 48(병렬 스트림), 67(최적화는 신중히) |
 
-90개 아이템 중 어느 하나를 잊어도 이 6가지를 체화하면 90%를 가져갑니다.
+90개 아이템 중 어느 하나를 잊어도 이 6가지를 체화하면 80%를 가져갑니다.
 
 ## 12장 흐름
 
@@ -92,26 +92,18 @@ Joshua Bloch(JDK 컬렉션·`java.lang` 핵심 설계자)가 자바 API를 만�
 | **85** | 자바 직렬화의 대안을 찾으라 | RCE 취약점의 근원 — JSON/Protobuf 우선 |
 | **90** | 직렬화 프록시 사용을 검토하라 | 어쩔 수 없는 자바 직렬화의 최선 |
 
-## 5권 도서 오각형 — OO 설계 학습의 5권 세트
+## 5권 도서 오각형에서의 자리
 
-같은 OO/품질 결론을 5권이 서로 다른 단위·시점으로 가리킵니다.
+5권의 관점·단위·시점 비교표(오각형)와 추천 학습 순서(*Clean Code* → *Effective Java* → *리팩터링* → *오브젝트* → *TDD*)는 [[guide-java-book-study-lab]] 한 곳에서 관리합니다.
 
-| 책 | 관점 | 단위 | 시점 | 언어 |
-|----|------|------|------|------|
-| [[entity-object]] *오브젝트* | 책임 주도 설계 (목적지) | 객체·협력·역할 | 처음부터 잘 설계 | Java |
-| **(이 책) [[entity-effective-java]] *Effective Java*** | **90 권고 (매뉴얼)** | **메서드·필드·생성자** | **매번 짤 때** | **Java** |
-| [[entity-refactoring]] *리팩터링 2판* | 카탈로그 (가는 길) | 1단계 변환 | 이미 짠 코드 | JS (2판) |
-| [[entity-clean-code]] *Clean Code* | 미시 규칙 + 휴리스틱 | 줄·이름·함수 | 매 라인 | Java |
-| [[entity-tdd]] *TDD* | 사이클 (만드는 과정) | 사이클 1회 (분) | 코드 짜기 전 | Java + Python |
-
-> ***Effective Java* 의 자리** : OO 원칙을 **Java 매일의 메서드·필드 권고** 90 개로 정형화. 다른 4권이 객체 단위 (오브젝트), 1단계 변환 (리팩터링), 1줄 (Clean Code), 1사이클 (TDD) 이라면 *Effective Java* 는 **메서드·필드 단위의 표준 매뉴얼**.
+> ***Effective Java* 의 자리** : OO 원칙을 **Java 매일의 메서드·필드 권고** 90 개로 정형화합니다. 다른 4권이 객체 단위 (오브젝트), 1단계 변환 (리팩터링), 1줄 (Clean Code), 1사이클 (TDD) 이라면 *Effective Java* 는 **메서드·필드 단위의 표준 매뉴얼**입니다.
 
 ## 위키 기존 페이지와의 매핑
 
 | Effective Java 주제 | 장·Item | 위키 기존 페이지 |
 |---------------------|---------|------------------|
 | OOP 4원칙 (캡슐화·상속·다형성·추상화) | 2·4·12장 | [[concept-oop]] |
-| 디자인 패턴 (Factory/Builder/Strategy/Template) | 2·5·15장 | [[concept-design-patterns]] |
+| 디자인 패턴 (Factory/Builder/Strategy/Template Method) | 2·4·7장 (Item 1·2·20·42) | [[concept-design-patterns]] |
 | Spring DI = Item 5 의존성 주입 | Item 5 | [[concept-spring-core]] |
 | try-with-resources = Item 9 | Item 9 | [[concept-db-connection-pool]] (HikariCP getConnection 패턴) |
 | 책임 주도 설계 + 합성 > 상속 | Item 18 | [[entity-object]] (11장 합성과 유연한 설계) |
@@ -122,7 +114,7 @@ Joshua Bloch(JDK 컬렉션·`java.lang` 핵심 설계자)가 자바 API를 만�
 | 한정적 와일드카드 (PECS) | Item 31 | [[concept-generics-pecs]] |
 | 자바 직렬화 RCE | Item 85·88·90 | [[concept-java-serialization-risk]] |
 
-→ **신규 concept 후보 4개** — 본문 노트·실무 사례 입력 시 ingest. 백로그 등록.
+→ 이 책의 아이템을 실무 사례로 풀어낸 전용 concept 페이지는 [[concept-jpa-enum-mapping]]·[[concept-functional-interfaces]]·[[concept-generics-pecs]]·[[concept-java-serialization-risk]]입니다.
 
 ## 같은 인사이트 패턴 — "공개 API는 영원하다"
 
@@ -151,7 +143,7 @@ Effective Java 전반을 관통하는 또 하나의 원칙: **한 번 공개된 
 | 누구에게 | 1~5년차 자바 개발자 | 3~10년차 설계·리뷰어 |
 | 함께 읽으면 | "각 메서드·필드를 어떻게" | "왜 그렇게 객체를 나눠야" |
 
-> **추천 순서**: 신입~1년차는 *Effective Java* 2·3·8·10장 발췌 → 3~5년차에 *오브젝트* 1~5장 → 그 뒤 두 책 교차 참조.
+> **읽는 순서**: 두 책을 포함한 5권 전체의 추천 학습 순서는 [[guide-java-book-study-lab]]에 있습니다.
 
 ## 누구에게·언제 권할 책인가
 
@@ -176,10 +168,10 @@ Effective Java 전반을 관통하는 또 하나의 원칙: **한 번 공개된 
 
 ## 한계·주의
 
-- **자바 7~9 기준**이라 record(Java 14+)·sealed class(Java 17+)·pattern matching 같은 신문법은 안 다룸. 단, 권고 원칙 자체는 그대로 유효.
-- **함수형 강조 부족**: 7장(람다·스트림)이 있지만, Scala/Kotlin 수준의 함수형 사고는 다른 책으로 보완 필요.
-- **현업 풀스택 관점 부족**: API 설계 관점이라 분산 시스템·MSA·관측성은 다른 책 영역.
-- **90개를 다 외울 필요 없다**: 위 "6원칙"과 "⭐ 현업 최핵심 20개"가 80%.
+- **자바 7~9 기준**이라 record(Java 14+)·sealed class(Java 17+)·pattern matching 같은 신문법은 다루지 않습니다. 단, 권고 원칙 자체는 그대로 유효합니다.
+- **함수형 강조 부족**: 7장(람다·스트림)이 있지만, Scala/Kotlin 수준의 함수형 사고는 다른 책으로 보완해야 합니다.
+- **현업 풀스택 관점 부족**: API 설계 관점이라 분산 시스템·MSA·관측성은 다른 책의 영역입니다.
+- **90개를 다 외울 필요는 없습니다**: 위 6원칙과 ⭐ 현업 최핵심 20개가 80%를 가져갑니다.
 
 ## 원본 출처
 
@@ -189,6 +181,7 @@ Effective Java 전반을 관통하는 또 하나의 원칙: **한 번 공개된 
 ## 관련 페이지
 
 - [[src-effective-java-lecture]] — 강의 교재 11장 인덱스 (각 장 본문 링크)
+- [[guide-java-book-study-lab]] — 5권 오각형·추천 학습 순서·공통 실습 환경
 - [[entity-object]] — *오브젝트* (한국어 OO 설계 표준, 같은 주제 다른 관점)
 - [[entity-refactoring]] — *리팩터링 2판* (90 아이템이 매일 짤 때의 권고라면, 리팩터링은 이미 짠 코드의 카탈로그)
 - [[entity-clean-code]] — *Clean Code* (90 권고가 Java 메서드·필드 단위라면, Clean Code 는 줄·이름·함수 단위 가독성)

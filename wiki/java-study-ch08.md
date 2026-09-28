@@ -682,7 +682,7 @@ Spring Security 문서를 읽다 보면 `Authentication`, `Principal`, `Security
 | `AuthenticationManager` | 자격(이메일/비밀번호)을 검증하는 관문 | 로그인 요청에서 인증 수행 |
 | `SecurityContextHolder` | 현재 요청의 인증 객체 보관소 | 검증 끝난 `Authentication` 저장·조회 |
 | `SecurityFilterChain` | 요청이 통과하는 보안 필터들의 사슬 | 모든 보호 요청이 지나감 |
-| `AuthenticationFilter`(JWT) | 요청의 토큰을 읽어 `Authentication` 재구성 | 보호 API 요청마다 |
+| `AuthenticationFilter`(JWT) | 요청의 토큰을 읽어 `Authentication` 재구성 | 보호 API의 모든 요청 |
 
 #### 참고 — 실무 저장소에서 특히 구분할 용어
 

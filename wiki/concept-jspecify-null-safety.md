@@ -13,7 +13,7 @@ updated: 2026-09-28
 
 # JSpecify Null Safety
 
-Java의 **null 안전성 표준** — `null` 가능 여부를 어노테이션으로 명시하여 컴파일러·정적 분석 도구·Kotlin이 NPE를 사전에 잡게 한다. Spring Framework 7.0이 기존 JSR 305를 버리고 JSpecify로 전면 마이그레이션.
+Java의 **null 안전성 표준** — `null` 가능 여부를 어노테이션으로 명시하여 컴파일러·정적 분석 도구·Kotlin이 NPE를 사전에 잡게 합니다. Spring Framework 7.0이 기존 JSR 305를 버리고 JSpecify로 전면 마이그레이션했습니다.
 
 - **공식**: https://jspecify.dev/
 - **GitHub**: https://github.com/jspecify/jspecify

@@ -2001,7 +2001,7 @@ for (String name : names) {
 | 에러 메시지 | 원인 → 확인할 것 |
 |------------|----------------|
 | `Note: ... uses unchecked or unsafe operations.` 경고 | raw type 사용(`List list = new ArrayList()`) → 제네릭 타입 파라미터를 명시(`List<String>`) |
-| `IllegalStateException: stream has already been operated upon or closed` | 최종 연산이 끝난 스트림 변수를 다시 사용 → 스트림은 1회용, `list.stream()`으로 새로 연다 |
+| `IllegalStateException: stream has already been operated upon or closed` | 최종 연산이 끝난 스트림 변수를 다시 사용 → 스트림은 1회용, `list.stream()`으로 새로 엽니다 |
 | `ConcurrentModificationException` | for-each 순회 도중 같은 컬렉션에 add/remove → `Iterator.remove()` 또는 `removeIf()`로 교체 |
 | `Could not find or load main class dev.wonslab.ch03...` | `-Dexec.mainClass` 오타 또는 `dev.wonslab.ch03.` 접두 누락 → 리드인의 파일명(= 클래스명)과 대조 |
 

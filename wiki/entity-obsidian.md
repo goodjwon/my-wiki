@@ -5,7 +5,7 @@ tags: [도구, PKM, 에디터, 마크다운]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://obsidian.md]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Obsidian
@@ -17,16 +17,16 @@ updated: 2026-07-02
 
 ## 플랫폼
 
-Windows · macOS · Linux · iOS · Android (전 플랫폼 동일 vault 사용 가능, Sync 사용 시)
+Windows · macOS · Linux · iOS · Android를 지원합니다. Sync를 사용하면 모든 플랫폼에서 같은 vault를 쓸 수 있습니다.
 
 ## 핵심 기능
 
 | 기능 | 설명 |
 |------|------|
-| **로컬 평문 저장** | vault = 로컬 디렉터리. 모든 노트는 `.md` 파일. 앱이 없어도 다른 에디터에서 열림 |
-| **Wikilinks** `[[]]` | 페이지명만으로 연결. 페이지 이동/이름 변경 시 링크 자동 갱신 |
-| **Backlinks** | 어떤 페이지가 현재 페이지를 가리키는지 자동 추적 |
-| **Graph View** | 위키 전체 연결 구조 시각화. 허브·고아 페이지 식별 |
+| **로컬 평문 저장** | vault는 로컬 디렉터리이고 모든 노트는 `.md` 파일입니다. 앱이 없어도 다른 에디터에서 열립니다 |
+| **Wikilinks** `[[]]` | 페이지명만으로 연결합니다. 페이지를 옮기거나 이름을 바꾸면 링크가 자동 갱신됩니다 |
+| **Backlinks** | 어떤 페이지가 현재 페이지를 가리키는지 자동으로 추적합니다 |
+| **Graph View** | 위키 전체 연결 구조를 시각화해 허브·고아 페이지를 찾게 해 줍니다 |
 | **Canvas** | 무한 화이트보드 (브레인스토밍, 다이어그램) |
 | **플러그인 생태계** | 커뮤니티 플러그인 수천 개 — [[entity-dataview]], [[entity-marp]] 등 |
 | **테마** | 커뮤니티 테마 다수 |
@@ -40,12 +40,12 @@ Windows · macOS · Linux · iOS · Android (전 플랫폼 동일 vault 사용 �
 
 ## LLM Wiki에서의 역할
 
-[[src-llm-wiki-pattern|LLM Wiki 패턴]]에서 Obsidian은 **위키 뷰어**:
+[[src-llm-wiki-pattern|LLM Wiki 패턴]]에서 Obsidian은 **위키 뷰어** 역할을 합니다.
 
 > "Obsidian is the IDE; the LLM is the programmer; the wiki is the codebase."
 > — `raw/ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md`
 
-LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서 실시간으로 결과를 봅니다 — 링크 따라가기, 그래프 뷰 확인, 페이지 읽기.
+LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서 실시간으로 결과를 봅니다. 링크를 따라가고, 그래프 뷰를 확인하고, 페이지를 읽습니다.
 
 ## 위키 운영에 유용한 기능
 
@@ -58,15 +58,14 @@ LLM이 vault의 마크다운을 직접 편집하고, 사용자는 Obsidian에서
 ## 설정 팁
 
 - **첨부파일 경로 고정**: Settings → Files and links → "Attachment folder path" = `raw/assets/`
-- **이미지 일괄 다운로드 핫키**: Settings → Hotkeys → "Download" 검색 → 핫키 바인딩 (예: `Ctrl+Shift+D`)
-- → 클리핑 후 핫키 한 번으로 이미지가 로컬에 저장됩니다. LLM이 직접 이미지를 참조할 수 있습니다.
-- **파일 명령 제약**: 한글 파일명/공백 포함 파일명은 OS·도구별 호환성에 주의
+- **이미지 일괄 다운로드 핫키**: Settings → Hotkeys → "Download" 검색 → 핫키 바인딩 (예: `Ctrl+Shift+D`). 클리핑 후 핫키 한 번으로 이미지가 로컬에 저장되어 LLM이 직접 참조할 수 있습니다.
+- **파일 명령 제약**: 한글 파일명·공백 포함 파일명은 OS·도구별 호환성에 주의합니다.
 
 ## 철학
 
-- **Privacy** — 데이터가 본인 디스크에만 있음
-- **Longevity** — 평문 마크다운은 앱이 사라져도 읽을 수 있음 ("file over app")
-- **Flexibility** — 코어는 미니멀, 플러그인으로 확장
+- **Privacy** — 데이터가 본인 디스크에만 있습니다.
+- **Longevity** — 평문 마크다운은 앱이 사라져도 읽을 수 있습니다 ("file over app").
+- **Flexibility** — 코어는 최소한으로 두고 플러그인으로 확장합니다.
 
 ## 원본 출처
 

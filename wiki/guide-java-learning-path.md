@@ -9,111 +9,30 @@ updated: 2026-09-28
 
 # Java 학습 경로 — 3단계 로드맵
 
-> [[src-java-study-2024-2025]]의 원본 교재를 **"언어 → 프레임워크 → 고급"** 세 단계로 재구성했습니다. 챕터 본문은 위에서 아래로 읽는 레퍼런스이고, 트랙(학습 코스)은 같은 내용을 실습 과제로 손에 익히는 동선입니다.
+> [[src-java-study-2024-2025]]의 원본 교재를 **"언어 → 프레임워크 → 고급"** 세 단계로 재구성했습니다. 앞 단계가 뒷 단계의 전제이므로 [[java-study-ch00]]의 안내부터 순서대로 따라갑니다.
 
-**학습 원칙**: 문법을 외우는 게 아니라 **왜 그렇게 동작하는지 설명**할 수 있는 상태를 목표로 합니다. 각 트랙 끝의 실습으로 굳힙니다.
+**역할 구분**: 챕터는 주제별 본문(찾아보기·순서대로 읽기 모두 가능)이고, 트랙은 같은 내용을 손에 익히는 실습 중심 학습 동선입니다.
 
----
-
-## 🗺️ 3단계 한눈에
-
-세 단계는 순수 언어에서 시작해, 그 위에 프레임워크를 얹고, 마지막에 품질과 성능으로 마감하는 선형 흐름입니다.
-
-```
-1단계 Java Core ──> 2단계 Spring & 웹 ──> 3단계 고급·품질
- (언어 기초 체력)     (웹 애플리케이션)       (테스트·성능)
-```
-
-순수 Java로 객체지향과 입출력까지 다진 다음(1단계), Spring으로 웹을 만들고 DB를 연동하며(2단계), 테스트와 JVM 튜닝으로 견고하게 마무리합니다(3단계). 앞 단계가 뒷 단계의 전제이므로 건너뛰지 말고 순서대로 따라갑니다.
+**학습 원칙**: 문법을 외우는 게 아니라 **왜 그렇게 동작하는지 설명**할 수 있는 상태를 목표로 합니다. 각 트랙 끝의 실습으로 굳히고, 실습은 빨강→초록→리팩터(TDD) 흐름으로 진행합니다.
 
 ---
 
-## 1단계 — Java Core
+## 🗺️ 단계 ↔ 챕터 ↔ 트랙 ↔ 마무리 실습
 
-프레임워크 없이 순수 Java 언어로 기초 체력을 다집니다. 문법·객체지향·예외·입출력까지 여기서 끝냅니다.
+| 단계 | 챕터 | 트랙(학습 코스) | 마무리 실습(과제) |
+|------|------|----------------|------------------|
+| 1단계 Java Core | [[java-study-ch01]] 환경과 실행 · [[java-study-ch02]] Java 문법과 객체 · [[java-study-ch03]] 컬렉션과 함수형 | [[guide-java-track1-basics]] | 챕터 실전문제 (2.9·3.8) |
+| 1단계 Java Core | [[java-study-ch04]] 객체지향 설계와 패턴 (+ [[java-study-ch10]] JVM과 성능) | [[guide-java-track2-design]] | 🧪 [[guide-java-practice-core]] |
+| 1단계 Java Core | [[java-study-ch05]] 입출력과 네트워크 | [[guide-java-track3-io-network]] | 챕터 실전문제 (5.8·5.9) |
+| 2단계 Spring & 웹 | [[java-study-ch06]] Spring과 프로젝트 실행 · [[java-study-ch07]] 데이터 접근과 SQL · [[java-study-ch08]] 서버와 인증 (+ [[java-study-ch09]] 테스트와 품질) | [[guide-java-track4-spring-web]] | 🧪 [[guide-java-practice-spring-library]] |
+| 3단계 고급·품질 | [[java-study-ch09]] 테스트와 품질 · [[java-study-ch10]] JVM과 성능 · [[java-study-ch11]] 부록 | [[guide-java-track5-deep-dive]] | 🧪 [[guide-java-practice-layered-quotation]] |
 
-| 챕터 | 무엇을 |
-|------|--------|
-| [[java-study-ch01]] 환경과 실행 | JDK·빌드·실행 흐름 |
-| [[java-study-ch02]] Java 문법과 객체 | 문법·클래스·객체 |
-| [[java-study-ch03]] 컬렉션과 함수형 | List/Map·람다·스트림 |
-| [[java-study-ch04]] 객체지향 설계와 패턴 | OOP 원칙·디자인 패턴 |
-| [[java-study-ch05]] 입출력과 네트워크 | 예외·파일 I/O·소켓 |
-
-🛠 **실습**: 🧪 과제 1 주문 처리 콘솔 앱 · 파일 처리 실전문제
-
----
-
-## 2단계 — Spring & 웹 백엔드
-
-Spring으로 웹 애플리케이션을 만들고 데이터베이스를 연동합니다. 1단계의 객체지향이 여기서 컨테이너·계층 구조로 확장됩니다.
-
-| 챕터 | 무엇을 |
-|------|--------|
-| [[java-study-ch06]] Spring과 프로젝트 실행 | IoC·DI·Bean·MVC·부트 |
-| [[java-study-ch07]] 데이터 접근과 SQL | JDBC·JPA·SQL |
-| [[java-study-ch08]] 서버와 인증 | 웹 서버·인증/인가 |
-
-🛠 **실습**: 🧪 과제 2 도서 대여 REST API
-
----
-
-## 3단계 — 고급·품질
-
-테스트와 성능으로 코드를 견고하게 만듭니다. 2단계까지 만든 애플리케이션을 검증하고 최적화하는 단계입니다.
-
-| 챕터 | 무엇을 |
-|------|--------|
-| [[java-study-ch09]] 테스트와 품질 | 단위 테스트·TDD |
-| [[java-study-ch10]] JVM과 성능 | 메모리·GC·튜닝 |
-| [[java-study-ch11]] 부록 | 워크북·심화 자료 |
-
-🛠 **실습**: 🧪 과제 3 견적·계약 업무
-
----
-
-## 🧭 본문 학습 순서
-
-챕터 본문은 번호순(ch00 → ch01 → … → ch11)으로 "다음 장" 링크가 이어지며, 그 번호가 곧 학습 순서입니다:
-
-```
-환경 → 문법·객체 → 컬렉션·함수형 → 객체지향 설계 → 입출력·네트워크
-   → Spring → 데이터·SQL → 서버·인증
-   → 테스트 → JVM·성능 → 부록
-```
-
-[[java-study-ch00]]의 안내부터 시작해 위 순서대로 읽으면 1단계 → 2단계 → 3단계가 자연스럽게 이어집니다.
-
----
-
-## 📚 학습 코스(트랙)와의 관계
-
-3단계가 **지식 계층**(무엇에 속하나)이라면, T1~T5 트랙은 **실습 중심 학습 동선**(어떻게 손에 익히나)입니다. 처음 배우는 사람은 트랙을 따라가고, 필요한 주제를 레퍼런스로 찾을 땐 3단계 본문을 쓰면 됩니다.
-
-| 학습 코스(트랙) | 해당 단계 | 마무리 실습 |
-|------|----------|----------|
-| [[guide-java-track1-basics]] — Java 기초 다지기 | 1단계 | 챕터 실전문제 (2.9·3.8) |
-| [[guide-java-track2-design]] — 객체지향 설계로 응용 | 1단계(설계) + 3단계(JVM 성능) | 🧪 [[guide-java-practice-core]] |
-| [[guide-java-track3-io-network]] — 입출력과 네트워크 | 1단계 | 챕터 실전문제 (5.8·5.9) |
-| [[guide-java-track4-spring-web]] — Spring 웹 애플리케이션 | 2단계 + 3단계(테스트) | 🧪 [[guide-java-practice-spring-library]] |
-| [[guide-java-track5-deep-dive]] — 심화·워크북·종합 | 3단계 | 🧪 [[guide-java-practice-layered-quotation]] |
-
-> 트랙 T2·T4가 두 단계에 걸치는 이유는, 학습 동선상 설계 트랙에서 JVM을, Spring 트랙에서 테스트를 함께 다루기 때문입니다. 지식 계층(3단계)에서는 JVM·테스트가 고급(3단계)에 속합니다.
-
----
-
-## 💡 이 경로의 특징
-
-- **이론·방법론 연결**: 각 트랙에 💡 팁 박스로 위키의 5권 도서 강의([[entity-object]]·[[entity-effective-java]]·[[entity-refactoring]]·[[entity-clean-code]]·[[entity-tdd]])와 개념 페이지를 연결하고, "자세히 →" 링크로 바로 깊이 들어갈 수 있게 했습니다.
-- **실습으로 마무리**: 모든 트랙이 실습으로 끝납니다. T2·T4·T5는 실행 검증된 과제([[guide-java-practice-core]]·[[guide-java-practice-spring-library]]·[[guide-java-practice-layered-quotation]])로, T1·T3는 챕터 실전문제로 마무리합니다.
-- **TDD 흐름 권장**: 트랙 마무리 실습은 빨강→초록→리팩터로. 작은 단위 검증이 막힘을 줄입니다.
+T2는 설계와 함께 JVM(ch10)을, T4는 Spring과 함께 테스트(ch09)를 다루므로 괄호 안 챕터는 3단계 소속이지만 해당 트랙에서 먼저 만납니다.
 
 ---
 
 ## 원본·관련 페이지
 
 - [[src-java-study-2024-2025]] — 원본 교재 (97개 문서 전체 카탈로그)
-- 트랙: [[guide-java-track1-basics]] · [[guide-java-track2-design]] · [[guide-java-track3-io-network]] · [[guide-java-track4-spring-web]] · [[guide-java-track5-deep-dive]]
-- 방법론: [[guide-code-authoring-and-review]] · [[entity-tdd]] · [[entity-refactoring]]
-
-> **챕터와 레퍼런스의 역할 구분**: 챕터 본문(3단계)은 **순서대로 따라가는 학습 흐름**이고, nav의 「📚 레퍼런스」에 있는 개념([[concept-spring-core]]·[[concept-transactional-rollback-policy]] 등)과 도구([[entity-spring-boot]]·[[entity-jvm]] 등)는 **챕터에서 만난 주제를 더 깊이 팔 때 찾아보는 자료**입니다. 둘은 겹치는 게 아니라 "배우기 → 깊이 파기"로 이어집니다.
+- 방법론: [[guide-code-authoring-and-review]] · [[entity-tdd]] · [[entity-refactoring]] · [[entity-object]] · [[entity-effective-java]] · [[entity-clean-code]]
+- 레퍼런스: 챕터에서 만난 주제를 더 깊이 팔 때는 개념([[concept-spring-core]]·[[concept-transactional-rollback-policy]])과 도구([[entity-spring-boot]]·[[entity-jvm]]) 페이지를 찾아봅니다.

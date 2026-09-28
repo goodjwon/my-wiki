@@ -8,7 +8,7 @@ external:
   - https://www.youtube.com/watch?v=LBWefG5zjxk
   - https://martinfowler.com/bliki/TolerantReader.html
 created: 2026-06-06
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # API 하위 호환성과 JSON Tolerant Reader 계약
@@ -60,7 +60,7 @@ API 클라이언트는 **응답에서 본인이 필요한 필드만 꺼내 쓰�
 
 - ✅ **선택적 필드 추가** (있어도 되고 없어도 되는 응답 필드)
 - ✅ 필드 순서 변경
-- ✅ 응답 값 범위 확장 (enum에 새 값 추가 — 단, 클라이언트가 알 수 없는 enum도 안전하게 처리해야 함)
+- ✅ 응답 값 범위 확장 (enum에 새 값 추가 — 단, 클라이언트가 알 수 없는 enum도 안전하게 처리해야 합니다)
 
 ### Breaking Change (계약상으로도 깨짐)
 
@@ -160,16 +160,18 @@ grep -rn "ignoreUnknownKeys\s*=\s*false\|FAIL_ON_UNKNOWN_PROPERTIES.*true\|deny_
 
 ## 같은 인사이트 패턴 — "기본값과 가정의 함정"
 
-| 페이지 | 위험 |
-|--------|------|
-| **이 페이지** | 클라이언트 JSON 라이브러리 기본값 차이 |
-| [[concept-transactional-rollback-policy]] | `@Transactional` 체크 예외 commit |
-| [[concept-cronjob-concurrency-trap]] | K8s `concurrencyPolicy: Allow` |
-| [[concept-keepalive-timeout-race]] | 웹 서버 keep-alive 짧음 |
-| [[concept-db-connection-pool]] | 무한 수명 커넥션 |
-| [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` |
-| [[concept-jpa-enum-mapping]] | JPA `@Enumerated` 기본 ORDINAL |
-| [[concept-java-serialization-risk]] | 기본 제공 직렬화의 암묵적 신뢰 |
+| 페이지 | 위험한 기본값·가정 | 결과 | 실무 권장 |
+|--------|-------------------|------|----------|
+| [[concept-transactional-rollback-policy|트랜잭션 롤백]] | `@Transactional`이 모든 예외를 롤백한다는 가정 (기본은 unchecked 예외·`Error`만 롤백) | 체크 예외에서 커밋되어 데이터 오염 | `rollbackFor = Exception.class` 또는 사내 합성 애너테이션 |
+| **API 하위 호환 (이 페이지)** | 클라이언트 JSON 파서가 미지 필드에 관용적일 것이라는 가정 (라이브러리마다 기본값이 다름) | 응답 필드 하나 추가로 앱 전체 오류 | Tolerant Reader + 응답 구조 wrapping 변경 금지 |
+| [[concept-api-versioning|API 버전 관리]] | 버전을 나누면 변경 부담이 끝난다는 가정 | 강제 업데이트가 불가한 환경에서 v1 코드 영구 유지 | 버전은 Controller·DTO에만 + deprecation·sunset 합의 |
+| [[concept-jpa-enum-mapping|JPA enum 매핑]] | JPA `@Enumerated` 기본 `ORDINAL` | enum 순서 변경·중간 삽입 시 조용한 데이터 오염 | `EnumType.STRING` + `@Column(length)` 명시 |
+| [[concept-cronjob-concurrency-trap|크론잡 동시 실행]] | K8s CronJob `concurrencyPolicy` 기본 `Allow` | 배치 중복 실행 → 정산 2배 | `Forbid` + `activeDeadlineSeconds` |
+| [[concept-keepalive-timeout-race|Keep-Alive 타임아웃]] | 웹 서버 keep-alive 기본값이 LB idle 이하 (Gunicorn 2초·Node.js 5초·Tomcat 60초 vs ALB 60초) | 서버가 먼저 끊어 새벽 간헐 502 | 서버 keep-alive > LB idle (+5~15초) |
+| [[concept-db-connection-pool|DB 커넥션 풀]] | 풀의 커넥션이 계속 유효하다는 가정 (`maxLifetime`이 DB `wait_timeout`·방화벽/LB idle 제한보다 김) | 이미 끊긴 커넥션 대여 → 산발적 `Connection is closed` | `maxLifetime`을 가장 짧은 인프라 제한보다 몇 초 짧게 + `keepaliveTime` |
+| [[concept-varchar-length-prefix|VARCHAR 길이]] | 관습적 `VARCHAR(255)` (Latin1 시대의 1바이트 프리픽스 경계) | utf8mb4에서는 2바이트 프리픽스 → 의도와 다른 저장·인덱스 비용 | 도메인 상한 우선 + utf8mb4의 63 경계 인지 |
+| [[concept-java-serialization-risk|자바 직렬화]] | `ObjectInputStream`이 데이터를 그냥 읽어 줄 것이라는 신뢰 | 임의 클래스 코드 실행(RCE) | JSON·Protobuf로 대체, 불가피하면 `ObjectInputFilter` 화이트리스트 |
+| [[concept-id-reference-vs-object-reference|애그리거트 참조]] | JPA 객체 참조로 애그리거트 경계 관통 | 트랜잭션 번짐·N+1 | 경계 밖은 ID 참조 |
 
 → **"가장 엄격한 구현이 사실상의 표준이 됩니다"** — 서버 개발자가 자기 기준으로만 "안전한 변경"을 판단하면 안 됩니다.
 

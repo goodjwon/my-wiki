@@ -4,14 +4,14 @@ type: source
 tags: [spring, testing, junit, mockMvc, 공식문서]
 sources: [spring/spring-testing-ref.md]
 created: 2026-04-19
-updated: 2026-04-19
+updated: 2026-09-28
 ---
 
 # Spring Framework Testing Reference
 
 ## 개요
 
-Spring Framework 7.0.7 공식 문서의 Testing 핵심 내용. 어노테이션, Mock 객체, MockMvc, 테스트 계층 가이드를 다룬다.
+Spring Framework 7.0.7 공식 문서의 Testing 핵심 내용입니다. 어노테이션, Mock 객체, MockMvc, 테스트 계층 가이드를 다룹니다.
 
 원본: https://docs.spring.io/spring-framework/reference/testing.html
 

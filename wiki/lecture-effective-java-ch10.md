@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 10장.md]
 created: 2026-06-20
-updated: 2026-07-05
+updated: 2026-09-28
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -555,5 +555,3 @@ try {
 ## 다음 장 예고 — 11장: 동시성
 
 스레드, 동기화, 락, 데드락, `ConcurrentHashMap`, `ExecutorService`, `CompletableFuture` — **멀티스레드 환경에서 안전하게 동작하는 코드 7개 아이템(Item 78~84)**. 단일 스레드에서는 안 보이는 함정이 한꺼번에 드러나는 장. 자바에서 가장 어려운 영역이지만, Spring·Web 환경에서는 매일 마주칩니다.
-
-> 이어서 만들까요? (11장으로 진행 / 12장 직렬화로 점프 / 지금까지 만든 장들을 통합 교재로 묶기)

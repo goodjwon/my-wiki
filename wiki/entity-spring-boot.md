@@ -17,7 +17,7 @@ updated: 2026-09-28
 - **공식**: https://spring.io/projects/spring-boot
 - **레퍼런스**: https://docs.spring.io/spring-boot/reference/
 - **GitHub**: https://github.com/spring-projects/spring-boot
-- **최신 버전**: 4.0.x (2026 기준)
+- **최신 버전**: 4.1.x (2026-09 기준 4.1.1, start.spring.io 기본값)
 - **라이선스**: Apache 2.0
 
 ## 핵심 가치 — Boot의 4가지 약속
@@ -181,7 +181,7 @@ cd demo && ./gradlew bootRun
 
 - **Major (3.x → 4.x)** : 2~3년 주기. Jakarta EE 베이스라인 변경 시
 - **Minor (4.0 → 4.1)** : 6개월 주기, 새 기능 추가
-- **Patch (4.0.5)** : 매월, 버그 수정·보안 패치
+- **Patch (4.1.1)** : 매월, 버그 수정·보안 패치
 
 ## Spring Boot vs 다른 Spring
 

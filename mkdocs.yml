@@ -4,6 +4,16 @@ site_author: wonslab
 site_url: https://wiki.wonslab.dev
 
 docs_dir: docs
+
+# nav 밖 문서: 저자용 운영 메모·로그와 entity 페이지에서 링크로만 쓰는 얇은 원본 요약
+not_in_nav: |
+  /log.md
+  /backlog.md
+  /plan-*.md
+  /src-spring-boot.md
+  /src-spring-guide.md
+  /src-spring-web-mvc-ref.md
+  /src-spring-testing-ref.md
 site_dir: site
 
 theme:
@@ -32,6 +42,7 @@ theme:
     - navigation.indexes
     - navigation.prune
     - navigation.top
+    - navigation.footer
     - toc.follow
     - search.suggest
     - search.highlight
@@ -84,73 +95,62 @@ markdown_extensions:
 
 nav:
   - 홈: index.md
-  - 위키·지식관리:
-    - 개념:
-      - 복리 지식: concept-compounding-knowledge.md
-      - Memex: concept-memex.md
-      - Ingest 워크플로: concept-ingest.md
-      - Query 워크플로: concept-query.md
-      - Lint 워크플로: concept-lint.md
-    - 도구:
-      - Obsidian: entity-obsidian.md
-      - Obsidian Web Clipper: entity-obsidian-web-clipper.md
-      - Dataview: entity-dataview.md
-      - qmd: entity-qmd.md
-      - Marp: entity-marp.md
-    - 인물:
-      - Vannevar Bush: entity-vannevar-bush.md
-    - 소스:
-      - LLM Wiki 패턴: src-llm-wiki-pattern.md
-      - 나의 링크: src-my-links.md
-    - 환경설정:
-      - 위키 배포: guide-deploy-mkdocs-firebase.md
-      - 프로젝트 문서 시스템: guide-project-docs-setup.md
-      - "📐 위키 작성 표준": guide-wiki-authoring-standards.md
-      - "📋 백로그·진행 상태": backlog.md
-      - "🎯 톤앤매너 정합 계획": plan-tone-consistency.md
-      - "🛠 실습 스캐폴드 계획": plan-practice-scaffold.md
-  - 하네스·AI 에이전트:
-    - 개념:
-      - 하네스 엔지니어링: concept-harness-engineering.md
-      - CLAUDE.md 헌법: concept-claude-md.md
-      - Claude Hooks: concept-claude-hooks.md
-      - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
-      - "Loop 엔지니어링": concept-loop-engineering.md
-      - "Advisor–Worker 패턴": concept-advisor-worker.md
-      - "그래프 엔지니어링": concept-graph-engineering.md
-      - "Advisor–Worker vs 그래프": comparison-advisor-worker-vs-graph.md
-    - 도구:
-      - Claude Design: entity-claude-design.md
-    - 소스:
-      - 하네스 엔지니어링 키트: src-harness-engineering.md
-      - "Loop 엔지니어링 커뮤니티 발화": src-loop-engineering.md
-      - "Advisor–Worker 에이전트 스크립트": src-ai-advisor-worker.md
-      - "그래프 엔지니어링 원문 정리": src-graph-engineering.md
-      - Claude Design 리뷰: src-claude-design-review.md
-      - Copilot 토큰 종량제 전환: src-copilot-token-pricing.md
-    - 실습:
-      - 사전 안내: guide-harness-00-prerequisites.md
-      - 5분 데모: guide-harness-demo.md
-      - Module 1 — Failure Audit: guide-harness-module1.md
-      - Module 2 — CLAUDE.md: guide-harness-module2.md
-      - Module 3 — Hooks: guide-harness-module3.md
-      - Module 4 — Multi-Agent: guide-harness-module4.md
-      - Module 5 — 리뷰·Rippable: guide-harness-module5.md
-      - "Loop 엔지니어링 실습": guide-loop-engineering-demo.md
-      - "Advisor–Worker 실습": guide-advisor-worker-demo.md
-      - "Advisor–Worker 심화": guide-advisor-worker-advanced.md
-      - "그래프 엔지니어링 실습": guide-graph-engineering-demo.md
+  - Java·Spring:
+    - 학습 경로: guide-java-learning-path.md
+    - 1단계 — Java Core:
+      - 안내: java-study-ch00.md
+      - 환경과 실행: java-study-ch01.md
+      - Java 문법과 객체: java-study-ch02.md
+      - 컬렉션과 함수형: java-study-ch03.md
+      - 객체지향 설계와 패턴: java-study-ch04.md
+      - 입출력과 네트워크: java-study-ch05.md
+    - 2단계 — Spring·웹:
+      - Spring과 프로젝트 실행: java-study-ch06.md
+      - 데이터 접근과 SQL: java-study-ch07.md
+      - 서버와 인증: java-study-ch08.md
+    - 3단계 — 고급·품질:
+      - 테스트와 품질: java-study-ch09.md
+      - JVM과 성능: java-study-ch10.md
+      - 부록: java-study-ch11.md
+    - 학습 코스:
+      - "T1. Java 기초 다지기": guide-java-track1-basics.md
+      - "T2. 객체지향 설계": guide-java-track2-design.md
+      - "과제 1. 주문 처리 콘솔": guide-java-practice-core.md
+      - "T3. 입출력과 네트워크": guide-java-track3-io-network.md
+      - "T4. Spring 웹": guide-java-track4-spring-web.md
+      - "과제 2. 도서 대여 API": guide-java-practice-spring-library.md
+      - "T5. 심화·워크북·종합": guide-java-track5-deep-dive.md
+      - "과제 3. 견적·계약 업무": guide-java-practice-layered-quotation.md
+    - 개념 레퍼런스:
+      - Spring Core: concept-spring-core.md
+      - "@Transactional 롤백": concept-transactional-rollback-policy.md
+      - API Versioning: concept-api-versioning.md
+      - API 하위 호환성: concept-api-backward-compatibility.md
+      - JSpecify Null Safety: concept-jspecify-null-safety.md
+      - JPA Enum 매핑: concept-jpa-enum-mapping.md
+      - 표준 함수형 인터페이스: concept-functional-interfaces.md
+      - 제네릭 PECS: concept-generics-pecs.md
+      - Java 직렬화 위험: concept-java-serialization-risk.md
+    - 도구·원본:
+      - JVM: entity-jvm.md
+      - Querydsl: entity-querydsl.md
+      - Spring Framework: entity-spring-framework.md
+      - Spring Boot: entity-spring-boot.md
+      - Spring Initializr: entity-spring-initializr.md
+      - Spring Framework 7: src-spring-framework-7.md
+      - Spring Data Access: src-spring-data-access-ref.md
+      - Java 스터디 원본: src-java-study-2024-2025.md
   - 개발방법론:
     - 개념:
       - 객체지향: concept-oop.md
       - 디자인 패턴: concept-design-patterns.md
-      - "네이밍 규약": concept-naming-conventions.md
+      - 네이밍 규약: concept-naming-conventions.md
       - "TDD 3법칙과 F.I.R.S.T.": concept-tdd-laws-and-first.md
-      - "단순 설계 4규칙": concept-simple-design-rules.md
+      - 단순 설계 4규칙: concept-simple-design-rules.md
       - GRASP: concept-grasp.md
       - SOLID: concept-solid.md
-      - "계약에 의한 설계": concept-design-by-contract.md
-      - "도메인 모델 3구분": concept-domain-model-kinds.md
+      - 계약에 의한 설계: concept-design-by-contract.md
+      - 도메인 모델 3구분: concept-domain-model-kinds.md
     - Clean Code:
       - 책 카드: entity-clean-code.md
       - "강의 인덱스": src-clean-code-lecture.md
@@ -206,7 +206,7 @@ nav:
       - "1장 객체, 설계": lecture-object-ch1.md
       - "2장 객체지향 프로그래밍": lecture-object-ch2.md
       - "3장 역할·책임·협력": lecture-object-ch3.md
-      - "4장 설계 품질·트레이드오프": lecture-object-ch4.md
+      - "4장 설계 품질": lecture-object-ch4.md
       - "5장 책임 할당하기": lecture-object-ch5.md
       - "6장 메시지와 인터페이스": lecture-object-ch6.md
       - "7장 객체 분해": lecture-object-ch7.md
@@ -215,12 +215,12 @@ nav:
       - "10장 상속과 코드 재사용": lecture-object-ch10.md
       - "11장 합성과 유연한 설계": lecture-object-ch11.md
       - "12장 다형성": lecture-object-ch12.md
-      - "13장 서브클래싱과 서브타이핑": lecture-object-ch13.md
+      - "13장 서브타이핑": lecture-object-ch13.md
       - "14장 일관성 있는 협력": lecture-object-ch14.md
-      - "15장 디자인 패턴과 프레임워크": lecture-object-ch15.md
-      - "부록 A — 계약에 의한 설계": lecture-object-appendixA.md
-      - "부록 B — 타입 계층의 구현": lecture-object-appendixB.md
-      - "부록 C — 동적인 협력, 정적인 코드": lecture-object-appendixC.md
+      - "15장 패턴과 프레임워크": lecture-object-ch15.md
+      - "부록 A 계약에 의한 설계": lecture-object-appendixA.md
+      - "부록 B 타입 계층의 구현": lecture-object-appendixB.md
+      - "부록 C 동적 협력": lecture-object-appendixC.md
     - TDD:
       - 책 카드: entity-tdd.md
       - "강의 인덱스": src-tdd-lecture.md
@@ -256,82 +256,81 @@ nav:
       - "30장 디자인 패턴": lecture-tdd-ch30.md
       - "31장 리팩토링": lecture-tdd-ch31.md
       - "32장 TDD 마스터하기": lecture-tdd-ch32.md
-      - "부록 A — 영향도": lecture-tdd-appendixA.md
-      - "부록 B — 피보나치": lecture-tdd-appendixB.md
+      - "부록 A 영향도": lecture-tdd-appendixA.md
+      - "부록 B 피보나치": lecture-tdd-appendixB.md
       - "마치는 글": lecture-tdd-afterword.md
     - DDD:
       - 카카오페이 DDD: src-kakaopay-ddd.md
       - "ID 참조 vs 객체 참조": concept-id-reference-vs-object-reference.md
       - "애그리거트 경계": concept-aggregate-boundary.md
-      - "도메인 이벤트·최종 일관성": concept-domain-event-eventual-consistency.md
+      - "도메인 이벤트": concept-domain-event-eventual-consistency.md
     - 실습:
-      - 실습 환경: guide-java-book-study-lab.md
+      - 5권 공통 가이드: guide-java-book-study-lab.md
       - 코드 작성·점검 가이드: guide-code-authoring-and-review.md
-  - Java·Spring:
-    - "학습 경로": guide-java-learning-path.md
-    - 1단계 — Java Core:
-      - 안내: java-study-ch00.md
-      - 환경과 실행: java-study-ch01.md
-      - Java 문법과 객체: java-study-ch02.md
-      - 컬렉션과 함수형: java-study-ch03.md
-      - 객체지향 설계와 패턴: java-study-ch04.md
-      - 입출력과 네트워크: java-study-ch05.md
-    - 2단계 — Spring & 웹 백엔드:
-      - Spring과 프로젝트 실행: java-study-ch06.md
-      - 데이터 접근과 SQL: java-study-ch07.md
-      - 서버와 인증: java-study-ch08.md
-    - 3단계 — 고급·품질:
-      - 테스트와 품질: java-study-ch09.md
-      - JVM과 성능: java-study-ch10.md
-      - 부록: java-study-ch11.md
-    - "학습 코스":
-      - "T1. Java 기초 다지기": guide-java-track1-basics.md
-      - "T2. 객체지향 설계로 응용": guide-java-track2-design.md
-      - "과제 1. 주문 처리 콘솔 앱": guide-java-practice-core.md
-      - "T3. 입출력과 네트워크": guide-java-track3-io-network.md
-      - "T4. Spring 웹 애플리케이션": guide-java-track4-spring-web.md
-      - "과제 2. 도서 대여 REST API": guide-java-practice-spring-library.md
-      - "T5. 심화·워크북·종합": guide-java-track5-deep-dive.md
-      - "과제 3. 견적·계약 업무": guide-java-practice-layered-quotation.md
-    - "📚 레퍼런스":
-      - 개념 — 심화 주제:
-        - Spring Core: concept-spring-core.md
-        - "@Transactional 롤백 정책": concept-transactional-rollback-policy.md
-        - API Versioning: concept-api-versioning.md
-        - API 하위 호환성: concept-api-backward-compatibility.md
-        - JSpecify Null Safety: concept-jspecify-null-safety.md
-        - "JPA Enum 매핑 함정": concept-jpa-enum-mapping.md
-        - 표준 함수형 인터페이스: concept-functional-interfaces.md
-        - "제네릭 PECS": concept-generics-pecs.md
-        - "Java 직렬화 위험": concept-java-serialization-risk.md
-      - 도구·생태계:
-        - JVM: entity-jvm.md
-        - Querydsl: entity-querydsl.md
-        - Spring Framework: entity-spring-framework.md
-        - Spring Boot: entity-spring-boot.md
-        - Spring Initializr: entity-spring-initializr.md
-      - 원본 소스:
-        - Spring Boot 소개: src-spring-boot.md
-        - Spring Framework 7: src-spring-framework-7.md
-        - Spring Guide: src-spring-guide.md
-        - Spring Data Access Ref: src-spring-data-access-ref.md
-        - Spring Web MVC Ref: src-spring-web-mvc-ref.md
-        - Spring Testing Ref: src-spring-testing-ref.md
-        - Java 스터디 2024-2025: src-java-study-2024-2025.md
   - DB·운영·인프라:
-    - 개념:
-      - DB 커넥션 풀: concept-db-connection-pool.md
-      - VARCHAR 길이 프리픽스: concept-varchar-length-prefix.md
-      - Keep-Alive 타임아웃 race: concept-keepalive-timeout-race.md
-      - 크론잡 중복 실행 + Forbid 함정: concept-cronjob-concurrency-trap.md
-      - HTTP HOL 블로킹: concept-http-hol-blocking.md
+    - DB 커넥션 풀: concept-db-connection-pool.md
+    - VARCHAR 길이 프리픽스: concept-varchar-length-prefix.md
+    - Keep-Alive 타임아웃: concept-keepalive-timeout-race.md
+    - 크론잡 중복 실행: concept-cronjob-concurrency-trap.md
+    - HTTP HOL 블로킹: concept-http-hol-blocking.md
   - 앱 개발·출시:
+    - Local-first 기록: concept-local-first-append-only.md
+    - 벽시계 타이머: concept-wall-clock-state-machine.md
+    - 멱등 동기화: concept-thin-client-idempotent-sync.md
+    - Workout History 출시기: src-workout-history-launch.md
+  - 하네스·AI 에이전트:
     - 개념:
-      - "Local-first + Append-only": concept-local-first-append-only.md
-      - "벽시계 앵커 타이머 상태기계": concept-wall-clock-state-machine.md
-      - "얇은 클라이언트 + 멱등 동기화": concept-thin-client-idempotent-sync.md
-    - 출시 회고:
-      - "Workout History 출시 여정": src-workout-history-launch.md
+      - 하네스 엔지니어링: concept-harness-engineering.md
+      - CLAUDE.md 헌법: concept-claude-md.md
+      - Claude Hooks: concept-claude-hooks.md
+      - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
+      - Loop 엔지니어링: concept-loop-engineering.md
+      - Advisor–Worker 패턴: concept-advisor-worker.md
+      - 그래프 엔지니어링: concept-graph-engineering.md
+      - 역할 분할 vs 그래프: comparison-advisor-worker-vs-graph.md
+    - 소스:
+      - 하네스 엔지니어링 키트: src-harness-engineering.md
+      - Loop 엔지니어링 원문: src-loop-engineering.md
+      - Advisor–Worker 원문: src-ai-advisor-worker.md
+      - 그래프 엔지니어링 원문: src-graph-engineering.md
+    - 하네스 코스:
+      - 사전 안내: guide-harness-00-prerequisites.md
+      - 5분 데모: guide-harness-demo.md
+      - M1 실패 감사: guide-harness-module1.md
+      - M2 CLAUDE.md: guide-harness-module2.md
+      - M3 Hooks: guide-harness-module3.md
+      - M4 멀티 에이전트: guide-harness-module4.md
+      - M5 리뷰·Rippable: guide-harness-module5.md
+    - 에이전트 패턴 실습:
+      - Loop 엔지니어링: guide-loop-engineering-demo.md
+      - Advisor–Worker 기본: guide-advisor-worker-demo.md
+      - Advisor–Worker 심화: guide-advisor-worker-advanced.md
+      - 그래프 엔지니어링: guide-graph-engineering-demo.md
+    - AI 도구·동향:
+      - Claude Design: entity-claude-design.md
+      - Claude Design 리뷰: src-claude-design-review.md
+      - Copilot 종량제 전환: src-copilot-token-pricing.md
+  - 위키 운영:
+    - 개념:
+      - 복리 지식: concept-compounding-knowledge.md
+      - Memex: concept-memex.md
+      - Vannevar Bush: entity-vannevar-bush.md
+      - Ingest 워크플로: concept-ingest.md
+      - Query 워크플로: concept-query.md
+      - Lint 워크플로: concept-lint.md
+    - 도구:
+      - Obsidian: entity-obsidian.md
+      - Obsidian Web Clipper: entity-obsidian-web-clipper.md
+      - Dataview: entity-dataview.md
+      - qmd: entity-qmd.md
+      - Marp: entity-marp.md
+    - 소스:
+      - LLM Wiki 패턴: src-llm-wiki-pattern.md
+      - 나의 링크: src-my-links.md
+    - 운영:
+      - 위키 배포: guide-deploy-mkdocs-firebase.md
+      - 프로젝트 문서 시스템: guide-project-docs-setup.md
+      - 위키 작성 표준: guide-wiki-authoring-standards.md
 
 extra:
   generator: false

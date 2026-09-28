@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 12장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-28
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -459,8 +459,3 @@ public final class Period implements Serializable {
 - ***Clean Code* (Martin)** — 가독성·이름 짓기·함수 길이 등 미시적 단위
 - ***Domain-Driven Design* (Evans/Vernon)** — 비즈니스 도메인의 큰 그림
 - ***Java Concurrency in Practice* (Goetz)** — 11장의 깊이 있는 전개
-
-> 이어서 만들까요?
-> - **통합 교재 묶기** (12장을 한 권으로 정리, 책 전체 결정 가이드·체크리스트 종합)
-> - **실습 프로젝트** (각 장의 핵심 아이템을 한 코드베이스로 통합 적용)
-> - **다른 책으로 진행** (Clean Code · TDD · 더 깊은 동시성)

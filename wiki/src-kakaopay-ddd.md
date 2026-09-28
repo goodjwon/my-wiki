@@ -4,14 +4,14 @@ type: source
 tags: [ddd, spring, kotlin, 도메인설계, 카카오페이]
 sources: [kakaopay-ddd/kakaopay-ddd.md]
 created: 2026-04-19
-updated: 2026-04-19
+updated: 2026-09-28
 ---
 
 # 카카오페이 여신코어 DDD 구축기
 
 ## 개요
 
-카카오페이 후불결제(BNPL) 여신코어시스템을 DDD(Domain Driven Design)로 내재화한 실무 경험기. Bounded Context, Aggregate Root, Command 패턴, DomainEntity/JpaEntity 분리를 Kotlin + Spring Boot로 구현한 사례를 다룬다.
+카카오페이 후불결제(BNPL) 여신코어시스템을 DDD(Domain Driven Design)로 내재화한 실무 경험기입니다. Bounded Context, Aggregate Root, Command 패턴, DomainEntity/JpaEntity 분리를 Kotlin + Spring Boot로 구현한 사례를 다룹니다.
 
 원본: https://tech.kakaopay.com/post/backend-domain-driven-design/
 
@@ -39,7 +39,6 @@ updated: 2026-04-19
 - [[concept-aggregate-boundary]] — Aggregate Root = 트랜잭션 경계의 개념 배경 (라이프사이클 기준 경계 긋기)
 - [[concept-id-reference-vs-object-reference]] — 애그리거트 경계를 넘는 연결 방식 (도메인 기능 독점 원칙과 동일 문제의식)
 - [[concept-domain-event-eventual-consistency]] — 경계로 나뉜 도메인 간 협력 (Biz-component의 대안 축)
-
 - [[concept-oop]] — DDD의 기반이 되는 객체지향 원칙
 - [[concept-spring-core]] — Spring DI/Bean으로 도메인 모듈 조합
 - [[src-spring-guide]] — cheese10yun의 Spring 실무 가이드 (domain-guide 참고)

@@ -8,7 +8,7 @@ external:
   - https://docs.spring.io/spring-framework/reference/core/aop/proxying.html
   - https://docs.spring.io/spring-framework/reference/web/webmvc.html
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Spring 핵심 개념
@@ -66,9 +66,9 @@ IoC를 **실현하는 가장 일반적인 방법**입니다. 의존 객체를 �
 
 ### 생성자 주입이 권장되는 이유
 
-1. **의존성이 시그니처에 드러난다** — 클래스를 보면 무엇이 필요한지 즉시 보입니다.
+1. **의존성이 시그니처에 드러납니다** — 클래스를 보면 무엇이 필요한지 즉시 보입니다.
 2. **`final` 키워드로 불변성 보장** — 객체 생성 후 의존성이 절대 안 바뀝니다.
-3. **테스트가 쉽다** — `new OrderService(mockRepo)` 한 줄로 생성하면 Spring 없이 단위 테스트가 가능합니다.
+3. **테스트가 쉽습니다** — `new OrderService(mockRepo)` 한 줄로 생성하면 Spring 없이 단위 테스트가 가능합니다.
 4. **순환 참조 컴파일 시 발견** — Spring이 시작 시 즉시 에러가 발생합니다 (필드 주입은 런타임 NPE).
 
 Spring 4.3+ 부터는 **생성자가 1개면 `@Autowired`가 자동 적용**되어 생략할 수 있습니다.

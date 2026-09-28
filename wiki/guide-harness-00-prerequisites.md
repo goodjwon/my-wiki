@@ -321,7 +321,7 @@ git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
     - **만들 파일**: `src/App.jsx` — 사용자 목록 + 추가 폼 화면 (나머지는 Vite 기본 생성)
     - **실행**: 블록 1a → 1b → 2 순서로 나눠 붙여넣습니다. 이유는 아래 경고를 참고하세요.
 
-> ⚠️ **한 번에 붙여넣지 말 것.** 첫 줄 `npm create vite` 는 대화형 프롬프트(패키지 설치 확인 `Ok to proceed? (y)` 등)가 뜰 수 있다. 아래 `cat ... << EOF` heredoc·`npm install` 과 한꺼번에 붙여넣으면 **프롬프트 대기 중 뒷줄이 응답으로 먹혀** 스캐폴딩이 깨진다. **블록 1을 먼저 끝내고(프롬프트엔 Enter / y), 그다음 블록 2를 붙여넣을 것.**
+> ⚠️ **한 번에 붙여넣지 마세요.** 첫 줄 `npm create vite` 는 대화형 프롬프트(패키지 설치 확인 `Ok to proceed? (y)` 등)가 뜰 수 있습니다. 아래 `cat ... << EOF` heredoc·`npm install` 과 한꺼번에 붙여넣으면 **프롬프트 대기 중 뒷줄이 응답으로 먹혀** 스캐폴딩이 깨집니다. **블록 1을 먼저 끝내고(프롬프트엔 Enter / y), 그다음 블록 2를 붙여넣으세요.**
 
 **블록 1a — React 스캐폴딩** (이 한 줄만 먼저. 프롬프트 `Ok to proceed? (y)` 가 뜨면 `y` / Enter)
 
@@ -431,7 +431,7 @@ git status --short   # → 아무것도 출력되지 않으면 정상 (추적 �
     - **만들 것**: 없음 — API 응답·테스트·화면이 정상인지 확인만 합니다.
     - **실행**: 터미널 ①에서 블록 1, 터미널 ②에서 블록 2, 다시 터미널 ①에서 블록 3을 실행합니다.
 
-> ⚠️ **API와 프론트는 두 터미널에서 동시에 떠 있어야 한다.** `npm run dev:web` 은 포그라운드 장기 실행 서버라, 같은 블록에 두고 붙여넣으면 거기서 멈춰 뒷줄(서버 정리 등)이 실행되지 않는다. 아래처럼 **블록 1(API 검증) → 블록 2(프론트, 다른 터미널) → 블록 3(정리)** 순서로.
+> ⚠️ **API와 프론트는 두 터미널에서 동시에 떠 있어야 합니다.** `npm run dev:web` 은 포그라운드 장기 실행 서버라, 같은 블록에 두고 붙여넣으면 거기서 멈춰 뒷줄(서버 정리 등)이 실행되지 않습니다. 아래처럼 **블록 1(API 검증) → 블록 2(프론트, 다른 터미널) → 블록 3(정리)** 순서로 진행하세요.
 
 **블록 1 — 의존성 설치 + API 검증** (터미널 ①)
 
@@ -513,7 +513,14 @@ git log --oneline
 - **Cloud Run** (컨테이너 기반)
 - **App Engine** (PaaS)
 
-→ 하네스의 STOP 트리거에 "프로덕션 환경변수 노출 금지", "`gcloud deploy` 직접 실행 금지" 같은 GCP 친화 규칙을 추가하게 됩니다 (module5).
+→ 하네스의 STOP 트리거에 GCP 친화 규칙을 추가하게 됩니다. module2 CLAUDE.md 작성 시 다음을 미리 적어두면 좋습니다:
+```
+STOP: .env*, *credentials.json, *service-account.json 커밋 시도
+STOP: gcloud deploy / gcloud functions deploy 직접 실행
+STOP: console.log(process.env.*) 디버그 코드 잔존
+STOP: API 응답에 password / secret / token 필드 노출
+```
+module3에서 이 규칙을 guard.sh 자동 차단으로 격상하고, module5에서 계속 보강합니다.
 
 ## 5분 요약: 하네스 엔지니어링이 뭔가
 
@@ -558,7 +565,7 @@ Module 1 (실패 패턴 찾기)
 | 용어 | 풀이 |
 |------|------|
 | **CLAUDE.md** | Claude Code가 **프로젝트 루트에서 자동으로 읽는** 규칙 파일. 매 세션 시작 시 가장 먼저 로드. 곧 "에이전트 헌법". |
-| **AGENTS.md** | CLAUDE.md와 같은 역할이지만 **모델 불가지론적** — Codex/Gemini 등 다른 에이전트도 읽는 공용 표준. Claude Code는 CLAUDE.md가 있는 프로젝트에서는 AGENTS.md를 자동으로 읽지 않으므로, CLAUDE.md에 `@AGENTS.md` 한 줄로 가져온다 (module4). |
+| **AGENTS.md** | CLAUDE.md와 같은 역할이지만 **모델 불가지론적** — Codex/Gemini 등 다른 에이전트도 읽는 공용 표준. Claude Code는 CLAUDE.md가 있는 프로젝트에서는 AGENTS.md를 자동으로 읽지 않으므로, CLAUDE.md에 `@AGENTS.md` 한 줄로 가져옵니다 (module4). |
 | **STOP 트리거** | "에이전트가 X를 하려 하면 즉시 멈춰라"의 규칙 목록. CLAUDE.md 섹션 7에 적음. |
 | **Karpathy 4원칙** | Think Before Coding / Simplicity First / Surgical Changes / Goal-Driven Execution. Andrej Karpathy가 자신의 CLAUDE.md에서 정리한 4가지. |
 
@@ -568,7 +575,7 @@ Module 1 (실패 패턴 찾기)
 |------|------|
 | **Hook(훅)** | 에이전트 라이프사이클의 특정 시점에 **자동 실행되는 사용자 스크립트**. |
 | **PreToolUse / PostToolUse** | 각각 "도구 실행 직전 / 직후"에 발동. 차단은 주로 PreToolUse. |
-| **`.claude/settings.json`** | 프로젝트의 Claude Code 설정 파일. hooks 등록 위치. (없으면 만든다) |
+| **`.claude/settings.json`** | 프로젝트의 Claude Code 설정 파일. hooks 등록 위치. (없으면 만듭니다) |
 | **`.claude/hooks/`** | 사용자가 만든 hook 스크립트(`*.sh`)를 두는 디렉터리. |
 | **exit code** | 스크립트의 종료 코드. **0이 아니면** Claude Code가 도구 실행을 막음. |
 | **Back-pressure** | 테스트 실패 같은 하류 결과가 상류 에이전트로 되돌아와 다음 행동을 압박. |
@@ -724,14 +731,7 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 두 항목을 그대로 인용해줘.
 **무시해도 됩니다.** 원본 템플릿의 DDD 섹션은 module2에서 본인 Node 패턴(컨트롤러/서비스/리포지토리, 또는 hooks/api/lib)으로 교체합니다. 핵심은 4원칙 + STOP 트리거 + 누적 실패 패턴입니다.
 
 ### Q. 나중에 GCP/Cloud Functions 배포할 건데 지금 뭘 미리 해두면 좋아요
-module2 CLAUDE.md 작성 시 다음을 STOP 트리거에 미리 적어두면 좋습니다:
-```
-STOP: .env*, *credentials.json, *service-account.json 커밋 시도
-STOP: gcloud deploy / gcloud functions deploy 직접 실행
-STOP: console.log(process.env.*) 디버그 코드 잔존
-STOP: API 응답에 password / secret / token 필드 노출
-```
-module3에서 이걸 guard.sh로 자동 차단으로 격상.
+위의 [미래 (Module 05 이후 GCP 배포)](#미래-module-05-이후-gcp-배포) 섹션에 미리 적어둘 STOP 트리거 4줄을 정리해 두었습니다.
 
 ## 관련 페이지
 

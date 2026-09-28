@@ -57,9 +57,9 @@ public class Account {
 }
 ```
 
-→ **invariant(불변 조건)** 를 객체 내부에서 보장. 외부에서 깰 수 없음.
+→ **invariant(불변 조건)** 를 객체 내부에서 보장합니다. 외부에서 깰 수 없습니다.
 
-> "getter/setter 자동 생성 = 캡슐화"는 가장 흔한 오해. setter가 있으면 사실상 `public` 필드와 같음. **잘못된 상태를 만들 수 없는 메서드 인터페이스**가 진짜 캡슐화.
+> "getter/setter 자동 생성 = 캡슐화"는 가장 흔한 오해입니다. setter가 있으면 사실상 `public` 필드와 같습니다. **잘못된 상태를 만들 수 없는 메서드 인터페이스**가 진짜 캡슐화입니다.
 
 ## 2. 상속
 
@@ -125,7 +125,7 @@ class TossPayProcessor implements PaymentProcessor { ... }
 
 → **호출자가 구체 구현을 모르는 상태**가 진짜 다형성의 가치. 새 결제 수단 추가 시 `OrderService` 안 바뀜 = **개방-폐쇄 원칙(OCP)**.
 
-→ 이게 [[concept-spring-core|Spring DI]]가 작동하는 이유.
+→ 이것이 [[concept-spring-core|Spring DI]]가 작동하는 이유입니다.
 
 ## 4. 추상화
 
@@ -140,7 +140,7 @@ class TossPayProcessor implements PaymentProcessor { ... }
 
 ### 인터페이스가 가치 있는 지점
 
-> 인터페이스는 **실제로 교체 가능성이 있는 지점**에만.
+> 인터페이스는 **실제로 교체 가능성이 있는 지점**에만 둡니다.
 
 ```java
 // 오버엔지니어링 ❌
@@ -178,7 +178,7 @@ r.setW(5); r.setH(10);
 assert r.area() == 50;  // 실패! Square 때문에 100
 ```
 
-→ Square `is-a` Rectangle 처럼 보이지만 **부모 계약을 깬다**. 상속 대신 별도 타입으로.
+→ Square `is-a` Rectangle 처럼 보이지만 **부모 계약을 깹니다**. 상속 대신 별도 타입으로 둡니다.
 
 ## 핵심 판단 기준
 
@@ -203,7 +203,7 @@ assert r.area() == 50;  // 실패! Square 때문에 100
 - **수치 계산·트랜스포메이션** → 함수형 또는 절차형
 - **모든 것을 클래스로** → 오버엔지니어링
 
-> "**객체지향은 도구지 종교가 아니다.**" Kotlin·Scala 같은 현대 언어가 OOP + 함수형 혼합으로 가는 이유.
+> "**객체지향은 도구지 종교가 아니다.**" Kotlin·Scala 같은 현대 언어가 OOP + 함수형 혼합으로 가는 이유입니다.
 
 ## 원본 출처
 

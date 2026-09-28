@@ -14,13 +14,13 @@ sources:
   - ai-engineering/harness-engineering/harness-engineering-tutor-prompt.md
   - ai-engineering/harness-engineering/harness-kit/
 created: 2026-05-30
-updated: 2026-05-30
+updated: 2026-09-28
 ---
 
 # 하네스 엔지니어링 실습 키트
 
 > Karpathy CLAUDE.md × OpenAI Harness Engineering × Mitchell Hashimoto
-> Spring Boot DDD 프로젝트에 하네스 엔지니어링을 적용하는 5모듈 커리큘럼.
+> Spring Boot DDD 프로젝트에 하네스 엔지니어링을 적용하는 5모듈 커리큘럼(원본 키트 기준). 위키 실습 가이드는 Node 기반 `~/harness-playground`로 재구성했습니다.
 
 ## 개요
 
@@ -39,11 +39,9 @@ AI 에이전트(Claude Code 등)에게 "잘 해줘"라고 부탁(프롬프트)�
 
 ## 시대 진화
 
-- **2023**: 단발 지시 (프롬프트 시대)
-- **2025**: 맥락 설계 (컨텍스트 엔지니어링 시대)
-- **2026**: 환경 설계 (하네스 엔지니어링 시대)
+원본 자료는 프롬프트(2023) → 컨텍스트(2025) → 하네스(2026) 3단계로 설명합니다. 이후 Loop·그래프까지 이어진 전체 진화 표는 [[concept-graph-engineering]]을 참조합니다.
 
-OpenAI 5개월 실험 사례: 100만 줄 코드를 생성했지만 인간이 작성한 코드는 0줄이었다. **병목은 모델이 아니었다 — 환경이었다.**
+OpenAI 5개월 실험 사례에서는 100만 줄 코드를 생성했지만 인간이 작성한 코드는 0줄이었습니다. **병목은 모델이 아니라 환경이었습니다.**
 
 ## 5모듈 커리큘럼 로드맵
 
@@ -68,7 +66,9 @@ OpenAI 5개월 실험 사례: 100만 줄 코드를 생성했지만 인간이 작
 - [[guide-harness-module4]] — Planner/Coder/Critic 워크플로우 + 세션 인계
 - [[guide-harness-module5]] — 저장소 구조화 + 주간 리뷰 + Rippable 점검
 
-## 실습 키트 디렉토리 구조
+> **실습 환경 변경 (2026-09-28)**: 모듈 가이드는 원본 키트의 Spring Boot DDD 대신 [[guide-harness-00-prerequisites]]에서 만드는 Node 기반 미니 프로젝트(`~/harness-playground`, React + Express)를 대상으로 재구성했고, 2026-09-28에 Claude Code로 실행 검증을 마쳤습니다. 5분 체험판은 [[guide-harness-demo]]에 있습니다. 아래 키트 구조와 빠른 시작은 원본(Spring) 기준입니다.
+
+## 실습 키트 디렉터리 구조
 
 ```
 harness-kit/
@@ -123,12 +123,7 @@ cp raw/ai-engineering/harness-engineering/harness-kit/module4/{AGENTS.md,task-li
 
 ## 핵심 원칙 (Summary)
 
-| # | 원칙 | 핵심 메시지 |
-|---|------|-----------|
-| 1 | **부탁 대신 구조** | 프롬프트는 부탁이다. guard.sh가 막으면 에이전트는 못 한다. |
-| 2 | **실패가 규칙이 된다** | 같은 실수 두 번 → 즉시 CLAUDE.md 추가. "다음엔 잘 해줘"는 없다. |
-| 3 | **검증 가능한 목표** | `[단계] → verify: [확인법]`. 성공 기준이 없으면 에이전트도 멈춘다. |
-| 4 | **하네스는 자산이다** | CLAUDE.md + hooks + skills = 팀이 쌓는 경쟁 우위. 모델이 바뀌어도 남는다. |
+부탁 대신 구조 · 실패가 규칙이 된다 · 검증 가능한 목표 · 하네스는 자산이다 — 4원칙의 설명은 [[concept-harness-engineering]]의 핵심 원칙 표를 참조합니다.
 
 ## 참고 자료
 

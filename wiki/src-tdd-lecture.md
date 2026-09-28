@@ -4,34 +4,20 @@ type: source
 tags: [book, tdd, kent-beck, lecture, curriculum]
 sources: [tdd/]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-09-28
 ---
 
 # TDD 실전 강의 교재 — 35편 인덱스 (32장 + 부록 2 + 마치는 글)
 
 ## 무엇인가
 
-Kent Beck *Test-Driven Development: By Example* (2002) 의 **3부 32장 + 부록 A·B + 마치는 글** 을 Java/Spring 백엔드 입문~중급 수강생용 강의 교재로 풀어 쓴 자료.
+Kent Beck *Test-Driven Development: By Example* (2002) 의 **3부 32장 + 부록 A·B + 마치는 글** 을 Java/Spring 백엔드 입문~중급 수강생용 강의 교재로 풀어 쓴 자료입니다.
 
-→ 책 카드는 [[entity-tdd]].
+→ 책 카드는 [[entity-tdd]]입니다.
 
 ## 실습 환경과 장별 루틴
 
-먼저 [[guide-java-book-study-lab]]의 Java 17 + JUnit 5 환경을 준비한다. 2부 xUnit 예제는 책 흐름을 살리기 위해 Python 3으로 따라 해도 좋다.
-
-각 장은 같은 순서로 진행한다.
-
-1. 할 일 목록에서 가장 작은 항목을 고른다.
-2. 실패 테스트 또는 실패하는 실행 결과를 먼저 만든다.
-3. 가장 빠른 초록을 만든다.
-4. 중복·이름·책임을 정리한다.
-5. 실패 메시지와 최종 인사이트를 한 줄로 기록한다.
-
-2부 xUnit은 `testcase.py` 한 파일에서 시작해도 된다.
-
-```bash
-python3 testcase.py
-```
+실습 환경(Java 17 + JUnit 5)과 5권 공통 루틴(읽기 → 빨강 → 초록 → 정련 → 기록)은 [[guide-java-book-study-lab]]에 있습니다. 2부 xUnit 예제는 책 흐름을 살리기 위해 Python 3으로 따라 해도 되며, `testcase.py` 한 파일에서 시작합니다 (`python3 testcase.py`).
 
 ## 35편 인덱스
 
@@ -90,17 +76,9 @@ python3 testcase.py
 | 부록 B | 피보나치 (짧은 사이클 사례) | [[lecture-tdd-appendixB]] |
 | 마치는 글 | Martin Fowler — TDD 균형 | [[lecture-tdd-afterword]] |
 
-## 5권 도서 오각형
+## 5권 도서 오각형에서의 자리
 
-| 책 | 단위 | 시점 |
-|----|------|------|
-| *오브젝트* | 객체 | 처음부터 |
-| *Effective Java* | 메서드·필드 | 매번 짤 때 |
-| *리팩터링* | 변환 | 이미 짠 코드 |
-| *Clean Code* | 줄·이름 | 매 라인 |
-| ***TDD*** | **사이클** | **코드 짜기 전** |
-
-→ 5권이 한 세트. TDD 가 "**과정**" 을 담당.
+*TDD*는 5권 중 코드를 만드는 **과정**(사이클)을 맡습니다. 5권 비교표와 추천 학습 순서는 [[guide-java-book-study-lab]]에 있습니다.
 
 ## 활용 가이드
 
@@ -114,6 +92,6 @@ python3 testcase.py
 ## 관련 페이지
 
 - [[entity-tdd]] — 책 카드 (상위)
-- [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-object]] — 5권 오각형 (entity 마다 동일 표)
+- [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-object]] — 5권 도서 카드
 - [[src-spring-testing-ref]] — JUnit 5 실무
-- [[guide-java-book-study-lab]] — 5권 공통 실습 환경
+- [[guide-java-book-study-lab]] — 5권 오각형·추천 학습 순서·공통 실습 환경

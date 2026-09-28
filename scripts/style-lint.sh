@@ -43,6 +43,12 @@ lint_file() {
 
   echo "── $file ──"
 
+  # 규칙 자체를 정의하는 작성 표준 문서는 금칙어·금지 문구를 예시로 인용하므로 검사 제외
+  if [[ "$base" == guide-wiki-authoring-standards.md ]]; then
+    echo "  (규칙 정의 문서 — 검사 제외)"
+    return
+  fi
+
   # 1) 금칙 용어 (§7-5)
   local term_hits
   term_hits="$(printf '%s\n' "$stripped" | grep -E '커맨드|폴더|디렉토리' || true)"
@@ -76,14 +82,23 @@ lint_file() {
     violations=$((violations + n))
   fi
 
-  # 4) 독자 콘텐츠 산문 한정 — 평어 종결 밀도 (§7-1)
-  #    챕터·가이드·개념·엔티티 페이지가 대상. backlog/plan 같은 저자 전용 운영 메모(§7-1 예외)는 제외.
-  #    🎯/✏️ 슬롯, 콜아웃(blockquote `>`)은 평어 예외이므로 검사에서 뺀다.
-  if [[ "$base" == java-study-ch*.md || "$base" == guide-*.md || "$base" == concept-*.md || "$base" == entity-*.md ]]; then
+  # 4) 독자 콘텐츠 산문 한정 — 평어 종결 (§7-1)
+  #    챕터·가이드·개념·엔티티·소스·비교 페이지가 대상. backlog/plan 같은 저자 전용 운영 메모(§7-1 예외)와
+  #    규칙 자체를 인용하는 작성 표준 문서는 제외.
+  #    🎯/✏️ 슬롯은 평어 예외. 콜아웃(blockquote `>`)은 챕터에서만 예외("따라 하는 법" 등 §7-1 매트릭스).
+  #    검출: 줄 끝 "다." / 문장 중간 "다. " / 목록·표 줄 끝 "다" / 표 셀 "다 |" — 인라인 코드·큰따옴표 인용은 제외.
+  if [[ "$base" == java-study-ch*.md || "$base" == guide-*.md || "$base" == concept-*.md || "$base" == entity-*.md \
+     || "$base" == src-*.md || "$base" == comparison-*.md ]] && [[ "$base" != guide-wiki-authoring-standards.md ]]; then
     local prose
-    prose="$(printf '%s\n' "$stripped" | grep -v '🎯\|✏️' | grep -v '^[0-9]*:>' || true)"
+    prose="$(printf '%s\n' "$stripped" | grep -v '🎯\|✏️' || true)"
+    if [[ "$base" == java-study-ch*.md ]]; then
+      prose="$(printf '%s\n' "$prose" | grep -v '^[0-9]*:>' || true)"
+    fi
+    # 인라인 코드와 "..." 인용을 지운 뒤 검사 (인용문은 원문 문체 보존)
+    prose="$(printf '%s\n' "$prose" | sed -E 's/`[^`]*`//g; s/"[^"]*"//g')"
     local heoje_hits
-    heoje_hits="$(printf '%s\n' "$prose" | grep -E '다\.[\"'"'"')]*$' | grep -vE '니다\.[\"'"'"')]*$' || true)"
+    heoje_hits="$(printf '%s\n' "$prose" | grep -E '다\.[\"'"'"')*]*$|[^니]다\. |^[0-9]+:[[:space:]]*([-*]|[0-9]+\.) .*[^니]다$|[^니마보]다 *\|' \
+      | grep -vE '니다\.[\"'"'"')*]*$' || true)"
     if [ -n "$heoje_hits" ]; then
       echo "  [산문 평어체] 합니다체로 교체 (스캐폴드·콜아웃 슬롯은 이미 제외됨)"
       printf '%s\n' "$heoje_hits" | sed 's/^/    /'

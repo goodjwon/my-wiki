@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 6 장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-28
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -485,5 +485,3 @@ public boolean equals(Bigram b) { ... }   // Object가 아니라 Bigram을 받�
 ## 다음 장 예고 — 7장: 람다와 스트림
 
 익명 클래스 대신 람다, 메서드 참조, 표준 함수형 인터페이스, 그리고 **스트림을 언제 쓰고 언제 피할지**를 다룹니다. 현업에서 가장 자주 쓰이지만 가독성·성능 면에서 오남용도 잦은 장입니다.
-
-> 이어서 만들까요? (7장으로 진행 / 8장 메서드로 점프 / 지금까지 만든 장들을 통합 교재로 묶기)

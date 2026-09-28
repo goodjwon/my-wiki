@@ -13,7 +13,7 @@ updated: 2026-09-28
 
 프로젝트 루트에 두는 **에이전트 실행 환경의 헌법** 파일입니다. Claude Code가 세션 시작 시 가장 먼저 읽으며, 모든 모델이 이 규칙 안에서 동작합니다. AI가 생성한 내용을 포함하지 않고 팀이 직접 관리합니다.
 
-> 이 파일은 프롬프트가 아니다. 에이전트 실행 환경의 헌법이다.
+> 이 파일은 프롬프트가 아닙니다. 에이전트 실행 환경의 헌법입니다.
 
 `AGENTS.md`는 같은 개념의 **모델 불가지론적** 버전입니다. 한 프로젝트만 쓴다면 `CLAUDE.md`를 우선하고, 멀티 모델 환경이면 `AGENTS.md`를 병용합니다. 단 Claude Code는 `CLAUDE.md`가 있는 디렉터리에서는 `AGENTS.md`를 읽지 않습니다(`CLAUDE.md`가 없을 때만 대신 읽음 — 2.1.283 실측). 두 파일을 함께 쓰려면 `CLAUDE.md` 맨 위에 `@AGENTS.md`로 import하거나 심볼릭 링크로 연결합니다.
 
@@ -71,9 +71,11 @@ CLAUDE.md 하단에는 반드시 다음 표를 둡니다 — 에이전트가 같
 
 "다음엔 잘 해줘" 대신 → **구조적 방지 장치로 전환**합니다 ([[concept-harness-engineering]]의 핵심 원칙 #2).
 
-## Spring Boot DDD 통합 예시
+## Spring Boot DDD 통합 예시 (원본 템플릿)
 
-`raw/ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md`는 다음 섹션을 포함:
+> 아래는 원본 키트의 **Spring Boot DDD용 템플릿**입니다. 위키 실습은 Node 기반 `~/harness-playground`로 진행하며, 그 실습용 CLAUDE.md는 [[guide-harness-module2]]에서 작성합니다.
+
+`raw/ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md`는 다음 섹션을 포함합니다.
 
 1. **Tech Stack** — Java 17 / Spring Boot 3.x / JPA + QueryDSL / Oracle / Gradle
 2. **Karpathy 4원칙** — 위 4원칙을 DDD 관점에서 구체화 (Entity/VO/Aggregate Root 확인 등)

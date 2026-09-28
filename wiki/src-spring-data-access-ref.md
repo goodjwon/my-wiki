@@ -4,14 +4,14 @@ type: source
 tags: [spring, jdbc, jpa, transaction, 공식문서]
 sources: [spring/spring-data-access-ref.md]
 created: 2026-04-19
-updated: 2026-04-19
+updated: 2026-09-28
 ---
 
 # Spring Framework Data Access Reference
 
 ## 개요
 
-Spring Framework 7.0.7 공식 문서의 Data Access 섹션. Transaction Management, JDBC, JPA, DAO Support 핵심 내용을 수집했다.
+Spring Framework 7.0.7 공식 문서의 Data Access 섹션입니다. Transaction Management, JDBC, JPA, DAO Support 핵심 내용을 수집했습니다.
 
 원본: https://docs.spring.io/spring-framework/reference/data-access.html
 
@@ -27,7 +27,7 @@ Spring Framework 7.0.7 공식 문서의 Data Access 섹션. Transaction Manageme
 
 ## 핵심 인사이트
 
-> Spring Data Access의 핵심은 **기술(JDBC/JPA/Hibernate)에 독립적인 일관된 프로그래밍 모델**을 제공하는 것이다.
+> Spring Data Access의 핵심은 **기술(JDBC/JPA/Hibernate)에 독립적인 일관된 프로그래밍 모델**을 제공하는 것입니다.
 
 - `@Transactional` 하나로 선언적 트랜잭션 관리
 - `DataAccessException` 계층으로 예외 통일

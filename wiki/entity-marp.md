@@ -5,7 +5,7 @@ tags: [도구, 프레젠테이션, 마크다운, 슬라이드]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://marp.app]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Marp — Markdown Presentation Ecosystem
@@ -21,8 +21,8 @@ updated: 2026-07-02
 |---------|------|
 | **Marp Core** | 모든 공식 도구의 변환 엔진 |
 | **Marpit Framework** | Markdown + CSS 테마 → HTML/CSS 슬라이드 덱으로 변환하는 기반 프레임워크 |
-| **Marp CLI** | 명령줄 도구. `marp slides.md -o slides.pdf` |
-| **Marp for VS Code** | VS Code 확장. 실시간 미리보기 + 익스포트 |
+| **Marp CLI** | 명령줄 도구입니다. `marp slides.md -o slides.pdf` |
+| **Marp for VS Code** | VS Code 확장으로 실시간 미리보기와 내보내기를 지원합니다 |
 
 ## 출력 포맷
 
@@ -53,9 +53,9 @@ footer: '© 2026'
 - $E = mc^2$  ← 수식 지원
 ```
 
-- `---` (수평선) → 슬라이드 구분자
-- CommonMark 기반 + 확장 디렉티브 (이미지 사이징, 수식 typesetting, auto-scaling)
-- frontmatter에 `theme:` 지정
+- `---`(수평선)이 슬라이드 구분자입니다.
+- CommonMark를 기반으로 확장 디렉티브(이미지 크기 조절, 수식 조판, 자동 크기 맞춤)를 더합니다.
+- 테마는 frontmatter의 `theme:`으로 지정합니다.
 
 ## 기본 테마
 
@@ -80,5 +80,5 @@ footer: '© 2026'
 ## 관련
 
 - [[entity-obsidian]] — Obsidian Marp 플러그인 호스트
-- [[concept-query]] — Marp는 Query 출력 옵션
+- [[concept-query]] — Query 출력 형식 중 하나
 - [[src-llm-wiki-pattern]] — 출처 패턴

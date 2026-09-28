@@ -4,28 +4,28 @@ type: concept
 tags: [워크플로, 위키운영, 질의응답]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Query (질의)
 
-위키에 질문하고 LLM이 관련 페이지를 종합해 답하는 워크플로. [[concept-ingest|Ingest]]와 함께 LLM Wiki의 두 축.
+위키에 질문하고 LLM이 관련 페이지를 종합해 답하는 워크플로입니다. [[concept-ingest|Ingest]]와 함께 LLM Wiki의 두 축을 이룹니다.
 
 ## RAG와의 차이
 
 전통 RAG는 매 질의마다 raw 문서에서 청크를 검색·재합성합니다. **누적되는 것이 없습니다.**
 
-Query는 다릅니다 — 이미 [[concept-ingest|Ingest]]를 통해 위키에 구조화·교차참조된 페이지가 존재합니다. LLM은 다음 순서로 동작합니다:
+Query는 다릅니다. 이미 [[concept-ingest|Ingest]]를 통해 위키에 구조화·교차참조된 페이지가 존재합니다. LLM은 다음 순서로 동작합니다.
 
-1. `wiki/index.md` 를 읽어 관련 페이지 식별
-2. 해당 페이지들을 로드, 답변 합성
-3. 출처(`[[페이지명]]`)와 함께 인용
+1. `wiki/index.md`를 읽어 관련 페이지를 찾습니다.
+2. 해당 페이지들을 읽고 답변을 합성합니다.
+3. 출처(`[[페이지명]]`)와 함께 인용합니다.
 
-→ 합성 자체가 빠르고, 같은 질문을 다시 받아도 추가 비용 없이 일관된 답이 나옵니다.
+따라서 합성 자체가 빠르고, 같은 질문을 다시 받아도 추가 비용 없이 일관된 답이 나옵니다.
 
 ## 답변 출력 형식
 
-질문 성격에 따라 다양:
+질문 성격에 따라 형식을 고릅니다.
 
 - **마크다운 페이지** (가장 일반적)
 - **비교표** (entity vs entity, version vs version 등)
@@ -40,7 +40,7 @@ Query는 다릅니다 — 이미 [[concept-ingest|Ingest]]를 통해 위키에 �
 
 가치 있는 Query 응답은 채팅 히스토리에서 사라지지 않게 **synthesis / comparison 페이지로 다시 위키에 저장**합니다. 이 과정에서 탐구 자체가 [[concept-compounding-knowledge|복리 지식]]에 기여합니다.
 
-이 위키의 예: [[guide-project-docs-setup]] (synthesis 페이지로 저장된 Query 결과)
+이 위키에서는 [[guide-project-docs-setup]]이 Query 결과를 synthesis 페이지로 저장한 예입니다.
 
 ## 표준 플로우
 
@@ -59,8 +59,8 @@ LLM이 index.md 읽음 → 관련 페이지 식별
 
 ## 위키 규모와 검색
 
-- **~100 페이지**: `index.md` 통독으로 충분 (LLM이 인덱스 먼저 보고 드릴다운)
-- **그 이상**: [[entity-qmd|qmd]] 같은 하이브리드 검색 엔진 도입 검토
+- **~100 페이지**: `index.md` 통독으로 충분합니다. LLM이 인덱스를 먼저 보고 필요한 페이지로 내려갑니다.
+- **그 이상**: [[entity-qmd|qmd]] 같은 하이브리드 검색 엔진 도입을 검토합니다.
 
 ## 관련
 

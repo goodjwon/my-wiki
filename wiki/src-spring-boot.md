@@ -4,12 +4,12 @@ type: source
 tags: [Java, Spring, 프레임워크, 백엔드]
 sources: [spring/Spring Boot.md]
 created: 2026-04-18
-updated: 2026-04-18
+updated: 2026-09-28
 ---
 
 # Spring Boot — 소스 요약
 
-Spring 공식 사이트의 Spring Boot 프로젝트 소개 페이지 클리핑. 최신 버전 **4.0.5** 기준.
+Spring 공식 사이트의 Spring Boot 프로젝트 소개 페이지 클리핑. 클리핑 당시 최신 버전 **4.0.5** 기준입니다(2026-09 현재 최신은 4.1.1).
 
 ## 핵심 메시지
 
@@ -18,7 +18,7 @@ Spring Boot는 독립 실행 가능한 프로덕션급 Spring 애플리케이션
 ## 주요 기능
 
 - **독립 실행** — stand-alone Spring 애플리케이션 생성
-- **내장 서버** — Tomcat, Jetty, Undertow 내장 (WAR 배포 불필요)
+- **내장 서버** — Tomcat, Jetty 내장 (WAR 배포 불필요). Undertow는 Servlet 6.1(Jakarta EE 11)을 지원하지 않아 Spring Boot 4.0에서 지원이 제거되었습니다
 - **Starter 의존성** — 빌드 설정을 단순화하는 opinionated 의존성 묶음
 - **자동 설정** — Spring 및 서드파티 라이브러리 자동 구성
 - **프로덕션 기능** — 메트릭, 헬스체크, 외부화된 설정

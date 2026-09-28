@@ -1,6 +1,6 @@
 ---
 title: Wons Wiki 인덱스
-updated: 2026-09-03
+updated: 2026-09-28
 
 ---
 
@@ -99,7 +99,7 @@ updated: 2026-09-03
 - [[plan-tone-consistency]] — 톤앤매너 정합 계획 (문체 표준 §7 + style-lint 게이트 + 루프 프롬프트 A/B/C)
 - [[plan-practice-scaffold]] — 실습 스캐폴드 계획 (예제마다 경로·패키지·실행명령, §7-7 + scaffold-lint + 프롬프트 A~D)
 - [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 가이드 (CLAUDE.md 템플릿, ADR, API, 트러블슈팅)
-- [[guide-java-book-study-lab]] — Java 도서 5권 실습 환경 가이드 (Java 17, JUnit 5, Python, Node)
+- [[guide-java-book-study-lab]] — 5권 도서 공통 가이드: 읽는 순서·오각형 비교·실습 환경
 - [[guide-java-learning-path]] — 📘 Java 학습 경로 전체 지도 (5개 트랙: 기초→설계→입출력→Spring→실전)
   - [[guide-java-track1-basics]] · [[guide-java-track2-design]] · [[guide-java-track3-io-network]] · [[guide-java-track4-spring-web]] · [[guide-java-track5-deep-dive]]
 - **Java·Spring 실습 과제 (실행 검증·스크린샷 포함, 2026-09-28)**:

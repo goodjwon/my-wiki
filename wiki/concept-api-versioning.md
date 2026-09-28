@@ -7,7 +7,7 @@ external:
   - https://spring.io/blog/2025/09/16/api-versioning-in-spring
   - https://docs.spring.io/spring-framework/reference/web/webmvc-versioning.html
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # API Versioning (Spring 7.0)
@@ -206,13 +206,20 @@ class UserControllerV2 {
 - 결국 v3, v4... 누적 → 유지보수 지옥이 됩니다
 - **deprecation 정책 + sunset 시점 합의가 함께** 가야 합니다
 
-## 같은 인사이트 패턴
+## 같은 인사이트 패턴 — "기본값과 가정의 함정"
 
-| 페이지 | "기본값과 가정의 함정" |
-|--------|----------------------|
-| **이 페이지** | 버전 만들면 영원히 유지 부담 |
-| [[concept-api-backward-compatibility]] | Tolerant Reader 명세 없으면 silent 사고 |
-| [[concept-transactional-rollback-policy]] | `@Transactional` 체크 예외 commit |
+| 페이지 | 위험한 기본값·가정 | 결과 | 실무 권장 |
+|--------|-------------------|------|----------|
+| [[concept-transactional-rollback-policy|트랜잭션 롤백]] | `@Transactional`이 모든 예외를 롤백한다는 가정 (기본은 unchecked 예외·`Error`만 롤백) | 체크 예외에서 커밋되어 데이터 오염 | `rollbackFor = Exception.class` 또는 사내 합성 애너테이션 |
+| [[concept-api-backward-compatibility|API 하위 호환]] | 클라이언트 JSON 파서가 미지 필드에 관용적일 것이라는 가정 (라이브러리마다 기본값이 다름) | 응답 필드 하나 추가로 앱 전체 오류 | Tolerant Reader + 응답 구조 wrapping 변경 금지 |
+| **API 버전 관리 (이 페이지)** | 버전을 나누면 변경 부담이 끝난다는 가정 | 강제 업데이트가 불가한 환경에서 v1 코드 영구 유지 | 버전은 Controller·DTO에만 + deprecation·sunset 합의 |
+| [[concept-jpa-enum-mapping|JPA enum 매핑]] | JPA `@Enumerated` 기본 `ORDINAL` | enum 순서 변경·중간 삽입 시 조용한 데이터 오염 | `EnumType.STRING` + `@Column(length)` 명시 |
+| [[concept-cronjob-concurrency-trap|크론잡 동시 실행]] | K8s CronJob `concurrencyPolicy` 기본 `Allow` | 배치 중복 실행 → 정산 2배 | `Forbid` + `activeDeadlineSeconds` |
+| [[concept-keepalive-timeout-race|Keep-Alive 타임아웃]] | 웹 서버 keep-alive 기본값이 LB idle 이하 (Gunicorn 2초·Node.js 5초·Tomcat 60초 vs ALB 60초) | 서버가 먼저 끊어 새벽 간헐 502 | 서버 keep-alive > LB idle (+5~15초) |
+| [[concept-db-connection-pool|DB 커넥션 풀]] | 풀의 커넥션이 계속 유효하다는 가정 (`maxLifetime`이 DB `wait_timeout`·방화벽/LB idle 제한보다 김) | 이미 끊긴 커넥션 대여 → 산발적 `Connection is closed` | `maxLifetime`을 가장 짧은 인프라 제한보다 몇 초 짧게 + `keepaliveTime` |
+| [[concept-varchar-length-prefix|VARCHAR 길이]] | 관습적 `VARCHAR(255)` (Latin1 시대의 1바이트 프리픽스 경계) | utf8mb4에서는 2바이트 프리픽스 → 의도와 다른 저장·인덱스 비용 | 도메인 상한 우선 + utf8mb4의 63 경계 인지 |
+| [[concept-java-serialization-risk|자바 직렬화]] | `ObjectInputStream`이 데이터를 그냥 읽어 줄 것이라는 신뢰 | 임의 클래스 코드 실행(RCE) | JSON·Protobuf로 대체, 불가피하면 `ObjectInputFilter` 화이트리스트 |
+| [[concept-id-reference-vs-object-reference|애그리거트 참조]] | JPA 객체 참조로 애그리거트 경계 관통 | 트랜잭션 번짐·N+1 | 경계 밖은 ID 참조 |
 
 → 공통: **"단순 변경의 부담을 미래의 누군가에게 전가하는 결정"** — 신중히 판단해야 합니다.
 

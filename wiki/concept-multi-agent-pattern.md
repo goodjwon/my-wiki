@@ -111,7 +111,7 @@ REJECT: 근본적 재설계 필요
 
 OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL REJECT 권한을 부여하는 패턴이 등장합니다. 단일 모델의 자기검증보다 모델 간 교차 검증이 더 강력합니다.
 
-> **Loop 엔지니어링 관점**: Critic의 `CONDITIONAL REJECT` / `REJECT`가 [[concept-loop-engineering]]에서 말하는 **"루프 안의 거부 신호"** 의 또 다른 구현이다. Hooks(back-pressure)가 코드·테스트 수준의 거부라면, Critic은 구조·설계 수준의 거부. 두 신호가 모두 있어야 루프가 메아리방이 되지 않는다.
+> **Loop 엔지니어링 관점**: Critic의 `CONDITIONAL REJECT` / `REJECT`가 [[concept-loop-engineering]]에서 말하는 **"루프 안의 거부 신호"** 의 또 다른 구현입니다. Hooks(back-pressure)가 코드·테스트 수준의 거부라면, Critic은 구조·설계 수준의 거부입니다. 두 신호가 모두 있어야 루프가 메아리방이 되지 않습니다.
 
 ## AGENTS.md — 모델 불가지론적 표준
 

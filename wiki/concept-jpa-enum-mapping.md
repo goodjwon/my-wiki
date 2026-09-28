@@ -86,7 +86,7 @@ public enum Ensemble {
 
 "순서에 의미를 싣지 말라"는 이 원칙을 DB 저장으로 확장하면, `ORDINAL` 저장 금지가 곧바로 따라 나옵니다.
 
-## JPA `@Enumerated` 기본값 함정 — ORDINAL은 조용히 데이터를 오염시킨다
+## JPA `@Enumerated` 기본값 함정 — ORDINAL의 조용한 데이터 오염
 
 Jakarta Persistence 명세에서 `@Enumerated`의 value 기본값은 `EnumType.ORDINAL`입니다. 즉 애너테이션을 생략하거나 `@Enumerated`만 붙이면 **선언 순서 숫자**가 DB에 저장됩니다. 함정이 되는 코드와 안전한 코드를 비교합니다.
 
@@ -121,7 +121,7 @@ public class Contract {
 | `SUSPENDED` | `2` | `'SUSPENDED'` |
 | `CLOSED` | `3` | `'CLOSED'` |
 
-### 사고 시나리오 — 중간 삽입 한 줄이 전체 데이터를 재해석한다
+### 사고 시나리오 — 중간 삽입 한 줄의 전체 데이터 재해석
 
 `ACTIVE` 앞에 `PENDING`(승인 대기)을 추가하는 흔한 요구사항이 들어왔다고 합시다. 코드는 `DRAFT, PENDING, ACTIVE, SUSPENDED, CLOSED` 한 줄 수정이지만, ORDINAL로 저장된 기존 데이터는 다음처럼 전부 다른 상태로 읽힙니다.
 
@@ -134,7 +134,7 @@ public class Contract {
 
 가장 위험한 점은 **예외가 전혀 나지 않는다**는 것입니다. 숫자 1은 여전히 유효한 ordinal이므로 JPA는 아무 경고 없이 다른 상수로 역직렬화하고, 사고는 정산·통계가 어긋난 뒤에야 발견됩니다. STRING이었다면 이름으로 매칭하므로 순서 변경·중간 삽입에 전혀 영향받지 않습니다.
 
-### STRING의 대가 — 이름 변경은 마이그레이션이 필요하다
+### STRING의 대가 — 이름 변경 시 필요한 마이그레이션
 
 STRING도 공짜는 아닙니다. 저장 값이 `name()`(상수 이름 그대로)이므로, 상수 이름을 바꾸면 기존 데이터가 매칭에 실패해 이번에는 **시끄럽게** 깨집니다(`IllegalArgumentException`). 그래서 이름 변경은 반드시 DB 마이그레이션과 한 세트로 배포해야 합니다.
 
@@ -159,15 +159,18 @@ Hibernate 6 공식 문서 기준으로 `@Enumerated(STRING)`은 대부분의 DB�
 
 이 함정은 위키에 누적 중인 "기본값과 가정의 함정" 패턴의 신규 사례입니다. 프레임워크·인프라가 깔아 둔 기본값을 검토 없이 받아들이면 조용한 사고로 돌아온다는 공통 구조를 가집니다.
 
-| 페이지 | 위험 |
-|--------|------|
-| **이 페이지** | JPA `@Enumerated` 기본 `ORDINAL` — enum 선언 순서가 곧 데이터 |
-| [[concept-api-backward-compatibility]] | 클라이언트 JSON 라이브러리 기본값 차이 |
-| [[concept-transactional-rollback-policy]] | `@Transactional` 체크 예외 commit |
-| [[concept-cronjob-concurrency-trap]] | K8s `concurrencyPolicy: Allow` |
-| [[concept-keepalive-timeout-race]] | 웹 서버 keep-alive 짧음 |
-| [[concept-db-connection-pool]] | 무한 수명 커넥션 |
-| [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` |
+| 페이지 | 위험한 기본값·가정 | 결과 | 실무 권장 |
+|--------|-------------------|------|----------|
+| [[concept-transactional-rollback-policy|트랜잭션 롤백]] | `@Transactional`이 모든 예외를 롤백한다는 가정 (기본은 unchecked 예외·`Error`만 롤백) | 체크 예외에서 커밋되어 데이터 오염 | `rollbackFor = Exception.class` 또는 사내 합성 애너테이션 |
+| [[concept-api-backward-compatibility|API 하위 호환]] | 클라이언트 JSON 파서가 미지 필드에 관용적일 것이라는 가정 (라이브러리마다 기본값이 다름) | 응답 필드 하나 추가로 앱 전체 오류 | Tolerant Reader + 응답 구조 wrapping 변경 금지 |
+| [[concept-api-versioning|API 버전 관리]] | 버전을 나누면 변경 부담이 끝난다는 가정 | 강제 업데이트가 불가한 환경에서 v1 코드 영구 유지 | 버전은 Controller·DTO에만 + deprecation·sunset 합의 |
+| **JPA enum 매핑 (이 페이지)** | JPA `@Enumerated` 기본 `ORDINAL` | enum 순서 변경·중간 삽입 시 조용한 데이터 오염 | `EnumType.STRING` + `@Column(length)` 명시 |
+| [[concept-cronjob-concurrency-trap|크론잡 동시 실행]] | K8s CronJob `concurrencyPolicy` 기본 `Allow` | 배치 중복 실행 → 정산 2배 | `Forbid` + `activeDeadlineSeconds` |
+| [[concept-keepalive-timeout-race|Keep-Alive 타임아웃]] | 웹 서버 keep-alive 기본값이 LB idle 이하 (Gunicorn 2초·Node.js 5초·Tomcat 60초 vs ALB 60초) | 서버가 먼저 끊어 새벽 간헐 502 | 서버 keep-alive > LB idle (+5~15초) |
+| [[concept-db-connection-pool|DB 커넥션 풀]] | 풀의 커넥션이 계속 유효하다는 가정 (`maxLifetime`이 DB `wait_timeout`·방화벽/LB idle 제한보다 김) | 이미 끊긴 커넥션 대여 → 산발적 `Connection is closed` | `maxLifetime`을 가장 짧은 인프라 제한보다 몇 초 짧게 + `keepaliveTime` |
+| [[concept-varchar-length-prefix|VARCHAR 길이]] | 관습적 `VARCHAR(255)` (Latin1 시대의 1바이트 프리픽스 경계) | utf8mb4에서는 2바이트 프리픽스 → 의도와 다른 저장·인덱스 비용 | 도메인 상한 우선 + utf8mb4의 63 경계 인지 |
+| [[concept-java-serialization-risk|자바 직렬화]] | `ObjectInputStream`이 데이터를 그냥 읽어 줄 것이라는 신뢰 | 임의 클래스 코드 실행(RCE) | JSON·Protobuf로 대체, 불가피하면 `ObjectInputFilter` 화이트리스트 |
+| [[concept-id-reference-vs-object-reference|애그리거트 참조]] | JPA 객체 참조로 애그리거트 경계 관통 | 트랜잭션 번짐·N+1 | 경계 밖은 ID 참조 |
 
 → 공통 교훈: **기본값은 "무난한 값"이 아니라 "역사적 이유가 있는 값"입니다.** `ORDINAL`이 기본인 것도 초기 JPA가 공간 효율을 우선한 결과일 뿐, 오늘의 안전한 선택이라는 뜻이 아닙니다.
 

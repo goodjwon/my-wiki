@@ -245,17 +245,20 @@ updated: 2026-09-28
 
 이 위키의 가장 큰 가치 → 비슷한 구조의 함정·해결이 여러 페이지에 흩어진 것을 **한 비교표로 묶어** 양방향 연결.
 
-예시:
-```markdown
-## 같은 인사이트 패턴 — "기본값과 가정의 함정"
+예시 — "기본값과 가정의 함정" 패턴은 멤버 페이지 전부가 **같은 행 집합·같은 열(페이지 | 위험한 기본값·가정 | 결과 | 실무 권장)** 의 표를 한 벌씩 갖고, 각 페이지는 자기 행만 `**주제 (이 페이지)**`로 표시합니다. 정본 표는 멤버 페이지 어느 곳에서든 확인할 수 있습니다.
 
-| 페이지 | 위험한 기본값 | 실무 권장 |
-|--------|-------------|----------|
-| **이 페이지** | ... | ... |
-| [[concept-cronjob-concurrency-trap]] | K8s Allow | Forbid + activeDeadlineSeconds |
-| [[concept-keepalive-timeout-race]] | 서버 < LB | 서버 > LB |
-| [[concept-db-connection-pool]] | 무한 수명 | maxLifetime < wait_timeout |
-```
+- [[concept-transactional-rollback-policy]] — `@Transactional` 체크 예외 커밋
+- [[concept-api-backward-compatibility]] — 클라이언트 JSON 파서의 관용성 가정
+- [[concept-api-versioning]] — 버전 분리의 영구 유지 부담
+- [[concept-jpa-enum-mapping]] — `@Enumerated` 기본 `ORDINAL`
+- [[concept-cronjob-concurrency-trap]] — K8s `concurrencyPolicy: Allow`
+- [[concept-keepalive-timeout-race]] — 웹 서버 keep-alive ≤ LB idle
+- [[concept-db-connection-pool]] — `maxLifetime`이 인프라 idle 제한보다 긴 설정
+- [[concept-varchar-length-prefix]] — 관습적 `VARCHAR(255)`
+- [[concept-java-serialization-risk]] — `ObjectInputStream`의 암묵적 신뢰
+- [[concept-id-reference-vs-object-reference]] — JPA 객체 참조의 경계 관통
+
+패턴에 새 멤버를 추가할 때는 정본 행 집합에 한 행을 더하고, **모든 멤버 페이지의 표를 같은 내용으로 갱신**합니다. 일부 페이지에만 행을 넣으면 표가 페이지마다 갈라집니다.
 
 새 페이지 작성 시 **기존 페이지에서 같은 패턴 찾아 양방향 추가**.
 

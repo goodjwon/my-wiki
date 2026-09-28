@@ -401,11 +401,11 @@ Started DemoApplication in 3.x seconds (process running for 4.x)
 
 아래 다섯 항목이 모두 통과하면 이 절의 목표는 달성입니다.
 
-- [ ] JDK 21이 설치되어 있고 `java -version`으로 확인했다
-- [ ] IDE Project SDK가 올바르게 설정되어 있다
-- [ ] Lombok과 Maven import가 정상 동작한다
-- [ ] `./mvnw spring-boot:run`이 실행된다
-- [ ] `./mvnw test`가 통과한다
+- [ ] JDK 21이 설치되어 있고 `java -version`으로 확인했습니다
+- [ ] IDE Project SDK가 올바르게 설정되어 있습니다
+- [ ] Lombok과 Maven import가 정상 동작합니다
+- [ ] `./mvnw spring-boot:run`이 실행됩니다
+- [ ] `./mvnw test`가 통과합니다
 
 ---
 

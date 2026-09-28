@@ -7,7 +7,7 @@ external:
   - https://spring.io/projects/spring-framework
   - https://docs.spring.io/spring-framework/reference/
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Spring Framework
@@ -120,7 +120,7 @@ User user = restClient
 | 정체성 | **기반 프레임워크** | **응용 도구** (Framework 위에) |
 | 설정 | 직접 (XML/JavaConfig) | 자동 설정 |
 | 서버 | 외부 (Tomcat 별도) | 내장 (실행 가능 jar) |
-| 시작 시간 | 길다 | 짧다 |
+| 시작 시간 | 느림 | 빠름 |
 | 운영 도구 | 직접 추가 | Actuator 기본 |
 
 → **Spring Boot = Spring Framework + 자동 설정 + 내장 서버 + 운영 도구.** 새 프로젝트는 거의 100%가 Spring Boot입니다.

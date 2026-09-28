@@ -96,7 +96,7 @@ public class OrderValidator {          // 도메인 서비스 — 여러 애그�
 |--------|------------|----------------|----------|
 | **이 페이지** | JPA `@ManyToOne` 객체 참조 | 트랜잭션 번짐·N+1·잠금 대기 | 경계 밖은 ID 참조 |
 | [[concept-transactional-rollback-policy]] | `@Transactional` 기본 롤백 정책 | 체크 예외가 commit됨 | `rollbackFor = Exception.class` |
-| [[concept-db-connection-pool]] | 무한 수명 커넥션 | DB `wait_timeout`과 충돌 | `maxLifetime` < `wait_timeout` |
+| [[concept-db-connection-pool]] | 풀의 커넥션이 계속 유효하다는 가정 (`maxLifetime`이 DB `wait_timeout`·LB idle보다 김) | 끊긴 커넥션 대여 → 산발적 `Connection is closed` | `maxLifetime`을 가장 짧은 인프라 제한보다 몇 초 짧게 |
 | [[concept-varchar-length-prefix]] | 관습적 `VARCHAR(255)` | utf8mb4에서 인덱스 한계 초과 | `VARCHAR(63)` 또는 도메인 길이 |
 | [[concept-cronjob-concurrency-trap]] | `concurrencyPolicy` 기본 `Allow` | 중복 실행 | `Forbid` + `activeDeadlineSeconds` |
 | [[concept-local-first-append-only]] | "하루 = UTC 날짜" | 자정·타임존 경계에서 스트릭 오판 | 저장은 UTC, 판정은 로컬 자정, 시계 단일 seam |

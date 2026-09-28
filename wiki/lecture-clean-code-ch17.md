@@ -4,7 +4,7 @@ type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 17장.md]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-09-28
 ---
 
 # 클린 코드 실전 강의 교재
@@ -305,5 +305,3 @@ PR 코멘트 예시:
 - *Clean Architecture* (Uncle Bob) — 시스템 단위
 - *The Clean Coder* (Uncle Bob) — 태도·전문성
 - 본 위키의 [[entity-effective-java]] / [[entity-refactoring]] / [[entity-object]] 교차 학습
-
-> 강의 교재 17장 완료. 4권 도서 비교의 마지막 책 정련까지 완성.

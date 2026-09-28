@@ -4,14 +4,14 @@ type: source
 tags: [spring, spring-boot, 가이드, 실무]
 sources: [spring/spring-guide.md]
 created: 2026-04-19
-updated: 2026-04-19
+updated: 2026-09-28
 ---
 
 # Spring Guide (cheese10yun)
 
 ## 개요
 
-cheese10yun의 Spring Boot 실무 가이드 모음. GitHub 저장소에서 6개 가이드 문서를 수집했다.
+cheese10yun의 Spring Boot 실무 가이드 모음입니다. GitHub 저장소에서 6개 가이드 문서를 수집했습니다.
 
 원본: https://github.com/cheese10yun/spring-guide
 
@@ -28,7 +28,7 @@ cheese10yun의 Spring Boot 실무 가이드 모음. GitHub 저장소에서 6개 
 
 ## 핵심 메시지
 
-> 실무에서 반복되는 구조적 결정을 가이드로 표준화하면, 팀 전체의 코드 품질이 일관되게 올라간다.
+> 실무에서 반복되는 구조적 결정을 가이드로 표준화하면, 팀 전체의 코드 품질이 일관되게 올라갑니다.
 
 ## 관련 페이지
 

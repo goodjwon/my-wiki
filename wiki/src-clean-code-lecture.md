@@ -4,33 +4,25 @@ type: source
 tags: [book, clean-code, uncle-bob, lecture, curriculum]
 sources: [clean-code/]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-09-28
 ---
 
 # Clean Code 실전 강의 교재 — 17장 인덱스
 
 ## 무엇인가
 
-Robert C. Martin *Clean Code* (Prentice Hall, 2008) 의 **1~17장** 을 Java/Spring 백엔드 입문~중급 수강생용 강의 교재로 풀어 쓴 자료. 총 **약 5,500줄**. 각 장 형식:
+Robert C. Martin *Clean Code* (Prentice Hall, 2008) 의 **1~17장** 을 Java/Spring 백엔드 입문~중급 수강생용 강의 교재로 풀어 쓴 자료입니다. 총 **약 5,500줄**이며, 각 장은 다음 형식을 따릅니다.
 
 - 0. 도입 (학습 목표·큰 그림 ASCII·시그니처 비유·현업에서 왜 중요한가)
 - 본문 (각 절별 한 줄 정의 → 비유 → Before/After → 함정 → Spring 현업)
 - 종합 (핵심 교훈 + 체크리스트 + Q/A 분리 퀴즈)
 - 다음 장 예고
 
-→ 책 카드는 [[entity-clean-code]].
+→ 책 카드는 [[entity-clean-code]]입니다.
 
 ## 실습 환경과 장별 루틴
 
-먼저 [[guide-java-book-study-lab]]의 Java 17 + JUnit 5 환경을 준비한다. Clean Code 강의는 거대한 프로젝트보다 **작은 함수 하나, 이름 하나, 테스트 하나**를 고치는 식으로 따라가는 편이 효과적이다.
-
-각 장은 같은 순서로 적용한다.
-
-1. Before 코드를 읽고 “읽는 사람이 추측해야 하는 부분”을 표시한다.
-2. 이름 변경, 함수 추출, 조건 캡슐화처럼 가장 작은 정리를 하나 고른다.
-3. After 코드를 작성하고 테스트를 실행한다.
-4. 코드가 더 짧아졌는지보다 의도가 더 잘 보이는지 확인한다.
-5. 장 끝 체크리스트를 자기 코드 한 파일에 적용한다.
+실습 환경(Java 17 + JUnit 5)과 5권 공통 루틴(읽기 → 빨강 → 초록 → 정련 → 기록)은 [[guide-java-book-study-lab]]에 있습니다. Clean Code 강의는 거대한 프로젝트보다 **작은 함수 하나, 이름 하나, 테스트 하나**를 고치는 식으로 따라갑니다.
 
 ## 17편 인덱스 — 각 장 본문으로 바로 진입
 
@@ -63,7 +55,7 @@ Robert C. Martin *Clean Code* (Prentice Hall, 2008) 의 **1~17장** 을 Java/Spr
 
 > 대상: Java/Spring 백엔드 입문~중급
 > 형식: 개념 → 비유 → Before/After → 함정 → 체크리스트 → 퀴즈
-> 전제: Java 17+, Spring Boot 3.x
+> 전제: Java 17+, Spring Boot 4.x (start.spring.io 기본값)
 
 ## 0. 이 장을 시작하기 전에
   0.1 학습 목표
@@ -148,15 +140,15 @@ Robert C. Martin *Clean Code* (Prentice Hall, 2008) 의 **1~17장** 을 Java/Spr
 
 ## 한계·주의
 
-- **사용자 강사용 내부 교재** 성격 — 인용·재배포 전 확인
-- **Java 17 + Spring Boot 3.x** 가정
-- 책 본문 직접 인용 아닌 강의용 재구성
-- "주석은 다 나쁨" 같은 도그마는 본문이 단서 ("단, ...") 를 다는 점 유의
+- **사용자 강사용 내부 교재** 성격입니다 — 인용·재배포 전에 확인합니다
+- **Java 17+** 가정 — 각 장 본문의 전제 환경 표기는 Spring Boot 3.x이며, 현재 기준(Spring Boot 4.x)과 다른 부분은 조정해 읽습니다
+- 책 본문을 직접 인용하지 않은 강의용 재구성입니다
+- "주석은 다 나쁨" 같은 도그마는 본문이 단서 ("단, ...") 를 다는 점에 유의합니다
 
 ## 관련 페이지
 
 - [[entity-clean-code]] — 책 카드 (상위)
 - [[entity-effective-java]] / [[src-effective-java-lecture]] — 같은 패턴 강의 교재
 - [[entity-refactoring]] / [[src-refactoring-lecture]] — 같은 패턴 강의 교재
-- [[entity-object]] / [[entity-tdd]] — 5권 오각형 비교 (entity 마다 동일 표)
-- [[guide-java-book-study-lab]] — 5권 공통 실습 환경
+- [[entity-object]] / [[entity-tdd]] — 5권 도서 카드
+- [[guide-java-book-study-lab]] — 5권 오각형·추천 학습 순서·공통 실습 환경

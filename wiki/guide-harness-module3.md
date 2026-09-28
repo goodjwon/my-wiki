@@ -505,7 +505,7 @@ git status --short   # → 아무것도 출력되지 않으면 정상
 처음에는 의도된 동작입니다 — `exit 2`라 Claude에게 오류가 전달돼 스스로 고치게 합니다. ESLint 규칙이 너무 엄격하면 ESLint 설정 파일(playground는 `api/eslint.config.js`)에서 일부 규칙을 warning으로 낮추거나, lint-fix.sh의 `exit 2`를 `exit 0`(경고만, 차단 안 함)으로 바꿉니다.
 
 ### Q. lint-fix.sh가 파일 경로를 못 잡아요 (린트가 안 됩니다)
-파일 경로는 **stdin JSON의 `.tool_input.file_path`**에서 온다 (예전 `CLAUDE_TOOL_OUTPUT_FILE` 환경변수가 아님). jq가 설치돼 있는지(`jq --version`), `claude --debug`로 PostToolUse가 받는 JSON에 `tool_input.file_path`가 있는지 확인. 직접 테스트:
+파일 경로는 **stdin JSON의 `.tool_input.file_path`**에서 옵니다 (예전 `CLAUDE_TOOL_OUTPUT_FILE` 환경변수가 아닙니다). jq가 설치돼 있는지(`jq --version`), `claude --debug`로 PostToolUse가 받는 JSON에 `tool_input.file_path`가 있는지 확인합니다. 아래 명령으로 직접 테스트합니다.
 ```bash
 echo '{"tool_input":{"file_path":"api/src/app.js"}}' | bash .claude/hooks/lint-fix.sh
 ```

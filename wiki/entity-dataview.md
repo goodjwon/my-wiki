@@ -5,7 +5,7 @@ tags: [도구, Obsidian, 플러그인, 쿼리]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 external: [https://blacksmithgu.github.io/obsidian-dataview/]
 created: 2026-04-18
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Dataview
@@ -34,9 +34,10 @@ SORT year DESC
 LIMIT 10
 ```
 
-구조: `<쿼리 유형>` + `FROM` (선택) + `WHERE` / `SORT` / `GROUP BY` / `LIMIT` (선택)
+구조는 `<쿼리 유형>` + `FROM`(선택) + `WHERE` / `SORT` / `GROUP BY` / `LIMIT`(선택)입니다.
 
-예시:
+작성자로 거르는 예시입니다.
+
 ```dataview
 LIST FROM #poems WHERE author = "Edgar Allan Poe"
 ```
@@ -45,15 +46,15 @@ LIST FROM #poems WHERE author = "Edgar Allan Poe"
 
 | 방식 | 예시 |
 |------|------|
-| **Frontmatter** (YAML) | `---\ntags: [book]\nrating: 5\n---` |
+| **Frontmatter** (YAML) | `tags: [book]`, `rating: 5` |
 | **인라인 필드** | 본문에 `[author:: Tolkien]` 또는 `rating:: 5` |
-| **암묵 필드** | 태그·링크·태스크는 자동 인덱싱 |
+| **암묵 필드** | 태그·링크·태스크는 자동으로 인덱싱됩니다 |
 
 ## 3가지 사용 모드
 
-1. **DQL (Dataview Query Language)** — 선언적 쿼리 (기본·권장)
-2. **인라인 DQL** — 본문 내 단일 값 표현식. `` `= file.size` ``
-3. **Dataview JS** — JavaScript API. `dv.pages("#book").table(...)` — 고급 커스터마이징
+1. **DQL (Dataview Query Language)** — 선언적 쿼리입니다 (기본·권장).
+2. **인라인 DQL** — 본문 안에서 단일 값을 계산합니다. `` `= file.size` ``
+3. **Dataview JS** — JavaScript API로 고급 커스터마이징을 합니다. `dv.pages("#book").table(...)`
 
 ## 실용 예시
 
@@ -64,7 +65,7 @@ LIST FROM #poems WHERE author = "Edgar Allan Poe"
 
 ## LLM Wiki에서의 활용
 
-[[src-llm-wiki-pattern|LLM Wiki 패턴]]은 LLM이 위키 페이지에 일관된 frontmatter를 다는 점을 활용해 Dataview로 **동적 뷰**를 만들 것을 제안:
+[[src-llm-wiki-pattern|LLM Wiki 패턴]]은 LLM이 위키 페이지에 일관된 frontmatter를 다는 점을 활용해 Dataview로 **동적 뷰**를 만들 것을 제안합니다.
 
 - 특정 태그를 가진 페이지 목록
 - 최근 업데이트된 페이지 (`updated` 필드 기반)

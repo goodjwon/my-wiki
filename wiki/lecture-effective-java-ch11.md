@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 11장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-28
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -541,5 +541,3 @@ consumer.consume();
 ## 다음 장 예고 — 12장: 직렬화
 
 자바 직렬화의 **위험**(보안 취약점·역호환·성능)과 그 대안 — 6개 아이템(Item 85~90). "Effective Java 3판이 가장 격하게 경고하는 장." JSON/Protobuf로 가야 할 이유, 그래도 어쩔 수 없이 자바 직렬화를 써야 할 때의 방어 패턴(`readObject` 방어적 작성, 직렬화 프록시)을 다룹니다.
-
-> 이어서 만들까요? (12장으로 진행 / 책 전체 종합 정리 + 통합 교재 묶기로 마무리)

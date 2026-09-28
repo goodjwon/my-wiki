@@ -7,7 +7,7 @@ external:
   - http://querydsl.com/
   - https://github.com/querydsl/querydsl
 created: 2026-04-18
-updated: 2026-06-07
+updated: 2026-09-28
 ---
 
 # Querydsl
@@ -96,7 +96,7 @@ public class QUser extends EntityPathBase<User> {
 }
 ```
 
-### Gradle 설정 (Spring Boot 3.x+)
+### Gradle 설정 (Spring Boot 3.x·4.x)
 
 ```kotlin
 dependencies {
@@ -108,7 +108,7 @@ dependencies {
 }
 ```
 
-> Spring Boot 3.x = Jakarta. classifier `:jakarta` 필수.
+> Spring Boot 3.0부터 Jakarta EE 기반이므로 4.x에서도 classifier `:jakarta`가 필수입니다. Querydsl 버전(5.1.0)은 직접 명시합니다.
 
 ## 핵심 문법
 
@@ -296,11 +296,11 @@ public class QuerydslConfig {
 
 ## 실무 운영 팁
 
-- **서비스 계층**은 검색 조건 DTO를 넘긴다 (Querydsl 의존성 누설 방지)
-- **Querydsl 전용 BooleanExpression 조합**은 조회 리포지토리 안에 둔다
-- 단순 쿼리는 **Spring Data JPA 메서드 쿼리**로 충분 (`findByEmailAndStatus`)
-- **fetch join + 페이징** 같이 쓰면 메모리 페이징 경고 — 별도 쿼리 분리
-- N+1은 fetch join 또는 `@EntityGraph`로
+- **서비스 계층**은 검색 조건 DTO를 넘깁니다 (Querydsl 의존성 누설 방지)
+- **Querydsl 전용 BooleanExpression 조합**은 조회 리포지토리 안에 둡니다
+- 단순 쿼리는 **Spring Data JPA 메서드 쿼리**로 충분합니다 (`findByEmailAndStatus`)
+- **fetch join + 페이징** 같이 쓰면 메모리 페이징 경고가 나므로 별도 쿼리로 분리합니다
+- N+1은 fetch join 또는 `@EntityGraph`로 해결합니다
 
 ## 대안 라이브러리
 

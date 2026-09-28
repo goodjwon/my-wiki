@@ -4,14 +4,14 @@ type: source
 tags: [spring, mvc, controller, rest-api, 공식문서]
 sources: [spring/spring-web-mvc-ref.md]
 created: 2026-04-19
-updated: 2026-04-19
+updated: 2026-09-28
 ---
 
 # Spring Framework Web MVC Reference
 
 ## 개요
 
-Spring Framework 7.0.7 공식 문서의 Web MVC 핵심 내용. Annotated Controllers, @RequestBody, ResponseEntity, 전역 예외 처리 패턴을 다룬다.
+Spring Framework 7.0.7 공식 문서의 Web MVC 핵심 내용입니다. Annotated Controllers, @RequestBody, ResponseEntity, 전역 예외 처리 패턴을 다룹니다.
 
 원본: https://docs.spring.io/spring-framework/reference/web.html
 

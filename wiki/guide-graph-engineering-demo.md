@@ -327,14 +327,15 @@ cd ~ && rm -rf ~/graph-demo
 
 ## 같은 인사이트 패턴 — "규칙을 확률 모델에 맡기지 말고 구조로 강제한다"
 
-이 실습이 보여준 원리는 위키 전반에 반복됩니다 ([[concept-graph-engineering]] 에 누적):
+이 실습과 직접 맞닿은 행만 추렸습니다.
 
 | 영역 | 부탁(프롬프트) 방식 | 구조 강제 방식 | 참조 |
 |------|--------------------|---------------|------|
 | **그래프** | "최소 3곳·출처 1건" 프롬프트 지시 | 엣지의 `if` + 재시도 상한 (이 실습) | [[concept-graph-engineering]] |
 | Loop | 자기보고 "완료했습니다" | 테스트 exit code가 거부 신호 | [[guide-loop-engineering-demo]] |
 | Hooks | "위험 명령 하지 마" 부탁 | `guard.sh` exit 2 → 도구 차단 | [[concept-claude-hooks]] |
-| Advisor–Worker | 역할 지시문만 | frontmatter `tools` 제한·검증 게이트 | [[concept-advisor-worker]] |
+
+전체 표(Advisor–Worker 포함)는 [[concept-graph-engineering]]에 있습니다.
 
 → **공통 원리**: 확률 모델의 준수 의지를 믿지 말고, 어길 수 없는 층(코드·환경·권한)에 규칙을 내립니다.
 

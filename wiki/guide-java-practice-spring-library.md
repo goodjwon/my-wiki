@@ -30,11 +30,11 @@ updated: 2026-09-28
 
 | # | 목표 | 확인 방법 |
 |---|------|----------|
-| 1 | controller·service·repository·domain·dto 계층을 나누고 각 계층의 책임을 설명할 수 있다 | 패키지 구조 |
-| 2 | JPA 엔티티 연관관계(`@ManyToOne`)와 enum 매핑(`@Enumerated(STRING)`)을 쓸 수 있다 | H2 콘솔에서 테이블 확인 |
-| 3 | 업무 규칙 위반을 예외로 표현하고 전역 핸들러에서 400/404/409로 변환할 수 있다 | curl 시나리오 |
-| 4 | 프로파일(`application-h2.yml`)로 실행 환경을 분리하고 `data.sql`로 시드 데이터를 넣을 수 있다 | 기동 로그·H2 콘솔 |
-| 5 | `@DataJpaTest`와 `@SpringBootTest`+MockMvc로 규칙을 테스트할 수 있다 | `./mvnw test` 통과 |
+| 1 | controller·service·repository·domain·dto 계층을 나누고 각 계층의 책임을 설명할 수 있습니다 | 패키지 구조 |
+| 2 | JPA 엔티티 연관관계(`@ManyToOne`)와 enum 매핑(`@Enumerated(STRING)`)을 쓸 수 있습니다 | H2 콘솔에서 테이블 확인 |
+| 3 | 업무 규칙 위반을 예외로 표현하고 전역 핸들러에서 400/404/409로 변환할 수 있습니다 | curl 시나리오 |
+| 4 | 프로파일(`application-h2.yml`)로 실행 환경을 분리하고 `data.sql`로 시드 데이터를 넣을 수 있습니다 | 기동 로그·H2 콘솔 |
+| 5 | `@DataJpaTest`와 `@SpringBootTest`+MockMvc로 규칙을 테스트할 수 있습니다 | `./mvnw test` 통과 |
 
 ---
 
@@ -44,13 +44,13 @@ updated: 2026-09-28
 
 | 번호 | 규칙 | 위반 시 응답 | 오류 코드 |
 |------|------|------------|----------|
-| R1 | ISBN이 같은 도서는 두 번 등록할 수 없다 | 409 Conflict | `DUPLICATE_ISBN` |
-| R2 | 이메일이 같은 회원은 두 번 가입할 수 없다 | 409 Conflict | `DUPLICATE_EMAIL` |
+| R1 | ISBN이 같은 도서는 두 번 등록할 수 없습니다 | 409 Conflict | `DUPLICATE_ISBN` |
+| R2 | 이메일이 같은 회원은 두 번 가입할 수 없습니다 | 409 Conflict | `DUPLICATE_EMAIL` |
 | R3 | 이미 대출 중인 도서는 다시 대출할 수 없다 (중복 대출 금지) | 409 Conflict | `BOOK_ALREADY_LOANED` |
 | R4 | 반납 기한이 지난 대출이 하나라도 있는 회원은 새로 대출할 수 없다 (연체 불가) | 409 Conflict | `OVERDUE_MEMBER` |
 | R5 | 회원 한 명이 동시에 빌릴 수 있는 도서는 최대 3권이다 (대출 가능 권수) | 409 Conflict | `LOAN_LIMIT_EXCEEDED` |
 | R6 | 대출 기간은 14일이다 — 반납 기한 = 대출일 + 14일 | — | — |
-| R7 | 이미 반납된 대출은 다시 반납할 수 없다 | 409 Conflict | `ALREADY_RETURNED` |
+| R7 | 이미 반납된 대출은 다시 반납할 수 없습니다 | 409 Conflict | `ALREADY_RETURNED` |
 
 공통 규칙도 함께 지킵니다.
 
@@ -1597,11 +1597,11 @@ curl -s -w '\n%{http_code}\n' -X POST http://localhost:8090/api/loans/999/return
 | 실행 환경 | `h2` 프로파일로 기동, `data.sql` 시드, H2 콘솔 접속, Swagger UI 표시 | 10 |
 | 테스트 | `@DataJpaTest` 1개 이상, API 테스트로 201·400·404·409 각 1개 이상, `./mvnw test` 통과 | 15 |
 
-- [ ] `./mvnw test`가 `BUILD SUCCESS`로 끝난다
-- [ ] `h2` 프로파일로 기동하고 `http://localhost:8090/swagger-ui.html`에 7개 엔드포인트가 보인다
-- [ ] H2 콘솔에서 `LOAN` 테이블의 `STATUS` 컬럼에 문자열(`LOANED`)이 저장돼 있다
-- [ ] curl 시나리오 ②~⑦이 201 → 409 → 409 → 400 → 200 → 409·404 순서로 나온다
-- [ ] 컨트롤러 코드에 `if`로 규칙을 검사하는 줄이 없다
+- [ ] `./mvnw test`가 `BUILD SUCCESS`로 끝납니다
+- [ ] `h2` 프로파일로 기동하고 `http://localhost:8090/swagger-ui.html`에 7개 엔드포인트가 보입니다
+- [ ] H2 콘솔에서 `LOAN` 테이블의 `STATUS` 컬럼에 문자열(`LOANED`)이 저장돼 있습니다
+- [ ] curl 시나리오 ②~⑦이 201 → 409 → 409 → 400 → 200 → 409·404 순서로 나옵니다
+- [ ] 컨트롤러 코드에 `if`로 규칙을 검사하는 줄이 없습니다
 
 ---
 

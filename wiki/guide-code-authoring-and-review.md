@@ -4,7 +4,7 @@ type: synthesis
 tags: [guide, code-quality, code-review, prompt]
 sources: [object/, effective_java/, refactoring/, clean-code/, tdd/]
 created: 2026-06-21
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 코드 작성·점검 가이드
@@ -175,11 +175,12 @@ PR 리뷰 어휘 — 표준 코드로 합의 빠르게.
 | T5 | 경계 조건 테스트 | "T5 — 빈 컬렉션·null 테스트 추가" |
 
 ### 3.3 Effective Java 핵심 20 ⭐
-*근거: Effective Java (90 Item 중 핵심 20 선별) · 장별 상세: [[entity-effective-java]]*
+*근거: Effective Java (90 Item 중 핵심 20 선별, 목록 정본은 [[entity-effective-java]]의 ⭐ 현업 최핵심 아이템 표)*
 
 | 장 | Item | 항목 (공식 제목) | 실무 포인트 |
 |----|------|------|------|
 | 2 객체 생성·파괴 | 1 | 정적 팩터리 메서드 고려 | `new` 대신 `of`·`from`·`valueOf` |
+| 2 객체 생성·파괴 | 2 | 생성자 매개변수가 많으면 빌더 | 인자 4개+ 객체는 빌더·record |
 | 2 객체 생성·파괴 | 5 | 의존 객체 주입 | 자원 직접 명시 X, 생성자 주입 |
 | 2 객체 생성·파괴 | 9 | try-with-resources | try-finally보다 우선 |
 | 3 공통 메서드 | 11 | equals 재정의 시 hashCode도 | 한 쪽만 재정의 금지 |
@@ -191,14 +192,13 @@ PR 리뷰 어휘 — 표준 코드로 합의 빠르게.
 | 6 열거·애너테이션 | 39 | 명명 패턴보다 애너테이션 | `@Test` 식 메타데이터 |
 | 7 람다·스트림 | 45 | 스트림은 주의해서 | 가독성 1순위, 남용 X |
 | 7 람다·스트림 | 48 | 스트림 병렬화 주의 | 측정 후, 함부로 X |
-| 8 메서드 | 49 | 매개변수 유효성 검사 | public 메서드 첫 줄 |
-| 8 메서드 | 50 | 적시에 방어적 복사 | 가변 객체 저장·반환 시 |
 | 9 일반 프로그래밍 | 64 | 인터페이스로 객체 참조 | `List` 타입으로 선언 |
 | 9 일반 프로그래밍 | 67 | 최적화는 신중히 | 측정 먼저 |
 | 10 예외 | 77 | 예외를 무시하지 말 것 | 빈 catch 블록 금지 |
 | 11 동시성 | 78 | 공유 가변 데이터 동기화 | `synchronized`·`volatile` |
 | 11 동시성 | 79 | 과도한 동기화 회피 | 락 안에서 외부 콜백 X |
 | 12 직렬화 | 85 | 자바 직렬화 대안 우선 | JSON·protobuf |
+| 12 직렬화 | 90 | 직렬화 프록시 검토 | 자바 직렬화가 불가피할 때의 최선 |
 
 ### 3.4 GRASP — 책임 할당 (9패턴)
 *근거: [[lecture-object-ch5]] · 심화: [[concept-grasp]]*
@@ -378,7 +378,7 @@ argument-hint: <대상> (예: 파일 경로, "diff", "staged", 생략 시 git di
 다음 섹션의 **3. 코드 점검 체크리스트** 활용:
 - 3.1 리팩터링 24 악취
 - 3.2 Clean Code 17장 ⭐ 휴리스틱 (G19·G23·G25·G30·G34·N1·T5 등)
-- 3.3 EJ ⭐ 20 (Item 5·17·18·49·64·77·78·79·85)
+- 3.3 EJ ⭐ 20 (Item 5·17·18·64·77·78·79·85 등)
 - 3.4 GRASP 책임 할당
 
 ### 3. 점검 + 표 보고
@@ -509,7 +509,7 @@ curl -fsSL https://raw.githubusercontent.com/goodjwon/my-wiki/main/.claude/comma
 점검 기준:
 - 리팩터링 24 악취 (3.1~3.24)
 - Clean Code 17장 휴리스틱 (특히 G19·G23·G25·G30·G34·N1·T5)
-- Effective Java ⭐ 20 (Item 5·17·18·49·64·77 등)
+- Effective Java ⭐ 20 (Item 5·17·18·64·77 등)
 - 오브젝트 책임 주도 + Tell, Don't Ask
 - TDD F.I.R.S.T.
 

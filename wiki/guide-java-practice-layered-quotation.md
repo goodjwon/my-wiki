@@ -11,7 +11,7 @@ updated: 2026-09-28
 
 > **이 과제의 목표**: B2B 조달의 **물품 등록 → 견적 제출 → 금액 변경·철회** 흐름을 REST API로 만들면서, 코드를 **4계층(interfaces·application·domain·infrastructure)** 으로 나누고 **쓰기(Command)와 읽기(Query) 경로를 분리**합니다. 영속성은 JPA 대신 **MyBatis XML 매퍼**로 SQL을 직접 씁니다.
 >
-> **선수 학습**: [[java-study-ch07]](SQL·페이징) · [[guide-java-practice-spring-library]](계층형 REST API 기본형). 코스 안내는 [[guide-java-track4-spring-web]]에 있습니다.
+> **선수 학습**: [[java-study-ch07]](SQL·페이징) · [[guide-java-practice-spring-library]](계층형 REST API 기본형). 코스 안내는 [[guide-java-track5-deep-dive]]에 있습니다.
 
 ---
 
@@ -30,11 +30,11 @@ updated: 2026-09-28
 
 | # | 목표 | 확인 방법 |
 |---|------|----------|
-| 1 | 4계층의 책임과 허용되는 의존 방향을 설명하고 패키지로 나눌 수 있다 | ArchUnit 테스트 통과 |
-| 2 | 도메인에 리포지토리 **인터페이스**를 두고 인프라에 **어댑터**로 구현할 수 있다 | 도메인 패키지에 Spring·MyBatis import 없음 |
-| 3 | Command 서비스와 Query 서비스, Command 매퍼와 Query 매퍼를 나눌 수 있다 | 패키지·파일 구조 |
-| 4 | MyBatis 동적 SQL로 검색하고 **Data SQL과 Count SQL을 따로** 작성할 수 있다 | 페이징 curl 응답의 `totalCount` |
-| 5 | 업무 규칙을 도메인 메서드에 두고, 예외 종류로 400/409를 나눌 수 있다 | curl 시나리오 |
+| 1 | 4계층의 책임과 허용되는 의존 방향을 설명하고 패키지로 나눌 수 있습니다 | ArchUnit 테스트 통과 |
+| 2 | 도메인에 리포지토리 **인터페이스**를 두고 인프라에 **어댑터**로 구현할 수 있습니다 | 도메인 패키지에 Spring·MyBatis import 없음 |
+| 3 | Command 서비스와 Query 서비스, Command 매퍼와 Query 매퍼를 나눌 수 있습니다 | 패키지·파일 구조 |
+| 4 | MyBatis 동적 SQL로 검색하고 **Data SQL과 Count SQL을 따로** 작성할 수 있습니다 | 페이징 curl 응답의 `totalCount` |
+| 5 | 업무 규칙을 도메인 메서드에 두고, 예외 종류로 400/409를 나눌 수 있습니다 | curl 시나리오 |
 
 ---
 
@@ -88,10 +88,10 @@ Command/Query 분리(CQRS의 가장 가벼운 형태)는 **같은 애그리거�
 | R1 | 물품명은 필수, 단가는 0 이상 | ReqDto(`@NotBlank`·`@Min`) + `Item` 생성자 | 400 |
 | R2 | 최소주문수량(MOQ)은 1 이상 | ReqDto(`@Min(1)`) + `Item` 생성자 | 400 |
 | R3 | 견적 수량은 해당 물품의 MOQ 이상 | `Item.checkOrderable()` — 응용 서비스가 호출 | 400 |
-| R4 | 견적금액은 0보다 커야 한다 | ReqDto(`@Positive`) + `Quotation` | 400 |
-| R5 | 제출(`SUBMITTED`) 상태의 견적만 금액 변경·철회할 수 있다 | `Quotation.requireOpen()` | 409 |
-| R6 | 마감 시각이 지나면 금액 변경·철회할 수 없다 | `Quotation.requireOpen()` | 409 |
-| R7 | 물품 검색은 페이지 단위(`page` 0 이상, `size` 1~100), 목록 SQL과 건수 SQL을 따로 둔다 | `ItemSearchParam` + `ItemQueryMapper.xml` | 400 |
+| R4 | 견적금액은 0보다 커야 합니다 | ReqDto(`@Positive`) + `Quotation` | 400 |
+| R5 | 제출(`SUBMITTED`) 상태의 견적만 금액 변경·철회할 수 있습니다 | `Quotation.requireOpen()` | 409 |
+| R6 | 마감 시각이 지나면 금액 변경·철회할 수 없습니다 | `Quotation.requireOpen()` | 409 |
+| R7 | 물품 검색은 페이지 단위(`page` 0 이상, `size` 1~100), 목록 SQL과 건수 SQL을 따로 둡니다 | `ItemSearchParam` + `ItemQueryMapper.xml` | 400 |
 | R8 | 없는 물품·견적 ID | 응용 서비스 | 400 (교육용 단순화, 도전 과제에서 404로 분리) |
 
 예외 → 상태 코드 규약은 하나입니다. **입력값이 틀리면 `IllegalArgumentException`(400), 입력은 맞지만 지금 상태에서 허용되지 않으면 `IllegalStateException`(409)** 입니다. 둘을 가르는 질문은 "같은 요청을 나중에 다시 보내면 성공할 수 있는가"입니다. R6은 요청 자체는 올바르지만 시점이 늦었으므로 409입니다.
@@ -1659,12 +1659,12 @@ grep -rn "import org.springframework\|import org.apache.ibatis" src/main/java/de
 grep -rn "import dev.wonslab.procurement.interfaces\|import dev.wonslab.procurement.infrastructure" src/main/java/dev/wonslab/procurement/application
 ```
 
-- [ ] `./gradlew test`가 `BUILD SUCCESSFUL`로 끝나고 8개 테스트가 모두 `PASSED`이다
-- [ ] 위 grep 두 줄의 출력이 비어 있다
-- [ ] curl ②에서 `page=1`로 요청해도 `totalCount`가 전체 건수이다
-- [ ] curl 시나리오가 ① 201 → ② 200 → ③ 400 → ④ 400 → ⑤ 201 → ⑥ 200 → ⑦ 201·409 → ⑧ 200·409 → ⑨ 400 순서로 나온다
-- [ ] H2 콘솔에서 철회한 견적의 `STATUS`가 `WITHDRAWN`이다
-- [ ] 도메인 클래스에 setter가 없다
+- [ ] `./gradlew test`가 `BUILD SUCCESSFUL`로 끝나고 8개 테스트가 모두 `PASSED`입니다
+- [ ] 위 grep 두 줄의 출력이 비어 있습니다
+- [ ] curl ②에서 `page=1`로 요청해도 `totalCount`가 전체 건수입니다
+- [ ] curl 시나리오가 ① 201 → ② 200 → ③ 400 → ④ 400 → ⑤ 201 → ⑥ 200 → ⑦ 201·409 → ⑧ 200·409 → ⑨ 400 순서로 나옵니다
+- [ ] H2 콘솔에서 철회한 견적의 `STATUS`가 `WITHDRAWN`입니다
+- [ ] 도메인 클래스에 setter가 없습니다
 
 ---
 
