@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, learning-path, track5, jvm, interview, project]
 sources: [java-study/]
 created: 2026-06-29
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Java 학습 경로 T5 — 심화·워크북·미니프로젝트
@@ -74,6 +74,8 @@ updated: 2026-07-02
 ---
 
 ## 🛠 미니프로젝트 — 종합 토이프로젝트
+
+> 🧪 **실행 검증된 실습 과제**: [[guide-java-practice-layered-quotation]] — 4계층 아키텍처와 Command/Query 분리를 MyBatis로 구현하는 견적·계약 업무 과제입니다.
 
 T1~T4를 모두 동원하는 가장 큰 산출물입니다. 하나를 골라 끝까지 진행합니다:
 

@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch07]
 sources: [java-study/java-study-ch07-데이터접근과SQL.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 데이터 접근과 SQL
@@ -1130,7 +1130,7 @@ Querydsl 입문의 핵심은 `문법`보다, **복잡한 조회를 어떤 구조
 
 **🎯 목표**: `demo` 프로젝트에 Querydsl 의존성·실습 엔티티·Q타입 생성까지 실습 환경을 완성한다.
 
-> **실습 프로젝트**: 7.4~7.10의 Querydsl 실습은 [[java-study-ch06]] **6.1에서 start.spring.io로 만든 `demo` 프로젝트**를 이어서 사용합니다. 아직 없다면 6.1의 생성 명령 한 줄로 먼저 만들고 옵니다(`data-jpa`, `h2` 의존성 포함). 이 절부터 만드는 파일은 모두 `com.example.demo.ch07` 패키지에 둡니다.
+> **실습 프로젝트**: 7.4~7.10의 Querydsl 실습은 [[java-study-ch06]] **6.1에서 start.spring.io로 만든 `demo` 프로젝트**를 이어서 사용합니다. 아직 없다면 6.1의 생성 명령 한 줄로 먼저 만들고 옵니다(`data-jpa`, `h2` 의존성 포함). 이 절부터 만드는 파일은 모두 `dev.wonslab.demo.ch07` 패키지에 둡니다.
 
 #### 1. 의존성 추가 — pom.xml
 
@@ -1179,10 +1179,17 @@ Spring Boot 3.x 이상(현재 start.spring.io 생성물은 4.x)은 `javax`가 �
                 <version>${querydsl.version}</version>
                 <classifier>jakarta</classifier>
             </path>
+            <!-- querydsl-apt가 @Entity를 읽으려면 JPA API도 프로세서 경로에 있어야 함 (버전은 Boot가 관리) -->
+            <path>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+            </path>
         </annotationProcessorPaths>
     </configuration>
 </plugin>
 ```
+
+> 현재 start.spring.io 생성물(Boot 4.x)은 `annotationProcessorPaths`가 `<executions>`의 `default-compile` 안에 있습니다. 그 목록에 위 두 `<path>`를 추가합니다. `jakarta.persistence-api` 경로가 빠지면 컴파일이 `NoClassDefFoundError: jakarta/persistence/Entity`로 실패합니다.
 
 Lombok 없이 생성해서 `annotationProcessorPaths` 자체가 없는 pom이라면 자동 발견이 살아 있어 이 단계를 건너뛸 수 있지만, 나중에 Lombok을 추가하는 순간 Q타입 생성이 조용히 멈추므로 처음부터 명시해 두는 편이 안전합니다. Gradle 프로젝트라면 아래처럼 씁니다.
 
@@ -1200,10 +1207,10 @@ dependencies {
 
 7.5~7.10의 예제가 참조하는 엔티티는 팀(Team)·회원(Member)·도서(Book)·대출(Loan)·주문(Order)입니다. 실습에 필요한 최소 필드만 갖춘 형태로 만듭니다.
 
-**파일**: src/main/java/com/example/demo/ch07/Team.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/Team.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -1231,10 +1238,10 @@ public class Team {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch07/Member.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/Member.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1283,10 +1290,10 @@ public class Member {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch07/Book.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/Book.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -1314,10 +1321,10 @@ public class Book {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch07/Loan.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/Loan.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -1364,10 +1371,10 @@ public class Loan {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch07/Order.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/Order.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1406,10 +1413,10 @@ public class Order {
 
 Querydsl 쿼리의 중심 객체인 `JPAQueryFactory`를 빈으로 등록합니다. 조회 리포지토리들은 이 빈을 주입받아 사용합니다.
 
-**파일**: src/main/java/com/example/demo/ch07/QuerydslConfig.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/QuerydslConfig.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -1433,7 +1440,7 @@ public class QuerydslConfig {
 ```bash
 cd demo
 ./mvnw compile
-ls target/generated-sources/annotations/com/example/demo/ch07
+ls target/generated-sources/annotations/dev/wonslab/demo/ch07
 ```
 
 ```text
@@ -1466,10 +1473,10 @@ Querydsl은 문법이 어렵다기보다, 처음에 Q 타입과 메서드 체인
 
 Querydsl 문법을 배우기 전에, 같은 조회가 Spring Data JPA + JPQL 문자열로는 어떤 모습인지 비교 기준을 `demo`에 만들어 둡니다(7.4-1 실습 환경이 먼저 필요합니다). 참고로 실무 저장소도 아직 Querydsl 없이 이 방식이 중심입니다.
 
-**파일**: src/main/java/com/example/demo/ch07/LoanRepository.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/LoanRepository.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -1635,11 +1642,11 @@ List<Member> result = queryFactory
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — 7.4-1 실습 환경을 갖춘 `demo` 프로젝트에 `src/test/java/com/example/demo/ch07/LoanQuerydslTest.java`를 만듭니다.
+    1. **파일 생성** — 7.4-1 실습 환경을 갖춘 `demo` 프로젝트에 `src/test/java/dev/wonslab/demo/ch07/LoanQuerydslTest.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.demo.ch07;
+        package dev.wonslab.demo.ch07;
 
         import static org.assertj.core.api.Assertions.assertThat;
 
@@ -1647,7 +1654,7 @@ List<Member> result = queryFactory
         import jakarta.persistence.EntityManager;
         import org.junit.jupiter.api.Test;
         import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+        import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest; // Boot 3.x: org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
         @DataJpaTest
         class LoanQuerydslTest {
@@ -1851,11 +1858,11 @@ List<MemberDto> result = queryFactory
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/com/example/demo/ch07/LoanSummary.java`를 만듭니다.
+    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/dev/wonslab/demo/ch07/LoanSummary.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.demo.ch07;
+        package dev.wonslab.demo.ch07;
 
         import java.time.LocalDate;
 
@@ -2206,10 +2213,10 @@ Spring Data JPA와 Querydsl은 **기본 저장 작업과 복잡한 조회를 분
 
 먼저 조회 전용 리포지토리를 나누기 **전 단계**를 `demo`에 만듭니다. 메서드 쿼리와 `JpaSpecificationExecutor`를 한 인터페이스에 섞어 쓰는 Spring Data JPA 리포지토리입니다. (실무 저장소도 아직 이 단계에 서 있습니다.)
 
-**파일**: src/main/java/com/example/demo/ch07/MemberRepository.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/MemberRepository.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -2242,10 +2249,10 @@ public interface MemberRepository extends JpaRepository<Member, Long>, JpaSpecif
 
 조회 API 설계에서 가장 먼저 정리해야 할 것은 메서드 이름보다 데이터 형태입니다.
 
-**파일**: src/main/java/com/example/demo/ch07/MemberSearchCondition.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/MemberSearchCondition.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 public record MemberSearchCondition(
         String username,
@@ -2256,10 +2263,10 @@ public record MemberSearchCondition(
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch07/MemberListItem.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/MemberListItem.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 public record MemberListItem(
         Long memberId,
@@ -2279,10 +2286,10 @@ public record MemberListItem(
 
 조회 전용 리포지토리는 `BooleanBuilder`, `JPAQuery`, `Tuple` 같은 구현 세부를 바깥으로 새기지 않는 편이 좋습니다.
 
-**파일**: src/main/java/com/example/demo/ch07/MemberQueryRepository.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/MemberQueryRepository.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -2304,13 +2311,13 @@ public interface MemberQueryRepository {
 
 Q타입은 정적 필드를 static import로 가져오면 체인이 짧아집니다. 조건 메서드는 7.7에서 다룬 `BooleanExpression` 분리 방식 그대로입니다 — null을 돌려주면 `where`가 그 조건을 무시합니다.
 
-**파일**: src/main/java/com/example/demo/ch07/MemberQueryRepositoryImpl.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/MemberQueryRepositoryImpl.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
-import static com.example.demo.ch07.QMember.member;
-import static com.example.demo.ch07.QTeam.team;
+import static dev.wonslab.demo.ch07.QMember.member;
+import static dev.wonslab.demo.ch07.QTeam.team;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -2424,10 +2431,10 @@ public class MemberQueryService {
 
 위에서 만든 검색 리포지토리를 `@DataJpaTest`로 돌려 봅니다. `@DataJpaTest`는 JPA 계층만 띄우는 슬라이스 테스트라 커스텀 `@Repository` 구현체를 자동으로 올리지 않으므로, `EntityManager`로 직접 조립합니다.
 
-**파일**: src/test/java/com/example/demo/ch07/MemberQueryRepositoryTest.java
+**파일**: src/test/java/dev/wonslab/demo/ch07/MemberQueryRepositoryTest.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -2435,7 +2442,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest; // Boot 3.x: org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -2514,23 +2521,23 @@ class MemberQueryRepositoryTest {
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/com/example/demo/ch07/LoanQueryRepository.java`와 `src/main/java/com/example/demo/ch07/LoanQueryRepositoryImpl.java`를 만듭니다.
+    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/dev/wonslab/demo/ch07/LoanQueryRepository.java`와 `src/main/java/dev/wonslab/demo/ch07/LoanQueryRepositoryImpl.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대 두 개를 그대로 입력합니다.
 
-        **파일**: `src/main/java/com/example/demo/ch07/LoanQueryRepository.java`
+        **파일**: `src/main/java/dev/wonslab/demo/ch07/LoanQueryRepository.java`
 
         ```java
-        package com.example.demo.ch07;
+        package dev.wonslab.demo.ch07;
 
         public interface LoanQueryRepository {
             // 1) 미반납 대출 목록을 돌려주는 메서드 시그니처 선언 — List<Loan> searchUnreturned() 처럼 Querydsl 타입 노출 없이
         }
         ```
 
-        **파일**: `src/main/java/com/example/demo/ch07/LoanQueryRepositoryImpl.java`
+        **파일**: `src/main/java/dev/wonslab/demo/ch07/LoanQueryRepositoryImpl.java`
 
         ```java
-        package com.example.demo.ch07;
+        package dev.wonslab.demo.ch07;
 
         import com.querydsl.jpa.impl.JPAQueryFactory;
         import org.springframework.stereotype.Repository;
@@ -2578,10 +2585,10 @@ Querydsl 조회 리포지토리 설계의 핵심은 **Querydsl을 노출하지 �
 
 Querydsl 페이징으로 가기 전에, 같은 페이징을 Spring Data JPA 메서드 쿼리로 표현한 비교 기준을 `demo`에 만들어 둡니다. (실무 저장소도 아직 Querydsl 페이징 없이 `Pageable`과 JPQL `JOIN FETCH`를 함께 쓰는 단계입니다.) 따라서 이 문서는 **향후 목록 API를 Querydsl로 옮기거나 확장할 때 지켜야 할 성능 기준**으로 읽는 편이 정확합니다.
 
-**파일**: src/main/java/com/example/demo/ch07/OrderRepository.java
+**파일**: src/main/java/dev/wonslab/demo/ch07/OrderRepository.java
 
 ```java
-package com.example.demo.ch07;
+package dev.wonslab.demo.ch07;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -2753,7 +2760,7 @@ N+1은 Querydsl 자체의 문제가 아니라 **조회 전략 문제**입니다.
 | 컴파일 에러 `cannot find symbol: class QMember` | Q타입 미생성 — `./mvnw compile`을 먼저 실행하고 `target/generated-sources/annotations`를 확인. IDE에서만 빨간 줄이면 이 디렉터리가 소스 루트로 잡혔는지 확인 |
 | Q타입이 `javax.persistence` 기준으로 생성되거나 엔티티를 못 찾음 | `querydsl-jpa`·`querydsl-apt` 좌표의 `jakarta` classifier 누락 — Spring Boot 3.x 이상은 jakarta가 필수 |
 | `./mvnw compile` 후에도 annotations 디렉터리가 비어 있음 | 7.4-1의 필수 단계인 maven-compiler-plugin `annotationProcessorPaths`의 `querydsl-apt`(jakarta) 등록을 빠뜨림 — Lombok 경로만 있으면 프로세서 자동 발견이 꺼져 querydsl-apt가 실행되지 않음. `querydsl-apt`(jakarta, provided) 의존성 자체가 pom에 있는지도 함께 확인 |
-| 기동 시 `No qualifying bean of type 'JPAQueryFactory'` | `QuerydslConfig` 미작성이거나 `com.example.demo` 컴포넌트 스캔 범위 밖에 있음 |
+| 기동 시 `No qualifying bean of type 'JPAQueryFactory'` | `QuerydslConfig` 미작성이거나 `dev.wonslab.demo` 컴포넌트 스캔 범위 밖에 있음 |
 | 기동 시 H2 `Syntax error ... "ORDER"` | 엔티티 `Order`가 SQL 예약어와 같은 이름의 테이블로 생성됨 — `@Table(name = "orders")` 지정 확인 |
 
 #### 공식 문서
@@ -3079,3 +3086,8 @@ JOIN salaries s ON e.employee_id = s.employee_id;
 
 ### 한 줄 정리
 좋은 SQL 풀이란 정답을 맞히는 것보다, 왜 그 쿼리가 적절한지 설명할 수 있는 풀이입니다.
+
+## 관련 실습 과제
+
+- [[guide-java-practice-spring-library]] — 🧪 실습 과제 2 — 도서 대여 REST API (Spring Boot + JPA + H2)
+- [[guide-java-practice-layered-quotation]] — 🧪 실습 과제 3 — 견적·계약 업무 (4계층 + Command/Query + MyBatis)

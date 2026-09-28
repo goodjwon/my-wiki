@@ -7,7 +7,7 @@ external:
   - https://spring.io/projects/spring-boot
   - https://docs.spring.io/spring-boot/reference/
 created: 2026-04-18
-updated: 2026-07-05
+updated: 2026-09-28
 ---
 
 # Spring Boot
@@ -139,7 +139,7 @@ management:
 ## 프로젝트 구조 (관용)
 
 ```
-src/main/java/com/example/myapp/
+src/main/java/dev/wonslab/myapp/
 ├── MyAppApplication.java       # @SpringBootApplication
 ├── config/                     # @Configuration 클래스
 ├── controller/ 또는 web/        # @RestController
@@ -228,3 +228,4 @@ cd demo && ./gradlew bootRun
 - [[src-spring-boot]] — 공식 소개 페이지 요약
 - [[src-spring-guide]] — 실무 가이드
 - [[entity-jvm]] — Spring Boot도 JVM 위에서 동작
+- [[guide-java-practice-spring-library]] — 🧪 실습 과제 2 — 도서 대여 REST API (Spring Boot + JPA + H2)

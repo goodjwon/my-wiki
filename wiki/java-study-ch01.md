@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch01]
 sources: [java-study/java-study-ch01-환경과실행.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 환경과 실행
@@ -301,7 +301,7 @@ Java 입문의 핵심은 **언어 특징을 아는 것보다, JDK 설치와 첫 
 **Maven** — 아키타입(archetype, 프로젝트 뼈대를 찍어내는 Maven의 템플릿) 중 quickstart로 생성 (한 줄):
 
 ```bash
-mvn archetype:generate -DgroupId=com.example -DartifactId=hello-java -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+mvn archetype:generate -DgroupId=dev.wonslab -DartifactId=hello-java -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
 cd hello-java
 ```
 
@@ -322,7 +322,7 @@ cd hello-java
 ```bash
 mkdir hello-java
 cd hello-java
-gradle init --type java-application --dsl groovy --test-framework junit-jupiter --package com.example --project-name hello-java
+gradle init --type java-application --dsl groovy --test-framework junit-jupiter --package dev.wonslab --project-name hello-java
 ```
 
 #### 3. 표준 프로젝트 구조
@@ -333,15 +333,15 @@ gradle init --type java-application --dsl groovy --test-framework junit-jupiter 
 hello-java/
 ├── pom.xml            ← Maven 설정      (Gradle은 build.gradle)
 ├── src/
-│   ├── main/java/com/example/App.java   ← 실제 코드
-│   └── test/java/com/example/AppTest.java ← 테스트
+│   ├── main/java/dev/wonslab/App.java   ← 실제 코드
+│   └── test/java/dev/wonslab/AppTest.java ← 테스트
 └── (gradlew)          ← 래퍼 스크립트 (버전 고정용) — gradle init만 생성
 ```
 
 > Maven quickstart 아키타입은 래퍼(`mvnw`)를 **만들지 않습니다** — Maven 쪽은 시스템 `mvn` 명령을 그대로 씁니다. (6장 Spring Initializr 프로젝트에는 `mvnw`가 포함됩니다.)
 
 - `src/main/java` = 프로덕션 코드, `src/test/java` = 테스트 코드. 이 분리가 표준입니다.
-- 패키지 `com.example` = 디렉터리 경로와 일치해야 합니다 (2장에서 자세히).
+- 패키지 `dev.wonslab` = 디렉터리 경로와 일치해야 합니다 (2장에서 자세히).
 
 #### 4. 빌드 → 실행 사이클
 
@@ -351,7 +351,7 @@ hello-java/
 mvn compile                                   # 컴파일 → target/classes (2번의 타깃 21 수정을 안 했다면 여기서 실패)
 mvn test                                      # 테스트 실행
 mvn package                                   # 실행 가능 jar → target/*.jar
-java -cp target/classes com.example.App       # 직접 실행
+java -cp target/classes dev.wonslab.App       # 직접 실행
 ```
 
 **Gradle**:
@@ -424,16 +424,16 @@ Maven **또는** Gradle 중 하나로 `hello-java` 프로젝트를 만들고, `A
 
 !!! example "실습 순서"
 
-    1. **파일 열기** — 위 2번으로 생성한 `hello-java` 프로젝트의 `src/main/java/com/example/App.java` (Gradle에서 소스가 `app/` 하위에 생겼다면 `app/src/main/java/com/example/App.java`)
+    1. **파일 열기** — 위 2번으로 생성한 `hello-java` 프로젝트의 `src/main/java/dev/wonslab/App.java` (Gradle에서 소스가 `app/` 하위에 생겼다면 `app/src/main/java/dev/wonslab/App.java`)
     2. **수정** — `main`이 원하는 문장을 콘솔에 출력하도록 고칩니다.
-    3. **재실행** — 위 4번 명령 재사용 — `mvn compile` + `java -cp target/classes com.example.App` 또는 `./gradlew run`
+    3. **재실행** — 위 4번 명령 재사용 — `mvn compile` + `java -cp target/classes dev.wonslab.App` 또는 `./gradlew run`
     4. **마무리** — 위 6번대로 `.gitignore`를 만들고 첫 커밋을 남깁니다.
 
 #### 정리
 
 첫 프로젝트의 핵심은 언어가 아니라 **"빌드 도구가 잡아 주는 표준 구조 위에서 소스를 빌드·실행하는 흐름"**입니다. Maven·Gradle 어느 쪽이든 `생성 → 구조 확인 → 빌드 → 실행 → 의존성 → git` 한 바퀴를 실행해 보면, 이후 Spring 프로젝트(6장)도 같은 골격의 확장임을 알게 됩니다.
 
-1.1의 `HelloJava.java`를 이 구조로 옮긴다면 `src/main/java/com/example/HelloJava.java`에 두고 첫 줄에 `package com.example;`을 선언하면 됩니다. 이후 장(2장~)의 실습도 이 프로젝트의 `com.example.chNN` 패키지에서 이어집니다.
+1.1의 `HelloJava.java`를 이 구조로 옮긴다면 `src/main/java/dev/wonslab/HelloJava.java`에 두고 첫 줄에 `package dev.wonslab;`을 선언하면 됩니다. 이후 장(2장~)의 실습도 이 프로젝트의 `dev.wonslab.chNN` 패키지에서 이어집니다.
 
 #### 한 줄 정리
 

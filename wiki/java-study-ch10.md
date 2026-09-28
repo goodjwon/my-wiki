@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch10]
 sources: [java-study/java-study-ch10-JVM과성능.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # JVM과 성능
@@ -606,6 +606,8 @@ GC 이벤트를 파일로 남기는 실행 형태입니다.
 java -Xlog:'gc*':file=/var/log/app-gc.log:time,level,tags -jar app.jar
 ```
 
+`/var/log`처럼 쓰기 권한이 없는 경로를 주면 `Error opening log file ... Permission denied`와 함께 JVM이 아예 기동하지 않습니다. 로컬 실습에서는 `file=/tmp/app-gc.log`처럼 쓰기 가능한 경로로 바꿔 실행합니다.
+
 GC 로그는 튜닝의 출발점입니다. 정지 시간이 얼마나 긴지, 수집이 얼마나 자주 일어나는지, 메모리가 회수되는지 같은 기본 정보를 먼저 봐야 합니다.
 
 ##### 2.4 장애 분석용 옵션
@@ -681,6 +683,12 @@ jcmd <pid> Thread.print
 
 ```bash
 jcmd <pid> VM.native_memory summary
+```
+
+이 명령은 JVM을 `-XX:NativeMemoryTracking=summary` 옵션으로 **시작한 경우에만** 동작합니다. 옵션 없이 띄운 프로세스에서는 `Native memory tracking is not enabled`만 출력됩니다.
+
+```bash
+java -XX:NativeMemoryTracking=summary -jar app.jar
 ```
 
 힙만 보고는 설명되지 않는 메모리 증가를 추적할 때 매우 중요합니다. 특히 Direct Buffer, 클래스 메타데이터, 스레드 관련 메모리를 같이 봐야 할 때 도움이 됩니다.
@@ -824,6 +832,8 @@ java -Xms1g -Xmx1g \
 java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -jar app.jar
 ```
 
+`-XX:+UseContainerSupport`는 Linux 전용 옵션이라 macOS·Windows에서 그대로 실행하면 `Unrecognized VM option 'UseContainerSupport'`로 JVM이 기동하지 않습니다. 로컬에서 확인할 때는 이 옵션을 빼고 `-XX:MaxRAMPercentage=75.0`만 줍니다.
+
 ```text
 예상 결과
 운영용 기본 템플릿은 장애 분석 자료를 남기기 위한 확장 예시다.
@@ -867,7 +877,15 @@ java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -jar app.jar
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `javac GcLogDemo.java && java -Xmx64m -verbose:gc GcLogDemo` — 추가할 때마다 다시 실행해 GC 로그가 어떻게 달라지는지 확인합니다.
+    4. **실행·확인** — `javac GcLogDemo.java && java -Xmx256m -verbose:gc GcLogDemo` — 추가할 때마다 다시 실행해 GC 로그가 어떻게 달라지는지 확인합니다. 10만 개(약 100MB)를 리스트에 붙잡아 두므로 `-Xmx64m`로 줄이면 Full GC가 반복되다 `OutOfMemoryError: Java heap space`로 끝납니다 — 이것도 한 번 확인해 볼 만합니다.
+
+        ```text
+        예상 결과 (수치는 환경마다 다름)
+        [0.018s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 24M->24M(256M) 2.226ms
+        [0.021s][info][gc] GC(1) Pause Young (Normal) (G1 Evacuation Pause) 38M->39M(256M) 1.381ms
+        ...
+        done
+        ```
 
 #### 정리
 

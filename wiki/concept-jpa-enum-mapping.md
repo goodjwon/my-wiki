@@ -4,7 +4,7 @@ type: concept
 tags: [java, jpa, hibernate, enum, effective-java, database]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 6 장.md]
 created: 2026-07-04
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # JPA Enum 매핑 — `@Enumerated(STRING)`과 ordinal 함정
@@ -196,3 +196,4 @@ Hibernate 6 공식 문서 기준으로 `@Enumerated(STRING)`은 대부분의 DB�
 - [[concept-transactional-rollback-policy]] — 같은 "Spring/JPA 기본값 함정" 계열
 - [[concept-varchar-length-prefix]] — enum STRING 컬럼 길이 설계와 직결되는 DB 스키마 함정
 - [[concept-api-backward-compatibility]] — "기본값과 가정의 함정" 패턴 원조 비교표 보유 페이지
+- [[guide-java-practice-spring-library]] — 🧪 실습 과제 2 — 도서 대여 REST API (Spring Boot + JPA + H2)

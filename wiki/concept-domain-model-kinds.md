@@ -4,7 +4,7 @@ type: concept
 tags: [object, modeling, ddd, analysis-model, design-model, implementation-model, ubiquitous-language]
 sources: [object/오브젝트 실전 강의 교재 부록C.md]
 created: 2026-07-04
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 도메인 모델의 세 얼굴 — 분석 모델·설계 모델·구현 모델
@@ -158,3 +158,4 @@ DDD의 유비쿼터스 언어(Ubiquitous Language)는 세 모델이 따로 놀�
 - [[src-kakaopay-ddd]] — 유비쿼터스 언어·DomainEntity/JpaEntity 분리의 실전 사례
 - [[concept-jpa-enum-mapping]] — 자바 층과 DB 층의 연결을 이름으로 유지하는 같은 패턴
 - [[concept-api-backward-compatibility]] — 서버·클라이언트 층의 연결을 계약으로 유지하는 같은 패턴
+- [[guide-java-practice-layered-quotation]] — 🧪 실습 과제 3 — 견적·계약 업무 (4계층 + Command/Query + MyBatis)

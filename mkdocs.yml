@@ -290,6 +290,10 @@ nav:
       - "T3. 입출력과 네트워크": guide-java-track3-io-network.md
       - "T4. Spring 웹 애플리케이션": guide-java-track4-spring-web.md
       - "T5. 심화·워크북·종합": guide-java-track5-deep-dive.md
+    - "실습 과제 (H2 실행·스크린샷)":
+      - "과제 1. 주문 처리 콘솔 앱 (Java 핵심)": guide-java-practice-core.md
+      - "과제 2. 도서 대여 REST API (Spring + JPA)": guide-java-practice-spring-library.md
+      - "과제 3. 견적·계약 업무 (4계층 + CQRS + MyBatis)": guide-java-practice-layered-quotation.md
     - "📚 레퍼런스 (필요할 때 찾아보기)":
       - 개념 — 심화 주제:
         - Spring Core: concept-spring-core.md

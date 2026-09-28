@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, learning-path, curriculum, index]
 sources: [java-study/]
 created: 2026-06-29
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Java 학습 경로 — 3단계 로드맵
@@ -101,6 +101,16 @@ Spring으로 웹 애플리케이션을 만들고 데이터베이스를 연동합
 > 트랙 T2·T4가 두 단계에 걸치는 이유는, 미니프로젝트 동선상 설계 트랙에서 JVM을, Spring 트랙에서 테스트를 함께 다루기 때문입니다. 지식 계층(3단계)에서는 JVM·테스트가 고급(3단계)에 속합니다.
 
 ---
+
+## 🧪 실습 과제 — 트랙을 마친 뒤 손으로 확인하기
+
+트랙이 "무엇을 배우는가"라면, 실습 과제는 "배운 것으로 작동하는 프로젝트를 끝까지 만들 수 있는가"를 확인하는 단계입니다. 세 과제 모두 페이지의 코드만으로 프로젝트를 새로 만들어 테스트·실행·스크린샷까지 실제로 검증했습니다.
+
+| 과제 | 짝이 되는 트랙 | 다루는 것 |
+|------|---------------|-----------|
+| [[guide-java-practice-core]] | T1·T2 | 컬렉션·스트림, 전략·옵저버 패턴, 미니 IoC 컨테이너, JUnit 5 |
+| [[guide-java-practice-spring-library]] | T4 | Spring Boot + JPA + H2, 업무 규칙·예외 처리, Swagger, MockMvc 테스트 |
+| [[guide-java-practice-layered-quotation]] | T4·T5 | 4계층 아키텍처, Command/Query 분리, MyBatis, 계층 의존 방향 |
 
 ## 💡 이 경로의 특징
 

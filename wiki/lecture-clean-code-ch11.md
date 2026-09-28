@@ -4,7 +4,7 @@ type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 11장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-28
 ---
 
 # 클린 코드 실전 강의 교재
@@ -174,7 +174,7 @@ public void transfer(...) {
 @Aspect
 @Component
 public class LoggingAspect {
-    @Around("execution(* com.example..*Service.*(..))")
+    @Around("execution(* dev.wonslab..*Service.*(..))")
     public Object logExecution(ProceedingJoinPoint pjp) throws Throwable {
         long start = System.currentTimeMillis();
         try {

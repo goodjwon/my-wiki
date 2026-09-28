@@ -6,7 +6,7 @@ sources: [java-study/java-study-ch04-객체지향설계와패턴.md]
 external:
   - https://refactoring.guru/design-patterns
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 디자인 패턴
@@ -252,3 +252,4 @@ public class OrderFacade {
 - [[src-java-study-2024-2025]] — Ch04 객체지향 설계와 패턴
 - [[src-kakaopay-ddd]] — DDD에서 패턴 활용
 - [[concept-transactional-rollback-policy]] — 프록시 패턴의 함정 사례
+- [[guide-java-practice-core]] — 🧪 실습 과제 1 — 주문 처리 콘솔 앱 (컬렉션·전략·옵저버·미니 IoC)

@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch08]
 sources: [java-study/java-study-ch08-서버와인증.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 서버와 인증
@@ -98,7 +98,7 @@ Spring Boot의 서블릿 웹 애플리케이션은 보통 내장 톰캣으로 �
 
 - 이 명령은 **포그라운드로 서버를 붙잡습니다** — 종료는 `Ctrl+C`입니다. curl 등은 새 터미널에서 실행합니다.
 - 프로파일이 구성된 프로젝트라면 `-Dspring-boot.run.profiles=h2`처럼 지정합니다. ch06 6.1의 `demo`는 프로파일 없이 그대로 뜹니다.
-- 로그에 `Tomcat started on port(s): 8080` / `Started ...Application in N seconds` 가 출력되면 서버가 준비된 것입니다. 아래 명령으로 확인합니다:
+- 로그에 `Tomcat started on port 8080 (http)` / `Started ...Application in N seconds` 가 출력되면 서버가 준비된 것입니다. 아래 명령으로 확인합니다:
 
 ```bash
 # 새 터미널에서
@@ -290,7 +290,7 @@ chmod +x $CATALINA_HOME/bin/*.sh
     1. **파일 열기** — ch06 6.1에서 만든 `demo` 프로젝트의 `src/main/resources/application.properties`를 엽니다.
     2. **수정** — `server.port=9090` 한 줄을 추가합니다.
     3. **재실행** — 위 4.1의 `./mvnw spring-boot:run`으로 다시 실행합니다.
-    4. **확인** — 로그에 `Tomcat started on port(s): 9090`이 찍히는지 보고, 새 터미널에서 `curl -i http://localhost:9090/`이 응답하는지 확인합니다.
+    4. **확인** — 로그에 `Tomcat started on port 9090 (http)`이 찍히는지 보고, 새 터미널에서 `curl -i http://localhost:9090/`이 응답하는지 확인합니다.
 
 
 #### 정리
@@ -473,7 +473,7 @@ http
 참고로 실무 저장소 기준으로 보면 예시를 이렇게 잡을 수 있습니다.
 
 - 로그인 요청 `/api/auth/login`에서 잘못된 이메일/비밀번호: `AuthenticationManager` 단계 실패, `GlobalExceptionHandler`를 통해 `401 Unauthorized`
-- USER 토큰으로 `/api/admin/**` 접근: 인가는 되었지만 역할 부족, `403 Forbidden`
+- USER 토큰으로 `/api/admin/**` 접근: 인증은 되었지만 역할 부족, `403 Forbidden`
 
 ```text
 예상 결과
@@ -513,11 +513,11 @@ JWT 기반 요청도 결국 아래 순서로 흘러갑니다.
 !!! example "실습 순서"
 
     1. **의존성 추가** — ch06 6.1에서 만든 `demo` 프로젝트의 `pom.xml`에 `spring-boot-starter-security` 의존성을 추가합니다.
-    2. **파일 생성** — `src/main/java/com/example/demo/config/SecurityConfig.java`를 만듭니다.
+    2. **파일 생성** — `src/main/java/dev/wonslab/demo/config/SecurityConfig.java`를 만듭니다.
     3. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.demo.config;
+        package dev.wonslab.demo.config;
 
         import org.springframework.context.annotation.Bean;
         import org.springframework.context.annotation.Configuration;
@@ -767,14 +767,15 @@ JWT는 `Header.Payload.Signature` 구조를 가지는 토큰입니다.
 이 클레임들을 담아 토큰을 만드는 코드(참고)는 다음과 같습니다.
 
 ```java
+// jjwt 0.12+ API — 0.11.x 이하는 setSubject/setIssuedAt/setExpiration, signWith(key, SignatureAlgorithm.HS256)
 return Jwts.builder()
-        .setSubject(authentication.getName())
+        .subject(authentication.getName())
         .claim("memberId", memberId)
         .claim("name", name)
         .claim("auth", authorities)
-        .setIssuedAt(new Date(now))
-        .setExpiration(validity)
-        .signWith(key, SignatureAlgorithm.HS256)
+        .issuedAt(new Date(now))
+        .expiration(validity)
+        .signWith(key)          // key = Keys.hmacShaKeyFor(32바이트 이상) → HS256 자동 선택
         .compact();
 ```
 
@@ -823,11 +824,13 @@ http
     .csrf(AbstractHttpConfigurer::disable)
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/auth/**").permitAll()
+        .requestMatchers("/api/auth/**", "/error").permitAll()   // /error: 403 응답이 401로 바뀌지 않게
         .requestMatchers("/api/admin/**").hasRole("ADMIN")
         .requestMatchers("/api/client/**").hasAnyRole("USER", "ADMIN")
         .anyRequest().authenticated()
     )
+    // 토큰 없음 → 401 (formLogin·httpBasic이 없으면 기본값은 403)
+    .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
     .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 ```
 
@@ -907,7 +910,7 @@ chain.doFilter(request, response);
 
 먼저 서버를 띄웁니다(`./mvnw spring-boot:run`, Windows는 `mvnw.cmd spring-boot:run`). curl은 새 터미널에서 실행합니다.
 
-> **전제**: `io.jsonwebtoken:jjwt-api`(+`jjwt-impl`,`jjwt-jackson`) 의존성과 `application.yml`의 `jwt.secret`(HS256이면 32바이트 이상)·`jwt.expiration` 설정이 있어야 토큰이 발급·검증된다.
+> **전제**: `io.jsonwebtoken:jjwt-api`(+`jjwt-impl`,`jjwt-jackson`, 둘은 `runtime` scope) 의존성과 `application.yml`의 `jwt.secret`(HS256이면 32바이트 이상)·`jwt.expiration` 설정이 있어야 토큰이 발급·검증됩니다. jjwt는 Spring Boot가 버전을 관리하지 않으므로 세 의존성 모두 `<version>0.13.0</version>`처럼 같은 버전(0.12 이상)을 직접 적습니다. 401/403이 아래처럼 구분되려면 위 참고 설정의 `/error` 허용과 `authenticationEntryPoint`가 있어야 합니다.
 
 **1) 로그인해서 토큰을 받습니다:**
 
@@ -926,7 +929,7 @@ curl -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: applicati
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"email":"admin@test.com","password":"pw"}' | jq -r .accessToken)
 
-curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" -H "Authorization: Bearer $TOKEN"
+curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" -H "Authorization: Bearer $TOKEN"   # → HTTP/1.1 200
 ```
 
 **3) 실패 케이스도 눈으로 확인합니다:**
@@ -936,9 +939,11 @@ curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" -H "Authoriza
 curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote"
 
 # USER 권한 토큰으로 admin API 호출 → 403 Forbidden (인증은 됐지만 권한 부족)
+USER_TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"email":"user@test.com","password":"pw"}' | jq -r .accessToken)
+curl -i -X PUT "http://localhost:8080/api/admin/members/1/promote" -H "Authorization: Bearer $USER_TOKEN"
 ```
 
-> **Windows**: PowerShell의 `curl`은 별칭이라 위 문법이 깨진다 → `curl.exe` 사용 또는 **Git Bash** 권장. 서버는 세션이 아니라 **헤더의 토큰**을 검사하므로, 요청마다 `Authorization: Bearer` 헤더가 있어야 한다.
+> **Windows**: PowerShell의 `curl`은 별칭이라 위 문법이 깨집니다 → `curl.exe`를 쓰거나 **Git Bash**를 권장합니다. 서버는 세션이 아니라 **헤더의 토큰**을 검사하므로, 요청마다 `Authorization: Bearer` 헤더가 있어야 합니다.
 
 #### JWT와 Bearer 토큰을 구분해서 이해하기
 
@@ -973,11 +978,11 @@ Spring Security에서도 직접 JWT를 파싱하는 커스텀 필터 구조를 �
 !!! example "실습 순서"
 
     1. **프로젝트 준비** — 위 "실제로 해보기"의 전제처럼 인증 API 골격(로그인 엔드포인트·`SecurityConfig`)이 갖춰진 프로젝트가 있다면 거기서 시작합니다. 없다면 ch06 6.1에서 만든 `demo` 프로젝트에 jjwt 의존성과 `jwt.secret` 설정(위 전제 박스 참고)을 먼저 추가합니다.
-    2. **파일 생성** — `src/main/java/com/example/demo/security/JwtAuthenticationFilter.java`를 만듭니다.
+    2. **파일 생성** — `src/main/java/dev/wonslab/demo/security/JwtAuthenticationFilter.java`를 만듭니다.
     3. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다. (뼈대는 검증 없이 통과만 시키므로 컴파일·기동에 지장이 없습니다)
 
         ```java
-        package com.example.demo.security;
+        package dev.wonslab.demo.security;
 
         import jakarta.servlet.FilterChain;
         import jakarta.servlet.ServletException;

@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch11]
 sources: [java-study/java-study-ch11-부록.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 부록
@@ -825,11 +825,11 @@ try {
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트(ch01 1.2에서 생성)에 `src/main/java/com/example/ch11/RaceConditionDemo.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트(ch01 1.2에서 생성)에 `src/main/java/dev/wonslab/ch11/RaceConditionDemo.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch11;
+        package dev.wonslab.ch11;
 
         public class RaceConditionDemo {
 
@@ -845,7 +845,7 @@ try {
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch11.RaceConditionDemo"` (이 프로젝트에는 mvnw 래퍼가 없습니다) — 추가할 때마다 다시 실행해 최종 값을 비교합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch11.RaceConditionDemo"` (이 프로젝트에는 mvnw 래퍼가 없습니다) — 추가할 때마다 다시 실행해 최종 값을 비교합니다.
 
 
 ## 11.17 포트폴리오 예제
@@ -1285,7 +1285,7 @@ JSP는 별도 선언 없이 여러 내장 객체를 제공합니다. 다만 이�
 
 ### 예제 4. JavaBean 사용
 ```
-<jsp:useBean id="user" class="com.example.beans.User" scope="session" />
+<jsp:useBean id="user" class="dev.wonslab.beans.User" scope="session" />
 <jsp:setProperty name="user" property="name" param="name" />
 <jsp:getProperty name="user" property="name" />
 ```
@@ -3563,10 +3563,10 @@ Modified: 2024-11-23 07:30:18
 
 파일 하나짜리 콘솔 프로그램이므로 자체 프로젝트를 새로 만들 필요 없이 [[java-study-ch01]] 1.2에서 만든 프로젝트에 아래 파일을 추가합니다.
 
-**파일**: src/main/java/com/example/ch11/toy/MemoApp.java
+**파일**: src/main/java/dev/wonslab/ch11/toy/MemoApp.java
 
 ```java
-package com.example.ch11.toy;
+package dev.wonslab.ch11.toy;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -3733,8 +3733,8 @@ public class MemoApp {
 프로젝트 루트에서 아래 한 줄로 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch11.toy.MemoApp"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch11.toy.MemoApp
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch11.toy.MemoApp"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch11.toy.MemoApp
 ```
 
 ```text

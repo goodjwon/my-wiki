@@ -102,6 +102,10 @@ updated: 2026-09-03
 - [[guide-java-book-study-lab]] — Java 도서 5권 실습 환경 가이드 (Java 17, JUnit 5, Python, Node)
 - [[guide-java-learning-path]] — 📘 Java 학습 경로 전체 지도 (5개 트랙: 기초→설계→입출력→Spring→실전)
   - [[guide-java-track1-basics]] · [[guide-java-track2-design]] · [[guide-java-track3-io-network]] · [[guide-java-track4-spring-web]] · [[guide-java-track5-deep-dive]]
+- **Java·Spring 실습 과제 (실행 검증·스크린샷 포함, 2026-09-28)**:
+  - [[guide-java-practice-core]] — 과제 1. 주문 처리 콘솔 앱: 컬렉션·전략·옵저버·미니 IoC (순수 Java + JUnit)
+  - [[guide-java-practice-spring-library]] — 과제 2. 도서 대여 REST API: Spring Boot + JPA + H2 + Swagger
+  - [[guide-java-practice-layered-quotation]] — 과제 3. 견적·계약 업무: 4계층 + Command/Query 분리 + MyBatis + H2
 - [[guide-code-authoring-and-review]] — 코드 작성·점검 가이드 — 작성 체크리스트·PR 리뷰 어휘 (5권 도서 기반)
 - [[guide-harness-00-prerequisites]] — 하네스 실습 사전 안내 (Node + GCP 학습자용 환경/용어/FAQ)
 - [[guide-harness-demo]] — 하네스 5분 데모: 있을 때 vs 없을 때 직접 체험 (.env 커밋 차단 시연)

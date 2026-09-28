@@ -8,7 +8,7 @@ external:
   - https://www.youtube.com/watch?v=L3IFezsV5VI
   - https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html
 created: 2026-06-06
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # `@Transactional` 롤백 정책 — 왜 RuntimeException에만 롤백할까
@@ -172,3 +172,5 @@ grep -rn "@Transactional" src/main/java/ \
 - [[src-kakaopay-ddd]] — Application Layer 트랜잭션 경계 설계
 - [[concept-cronjob-concurrency-trap]] / [[concept-keepalive-timeout-race]] — 같은 "기본값 함정" 패턴
 - [[concept-claude-md]] — STOP 트리거로 구조적 방어
+- [[guide-java-practice-spring-library]] — 🧪 실습 과제 2 — 도서 대여 REST API (Spring Boot + JPA + H2)
+- [[guide-java-practice-layered-quotation]] — 🧪 실습 과제 3 — 견적·계약 업무 (4계층 + Command/Query + MyBatis)

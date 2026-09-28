@@ -4,6 +4,19 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-28] feat+verify | Java·Spring 실습 과제 3편 신설 (H2 실행·스크린샷) + 패키지 dev.wonslab 통일 + 챕터 Boot 4 재검증
+- **계기**: 사용자 "Java·Spring 다시 보고 예제를 구성부터 스샷까지, H2로 실행, 개인 저장소 3개로 실습 과제, 고유명사 피하고 dev.wonslab으로 통일".
+- **실습 과제 3편** (메뉴 Java·Spring › 실습 과제, 원본 추적 `raw/java-study/practice/README.md` — 저장소명은 raw에만):
+  - [[guide-java-practice-core]] — 주문 처리 콘솔 앱: 컬렉션·전략·옵저버·미니 IoC, 테스트 13개. 스샷 2장.
+  - [[guide-java-practice-spring-library]] — 도서 대여 REST API: Boot 4.1.1 + JPA + H2 + springdoc 3.1.1, 업무 규칙 R1~R7, 테스트 9개, curl 409/400/404 시나리오. 스샷 6장(Swagger 목록·Try it out·H2 콘솔 2·테스트 리포트·기동 로그).
+  - [[guide-java-practice-layered-quotation]] — 견적·계약 업무: 4계층 + Command/Query + MyBatis 4.1.0 + ArchUnit, 테스트 8개. 스샷 3장. start.spring.io가 Boot 4.1.1+mybatis 조합을 거절 → 의존성 직접 추가 안내.
+  - 세 페이지 모두 **페이지 코드 블록만으로 새 프로젝트를 만들어** 빌드·테스트·H2 기동·curl 실측, 예상 결과는 실측값. 고유명사(저장소명·S2B) 0건.
+- **패키지 통일**: `com.example` → `dev.wonslab` 16개 파일 약 375건 (log·plan 이력은 유지).
+- **챕터 실행 재검증 (start.spring.io 기본 Boot 4.1.1)**: ch01 archetype, Core 코드 블록 69개 일괄 컴파일, ch06 demo h2 기동, ch07 Querydsl(annotationProcessorPaths에 jakarta.persistence 누락 수정), `@DataJpaTest`·`@WebMvcTest` Boot 4 import 경로(Boot 3 주석 병기), ch06 배너 v4.1.1.
+  - ch08: 토큰 없음이 403으로 나오던 것 → `HttpStatusEntryPoint(401)` + `/error` permitAll로 401/403 구분 실측, jjwt 0.12+ 빌더 API, 기동 로그 문구.
+  - ch10: GcLogDemo `-Xmx64m` OOM → 256m, NMT·`/var/log` 권한·`UseContainerSupport`(Linux 전용) 로컬 실행 안내.
+- **흐름**: 트랙 T1~T4의 장 번호 라벨 어긋남 수정, 학습 경로·트랙 3곳·index에 과제 연결, 개념·챕터 15개에 역링크.
+
 ## [2026-09-28] infra | 메뉴 🆕 배지 자동화 — created 30일 이내만 표시
 - mkdocs.yml에 하드코딩된 🆕 17개 제거, MkDocs hook `scripts/new_badge.py`(`on_nav`) 신설: frontmatter `created`가 빌드일 기준 30일 이내인 페이지 제목에 🆕 부착.
 - 빌드 시점 기준이라 30일이 지나면 다음 빌드·배포 때 사라짐. 현재 대상: Workout History 4페이지(2026-09-03).

@@ -6,7 +6,7 @@ sources: [java-study/java-study-ch02-Java문법과객체.md]
 external:
   - https://docs.oracle.com/javase/tutorial/java/concepts/
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 객체지향 프로그래밍 (OOP)
@@ -225,3 +225,4 @@ assert r.area() == 50;  // 실패! Square 때문에 100
 - [[src-kakaopay-ddd]] — DDD = OOP를 도메인에 적용한 설계법
 - [[src-java-study-2024-2025]] — Java 스터디 Ch02
 - [[entity-jvm]] — 객체 생성·소멸이 일어나는 런타임
+- [[guide-java-practice-core]] — 🧪 실습 과제 1 — 주문 처리 콘솔 앱 (컬렉션·전략·옵저버·미니 IoC)

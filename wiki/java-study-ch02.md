@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch02]
 sources: [java-study/java-study-ch02-Java문법과객체.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # Java 문법과 객체
@@ -19,7 +19,7 @@ updated: 2026-07-04
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 각 절의 코드를 직접 쳐보고, 끝의 2.9 실전문제를 풀어본다. 막히면 [[concept-oop]].
 
-> **실습 프로젝트**: 이 장의 실습 예제 파일(2.4·2.5와 각 절의 ✏️ 직접 해보기)은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/com/example/ch02/` 아래에 만듭니다(패키지 `com.example.ch02`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
+> **실습 프로젝트**: 이 장의 실습 예제 파일(2.4·2.5와 각 절의 ✏️ 직접 해보기)은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/dev/wonslab/ch02/` 아래에 만듭니다(패키지 `dev.wonslab.ch02`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
 
 ---
 
@@ -177,11 +177,11 @@ int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch02/practice/TypePractice.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch02/practice/TypePractice.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch02.practice;
+        package dev.wonslab.ch02.practice;
 
         public class TypePractice {
             public static void main(String[] args) {
@@ -193,7 +193,7 @@ int·double·String 변수를 선언하고, 형 변환 결과와 `==` vs `equals
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch02.practice.TypePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -491,11 +491,11 @@ String result = builder.toString();
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch02/practice/ArrayStatsPractice.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch02/practice/ArrayStatsPractice.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch02.practice;
+        package dev.wonslab.ch02.practice;
 
         public class ArrayStatsPractice {
             public static void main(String[] args) {
@@ -507,7 +507,7 @@ String result = builder.toString();
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.ArrayStatsPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch02.practice.ArrayStatsPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -641,10 +641,10 @@ Spring에서도 객체지향 원칙은 그대로 이어집니다. DI, 전략 패
 
 객체지향 원칙은 정의를 외우는 순간보다, **같은 메시지를 보내도 객체 타입에 따라 다른 동작이 나온다**는 장면을 직접 볼 때 훨씬 빨리 잡힙니다. 아래 예시는 게임 예제 흐름을 단순화한 것으로, 다형성과 오버라이딩을 가장 짧게 보여줍니다.
 
-**파일**: src/main/java/com/example/ch02/EnemyAttackDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/EnemyAttackDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 class Enemy {
     public String name;
@@ -693,8 +693,8 @@ public class EnemyAttackDemo {
 프로젝트 루트에서 아래 한 줄로 실행합니다. 이 절(2.4)의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch02.EnemyAttackDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch02.EnemyAttackDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch02.EnemyAttackDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch02.EnemyAttackDemo
 ```
 
 ```text
@@ -711,10 +711,10 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch02.EnemyAttackDemo"
 
 ##### 예제 1: Private 필드와 Public 메서드 사용
 
-**파일**: src/main/java/com/example/ch02/EncapsulationDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/EncapsulationDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 class Person {
     // Private 필드
@@ -767,10 +767,10 @@ public class EncapsulationDemo {
 
 ##### 예제 2: 은행 계좌 클래스
 
-**파일**: src/main/java/com/example/ch02/BankAccountDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/BankAccountDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 class BankAccount {
     private double balance;
@@ -827,10 +827,10 @@ public class BankAccountDemo {
 
 ##### 예제 1: 동물과 개 클래스
 
-**파일**: src/main/java/com/example/ch02/InheritanceDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/InheritanceDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 // 부모 클래스
 class Animal {
@@ -863,10 +863,10 @@ public class InheritanceDemo {
 
 ##### 예제 2: 차량과 자동차 클래스
 
-**파일**: src/main/java/com/example/ch02/Car.java
+**파일**: src/main/java/dev/wonslab/ch02/Car.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 // 부모 클래스
 class Vehicle {
@@ -896,10 +896,10 @@ public class Car extends Vehicle {
 
 ##### 예제 3: 직원과 매니저 클래스
 
-**파일**: src/main/java/com/example/ch02/ManagerDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/ManagerDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 class Staff {
     public void work() {
@@ -941,10 +941,10 @@ public class ManagerDemo {
 
 ##### 예제 1: 메서드 오버로딩 (Overloading)
 
-**파일**: src/main/java/com/example/ch02/OverloadingDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/OverloadingDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 class Calculator {
     // 두 개의 정수 합
@@ -981,10 +981,10 @@ public class OverloadingDemo {
 
 ##### 예제 2: 메서드 오버라이딩 (Overriding)과 다형성
 
-**파일**: src/main/java/com/example/ch02/OverridingDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/OverridingDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 class Pet {
     public void makeSound() {
@@ -1026,10 +1026,10 @@ public class OverridingDemo {
 
 ##### 예제 3: 인터페이스와 다형성
 
-**파일**: src/main/java/com/example/ch02/PolymorphismDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/PolymorphismDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 interface Shape {
     public double getArea();
@@ -1084,10 +1084,10 @@ public class PolymorphismDemo {
 
 ##### 예제 1: 추상 클래스 사용
 
-**파일**: src/main/java/com/example/ch02/AbstractionDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/AbstractionDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class AbstractAnimal {
     public abstract void makeSound();
@@ -1120,10 +1120,10 @@ public class AbstractionDemo {
 
 ##### 예제 2: 인터페이스 사용
 
-**파일**: src/main/java/com/example/ch02/RemoteControlDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/RemoteControlDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 interface RemoteControl {
     void turnOn();
@@ -1158,10 +1158,10 @@ public class RemoteControlDemo {
 
 ##### 예제 3: 추상 클래스를 이용한 템플릿 메서드 패턴
 
-**파일**: src/main/java/com/example/ch02/TemplateMethodDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/TemplateMethodDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class Game {
     abstract void initialize();
@@ -1222,7 +1222,7 @@ public class TemplateMethodDemo {
 
     1. **파일 열기** — 위 `Car.java`(2.4 상속 예제 2)
     2. **수정** — `protected String brand` 필드를 `private`로 바꾸고, getter 메서드로만 읽게 고칩니다.
-    3. **재실행** — 이 절(2.4) 대표 실행 명령 재사용 — `-Dexec.mainClass` 값만 `com.example.ch02.Car`로 변경
+    3. **재실행** — 이 절(2.4) 대표 실행 명령 재사용 — `-Dexec.mainClass` 값만 `dev.wonslab.ch02.Car`로 변경
 
 ## 2.5 추상 클래스 활용 예제
 
@@ -1234,10 +1234,10 @@ public class TemplateMethodDemo {
 
 템플릿 메서드 예제를 단순화하면 아래처럼 읽을 수 있습니다.
 
-**파일**: src/main/java/com/example/ch02/CsvProcessorDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/CsvProcessorDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class AbstractDataProcessor {
     public final void process() {
@@ -1286,8 +1286,8 @@ public class CsvProcessorDemo {
 프로젝트 루트에서 아래 한 줄로 실행합니다. 이 절(2.5)의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch02.CsvProcessorDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch02.CsvProcessorDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch02.CsvProcessorDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch02.CsvProcessorDemo
 ```
 
 ```text
@@ -1307,10 +1307,10 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch02.CsvProcessorDemo"
 
 정규직과 계약직의 급여 계산식이 서로 다른 상황입니다. 공통 정보(이름·ID)와 출력은 부모가 들고, 계산식만 자식이 채우는 분담을 봅니다.
 
-**파일**: src/main/java/com/example/ch02/EmployeeSalaryDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/EmployeeSalaryDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 // 추상 클래스
 abstract class Employee {
@@ -1392,10 +1392,10 @@ public class EmployeeSalaryDemo {
 
 원과 사각형처럼 그리는 방법은 다르지만 이동 방식은 같은 도형들입니다. 추상 클래스가 공통 동작(`move`)을 제공하고, 부모 타입 변수로 서로 다른 `draw()`가 실행되는 다형성을 함께 봅니다.
 
-**파일**: src/main/java/com/example/ch02/GraphicDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/GraphicDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 // 추상 클래스
 abstract class Graphic {
@@ -1464,10 +1464,10 @@ public class GraphicDemo {
 
 읽기→처리→저장 순서는 고정하고 처리 단계만 CSV·XML별로 갈라지는 구조입니다. 절 첫머리의 `CsvProcessorDemo`와 같은 템플릿 메서드 패턴을 두 형식으로 확장한 예제입니다.
 
-**파일**: src/main/java/com/example/ch02/DataProcessorDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/DataProcessorDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class DataProcessor {
     // 템플릿 메서드
@@ -1544,10 +1544,10 @@ public class DataProcessorDemo {
 
 모든 캐릭터가 공유하는 동작은 추상 클래스로, 마법사만 가지는 능력은 인터페이스로 나누는 조합입니다. 상속 계층 하나로 다 담지 않고 역할별 계약을 분리하는 감각을 봅니다.
 
-**파일**: src/main/java/com/example/ch02/GameCharacterDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/GameCharacterDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 // 추상 클래스
 abstract class Character {
@@ -1626,10 +1626,10 @@ public class GameCharacterDemo {
 
 전원 켜기·끄기 같은 공통 동작은 추상 클래스가 완성된 구현으로 제공하고, 제품별 기능만 추상 메서드로 남기는 구조입니다. 전원이 꺼진 상태의 분기까지 함께 봅니다.
 
-**파일**: src/main/java/com/example/ch02/ApplianceDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/ApplianceDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class Appliance {
     protected boolean isOn = false;
@@ -1700,10 +1700,10 @@ public class ApplianceDemo {
 
 주문 흐름 가운데 결제 방법은 반드시 자식이 정하고, 선물 포장 여부는 필요한 자식만 재정의하는 구조입니다. 기본값을 돌려주다가 선택적으로 바꾸는 후크(hook) 메서드가 처음 등장하는 예제입니다.
 
-**파일**: src/main/java/com/example/ch02/OrderProcessorDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/OrderProcessorDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class OrderProcessor {
     // 주문 처리 전체 흐름
@@ -1797,10 +1797,10 @@ public class OrderProcessorDemo {
 
 수강 흐름 다섯 단계 중 시험 방식 하나만 온라인·오프라인별로 달라지는 구조입니다. 고정 단계가 많고 가변 지점이 하나뿐일 때 템플릿이 얼마나 단순해지는지 봅니다.
 
-**파일**: src/main/java/com/example/ch02/CourseDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/CourseDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class Course {
     public void takeCourse() {
@@ -1888,10 +1888,10 @@ public class CourseDemo {
 
 파일과 디렉터리를 같은 부모 타입으로 묶어, 중첩된 트리 구조를 재귀 호출 한 번으로 출력하는 예제입니다. 디렉터리가 자기 안의 구성 요소에게 같은 `display`를 위임하는 지점이 핵심입니다.
 
-**파일**: src/main/java/com/example/ch02/FileSystemDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/FileSystemDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1980,10 +1980,10 @@ public class FileSystemDemo {
 
 이메일·SMS처럼 전송 수단이 달라도 보낸 사람·받는 사람 구조는 같은 상황입니다. 공통 필드는 부모가 들고, 전송 방식만 자식이 구현합니다.
 
-**파일**: src/main/java/com/example/ch02/MessageSenderDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/MessageSenderDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 abstract class MessageSender {
     protected String sender;
@@ -2051,10 +2051,10 @@ public class MessageSenderDemo {
 
 추상 클래스가 추상 클래스를 상속하며 계약을 단계적으로 넓히고, 맨 아래 구체 클래스가 전부 구현하는 구조입니다. 중간 계층을 언제 추상으로 남길지 감을 잡는 예제입니다.
 
-**파일**: src/main/java/com/example/ch02/MultiLevelInheritanceDemo.java
+**파일**: src/main/java/dev/wonslab/ch02/MultiLevelInheritanceDemo.java
 
 ```java
-package com.example.ch02;
+package dev.wonslab.ch02;
 
 // 최상위 추상 클래스
 abstract class Transport {
@@ -2105,10 +2105,10 @@ public class MultiLevelInheritanceDemo {
 | 에러 메시지 | 원인 → 확인할 것 |
 |------------|----------------|
 | `class XxxDemo is public, should be declared in a file named XxxDemo.java` | 파일명과 public 클래스명이 다름 → 파일명을 리드인의 클래스명과 똑같이 |
-| `duplicate class: com.example.ch02.Animal` | 앞 예제와 같은 클래스명이 패키지에 이미 있음 → 이 장의 예제 클래스명은 서로 겹치지 않게 지어져 있으니, 임의로 이름을 바꿨다면 원래 이름으로 |
-| `Could not find or load main class com.example.ch02...` | `-Dexec.mainClass` 오타 또는 `com.example.ch02.` 접두 누락 → 리드인의 파일명(= 클래스명)과 대조 |
-| `error: class, interface, or enum expected` (파일 첫머리) | `package com.example.ch02;`가 첫 줄이 아니거나 import가 클래스 선언 뒤에 있음 → 코드블록 순서 그대로 복사 |
-| 컴파일은 되는데 실행 시 `ClassNotFoundException` | 파일을 `src/main/java/com/example/ch02/`가 아닌 곳에 만듦 → 디렉터리 경로와 package 선언 일치 확인 |
+| `duplicate class: dev.wonslab.ch02.Animal` | 앞 예제와 같은 클래스명이 패키지에 이미 있음 → 이 장의 예제 클래스명은 서로 겹치지 않게 지어져 있으니, 임의로 이름을 바꿨다면 원래 이름으로 |
+| `Could not find or load main class dev.wonslab.ch02...` | `-Dexec.mainClass` 오타 또는 `dev.wonslab.ch02.` 접두 누락 → 리드인의 파일명(= 클래스명)과 대조 |
+| `error: class, interface, or enum expected` (파일 첫머리) | `package dev.wonslab.ch02;`가 첫 줄이 아니거나 import가 클래스 선언 뒤에 있음 → 코드블록 순서 그대로 복사 |
+| 컴파일은 되는데 실행 시 `ClassNotFoundException` | 파일을 `src/main/java/dev/wonslab/ch02/`가 아닌 곳에 만듦 → 디렉터리 경로와 package 선언 일치 확인 |
 
 ### ✏️ 추상 클래스 활용 예제 직접 해보기
 
@@ -2118,7 +2118,7 @@ public class MultiLevelInheritanceDemo {
 
     1. **파일 열기** — 위 `GraphicDemo.java`(2.5 예제 2)
     2. **수정** — `GraphicTriangle` 클래스를 추가하고, `Graphic` 추상 클래스는 그대로 둔 채 `main`에서 그리게 고칩니다.
-    3. **재실행** — 위 절(2.5)의 실행 명령 재사용 — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.GraphicDemo"`
+    3. **재실행** — 위 절(2.5)의 실행 명령 재사용 — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch02.GraphicDemo"`
 
 ## 2.9 객체지향 실전문제
 
@@ -2253,7 +2253,7 @@ class PartTimeWorker extends Worker {
 
 > 게임에 필요한 요소들에 대해서 고민해 보고 객체화 하는 연습을 통해 객체 활용에 대한 이해를 높인다.
 
-각 문제 아래의 코드 펜스는 구현을 마쳤을 때 콘솔에 나와야 하는 예상 출력입니다. 정답 코드는 제시하지 않으므로, 출력이 똑같이 나오도록 클래스를 직접 설계합니다. 파일은 `hello-java` 프로젝트에 `com.example.ch02.game`처럼 별도 하위 패키지를 만들어 두면 2.4·2.5 예제의 `Character`·`Goblin` 같은 클래스와 이름이 겹치지 않습니다.
+각 문제 아래의 코드 펜스는 구현을 마쳤을 때 콘솔에 나와야 하는 예상 출력입니다. 정답 코드는 제시하지 않으므로, 출력이 똑같이 나오도록 클래스를 직접 설계합니다. 파일은 `hello-java` 프로젝트에 `dev.wonslab.ch02.game`처럼 별도 하위 패키지를 만들어 두면 2.4·2.5 예제의 `Character`·`Goblin` 같은 클래스와 이름이 겹치지 않습니다.
 
 **문제**: 게임 캐릭터를 나타내는 `Character` 클래스를 작성하세요. 이 클래스는 `name`, `health`, `level` 등의 속성을 가지며, `attack()`과 `defend()` 메서드를 포함합니다. 이 클래스를 기반으로 여러 캐릭터 객체를 생성하고, 각 캐릭터의 행동을 구현하세요
 ```javascript
@@ -2354,7 +2354,7 @@ NPC 상인이(가) 위치 (35, 45)로 이동했습니다.
 
 **🎯 목표**: 제어문을 반복 문제로 손에 익힌다.
 
-열 문제 모두 정답 코드 없이 문제 설명과 출력 예시만 제시합니다. 2.1에서 익힌 조건문·반복문만으로 풀 수 있으며, 파일은 ✏️ 직접 해보기와 같은 `com.example.ch02.practice` 패키지에 자유롭게 만들면 됩니다.
+열 문제 모두 정답 코드 없이 문제 설명과 출력 예시만 제시합니다. 2.1에서 익힌 조건문·반복문만으로 풀 수 있으며, 파일은 ✏️ 직접 해보기와 같은 `dev.wonslab.ch02.practice` 패키지에 자유롭게 만들면 됩니다.
 
 #### 문제 1: 1부터 100까지의 숫자 출력
 **문제 설명**: 1부터 100까지의 숫자를 출력하는 프로그램 작성.
@@ -2472,3 +2472,9 @@ NPC 상인이(가) 위치 (35, 45)로 이동했습니다.
 ```
 
 ---
+
+---
+
+## 관련 실습 과제
+
+- [[guide-java-practice-core]] — 🧪 실습 과제 1 — 주문 처리 콘솔 앱 (컬렉션·전략·옵저버·미니 IoC)

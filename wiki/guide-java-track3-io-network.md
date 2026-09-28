@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, learning-path, track3, io, network, exception]
 sources: [java-study/]
 created: 2026-06-29
-updated: 2026-06-29
+updated: 2026-09-28
 ---
 
 # Java 학습 경로 T3 — 입출력과 네트워크
@@ -19,7 +19,7 @@ updated: 2026-06-29
 
 ---
 
-## 📚 학습 순서 (ch10)
+## 📚 학습 순서 (ch05)
 
 | 순서 | 문서 | 한 줄 |
 |------|------|------|

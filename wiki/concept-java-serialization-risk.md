@@ -4,7 +4,7 @@ type: concept
 tags: [java, security, serialization, deserialization, effective-java, rce, jep290]
 sources: []
 created: 2026-07-04
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 자바 직렬화의 보안 위험 — 역직렬화 RCE와 방어 패턴
@@ -172,7 +172,7 @@ ObjectInputStream ois = new ObjectInputStream(in);
 
 // 허용 목록(화이트리스트) — 우리 패키지만 통과, 그 외 전부 거부
 ObjectInputFilter filter = ObjectInputFilter.Config.createFilter(
-        "com.example.dto.*;java.base/*;!*");
+        "dev.wonslab.dto.*;java.base/*;!*");
 ois.setObjectInputFilter(filter);
 
 Object obj = ois.readObject();   // 허용되지 않은 클래스는 여기서 거부됨

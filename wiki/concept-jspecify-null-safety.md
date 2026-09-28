@@ -8,7 +8,7 @@ external:
   - https://jspecify.dev/docs/user-guide/
   - https://spring.io/blog/2025/11/12/null-safe-applications-with-spring-boot-4
 created: 2026-04-18
-updated: 2026-06-07
+updated: 2026-09-28
 ---
 
 # JSpecify Null Safety
@@ -82,7 +82,7 @@ public class UserService {
 ```java
 // package-info.java
 @NullMarked
-package com.example.service;
+package dev.wonslab.service;
 ```
 
 → 이 패키지의 모든 타입은 **기본 non-null**, `@Nullable`만 명시.
@@ -161,7 +161,7 @@ dependencies {
 
 tasks.withType(JavaCompile) {
     options.errorprone.check 'NullAway', net.ltgt.gradle.errorprone.CheckSeverity.ERROR
-    options.errorprone.option 'NullAway:AnnotatedPackages', 'com.example'
+    options.errorprone.option 'NullAway:AnnotatedPackages', 'dev.wonslab'
 }
 ```
 

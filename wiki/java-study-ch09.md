@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch09]
 sources: [java-study/java-study-ch09-테스트와품질.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 테스트와 품질
@@ -192,13 +192,13 @@ class LoanRepositoryTest {
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — ch06 6.1에서 만든 `demo` 프로젝트에 컨트롤러 `src/main/java/com/example/demo/practice/PingController.java`와 테스트 `src/test/java/com/example/demo/practice/PingControllerTest.java`를 만듭니다.
+    1. **파일 생성** — ch06 6.1에서 만든 `demo` 프로젝트에 컨트롤러 `src/main/java/dev/wonslab/demo/practice/PingController.java`와 테스트 `src/test/java/dev/wonslab/demo/practice/PingControllerTest.java`를 만듭니다.
     2. **뼈대 입력** — 아래 두 뼈대를 그대로 입력합니다.
 
-        **파일**: `src/main/java/com/example/demo/practice/PingController.java`
+        **파일**: `src/main/java/dev/wonslab/demo/practice/PingController.java`
 
         ```java
-        package com.example.demo.practice;
+        package dev.wonslab.demo.practice;
 
         import org.springframework.web.bind.annotation.GetMapping;
         import org.springframework.web.bind.annotation.RestController;
@@ -213,14 +213,14 @@ class LoanRepositoryTest {
         }
         ```
 
-        **파일**: `src/test/java/com/example/demo/practice/PingControllerTest.java`
+        **파일**: `src/test/java/dev/wonslab/demo/practice/PingControllerTest.java`
 
         ```java
-        package com.example.demo.practice;
+        package dev.wonslab.demo.practice;
 
         import org.junit.jupiter.api.Test;
         import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+        import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest; // Boot 3.x: org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
         import org.springframework.test.web.servlet.MockMvc;
 
         import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -270,7 +270,7 @@ Spring Boot 테스트의 핵심은 **가장 작은 비용으로 가장 큰 회�
 - 입력 파싱과 계산 책임을 나누기
 - 성공 케이스와 실패 케이스를 JUnit 5로 검증하기
 
-이 절의 파일들은 [[java-study-ch01]] 1.2에서 만든 순수 Java 프로젝트 `hello-java`에 `com.example.ch09` 패키지로 작성합니다. JUnit 5 의존성 추가와 실행 방법은 절 끝의 "프로젝트에 두고 실행하기"에서 안내합니다.
+이 절의 파일들은 [[java-study-ch01]] 1.2에서 만든 순수 Java 프로젝트 `hello-java`에 `dev.wonslab.ch09` 패키지로 작성합니다. JUnit 5 의존성 추가와 실행 방법은 절 끝의 "프로젝트에 두고 실행하기"에서 안내합니다.
 
 ### 1. 처음 코드가 왜 테스트하기 어려운가
 계산기의 첫 코드는 흔히 콘솔 입력, 문자열 파싱, 계산, 출력이 모두 `main` 메서드 하나에 붙어 있는 형태가 됩니다. 이런 코드는 테스트가 어렵습니다.
@@ -282,10 +282,10 @@ Spring Boot 테스트의 핵심은 **가장 작은 비용으로 가장 큰 회�
 
 ### 2. 첫 단계는 계산 규칙을 메서드로 분리하는 것이다
 
-**파일**: src/main/java/com/example/ch09/Calculator.java
+**파일**: src/main/java/dev/wonslab/ch09/Calculator.java
 
 ```java
-package com.example.ch09;
+package dev.wonslab.ch09;
 
 public class Calculator {
     public int calculate(int left, String operator, int right) {
@@ -308,19 +308,19 @@ public class Calculator {
 
 ### 3. 입력 파싱은 별도 책임으로 분리한다
 
-**파일**: src/main/java/com/example/ch09/Expression.java
+**파일**: src/main/java/dev/wonslab/ch09/Expression.java
 
 ```java
-package com.example.ch09;
+package dev.wonslab.ch09;
 
 public record Expression(int left, String operator, int right) {
 }
 ```
 
-**파일**: src/main/java/com/example/ch09/ExpressionParser.java
+**파일**: src/main/java/dev/wonslab/ch09/ExpressionParser.java
 
 ```java
-package com.example.ch09;
+package dev.wonslab.ch09;
 
 public class ExpressionParser {
     public Expression parse(String input) {
@@ -345,10 +345,10 @@ public class ExpressionParser {
 
 이제 분리해 둔 계산 규칙을 JUnit 5로 검증합니다. 코드에 처음 나오는 세 요소만 미리 알아 두면 됩니다 — `assertEquals`는 기대값과 실제 결과가 같은지, `assertThrows`는 지정한 예외가 실제로 발생하는지 확인하는 단언(assertion) 메서드이고, `@DisplayName`은 테스트 결과에 표시될 이름을 사람이 읽는 문장으로 붙이는 애노테이션입니다.
 
-**파일**: src/test/java/com/example/ch09/CalculatorTest.java
+**파일**: src/test/java/dev/wonslab/ch09/CalculatorTest.java
 
 ```java
-package com.example.ch09;
+package dev.wonslab.ch09;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -443,7 +443,7 @@ class LoanServiceImplTest {
 
 #### 프로젝트에 두고 실행하기
 
-위 `Calculator`·`Expression`·`ExpressionParser`·`CalculatorTest`를 실제로 실행하려면 JUnit 5 의존성과 표준 위치가 필요합니다. 프로젝트는 [[java-study-ch01]] 1.2에서 만든 Maven/Gradle 프로젝트 `hello-java`를 그대로 사용하고, 이 장의 코드는 `com.example.ch09` 패키지에 둡니다.
+위 `Calculator`·`Expression`·`ExpressionParser`·`CalculatorTest`를 실제로 실행하려면 JUnit 5 의존성과 표준 위치가 필요합니다. 프로젝트는 [[java-study-ch01]] 1.2에서 만든 Maven/Gradle 프로젝트 `hello-java`를 그대로 사용하고, 이 장의 코드는 `dev.wonslab.ch09` 패키지에 둡니다.
 
 의존성 (빌드 파일):
 
@@ -468,10 +468,10 @@ dependencies {
 파일 배치 — 프로덕션 코드와 테스트 코드를 나눕니다:
 
 ```text
-src/main/java/com/example/ch09/Calculator.java        ← 계산 규칙
-src/main/java/com/example/ch09/Expression.java        ← 수식 record
-src/main/java/com/example/ch09/ExpressionParser.java  ← 입력 파싱
-src/test/java/com/example/ch09/CalculatorTest.java    ← 테스트 코드
+src/main/java/dev/wonslab/ch09/Calculator.java        ← 계산 규칙
+src/main/java/dev/wonslab/ch09/Expression.java        ← 수식 record
+src/main/java/dev/wonslab/ch09/ExpressionParser.java  ← 입력 파싱
+src/test/java/dev/wonslab/ch09/CalculatorTest.java    ← 테스트 코드
 ```
 
 실행:
@@ -489,8 +489,8 @@ mvn test -Dtest=CalculatorTest            # 1장 archetype 프로젝트에는 mv
 | 증상 | 원인 확인 |
 |------|----------|
 | 테스트가 0개 실행됨 (`Tests run: 0` / `NO-SOURCE`) | 테스트 파일이 `src/test/java` 아래에 있는지, 클래스명이 `*Test` 형태인지 확인합니다. |
-| `error: package com.example.ch09 does not exist` | 디렉터리 경로(`com/example/ch09/`)와 `package` 선언이 일치하는지 확인합니다. |
-| `cannot find symbol: class Calculator` | `Calculator`가 `src/main/java/com/example/ch09/`에 있고 테스트와 같은 패키지인지 확인합니다. |
+| `error: package dev.wonslab.ch09 does not exist` | 디렉터리 경로(`dev/wonslab/ch09/`)와 `package` 선언이 일치하는지 확인합니다. |
+| `cannot find symbol: class Calculator` | `Calculator`가 `src/main/java/dev/wonslab/ch09/`에 있고 테스트와 같은 패키지인지 확인합니다. |
 | Gradle에서 JUnit 5 테스트를 찾지 못함 | `build.gradle`에 `test { useJUnitPlatform() }`이 있는지 확인합니다. |
 
 ### 정리
@@ -734,7 +734,7 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 
 !!! example "실습 순서"
 
-    1. **파일 열기** — ch06 6.1에서 만든 `demo` 프로젝트의 `src/main/java/com/example/demo/practice/PingController.java`(9.1 실습에서 생성)를 엽니다. 없다면 9.1 실습 순서대로 먼저 만듭니다.
+    1. **파일 열기** — ch06 6.1에서 만든 `demo` 프로젝트의 `src/main/java/dev/wonslab/demo/practice/PingController.java`(9.1 실습에서 생성)를 엽니다. 없다면 9.1 실습 순서대로 먼저 만듭니다.
     2. **수정** — POST를 받을 메서드를 추가합니다. 예: `@PostMapping("/echo")` + `@RequestBody String body`를 그대로 반환.
     3. **실행** — `./mvnw spring-boot:run`으로 서버를 띄웁니다.
     4. **요청** — 새 터미널에서 `curl -i http://localhost:8080/ping`(GET)과 `curl -i -X POST http://localhost:8080/echo -H "Content-Type: text/plain" -d "hello"`(POST)를 보내고, 위 7번 형식처럼 목적·요청·기대 상태 코드를 함께 기록합니다.
@@ -749,3 +749,7 @@ curl -i -X POST "http://localhost:8080/api/auth/login" \
 `curl` 수동 검증의 핵심은 사전 조건, 요청, 상태 코드, 기대 결과를 한 세트로 관리하는 것입니다.
 
 ---
+
+## 관련 실습 과제
+
+- [[guide-java-practice-spring-library]] — 🧪 실습 과제 2 — 도서 대여 REST API (Spring Boot + JPA + H2)

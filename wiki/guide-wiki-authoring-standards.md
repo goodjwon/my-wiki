@@ -396,7 +396,7 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 
 **실습 예제 4요소**:
 
-1. **파일 리드인** — 코드블록 바로 위에 둡니다: `**파일**: src/main/java/com/example/ch02/AnimalDemo.java`
+1. **파일 리드인** — 코드블록 바로 위에 둡니다: `**파일**: src/main/java/dev/wonslab/ch02/AnimalDemo.java`
 2. **package 선언** — 코드 첫 줄, 리드인 경로와 일치해야 합니다. 경로가 파일명뿐인 단일 파일 실습은 package 없이 씁니다.
 3. **한 블록 = 한 파일** — 파일명 = public 클래스명. 보조 클래스는 non-public으로 같은 파일에 허용하고, public이 여러 개면 블록을 파일별로 분리합니다.
 4. **실행 명령 + 예상 결과** — 예제(묶음) 끝에 bash 실행 명령과 `예상 결과` 펜스를 둡니다.
@@ -405,9 +405,9 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 
 | 챕터 | 기준 프로젝트 | 패키지 |
 |------|-------------|--------|
-| ch01~05, ch09 §9.2 | ch01 1.2에서 만든 Maven/Gradle 프로젝트 | `com.example.chNN` |
+| ch01~05, ch09 §9.2 | ch01 1.2에서 만든 Maven/Gradle 프로젝트 | `dev.wonslab.chNN` |
 | ch05 소켓·JDBC | 단일 파일 javac 병행 허용 (작업 디렉터리 명시) | default 허용 |
-| ch06~08·10 (Spring) | ch06 6.1 start.spring.io `demo` (자족형) | `com.example.demo.*` |
+| ch06~08·10 (Spring) | ch06 6.1 start.spring.io `demo` (자족형) | `dev.wonslab.demo.*` |
 | ch11 미니프로젝트 | 예제별 자체 프로젝트 (트리 제시, §11.23 모델) | 예제 자체 규칙 |
 
 **클래스명 규칙**: 챕터 안에서 고유해야 합니다. 드라이버 클래스 `public class Main`은 금지합니다 → `<주제>Demo` (예: `InheritanceDemo`). 퀴즈 스니펫은 non-public `class Main`까지 허용합니다.
@@ -421,11 +421,11 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 ````markdown
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch02/practice/TypePractice.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch02/practice/TypePractice.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch02.practice;
+        package dev.wonslab.ch02.practice;
 
         public class TypePractice {
             public static void main(String[] args) {
@@ -437,7 +437,7 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch02.practice.TypePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch02.practice.TypePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 ````
 
 수정형 과제는 뼈대 없이 단계만 씁니다: `1. **파일 열기** — 위 \`EncapsulationDemo.java\`(2.4)` / `2. **수정** — …` / `3. **재실행** — 위 절의 실행 명령 재사용`. 박스 단계 문장은 합니다체입니다(직접 해보기 과제 문장의 하라체 예외는 박스 밖 과제 문장에만 적용).

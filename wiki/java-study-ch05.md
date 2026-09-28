@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch05]
 sources: [java-study/java-study-ch05-입출력과네트워크.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 입출력과 네트워크
@@ -269,11 +269,11 @@ Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 �
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/exceptions/ExceptionKindsDemo.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch05/exceptions/ExceptionKindsDemo.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch05.exceptions;
+        package dev.wonslab.ch05.exceptions;
 
         public class ExceptionKindsDemo {
             public static void main(String[] args) {
@@ -285,7 +285,7 @@ Checked·Unchecked 예외를 각각 발생시키고 처리 방식의 차이를 �
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.ExceptionKindsDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.exceptions.ExceptionKindsDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -443,11 +443,11 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/exceptions/CustomExceptionDemo.java`를 만듭니다. 예외 클래스는 non-public으로 같은 파일에 둡니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch05/exceptions/CustomExceptionDemo.java`를 만듭니다. 예외 클래스는 non-public으로 같은 파일에 둡니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch05.exceptions;
+        package dev.wonslab.ch05.exceptions;
 
         public class CustomExceptionDemo {
             public static void main(String[] args) {
@@ -459,7 +459,7 @@ throw new IllegalArgumentException("age는 0 이상이어야 합니다. 입력�
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.exceptions.CustomExceptionDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.exceptions.CustomExceptionDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 ## 5.3 파일 읽기와 쓰기 기초
@@ -688,11 +688,11 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/fileio/FileReadWriteDemo.java`를 만들고, 읽을 `input.txt`(아무 텍스트 몇 줄)를 프로젝트 루트에 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch05/fileio/FileReadWriteDemo.java`를 만들고, 읽을 `input.txt`(아무 텍스트 몇 줄)를 프로젝트 루트에 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch05.fileio;
+        package dev.wonslab.ch05.fileio;
 
         public class FileReadWriteDemo {
             public static void main(String[] args) {
@@ -704,7 +704,7 @@ try (Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.fileio.FileReadWriteDemo"` — 추가할 때마다 다시 실행해 출력과 `output.txt` 생성 여부를 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.fileio.FileReadWriteDemo"` — 추가할 때마다 다시 실행해 출력과 `output.txt` 생성 여부를 확인합니다.
 
 
 #### 정리
@@ -856,11 +856,11 @@ CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라.
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch05/formats/CsvLineParseDemo.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch05/formats/CsvLineParseDemo.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch05.formats;
+        package dev.wonslab.ch05.formats;
 
         public class CsvLineParseDemo {
             public static void main(String[] args) {
@@ -873,7 +873,7 @@ CSV 한 줄을 읽어 객체로 파싱하는 코드를 작성하라.
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch05.formats.CsvLineParseDemo"` — 추가할 때마다 다시 실행해 파싱 결과를 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.formats.CsvLineParseDemo"` — 추가할 때마다 다시 실행해 파싱 결과를 확인합니다.
 
 
 #### 정리
@@ -1565,7 +1565,7 @@ JDBC 입문의 핵심은 SQL 문법이 아니라, **DB 접근 코드의 생명�
 
 > 아래 파일은 유틸리티 클래스를 만들어 여러 형태로 처리 하는 연습을 해 봅니다. 한번에 다하지 말고 메소드 하나 하고 결과 보고 하는 식으로 진행 바랍니다.
 
-이 실습은 1장 1.2에서 만든 Maven/Gradle 프로젝트(`hello-java`)에 `com.example.ch05.files` 패키지로 추가합니다. JSON 처리에는 Gson(구글이 만든, 자바 객체와 JSON을 서로 변환해 주는 라이브러리)을 사용하므로 의존성을 먼저 추가합니다.
+이 실습은 1장 1.2에서 만든 Maven/Gradle 프로젝트(`hello-java`)에 `dev.wonslab.ch05.files` 패키지로 추가합니다. JSON 처리에는 Gson(구글이 만든, 자바 객체와 JSON을 서로 변환해 주는 라이브러리)을 사용하므로 의존성을 먼저 추가합니다.
 
 ```xml
 <!-- pom.xml -->
@@ -1583,10 +1583,10 @@ implementation 'com.google.code.gson:gson:2.10.1'
 
 ---
 
-**파일**: src/main/java/com/example/ch05/files/Person.java
+**파일**: src/main/java/dev/wonslab/ch05/files/Person.java
 
 ```java
-package com.example.ch05.files;
+package dev.wonslab.ch05.files;
 
 import java.io.Serializable;
 
@@ -1632,13 +1632,13 @@ public class Person implements Serializable {
 
 ---
 
-**파일**: src/main/java/com/example/ch05/files/FileIOHandler.java
+**파일**: src/main/java/dev/wonslab/ch05/files/FileIOHandler.java
 
 실제로는 필요한 라이브러리 추가 후 예외처리 등을 상세히 구현해야 함
 
 ```java
 
-package com.example.ch05.files;
+package dev.wonslab.ch05.files;
 
 import java.io.*;
 import java.util.*;
@@ -2014,10 +2014,10 @@ public class FileIOHandler {
 
 ---
 
-**파일**: src/main/java/com/example/ch05/files/FileIOHandlerMain.java
+**파일**: src/main/java/dev/wonslab/ch05/files/FileIOHandlerMain.java
 
 ```java
-package com.example.ch05.files;
+package dev.wonslab.ch05.files;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -2138,8 +2138,8 @@ public class FileIOHandlerMain {
 세 파일을 모두 저장한 뒤 프로젝트 루트에서 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.files.FileIOHandlerMain"
-# Gradle 프로젝트: build.gradle에 application { mainClass = 'com.example.ch05.files.FileIOHandlerMain' } 지정 후 ./gradlew run
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.files.FileIOHandlerMain"
+# Gradle 프로젝트: build.gradle에 application { mainClass = 'dev.wonslab.ch05.files.FileIOHandlerMain' } 지정 후 ./gradlew run
 ```
 
 ```text
@@ -2265,7 +2265,7 @@ id,name,age,score
 코드를 다 작성했다면 풀이 절(5.8-1, 5.8-2)과 같은 명령으로 실행해 확인합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.LargeFileProcessing"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.csv.LargeFileProcessing"
 ```
 
 위 10행 샘플 기준 예상 결과입니다. 5,000행 원본을 쓰면 수치가 달라지고, 풀이 코드는 평균 점수 항목을 구현하지 않으므로 직접 추가해 보면 좋습니다.
@@ -2288,10 +2288,10 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.LargeFileProcessing
 처음 문제를 풀 때는 이 방식이 이해하기 쉽고, 두 번째 풀이와 비교하면 구조화의 필요성이 더 잘 보입니다.
 `BufferedReader`는 한 번 끝까지 읽으면 되감을 수 없으므로, 이 풀이는 통계마다 파일을 새로 여는 3-pass 방식을 씁니다. 리더 하나로 세 메서드를 이어 부르면 두 번째 메서드부터는 빈 스트림을 읽어 0이 나옵니다 — 한 번만 읽는 풀이 2(→ 5.8-2)와 비교해 보세요.
 
-**파일**: src/main/java/com/example/ch05/csv/LargeFileProcessing.java
+**파일**: src/main/java/dev/wonslab/ch05/csv/LargeFileProcessing.java
 
 ```java
-package com.example.ch05.csv;
+package dev.wonslab.ch05.csv;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -2390,7 +2390,7 @@ public class LargeFileProcessing {
 데이터 파일은 문제 절(→ 5.8)의 10행 샘플을 `src/main/resources/sample_data.csv`로 둡니다(클래스패스에서 읽기 때문). 프로젝트 루트에서 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.LargeFileProcessing"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.csv.LargeFileProcessing"
 # Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
 ```
 
@@ -2410,12 +2410,12 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.LargeFileProcessing
 ### 개요
 이 풀이는 CSV 읽기, 통계 집계, 결과 표현을 역할별로 나눈 구조화된 해설입니다.
 같은 문제라도 도메인 모델과 리포지토리, 분석 서비스로 분리할 수 있다는 점을 보여주기 위해 남깁니다.
-풀이 1과 같은 `com.example.ch05.csv` 패키지에 두면 클래스명이 달라 두 풀이가 공존합니다. 이 풀이는 파일을 한 번만 읽으면서 모든 통계를 동시에 누적하는 1-pass 방식입니다.
+풀이 1과 같은 `dev.wonslab.ch05.csv` 패키지에 두면 클래스명이 달라 두 풀이가 공존합니다. 이 풀이는 파일을 한 번만 읽으면서 모든 통계를 동시에 누적하는 1-pass 방식입니다.
 
-**파일**: src/main/java/com/example/ch05/csv/BigFileProcessingDomain.java
+**파일**: src/main/java/dev/wonslab/ch05/csv/BigFileProcessingDomain.java
 
 ```java
-package com.example.ch05.csv;
+package dev.wonslab.ch05.csv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -2669,7 +2669,7 @@ public class BigFileProcessingDomain {
 풀이 1과 같이 `sample_data.csv`를 `src/main/resources/`에 두고 프로젝트 루트에서 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.BigFileProcessingDomain"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.csv.BigFileProcessingDomain"
 # Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
 ```
 
@@ -2845,7 +2845,7 @@ JSON 문제도 엑셀과 마찬가지로 1번부터 10번까지 모든 풀이가
 
 아래 코드는 단일 책임 원칙을 기준으로 각 작업의 책임을 독립적인 클래스로 나눠 구조화한 예시입니다.
 
-이 풀이도 1장 1.2에서 만든 Maven/Gradle 프로젝트(`hello-java`)를 그대로 사용하고, 형식별로 `com.example.ch05.csv` / `com.example.ch05.excel` / `com.example.ch05.json` 패키지에 나눠 담습니다. 라이브러리는 세 가지를 씁니다 — 엑셀은 5.4에서 소개한 Apache POI, JSON은 Jackson(자바 객체와 JSON을 서로 변환해 주는 라이브러리로, Spring이 기본으로 쓰는 그 라이브러리입니다), 차트 문제(엑셀 7번·JSON 8번)는 JFreeChart(차트를 그려 이미지 파일로 저장해 주는 자바 라이브러리)입니다. 의존성을 먼저 추가합니다.
+이 풀이도 1장 1.2에서 만든 Maven/Gradle 프로젝트(`hello-java`)를 그대로 사용하고, 형식별로 `dev.wonslab.ch05.csv` / `dev.wonslab.ch05.excel` / `dev.wonslab.ch05.json` 패키지에 나눠 담습니다. 라이브러리는 세 가지를 씁니다 — 엑셀은 5.4에서 소개한 Apache POI, JSON은 Jackson(자바 객체와 JSON을 서로 변환해 주는 라이브러리로, Spring이 기본으로 쓰는 그 라이브러리입니다), 차트 문제(엑셀 7번·JSON 8번)는 JFreeChart(차트를 그려 이미지 파일로 저장해 주는 자바 라이브러리)입니다. 의존성을 먼저 추가합니다.
 
 ```xml
 <!-- pom.xml -->
@@ -2876,7 +2876,7 @@ implementation 'org.jfree:jfreechart:1.5.4'
 데이터 파일(`data.csv`, `sales_data.xlsx`, `products.json` 등)은 프로젝트 루트(명령을 실행하는 디렉터리)에 둡니다. 실행 명령은 아래 한 가지 꼴이고, `-Dexec.mainClass` 값만 각 풀이의 public 클래스로 바꾸면 됩니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.csv.CsvProcessor"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.csv.CsvProcessor"
 # Gradle 프로젝트: build.gradle에 application { mainClass = '...' } 지정 후 ./gradlew run
 ```
 
@@ -3075,10 +3075,10 @@ id,name,age,department
 
 1. 부서별 CSV 필터링과 정렬
 
-**파일**: src/main/java/com/example/ch05/csv/CsvProcessor.java
+**파일**: src/main/java/dev/wonslab/ch05/csv/CsvProcessor.java
 
 ```java
-package com.example.ch05.csv;
+package dev.wonslab.ch05.csv;
 
 import java.io.*;
 import java.util.*;
@@ -3156,7 +3156,7 @@ CSV 문제의 핵심은 포맷이 단순하다는 이유로 검증을 빼먹지 
 엑셀 풀이는 모두 같은 꼴로 실행합니다. `-Dexec.mainClass`의 클래스명만 각 풀이의 public 클래스로 바꿉니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.excel.ExcelSumProcessor"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.excel.ExcelSumProcessor"
 # 2번 이후: EmployeeFilterProcessor, StudentScoreProcessor, InventoryUpdater, ExcelDataMerger,
 #           GradeHighlighter, SalesVisualizer, SurveyDataCleaner, SurveyDataReplacer,
 #           MultiSheetMerger, TestScoresAnalyzer
@@ -3168,10 +3168,10 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.excel.ExcelSumProcessor
 
 ##### 1. 엑셀 데이터 합산
 
-**파일**: src/main/java/com/example/ch05/excel/ExcelSumProcessor.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/ExcelSumProcessor.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3216,10 +3216,10 @@ class ExcelSalesDataReader {
 
 ##### 2. 특정 열의 데이터 필터링
 
-**파일**: src/main/java/com/example/ch05/excel/EmployeeFilterProcessor.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/EmployeeFilterProcessor.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3273,10 +3273,10 @@ class EmployeeDataReader {
 
 ##### 3. 엑셀 데이터 정렬
 
-**파일**: src/main/java/com/example/ch05/excel/StudentScoreProcessor.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/StudentScoreProcessor.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3359,10 +3359,10 @@ class StudentScoreReader {
 
 ##### 4. 특정 셀 값 변경
 
-**파일**: src/main/java/com/example/ch05/excel/InventoryUpdater.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/InventoryUpdater.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3420,10 +3420,10 @@ class InventoryDataModifier {
 
 ##### 5. 엑셀 데이터 통합
 
-**파일**: src/main/java/com/example/ch05/excel/ExcelDataMerger.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/ExcelDataMerger.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3502,10 +3502,10 @@ class ExcelMerger {
 
 ##### 6. 조건에 맞는 셀 색상 변경
 
-**파일**: src/main/java/com/example/ch05/excel/GradeHighlighter.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/GradeHighlighter.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3562,10 +3562,10 @@ class GradeCellModifier {
 
 ##### 7. 엑셀 데이터 시각화
 
-**파일**: src/main/java/com/example/ch05/excel/SalesVisualizer.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/SalesVisualizer.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3632,10 +3632,10 @@ class SalesChartGenerator {
 
 ##### 8. 빈 셀 채우기
 
-**파일**: src/main/java/com/example/ch05/excel/SurveyDataCleaner.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/SurveyDataCleaner.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3688,10 +3688,10 @@ class SurveyCleaner {
 
 같은 문제의 변형으로, "없음"으로 적힌 셀을 "n/a"로 대체하는 풀이는 별도 파일로 둡니다.
 
-**파일**: src/main/java/com/example/ch05/excel/SurveyDataReplacer.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/SurveyDataReplacer.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3749,10 +3749,10 @@ class SurveyReplacer {
 
 ##### 9. 다중 시트 데이터 처리
 
-**파일**: src/main/java/com/example/ch05/excel/MultiSheetMerger.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/MultiSheetMerger.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3828,10 +3828,10 @@ class MultiSheetProcessor {
 
 ##### 10. 엑셀 데이터 통계 분석
 
-**파일**: src/main/java/com/example/ch05/excel/TestScoresAnalyzer.java
+**파일**: src/main/java/dev/wonslab/ch05/excel/TestScoresAnalyzer.java
 
 ```java
-package com.example.ch05.excel;
+package dev.wonslab.ch05.excel;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3894,7 +3894,7 @@ class TestScoreProcessor {
 JSON 풀이도 실행 꼴은 같고, 클래스명만 바꿉니다. 각 데이터 클래스는 모든 필드에 getter를 두는데, Jackson이 private 필드를 직접 읽지 못해 getter가 없는 필드를 만나면 `Unrecognized field` 예외를 던지기 때문입니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch05.json.ProductKeySearcher"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch05.json.ProductKeySearcher"
 # 2번 이후: UserFilter, SalesSumCalculator, DepartmentEmployeeFinder, InventoryPriceUpdater,
 #           JsonMerger, MovieSorter, PopulationVisualizer, CustomerDataCleaner, OrderDeduplicator
 ```
@@ -3903,10 +3903,10 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch05.json.ProductKeySearcher
 
 ##### 1. JSON 데이터 키 검색
 
-**파일**: src/main/java/com/example/ch05/json/ProductKeySearcher.java
+**파일**: src/main/java/dev/wonslab/ch05/json/ProductKeySearcher.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -3976,10 +3976,10 @@ price 값 목록:
 
 ##### 2. 특정 값 추출
 
-**파일**: src/main/java/com/example/ch05/json/UserFilter.java
+**파일**: src/main/java/dev/wonslab/ch05/json/UserFilter.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4045,10 +4045,10 @@ junho@example.com
 
 ##### 3. JSON 데이터 합산
 
-**파일**: src/main/java/com/example/ch05/json/SalesSumCalculator.java
+**파일**: src/main/java/dev/wonslab/ch05/json/SalesSumCalculator.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4115,10 +4115,10 @@ class MonthlySale {
 
 ##### 4. 중첩 JSON 데이터 탐색
 
-**파일**: src/main/java/com/example/ch05/json/DepartmentEmployeeFinder.java
+**파일**: src/main/java/dev/wonslab/ch05/json/DepartmentEmployeeFinder.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4194,10 +4194,10 @@ class OrgEmployee {
 
 ##### 5. JSON 데이터 수정
 
-**파일**: src/main/java/com/example/ch05/json/InventoryPriceUpdater.java
+**파일**: src/main/java/dev/wonslab/ch05/json/InventoryPriceUpdater.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4269,10 +4269,10 @@ class InventoryProduct {
 
 ##### 6. JSON 데이터 병합
 
-**파일**: src/main/java/com/example/ch05/json/JsonMerger.java
+**파일**: src/main/java/dev/wonslab/ch05/json/JsonMerger.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4325,10 +4325,10 @@ JSON 파일 병합 완료: merged_data.json
 
 ##### 7. JSON 데이터 정렬
 
-**파일**: src/main/java/com/example/ch05/json/MovieSorter.java
+**파일**: src/main/java/dev/wonslab/ch05/json/MovieSorter.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4397,10 +4397,10 @@ class Movie {
 
 ##### 8. JSON 데이터 시각화
 
-**파일**: src/main/java/com/example/ch05/json/PopulationVisualizer.java
+**파일**: src/main/java/dev/wonslab/ch05/json/PopulationVisualizer.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4477,10 +4477,10 @@ class Country {
 
 ##### 9. 특정 조건의 데이터 삭제
 
-**파일**: src/main/java/com/example/ch05/json/CustomerDataCleaner.java
+**파일**: src/main/java/dev/wonslab/ch05/json/CustomerDataCleaner.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4555,10 +4555,10 @@ class Customer {
 
 ##### 10. JSON 데이터에서 중복 제거
 
-**파일**: src/main/java/com/example/ch05/json/OrderDeduplicator.java
+**파일**: src/main/java/dev/wonslab/ch05/json/OrderDeduplicator.java
 
 ```java
-package com.example.ch05.json;
+package dev.wonslab.ch05.json;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -4653,7 +4653,7 @@ class Order {
 | `NoClassDefFoundError: org/apache/poi/...` · `com/fasterxml/jackson/...` · `org/jfree/...` | POI·Jackson·JFreeChart 의존성을 pom.xml/build.gradle에 추가했는지, 추가 후 다시 빌드(`mvn compile`)했는지 확인합니다. |
 | `FileNotFoundException: data.csv` 등 데이터 파일을 못 찾음 | 명령을 실행하는 작업 디렉터리가 프로젝트 루트인지, 데이터 파일을 그 위치에 두었는지 확인합니다. 5.8 풀이의 `sample_data.csv`만 예외로 `src/main/resources/`에 둡니다. |
 | 출력에서 한글이 깨짐 | 터미널·소스 파일 인코딩이 UTF-8인지 확인하고, 필요하면 `MAVEN_OPTS=-Dfile.encoding=UTF-8`을 지정해 실행합니다. |
-| `mvn exec:java`에서 `ClassNotFoundException` | `compile` 없이 실행하지 않았는지(`mvn compile exec:java`), `-Dexec.mainClass`의 패키지 경로(`com.example.ch05.csv/excel/json`)에 오타가 없는지 확인합니다. |
+| `mvn exec:java`에서 `ClassNotFoundException` | `compile` 없이 실행하지 않았는지(`mvn compile exec:java`), `-Dexec.mainClass`의 패키지 경로(`dev.wonslab.ch05.csv/excel/json`)에 오타가 없는지 확인합니다. |
 | `ERROR StatusLogger Log4j2 could not find a logging implementation` | POI가 내는 무해한 경고입니다. 없애려면 `log4j-core` 의존성을 추가하고, 실습에서는 무시해도 됩니다. |
 | Jackson `Unrecognized field "..." not marked as ignorable` | 데이터 클래스에 그 필드의 getter가 없어서입니다. Jackson은 private 필드를 직접 읽지 못하므로 모든 필드에 getter를 두거나 클래스에 `@JsonIgnoreProperties(ignoreUnknown = true)`를 붙입니다. |
 

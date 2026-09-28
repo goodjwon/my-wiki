@@ -4,7 +4,7 @@ type: concept
 tags: [ddd, aggregate, 도메인설계, 트랜잭션, jpa]
 sources: [object-dependency/aggregate-boundary-lifecycle.md]
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-09-28
 ---
 
 # 애그리거트 경계 (Aggregate Boundary)
@@ -82,3 +82,4 @@ public class Order {                       // 애그리거트 루트
 - [[concept-domain-event-eventual-consistency]] — 경계로 나뉜 애그리거트 간 협력
 - [[src-kakaopay-ddd]] — Aggregate Root·Bounded Context 실무 구현 (Kotlin + Spring Boot)
 - [[entity-object]] — 조영호 *오브젝트* — 책임 주도 설계의 책 배경
+- [[guide-java-practice-layered-quotation]] — 🧪 실습 과제 3 — 견적·계약 업무 (4계층 + Command/Query + MyBatis)

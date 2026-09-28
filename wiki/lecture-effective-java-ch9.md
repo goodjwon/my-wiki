@@ -4,7 +4,7 @@ type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 9장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-28
 ---
 
 # 이펙티브 자바 실전 강의 교재
@@ -625,7 +625,7 @@ int half = x >> 1;   // x / 2 대신 (가독성↓, 컴파일러가 어차피 �
 
 | 종류 | 규칙 | 예시 |
 |------|------|------|
-| 패키지 | 모두 소문자, 도메인 역순 | `com.example.order` |
+| 패키지 | 모두 소문자, 도메인 역순 | `dev.wonslab.order` |
 | 클래스/인터페이스 | PascalCase | `OrderService`, `Comparable` |
 | 메서드/필드 | camelCase | `findById`, `userName` |
 | 상수 | UPPER_SNAKE_CASE | `MAX_RETRIES`, `DEFAULT_PORT` |

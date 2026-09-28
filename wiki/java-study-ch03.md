@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch03]
 sources: [java-study/java-study-ch03-컬렉션과함수형.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 컬렉션과 함수형
@@ -19,7 +19,7 @@ updated: 2026-07-04
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 컬렉션 예제를 직접 돌려보고, 3.8 알고리즘 실전문제로 마무리한다.
 
-> **실습 프로젝트**: 이 장의 실습 예제 파일은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/com/example/ch03/` 아래에 만듭니다(패키지 `com.example.ch03`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
+> **실습 프로젝트**: 이 장의 실습 예제 파일은 [[java-study-ch01]] 1.2에서 만든 `hello-java` 프로젝트의 `src/main/java/dev/wonslab/ch03/` 아래에 만듭니다(패키지 `dev.wonslab.ch03`). Gradle(`gradle init`) 프로젝트도 같은 경로 구조를 쓰며, 소스가 `app/` 하위에 생성된 경우에만 `app/src/main/java/...`로 읽으면 됩니다.
 
 ---
 
@@ -34,10 +34,10 @@ updated: 2026-07-04
 컬렉션과 함수형 프로그래밍은 서로 다른 주제처럼 보이지만, 실제 Java 코드에서는 함께 등장합니다. 컬렉션이 데이터를 담는 방식이라면, 람다와 스트림은 그 데이터를 읽고 변환하고 집계하는 방식입니다.
 가장 짧은 연결 예시는 아래처럼 볼 수 있습니다. 이 장의 첫 실행 예제이기도 합니다. 화살표(`->`)나 `String::toUpperCase` 같은 문법이 아직 낯설어도 지금은 "리스트를 걸러서 바꾼다"는 흐름만 보면 충분합니다(문법은 3.4에서 자세히 다룹니다).
 
-**파일**: src/main/java/com/example/ch03/IntroPipelineDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/IntroPipelineDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 import java.util.List;
 
@@ -57,8 +57,8 @@ public class IntroPipelineDemo {
 위 실습 프로젝트 안내에서 말한 `hello-java` 프로젝트 루트에서 아래 한 줄로 실행합니다. 이 장의 다른 예제도 `-Dexec.mainClass` 값만 해당 Demo 클래스로 바꾸면 같은 방식으로 실행됩니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch03.IntroPipelineDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.IntroPipelineDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.IntroPipelineDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch03.IntroPipelineDemo
 ```
 
 ```text
@@ -120,10 +120,10 @@ Java 컬렉션 프레임워크는 데이터를 담는 공통 인터페이스와 
 
 네 인터페이스의 예제는 파일 하나에 모아 실행합니다. 먼저 아래 뼈대를 만들고, 이어지는 List → Set → Queue → Map 코드 조각을 `main` 안에 순서대로 넣습니다.
 
-**파일**: src/main/java/com/example/ch03/CollectionBasicsDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/CollectionBasicsDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 import java.util.*;
 
@@ -196,8 +196,8 @@ for (Map.Entry<Integer, String> entry : userMap.entrySet()) {
 네 조각을 모두 넣었으면 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch03.CollectionBasicsDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.CollectionBasicsDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.CollectionBasicsDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch03.CollectionBasicsDemo
 ```
 
 ```text
@@ -251,10 +251,10 @@ names.add("Kim");
 - 잘못된 타입 삽입이 런타임이 아니라 컴파일 단계에서 막힙니다.
 제네릭은 컬렉션에만 쓰는 문법이 아니라, 같은 구조를 여러 타입에 안전하게 재사용하는 도구이기도 합니다. 단순 예제를 보면 감이 더 빠르게 잡힙니다. `Box`는 보조 클래스이므로 같은 파일에 non-public으로 함께 둡니다.
 
-**파일**: src/main/java/com/example/ch03/GenericsDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/GenericsDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 class Box<T> {
     private T value;
@@ -281,7 +281,7 @@ public class GenericsDemo {
 }
 ```
 
-실행은 3.0에서 소개한 명령에서 `-Dexec.mainClass` 값만 `com.example.ch03.GenericsDemo`로 바꾸면 됩니다.
+실행은 3.0에서 소개한 명령에서 `-Dexec.mainClass` 값만 `dev.wonslab.ch03.GenericsDemo`로 바꾸면 됩니다.
 
 ```text
 예상 결과
@@ -345,11 +345,11 @@ public static void printNumbers(List<? extends Number> numbers) {
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionComparePractice.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch03/practice/CollectionComparePractice.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch03.practice;
+        package dev.wonslab.ch03.practice;
 
         public class CollectionComparePractice {
             public static void main(String[] args) {
@@ -361,7 +361,7 @@ public static void printNumbers(List<? extends Number> numbers) {
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionComparePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.practice.CollectionComparePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -388,10 +388,10 @@ public static void printNumbers(List<? extends Number> numbers) {
 
 이 절의 예제도 파일 하나에 모아 실행합니다. 아래 뼈대를 만들고, 1~7의 코드 조각을 `main` 안에 순서대로 넣습니다(5. Vector는 코드 조각이 없습니다).
 
-**파일**: src/main/java/com/example/ch03/DataStructureUsageDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/DataStructureUsageDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 import java.util.*;
 
@@ -559,8 +559,8 @@ Message 2
 조각을 모두 넣었으면 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch03.DataStructureUsageDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.DataStructureUsageDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.DataStructureUsageDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch03.DataStructureUsageDemo
 ```
 
 ```text
@@ -596,11 +596,11 @@ Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/WordCountPractice.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch03/practice/WordCountPractice.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch03.practice;
+        package dev.wonslab.ch03.practice;
 
         public class WordCountPractice {
             public static void main(String[] args) {
@@ -612,7 +612,7 @@ Map으로 문자열에서 단어별 빈도수를 세는 코드를 작성하라.
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.WordCountPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.practice.WordCountPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -665,10 +665,10 @@ public class ProductCatalog {
 
 시나리오 2~6의 코드는 파일 하나에 모아 실행합니다. 아래 뼈대를 만들고, 각 시나리오의 코드 조각을 `main` 안에 순서대로 넣습니다.
 
-**파일**: src/main/java/com/example/ch03/CollectionScenarioDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/CollectionScenarioDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -803,8 +803,8 @@ System.out.println(settings.get("theme"));
 시나리오 2~6의 조각을 모두 넣었으면 실행합니다. `record Order`는 `main` 안에 그대로 두어도 됩니다(Java 16+의 지역 record).
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch03.CollectionScenarioDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.CollectionScenarioDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.CollectionScenarioDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch03.CollectionScenarioDemo
 ```
 
 ```text
@@ -857,11 +857,11 @@ class FileNode {
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — (코드로 검증하는 경우) `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/CollectionChoicePractice.java`를 만듭니다.
+    1. **파일 생성** — (코드로 검증하는 경우) `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch03/practice/CollectionChoicePractice.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch03.practice;
+        package dev.wonslab.ch03.practice;
 
         public class CollectionChoicePractice {
             public static void main(String[] args) {
@@ -873,7 +873,7 @@ class FileNode {
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.CollectionChoicePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.practice.CollectionChoicePractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -904,10 +904,10 @@ class FileNode {
 
 이 절의 두 예제(1의 `Runnable`, 2의 `Function`)는 파일 하나에 모아 실행합니다. 아래 뼈대를 만들고, 코드 조각을 `main` 안에 순서대로 넣습니다.
 
-**파일**: src/main/java/com/example/ch03/LambdaBasicsDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/LambdaBasicsDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 import java.util.function.Function;
 
@@ -963,8 +963,8 @@ System.out.println(lengthFunction.apply("Hello"));
 두 조각을 모두 넣었으면 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch03.LambdaBasicsDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.LambdaBasicsDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.LambdaBasicsDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch03.LambdaBasicsDemo
 ```
 
 ```text
@@ -1032,11 +1032,11 @@ List<String> result = names.stream()
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch03/practice/EvenSquareSumPractice.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch03/practice/EvenSquareSumPractice.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch03.practice;
+        package dev.wonslab.ch03.practice;
 
         public class EvenSquareSumPractice {
             public static void main(String[] args) {
@@ -1048,7 +1048,7 @@ List<String> result = names.stream()
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch03.practice.EvenSquareSumPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.practice.EvenSquareSumPractice"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 #### 정리
@@ -1103,10 +1103,10 @@ Arrays.sort(numbers);             // 보통 O(n log n)
 
 정렬되지 않은 목록을 한 번 훑어야 하면 가장 단순합니다.
 
-**파일**: src/main/java/com/example/ch03/LinearSearchDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/LinearSearchDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 public class LinearSearchDemo {
     public static void main(String[] args) {
@@ -1126,8 +1126,8 @@ public class LinearSearchDemo {
 ```
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch03.LinearSearchDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.LinearSearchDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.LinearSearchDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch03.LinearSearchDemo
 ```
 
 ```text
@@ -1145,10 +1145,10 @@ mvn compile exec:java -Dexec.mainClass="com.example.ch03.LinearSearchDemo"
 
 데이터가 이미 정렬되어 있다면 범위를 절반씩 줄여 빠르게 찾을 수 있습니다.
 
-**파일**: src/main/java/com/example/ch03/BinarySearchDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/BinarySearchDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 public class BinarySearchDemo {
     public static void main(String[] args) {
@@ -1175,7 +1175,7 @@ public class BinarySearchDemo {
 }
 ```
 
-실행 명령은 위 `LinearSearchDemo`와 같고, `-Dexec.mainClass` 값만 `com.example.ch03.BinarySearchDemo`로 바꿉니다.
+실행 명령은 위 `LinearSearchDemo`와 같고, `-Dexec.mainClass` 값만 `dev.wonslab.ch03.BinarySearchDemo`로 바꿉니다.
 
 ```text
 예상 결과
@@ -1277,10 +1277,10 @@ void preOrder(TreeNode node) {
 
 재귀 문제를 풀다 보면 같은 하위 문제를 여러 번 계산하는 경우가 많습니다. 동적 프로그래밍은 이 중복 계산을 줄이는 방법입니다.
 
-**파일**: src/main/java/com/example/ch03/FibonacciDpDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/FibonacciDpDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 public class FibonacciDpDemo {
     static int fib(int n) {
@@ -1300,7 +1300,7 @@ public class FibonacciDpDemo {
 }
 ```
 
-실행은 `-Dexec.mainClass` 값만 `com.example.ch03.FibonacciDpDemo`로 바꿔 같은 방식으로 합니다.
+실행은 `-Dexec.mainClass` 값만 `dev.wonslab.ch03.FibonacciDpDemo`로 바꿔 같은 방식으로 합니다.
 
 ```text
 예상 결과
@@ -1513,10 +1513,10 @@ int[][] recommendations = {
 
 아홉 문제의 풀이 메서드는 파일 하나에 모아 실행합니다. 아래 뼈대를 만들면 `main`이 각 풀이를 예시 데이터로 호출합니다. 이어지는 문제별 풀이 메서드를 클래스 몸통(main 아래)에 순서대로 넣습니다. 문제 6은 정렬 한 줄이 풀이의 전부라 `main`에 이미 들어 있습니다.
 
-**파일**: src/main/java/com/example/ch03/PracticeSolutionsDemo.java
+**파일**: src/main/java/dev/wonslab/ch03/PracticeSolutionsDemo.java
 
 ```java
-package com.example.ch03;
+package dev.wonslab.ch03;
 
 import java.util.*;
 
@@ -1698,8 +1698,8 @@ public static void sortRecommendations(int[][] recommendations) {
 풀이 메서드를 모두 넣었으면 실행합니다.
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch03.PracticeSolutionsDemo"
-# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main com.example.ch03.PracticeSolutionsDemo
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch03.PracticeSolutionsDemo"
+# Gradle 프로젝트: ./gradlew compileJava && java -cp build/classes/java/main dev.wonslab.ch03.PracticeSolutionsDemo
 ```
 
 ```text
@@ -2003,6 +2003,10 @@ for (String name : names) {
 | `Note: ... uses unchecked or unsafe operations.` 경고 | raw type 사용(`List list = new ArrayList()`) → 제네릭 타입 파라미터를 명시(`List<String>`) |
 | `IllegalStateException: stream has already been operated upon or closed` | 최종 연산이 끝난 스트림 변수를 다시 사용 → 스트림은 1회용, `list.stream()`으로 새로 연다 |
 | `ConcurrentModificationException` | for-each 순회 도중 같은 컬렉션에 add/remove → `Iterator.remove()` 또는 `removeIf()`로 교체 |
-| `Could not find or load main class com.example.ch03...` | `-Dexec.mainClass` 오타 또는 `com.example.ch03.` 접두 누락 → 리드인의 파일명(= 클래스명)과 대조 |
+| `Could not find or load main class dev.wonslab.ch03...` | `-Dexec.mainClass` 오타 또는 `dev.wonslab.ch03.` 접두 누락 → 리드인의 파일명(= 클래스명)과 대조 |
 
 ---
+
+## 관련 실습 과제
+
+- [[guide-java-practice-core]] — 🧪 실습 과제 1 — 주문 처리 콘솔 앱 (컬렉션·전략·옵저버·미니 IoC)

@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch06]
 sources: [java-study/java-study-ch06-Spring과프로젝트실행.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # Spring과 프로젝트 실행
@@ -114,13 +114,13 @@ Spring 핵심 개념의 핵심은 **어노테이션 이름**보다, **객체 생
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/com/example/demo/ch06/di/MessageProvider.java`와 `src/main/java/com/example/demo/ch06/di/MessageClient.java`를 만듭니다. 아직 `demo` 프로젝트가 없으면 6.1을 먼저 진행합니다.
+    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/dev/wonslab/demo/ch06/di/MessageProvider.java`와 `src/main/java/dev/wonslab/demo/ch06/di/MessageClient.java`를 만듭니다. 아직 `demo` 프로젝트가 없으면 6.1을 먼저 진행합니다.
     2. **뼈대 입력** — 아래 뼈대 두 개를 그대로 입력합니다.
 
-        **파일**: `src/main/java/com/example/demo/ch06/di/MessageProvider.java`
+        **파일**: `src/main/java/dev/wonslab/demo/ch06/di/MessageProvider.java`
 
         ```java
-        package com.example.demo.ch06.di;
+        package dev.wonslab.demo.ch06.di;
 
         import org.springframework.stereotype.Component;
 
@@ -130,10 +130,10 @@ Spring 핵심 개념의 핵심은 **어노테이션 이름**보다, **객체 생
         }
         ```
 
-        **파일**: `src/main/java/com/example/demo/ch06/di/MessageClient.java`
+        **파일**: `src/main/java/dev/wonslab/demo/ch06/di/MessageClient.java`
 
         ```java
-        package com.example.demo.ch06.di;
+        package dev.wonslab.demo.ch06.di;
 
         import org.springframework.stereotype.Component;
 
@@ -246,7 +246,7 @@ Spring Initializr(start.spring.io — 스프링 부트 프로젝트 뼈대를 �
 
 ```bash
 # start.spring.io에 요청해 zip으로 받아 푼다 (한 줄)
-curl https://start.spring.io/starter.zip -d type=maven-project -d language=java -d javaVersion=21 -d groupId=com.example -d artifactId=demo -d dependencies=web,data-jpa,validation,h2,lombok -o demo.zip
+curl https://start.spring.io/starter.zip -d type=maven-project -d language=java -d javaVersion=21 -d groupId=dev.wonslab -d artifactId=demo -d dependencies=web,data-jpa,validation,h2,lombok -o demo.zip
 unzip demo.zip -d demo
 cd demo
 ```
@@ -348,7 +348,7 @@ curl -i http://localhost:8080/
  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::               (v3.5.5)
+ :: Spring Boot ::                (v4.1.1)
 
 Tomcat started on port 8080 (http) with context path '/'
 Started DemoApplication in 3.x seconds (process running for 4.x)
@@ -513,7 +513,7 @@ project-root
 
 ```bash
 mvn archetype:generate \
-  -DgroupId=com.example \
+  -DgroupId=dev.wonslab \
   -DartifactId=myapp \
   -DarchetypeArtifactId=maven-archetype-quickstart \
   -DinteractiveMode=false
@@ -540,7 +540,7 @@ mvn archetype:generate \
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
+    <groupId>dev.wonslab</groupId>
     <artifactId>myapp</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -954,3 +954,8 @@ The following 1 profile is active: "<지정한 프로파일>"
 
 ### 한 줄 정리
 `demo`의 프로파일 구조는 일반론이 아니라, **`h2`를 기본으로 하고 `dev-my`, `dev-pg`, `prod`로 확장되는 실제 설정 구조**를 기준으로 이해해야 합니다.
+
+## 관련 실습 과제
+
+- [[guide-java-practice-spring-library]] — 🧪 실습 과제 2 — 도서 대여 REST API (Spring Boot + JPA + H2)
+- [[guide-java-practice-layered-quotation]] — 🧪 실습 과제 3 — 견적·계약 업무 (4계층 + Command/Query + MyBatis)

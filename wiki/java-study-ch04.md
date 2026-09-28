@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch04]
 sources: [java-study/java-study-ch04-객체지향설계와패턴.md]
 created: 2026-04-18
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 객체지향 설계와 패턴
@@ -19,7 +19,7 @@ updated: 2026-07-04
 
 > **따라 하는 법**: 위에서 아래로 읽으며 코드를 직접 쳐본다. 패턴마다 Before/After 코드를 비교하고, 4.9 실전문제로 OCP를 코드로 확인한다. 깊이: [[concept-design-patterns]].
 
-> **실습 준비** — 이 장의 실습은 [[java-study-ch01]] 1.2에서 만든 `hello-java` Maven/Gradle 프로젝트를 그대로 사용하고, 패턴마다 패키지 `com.example.ch04.<패턴>`을 새로 만든다. 각 절의 **Before는 참고 코드**(문제 상황 비교용)라 파일로 만들지 않고, **After만 실습 파일**로 만든다. 단, 싱글톤·옵저버·프록시(4.3~4.5)의 After는 Spring 기반이라 [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트가 필요하다 — 아직 6장 전이라면 읽기만 하고, 6장을 마친 뒤 돌아와 실행해도 된다.
+> **실습 준비** — 이 장의 실습은 [[java-study-ch01]] 1.2에서 만든 `hello-java` Maven/Gradle 프로젝트를 그대로 사용하고, 패턴마다 패키지 `dev.wonslab.ch04.<패턴>`을 새로 만든다. 각 절의 **Before는 참고 코드**(문제 상황 비교용)라 파일로 만들지 않고, **After만 실습 파일**로 만든다. 단, 싱글톤·옵저버·프록시(4.3~4.5)의 After는 Spring 기반이라 [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트가 필요하다 — 아직 6장 전이라면 읽기만 하고, 6장을 마친 뒤 돌아와 실행해도 된다.
 
 ---
 
@@ -63,10 +63,10 @@ public class PaymentService {
 
 인터페이스·전략 구현체·컨텍스트를 non-public으로 한 파일에 모으고, 드라이버 `StrategyDemo`만 public으로 둡니다.
 
-**파일**: src/main/java/com/example/ch04/strategy/StrategyDemo.java
+**파일**: src/main/java/dev/wonslab/ch04/strategy/StrategyDemo.java
 
 ```java
-package com.example.ch04.strategy;
+package dev.wonslab.ch04.strategy;
 
 interface PaymentStrategy {
     void pay(int amount);
@@ -104,10 +104,10 @@ public class StrategyDemo {
 ```
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch04.strategy.StrategyDemo"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch04.strategy.StrategyDemo"
 ```
 
-Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.strategy.StrategyDemo`로 실행합니다.
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main dev.wonslab.ch04.strategy.StrategyDemo`로 실행합니다.
 
 ```text
 예상 결과
@@ -200,10 +200,10 @@ public class TxtDataProcessor {
 
 골격(추상 클래스)과 하위 구현을 non-public으로 한 파일에 모으고, 드라이버 `TemplateMethodDemo`만 public으로 둡니다.
 
-**파일**: src/main/java/com/example/ch04/template/TemplateMethodDemo.java
+**파일**: src/main/java/dev/wonslab/ch04/template/TemplateMethodDemo.java
 
 ```java
-package com.example.ch04.template;
+package dev.wonslab.ch04.template;
 
 abstract class AbstractDataProcessor {
 
@@ -248,10 +248,10 @@ public class TemplateMethodDemo {
 ```
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch04.template.TemplateMethodDemo"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch04.template.TemplateMethodDemo"
 ```
 
-Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.template.TemplateMethodDemo`로 실행합니다.
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main dev.wonslab.ch04.template.TemplateMethodDemo`로 실행합니다.
 
 ```text
 예상 결과
@@ -287,11 +287,11 @@ Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/ja
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch04/template/practice/BeverageDemo.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch04/template/practice/BeverageDemo.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch04.template.practice;
+        package dev.wonslab.ch04.template.practice;
 
         public class BeverageDemo {
             public static void main(String[] args) {
@@ -304,7 +304,7 @@ Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/ja
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch04.template.practice.BeverageDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch04.template.practice.BeverageDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 ## 4.2 팩토리 메서드 패턴
@@ -345,10 +345,10 @@ public class NotificationService {
 
 인터페이스·팩토리·클라이언트를 non-public으로 한 파일에 모으고, 드라이버 `FactoryMethodDemo`만 public으로 둡니다. Before에서 쓰던 `EmailNotifier`·`SmsNotifier` 구현도 함께 넣어 실행 가능하게 만듭니다.
 
-**파일**: src/main/java/com/example/ch04/factory/FactoryMethodDemo.java
+**파일**: src/main/java/dev/wonslab/ch04/factory/FactoryMethodDemo.java
 
 ```java
-package com.example.ch04.factory;
+package dev.wonslab.ch04.factory;
 
 interface Notifier {
     void send(String message);
@@ -403,10 +403,10 @@ public class FactoryMethodDemo {
 ```
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch04.factory.FactoryMethodDemo"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch04.factory.FactoryMethodDemo"
 ```
 
-Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.factory.FactoryMethodDemo`로 실행합니다.
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main dev.wonslab.ch04.factory.FactoryMethodDemo`로 실행합니다.
 
 ```text
 예상 결과
@@ -440,11 +440,11 @@ Spring Bean 생성, 메시지 발송기 선택, 결제 클라이언트 생성, �
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/com/example/ch04/factory/practice/ShapeFactoryDemo.java`를 만듭니다.
+    1. **파일 생성** — `hello-java` 프로젝트에 `src/main/java/dev/wonslab/ch04/factory/practice/ShapeFactoryDemo.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다.
 
         ```java
-        package com.example.ch04.factory.practice;
+        package dev.wonslab.ch04.factory.practice;
 
         public class ShapeFactoryDemo {
             public static void main(String[] args) {
@@ -456,7 +456,7 @@ Spring Bean 생성, 메시지 발송기 선택, 결제 클라이언트 생성, �
         ```
 
     3. **하나씩 구현** — 주석의 과제를 한 항목씩 구현합니다.
-    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="com.example.ch04.factory.practice.ShapeFactoryDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
+    4. **실행·확인** — `mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch04.factory.practice.ShapeFactoryDemo"` — 추가할 때마다 다시 실행해 출력을 확인합니다.
 
 
 ## 4.3 싱글톤 패턴
@@ -494,10 +494,10 @@ public class AppConfig {
 
 Spring 기반 실습입니다 — [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트에 파일을 만들고 테스트로 확인합니다.
 
-**파일**: src/main/java/com/example/demo/ch04/singleton/SpringAppConfig.java
+**파일**: src/main/java/dev/wonslab/demo/ch04/singleton/SpringAppConfig.java
 
 ```java
-package com.example.demo.ch04.singleton;
+package dev.wonslab.demo.ch04.singleton;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
@@ -512,10 +512,10 @@ public class SpringAppConfig {
 }
 ```
 
-**파일**: src/test/java/com/example/demo/ch04/singleton/SpringSingletonTest.java
+**파일**: src/test/java/dev/wonslab/demo/ch04/singleton/SpringSingletonTest.java
 
 ```java
-package com.example.demo.ch04.singleton;
+package dev.wonslab.demo.ch04.singleton;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -579,13 +579,13 @@ SpringAppConfig Bean 초기화 완료
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/com/example/demo/ch04/singleton/practice/AppSettings.java`와 `src/test/java/com/example/demo/ch04/singleton/practice/AppSettingsTest.java`를 만듭니다.
+    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/dev/wonslab/demo/ch04/singleton/practice/AppSettings.java`와 `src/test/java/dev/wonslab/demo/ch04/singleton/practice/AppSettingsTest.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대 두 개를 그대로 입력합니다.
 
-        **파일**: `src/main/java/com/example/demo/ch04/singleton/practice/AppSettings.java`
+        **파일**: `src/main/java/dev/wonslab/demo/ch04/singleton/practice/AppSettings.java`
 
         ```java
-        package com.example.demo.ch04.singleton.practice;
+        package dev.wonslab.demo.ch04.singleton.practice;
 
         public class AppSettings {
             // 1) private static final INSTANCE 필드로 인스턴스를 하나만 생성
@@ -594,10 +594,10 @@ SpringAppConfig Bean 초기화 완료
         }
         ```
 
-        **파일**: `src/test/java/com/example/demo/ch04/singleton/practice/AppSettingsTest.java`
+        **파일**: `src/test/java/dev/wonslab/demo/ch04/singleton/practice/AppSettingsTest.java`
 
         ```java
-        package com.example.demo.ch04.singleton.practice;
+        package dev.wonslab.demo.ch04.singleton.practice;
 
         import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -651,10 +651,10 @@ public class OrderService {
 
 Spring 기반 실습입니다 — [[java-study-ch06]] 6.1에서 만드는 `demo` 프로젝트에 파일 4개(이벤트·발행자·리스너 2개)를 만들고 테스트로 발행-구독 흐름을 확인합니다.
 
-**파일**: src/main/java/com/example/demo/ch04/observer/OrderPlacedEvent.java
+**파일**: src/main/java/dev/wonslab/demo/ch04/observer/OrderPlacedEvent.java
 
 ```java
-package com.example.demo.ch04.observer;
+package dev.wonslab.demo.ch04.observer;
 
 public class OrderPlacedEvent {
     private final String productId;
@@ -675,10 +675,10 @@ public class OrderPlacedEvent {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch04/observer/OrderService.java
+**파일**: src/main/java/dev/wonslab/demo/ch04/observer/OrderService.java
 
 ```java
-package com.example.demo.ch04.observer;
+package dev.wonslab.demo.ch04.observer;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -698,10 +698,10 @@ public class OrderService {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch04/observer/InventoryService.java
+**파일**: src/main/java/dev/wonslab/demo/ch04/observer/InventoryService.java
 
 ```java
-package com.example.demo.ch04.observer;
+package dev.wonslab.demo.ch04.observer;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -715,10 +715,10 @@ public class InventoryService {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch04/observer/ShippingService.java
+**파일**: src/main/java/dev/wonslab/demo/ch04/observer/ShippingService.java
 
 ```java
-package com.example.demo.ch04.observer;
+package dev.wonslab.demo.ch04.observer;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -732,10 +732,10 @@ public class ShippingService {
 }
 ```
 
-**파일**: src/test/java/com/example/demo/ch04/observer/OrderEventTest.java
+**파일**: src/test/java/dev/wonslab/demo/ch04/observer/OrderEventTest.java
 
 ```java
-package com.example.demo.ch04.observer;
+package dev.wonslab.demo.ch04.observer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -796,11 +796,11 @@ Gradle이라면 `./gradlew test --tests OrderEventTest`로 실행합니다.
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/com/example/demo/ch04/observer/PointService.java`를 만듭니다.
+    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/dev/wonslab/demo/ch04/observer/PointService.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다. 위 `InventoryService.java`·`ShippingService.java`와 같은 방식입니다.
 
         ```java
-        package com.example.demo.ch04.observer;
+        package dev.wonslab.demo.ch04.observer;
 
         import org.springframework.context.event.EventListener;
         import org.springframework.stereotype.Service;
@@ -869,10 +869,10 @@ Spring 기반 실습입니다 — [[java-study-ch06]] 6.1에서 만드는 `demo`
 
 Spring AOP에서 프록시가 끼워 넣는 부가 기능 메서드를 **어드바이스**, 그것을 어디에 적용할지 지정하는 식(아래 코드의 `@Around` 값)을 **포인트컷**이라고 부릅니다. 포인트컷은 실습 패키지를 가리켜야 어드바이스가 적용됩니다 (`@Aspect` 빈 자신은 프록시 대상에서 제외됩니다).
 
-**파일**: src/main/java/com/example/demo/ch04/proxy/PerformanceAspect.java
+**파일**: src/main/java/dev/wonslab/demo/ch04/proxy/PerformanceAspect.java
 
 ```java
-package com.example.demo.ch04.proxy;
+package dev.wonslab.demo.ch04.proxy;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -883,7 +883,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PerformanceAspect {
 
-    @Around("execution(* com.example.demo.ch04.proxy..*(..))")
+    @Around("execution(* dev.wonslab.demo.ch04.proxy..*(..))")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         try {
@@ -897,10 +897,10 @@ public class PerformanceAspect {
 }
 ```
 
-**파일**: src/main/java/com/example/demo/ch04/proxy/EventService.java
+**파일**: src/main/java/dev/wonslab/demo/ch04/proxy/EventService.java
 
 ```java
-package com.example.demo.ch04.proxy;
+package dev.wonslab.demo.ch04.proxy;
 
 import org.springframework.stereotype.Service;
 
@@ -918,10 +918,10 @@ public class EventService {
 }
 ```
 
-**파일**: src/test/java/com/example/demo/ch04/proxy/ProxyAspectTest.java
+**파일**: src/test/java/dev/wonslab/demo/ch04/proxy/ProxyAspectTest.java
 
 ```java
-package com.example.demo.ch04.proxy;
+package dev.wonslab.demo.ch04.proxy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -980,11 +980,11 @@ EventService.processEvent(..) 실행 시간: 약 1000ms
 
 !!! example "실습 순서"
 
-    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/com/example/demo/ch04/proxy/practice/LoggingAspect.java`를 만듭니다.
+    1. **파일 생성** — `demo` 프로젝트에 `src/main/java/dev/wonslab/demo/ch04/proxy/practice/LoggingAspect.java`를 만듭니다.
     2. **뼈대 입력** — 아래 뼈대를 그대로 입력합니다. 위 `PerformanceAspect.java`(4.5)를 참고합니다.
 
         ```java
-        package com.example.demo.ch04.proxy.practice;
+        package dev.wonslab.demo.ch04.proxy.practice;
 
         import org.aspectj.lang.ProceedingJoinPoint;
         import org.aspectj.lang.annotation.Around;
@@ -995,7 +995,7 @@ EventService.processEvent(..) 실행 시간: 약 1000ms
         @Component
         public class LoggingAspect {
 
-            // 1) @Around("execution(* com.example.demo.ch04.proxy..*(..))") 메서드 추가
+            // 1) @Around("execution(* dev.wonslab.demo.ch04.proxy..*(..))") 메서드 추가
             // 2) proceed() 호출 전에 "호출 시작: " + 시그니처, 호출 후에 "호출 종료" 로그 출력
         }
         ```
@@ -1055,10 +1055,10 @@ public class DataService {
 
 Before의 표준 인터페이스 `DataProcessor`와 외부 라이브러리 역할인 `NewJsonLibrary`를 non-public으로 함께 담고, 드라이버 `AdapterDemo`만 public으로 둡니다.
 
-**파일**: src/main/java/com/example/ch04/adapter/AdapterDemo.java
+**파일**: src/main/java/dev/wonslab/ch04/adapter/AdapterDemo.java
 
 ```java
-package com.example.ch04.adapter;
+package dev.wonslab.ch04.adapter;
 
 interface DataProcessor {
     void processData();
@@ -1100,10 +1100,10 @@ public class AdapterDemo {
 ```
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch04.adapter.AdapterDemo"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch04.adapter.AdapterDemo"
 ```
 
-Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.adapter.AdapterDemo`로 실행합니다.
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main dev.wonslab.ch04.adapter.AdapterDemo`로 실행합니다.
 
 ```text
 예상 결과
@@ -1180,10 +1180,10 @@ public class OrderClient {
 
 서브시스템 4개(재고·결제·배송·알림)와 파사드·클라이언트를 non-public으로 한 파일에 모으고, 드라이버 `FacadeDemo`만 public으로 둡니다. 예상 결과의 출력을 내도록 서브시스템 구현을 최소로 채웠습니다.
 
-**파일**: src/main/java/com/example/ch04/facade/FacadeDemo.java
+**파일**: src/main/java/dev/wonslab/ch04/facade/FacadeDemo.java
 
 ```java
-package com.example.ch04.facade;
+package dev.wonslab.ch04.facade;
 
 class InventoryService {
     public void checkStock(String item) {
@@ -1239,10 +1239,10 @@ public class FacadeDemo {
 ```
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.ch04.facade.FacadeDemo"
+mvn compile exec:java -Dexec.mainClass="dev.wonslab.ch04.facade.FacadeDemo"
 ```
 
-Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main com.example.ch04.facade.FacadeDemo`로 실행합니다.
+Gradle 프로젝트라면 `./gradlew compileJava` 후 `java -cp build/classes/java/main dev.wonslab.ch04.facade.FacadeDemo`로 실행합니다.
 
 ```text
 예상 결과
@@ -1431,7 +1431,11 @@ public class NotificationService {
 | 증상 | 원인 확인 |
 |------|----------|
 | `mvn exec:java`에서 `ClassNotFoundException` | `compile` 없이 실행하지 않았는지 (`mvn compile exec:java`), `-Dexec.mainClass`의 패키지 경로 오타가 없는지 확인합니다. |
-| `duplicate class` / 클래스 중복 컴파일 에러 | Before 참고 코드까지 파일로 만들지 않았는지, 패턴마다 패키지(`com.example.ch04.<패턴>`)를 분리했는지 확인합니다. |
-| `package com.example.ch04... does not exist` | 파일 위치가 리드인 경로와 일치하는지 (`src/main/java` 아래 패키지 디렉터리 구조) 확인합니다. |
-| Spring 실습(4.3~4.5)에서 `NoSuchBeanDefinitionException` | 파일을 `demo` 프로젝트의 `com.example.demo` 하위 패키지에 두었는지 확인합니다 — 밖에 두면 컴포넌트 스캔에서 빠집니다. |
+| `duplicate class` / 클래스 중복 컴파일 에러 | Before 참고 코드까지 파일로 만들지 않았는지, 패턴마다 패키지(`dev.wonslab.ch04.<패턴>`)를 분리했는지 확인합니다. |
+| `package dev.wonslab.ch04... does not exist` | 파일 위치가 리드인 경로와 일치하는지 (`src/main/java` 아래 패키지 디렉터리 구조) 확인합니다. |
+| Spring 실습(4.3~4.5)에서 `NoSuchBeanDefinitionException` | 파일을 `demo` 프로젝트의 `dev.wonslab.demo` 하위 패키지에 두었는지 확인합니다 — 밖에 두면 컴포넌트 스캔에서 빠집니다. |
 | 4.5에서 실행 시간 로그가 안 찍힘 | `spring-boot-starter-aop` 의존성을 추가했는지, `@Around` 포인트컷 패키지가 실제 패키지와 일치하는지 확인합니다. |
+
+## 관련 실습 과제
+
+- [[guide-java-practice-core]] — 🧪 실습 과제 1 — 주문 처리 콘솔 앱 (컬렉션·전략·옵저버·미니 IoC)

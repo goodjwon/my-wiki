@@ -4,7 +4,7 @@ type: concept
 tags: [solid, oop, design, srp, ocp, lsp, isp, dip, object, robert-c-martin]
 sources: [object/오브젝트 실전 강의 교재 9장.md, object/오브젝트 실전 강의 교재 13장.md]
 created: 2026-07-04
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # SOLID 5원칙 — 오브젝트 책 관점의 심화
@@ -221,3 +221,5 @@ class JpaLedgerRepository implements LedgerRepository { /* JPA 세부 */ }
 - [[concept-generics-pecs]] — 공변/반공변을 타입으로 강제 (LSP 계약 규칙의 타입 시스템 판)
 - [[concept-spring-core]] — Spring DI 컨테이너 = DIP·OCP 의 산업 표준 구현
 - [[entity-effective-java]] — Item 18 (상속보다 합성)·Item 20 (인터페이스 우선) 이 LSP·DIP 의 실전 권고
+- [[guide-java-practice-core]] — 🧪 실습 과제 1 — 주문 처리 콘솔 앱 (컬렉션·전략·옵저버·미니 IoC)
+- [[guide-java-practice-layered-quotation]] — 🧪 실습 과제 3 — 견적·계약 업무 (4계층 + Command/Query + MyBatis)
