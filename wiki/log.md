@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-28] infra | 메뉴 🆕 배지 자동화 — created 30일 이내만 표시
+- mkdocs.yml에 하드코딩된 🆕 17개 제거, MkDocs hook `scripts/new_badge.py`(`on_nav`) 신설: frontmatter `created`가 빌드일 기준 30일 이내인 페이지 제목에 🆕 부착.
+- 빌드 시점 기준이라 30일이 지나면 다음 빌드·배포 때 사라짐. 현재 대상: Workout History 4페이지(2026-09-03).
+- 작성 표준 체크리스트에 "🆕 직접 붙이지 않음" 명시.
+
 ## [2026-09-28] verify+fix | 이론↔실습 정합 점검 + 하네스 00~M5 실제 실행 검증 + 메뉴 순서 정렬
 - **계기**: 사용자 "위키 이론과 실습이 맞지 않는 게 있다, 메뉴 순서도 맞추자", "Module 04 실습하다 안 맞는 게 있었다", "가능하면 실제로 돌려보고 결과를 남겨라".
 - **메뉴(nav)**: 하네스·AI 에이전트의 개념·소스를 실습 순서(M1~5 → Loop → Advisor–Worker → 그래프)로 재배열. 개발방법론은 개념 → 5권(Clean Code → EJ → 리팩터링 → 오브젝트 → TDD, 책 카드의 권장 순서) → DDD → 실습으로 재편하고, Clean Code·오브젝트 유래 개념 7개(네이밍·TDD 3법칙·단순 설계·GRASP·SOLID·DbC·도메인 모델 3구분)를 Java 레퍼런스에서 개발방법론 › 개념으로 이동. 실습 환경 도서표·entity-refactoring 추천 순서도 같은 순서로 맞춤.

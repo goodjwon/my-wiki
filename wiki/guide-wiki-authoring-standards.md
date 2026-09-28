@@ -4,7 +4,7 @@ type: synthesis
 tags: [wiki, standards, authoring, diagram, mermaid, html]
 sources: []
 created: 2026-06-07
-updated: 2026-07-05
+updated: 2026-09-28
 ---
 
 # 위키 작성 표준
@@ -125,7 +125,7 @@ external:
   - https://공식문서
   - https://기타URL
 created: YYYY-MM-DD
-updated: YYYY-MM-DD
+updated: 2026-09-28
 ---
 
 # 제목
@@ -228,7 +228,7 @@ sources: [<주제>/원본.md]             # source/concept/entity는 필수 (raw
 external:                            # 외부 자료로 보강 시 필수
   - https://공식
 created: YYYY-MM-DD                  # 필수
-updated: YYYY-MM-DD                  # 필수 (수정 시 갱신)
+updated: 2026-09-28
 ---
 ```
 
@@ -470,7 +470,7 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 - [ ] 다이어그램이 필요하다면 mermaid 한계 점검했나?
 - [ ] 같은 인사이트 패턴 비교표가 있나? (양방향 연결?)
 - [ ] 원본 출처 / 관련 페이지 섹션이 있나?
-- [ ] mkdocs.yml nav에 추가했나?
+- [ ] mkdocs.yml nav에 추가했나? (🆕는 직접 붙이지 않음 — `scripts/new_badge.py` hook이 `created` 30일 이내 페이지에 빌드 시 자동 부착)
 - [ ] index.md에 추가했나?
 - [ ] log.md에 작업 기록했나?
 - [ ] §7 문체 표준(종결어미·성공확인·OS분기·용어)을 지켰나?
