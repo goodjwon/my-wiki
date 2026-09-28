@@ -114,13 +114,16 @@ nav:
       - 부록: java-study-ch11.md
     - 학습 코스:
       - "T1. Java 기초 다지기": guide-java-track1-basics.md
-      - "T2. 객체지향 설계": guide-java-track2-design.md
-      - "과제 1. 주문 처리 콘솔": guide-java-practice-core.md
+      - "T2. 객체지향 설계":
+        - 코스 안내: guide-java-track2-design.md
+        - "과제 1. 주문 처리 콘솔": guide-java-practice-core.md
       - "T3. 입출력과 네트워크": guide-java-track3-io-network.md
-      - "T4. Spring 웹": guide-java-track4-spring-web.md
-      - "과제 2. 도서 대여 API": guide-java-practice-spring-library.md
-      - "T5. 심화·워크북·종합": guide-java-track5-deep-dive.md
-      - "과제 3. 견적·계약 업무": guide-java-practice-layered-quotation.md
+      - "T4. Spring 웹":
+        - 코스 안내: guide-java-track4-spring-web.md
+        - "과제 2. 도서 대여 API": guide-java-practice-spring-library.md
+      - "T5. 심화·워크북·종합":
+        - 코스 안내: guide-java-track5-deep-dive.md
+        - "과제 3. 견적·계약 업무": guide-java-practice-layered-quotation.md
     - 개념 레퍼런스:
       - Spring Core: concept-spring-core.md
       - "@Transactional 롤백": concept-transactional-rollback-policy.md

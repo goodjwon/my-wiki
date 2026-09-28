@@ -4,6 +4,9 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-29] nav | 학습 코스 계층 정리 — 과제를 소속 트랙 아래로
+- 사용자 지적("과제는 트랙에 속한 것") → T2·T4·T5를 그룹화해 "코스 안내 + 과제 N" 2항목으로, 과제 없는 T1·T3는 단일 페이지 유지.
+
 ## [2026-09-28] refactor | 보류 구조 제안 9~13 반영 — 병합·삭제·재배치·홈 개편
 - **병합**: concept-ingest·query·lint → [[concept-wiki-workflow]](179줄), Web Clipper·Dataview·qmd·Marp → [[entity-obsidian]] "플러그인·주변 도구", src-claude-design-review → [[entity-claude-design]]. 북마크 페이지(src-my-links) 삭제(보강 정책 3: 본문 없는 링크 목록).
 - **링크·URL**: 인바운드 링크 치환(10개 파일, 중복 링크 정리), 옛 URL 9개는 firebase.json 301 리다이렉트(병합 절 앵커로). "생성 뒤 검증 게이트" 패턴 역링크 3곳.
