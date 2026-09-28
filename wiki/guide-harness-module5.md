@@ -7,7 +7,7 @@ sources:
   - ai-engineering/harness-engineering/harness-kit/module5/01_repo_and_rippable_prompt.md
   - ai-engineering/harness-engineering/harness-kit/module5/02_weekly_review_prompt.md
 created: 2026-05-31
-updated: 2026-07-12
+updated: 2026-09-28
 ---
 
 # 하네스 Module 05 — 진화·주간 리뷰·Rippable
@@ -27,7 +27,7 @@ updated: 2026-07-12
 
 **시간**: 약 1시간 (구조화 20분 + 주간 리뷰 20분 + Rippable 10분 + Before/After 10분). **이후 매주 30분/회 반복**.
 
-> ✅ **Step 5 실행 검증됨 (2026-07-12, Node v24)**: 태스크 D까지 완주한 playground 복사본(CLAUDE.md + Module 03 자기검증 루프)에서 태스크 E를 헤드리스로 실행해 확인했습니다 — phone·address가 이미 구현된 상태에서 충돌 없이 birthDate 추가(YYYY-MM-DD 정규식 + 실존 날짜 refine: 윤일 `2000-02-29` 201, `2001-02-30`·13월 400), **자기검증 루프 4단계가 그대로 작동**해 `node --check` → `npm test`를 스스로 실행하고 "---검증 완료 보고---" 형식으로 종료, 테스트 17개 전부 통과. hooks(M3)·AGENTS.md(M4) 설치 자체는 이번 검증 범위 밖입니다.
+> ✅ **실행 검증됨 (2026-09-28, Claude Code 2.1.283, Node v26)**: prerequisites부터 Module 05까지 문서 명령을 그대로 이어 실행한 playground 복사본에서 태스크 E를 헤드리스(`claude -p` + stream-json 도구 호출 감사)로 실행해 확인했습니다 — phone(M1)·address(M2)·`GET /users/:id`(M3 Step 7-2)가 이미 있는 상태에서 충돌 없이 birthDate 추가(Zod `z.iso.date()`로 윤일 `2000-02-29` 허용, `2023-02-29`·13월·4월 31일 400), 자기검증 루프가 그대로 작동해 `node --check` → 관련 테스트 → `npm test`를 스스로 실행하고 "---검증 완료 보고---" 형식으로 종료, 테스트 52→69개 전부 통과, 파일 수정마다 lint-fix.sh(PostToolUse) 작동. Module 04 산출물(AGENTS.md·task-list·Stop hook)도 같은 날 별도 실행 검증했습니다. Step 1~4의 셸 블록도 전부 그대로 실행해 확인했고, Step 4-2는 삭제할 규칙이 없으면 커밋이 생기지 않습니다 (본문 참고).
 
 이론 배경: [[concept-harness-engineering]] (Rippable 섹션)
 
@@ -266,9 +266,7 @@ git add CLAUDE.md .claude/hooks/guard.sh .claude/weekly-review-*.md
 git commit -m "harness(M5): $WEEK 주간 리뷰 — 새 규칙 N개 추가
 
 - [규칙 1 요약]
-- [규칙 2 요약]
-
-Reviewed-by: Critic Agent"
+- [규칙 2 요약]"
 ```
 
 ---
@@ -326,6 +324,8 @@ git commit -m "harness(M5): 미사용 규칙 정리 (Rippable cleanup)
 - [규칙 3]"
 ```
 
+삭제할 규칙이 하나도 없으면 바뀐 파일이 없어 `git commit`이 `nothing to commit`(또는 `no changes added to commit`)으로 끝나는데, 정상이므로 이 커밋은 건너뜁니다.
+
 > 처음 점검에서는 보통 삭제할 게 적습니다 (하네스가 아직 어립니다). **3개월 이상 운영 후 진가를 발휘합니다**.
 
 ---
@@ -342,7 +342,7 @@ git commit -m "harness(M5): 미사용 규칙 정리 (Rippable cleanup)
 
 ### Step 5-1: 태스크 E 실행 (하네스 전체 적용)
 
-태스크 E를 **현재 상태(CLAUDE.md + hooks + AGENTS.md 모두 적용)** 로 실행합니다. playground에는 phone(M1)·address(M2) 필드가 이미 들어가 있어 같은 태스크를 재실행할 수 없고, 커밋을 revert해 출발선을 되돌리는 방식은 태스크 커밋에 CLAUDE.md·hooks 변경이 섞여 있으면 하네스까지 함께 초기화되는 함정이 있어 쓰지 않습니다 (Module 02 Step 5-1과 같은 이유). 세 측정(M1 phone · M2 address · M5 birthDate)은 태스크 본문이 아니라 **요구 구조(필드 추가·형식 검증·필수 처리·web 반영·테스트)와 측정 항목을 고정**해 비교합니다:
+태스크 E를 **현재 상태(CLAUDE.md + hooks 적용)** 로 실행합니다. CLAUDE.md가 있는 프로젝트에서는 Claude Code가 AGENTS.md를 자동 로드하지 않으므로(CLAUDE.md의 `@AGENTS.md` import나 심링크가 필요), 아래처럼 단일 프롬프트로 실행하면 Module 04의 역할 분리(Planner/Coder/Critic) 효과는 측정에 포함되지 않습니다. playground에는 phone(M1)·address(M2) 필드가 이미 들어가 있어 같은 태스크를 재실행할 수 없고, 커밋을 revert해 출발선을 되돌리는 방식은 태스크 커밋에 CLAUDE.md·hooks 변경이 섞여 있으면 하네스까지 함께 초기화되는 함정이 있어 쓰지 않습니다 (Module 02 Step 5-1과 같은 이유). 세 측정(M1 phone · M2 address · M5 birthDate)은 태스크 본문이 아니라 **요구 구조(필드 추가·형식 검증·필수 처리·web 반영·테스트)와 측정 항목을 고정**해 비교합니다:
 
 ```
 이 모노레포에 User에 'birthDate' 필드를 추가해줘.
@@ -357,7 +357,7 @@ Module 01과 달리 이번에는 Module 03 Step 7에서 CLAUDE.md 섹션 5에 �
 
 ### Step 5-2: 비교 표 작성
 
-태스크 E 결과를 Module 01·02 때와 같은 항목으로 측정해, Before 기록이 있는 `.claude/baseline.md` 맨 아래에 이어 붙입니다. 표의 **M2 After** 열은 Module 02 Step 5에서 CLAUDE.md만 적용해 태스크 D를 실행했을 때 기록한 수치이니 baseline.md의 기존 표에서 옮겨 적습니다. 마지막 두 행은 이번에 처음 채워집니다 — guard.sh 차단은 Module 03, Critic의 CONDITIONAL REJECT(조건부 반려) 판정은 Module 04에서 생겨 이전 측정에는 없던 항목이기 때문입니다:
+태스크 E 결과를 Module 01·02 때와 같은 항목으로 측정해, Before 기록이 있는 `.claude/baseline.md` 맨 아래에 이어 붙입니다. 표의 **M2 After** 열은 Module 02 Step 5에서 CLAUDE.md만 적용해 태스크 D를 실행했을 때 기록한 수치이니 baseline.md의 기존 표에서 옮겨 적습니다. 마지막 두 행은 이전 측정에는 없던 항목입니다 — guard.sh 차단은 Module 03, Critic의 CONDITIONAL REJECT(조건부 반려) 판정은 Module 04에서 생겼습니다. 단일 프롬프트 실행에는 Critic 단계가 없으므로 Critic 행은 `—`로 둡니다. 이 행까지 측정하려면 태스크 E를 Module 04처럼 Planner → Coder → Critic 사이클로 실행합니다:
 
 ```bash
 cat >> .claude/baseline.md << 'EOF'
@@ -377,7 +377,7 @@ cat >> .claude/baseline.md << 'EOF'
 | 가정 명시 | __ | __ | __ | __ |
 | 화면 작동 확인 | __ | __ | __ | __ |
 | guard.sh 차단 횟수 | 0 | 0 | __ | __ |
-| Critic CONDITIONAL REJECT 횟수 | — | — | __ | __ |
+| Critic CONDITIONAL REJECT 횟수 | — | — | — | — |
 
 ### 5모듈 종합 효과
 - 가장 큰 변화: ____________
@@ -413,7 +413,7 @@ git commit -m "harness(M5-E): 태스크 E — birthDate 필드 추가 + M1↔M5 
 - guard.sh 차단 로그를 별도 파일에 남기도록 수정하면 분석이 쉬워집니다:
 
 ```bash
-# guard.sh의 block() 함수에 추가
+# guard.sh의 block() 함수 안, exit 2 바로 앞 줄에 추가 (exit 뒤에 두면 실행되지 않음)
 echo "$(date '+%Y-%m-%d %H:%M') BLOCKED: $1 — $COMMAND" >> .claude/guard-blocked.log
 ```
 

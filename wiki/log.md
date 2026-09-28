@@ -4,6 +4,22 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-28] verify+fix | 이론↔실습 정합 점검 + 하네스 00~M5 실제 실행 검증 + 메뉴 순서 정렬
+- **계기**: 사용자 "위키 이론과 실습이 맞지 않는 게 있다, 메뉴 순서도 맞추자", "Module 04 실습하다 안 맞는 게 있었다", "가능하면 실제로 돌려보고 결과를 남겨라".
+- **메뉴(nav)**: 하네스·AI 에이전트의 개념·소스를 실습 순서(M1~5 → Loop → Advisor–Worker → 그래프)로 재배열. 개발방법론은 개념 → 5권(Clean Code → EJ → 리팩터링 → 오브젝트 → TDD, 책 카드의 권장 순서) → DDD → 실습으로 재편하고, Clean Code·오브젝트 유래 개념 7개(네이밍·TDD 3법칙·단순 설계·GRASP·SOLID·DbC·도메인 모델 3구분)를 Java 레퍼런스에서 개발방법론 › 개념으로 이동. 실습 환경 도서표·entity-refactoring 추천 순서도 같은 순서로 맞춤.
+- **이론↔실습 대조 (4쌍 병렬 감사 → 수정, 약 25개 파일)**:
+  - hooks 이론이 실습과 반대: guard `exit 1`→**exit 2**, argv `$1`→**stdin JSON + jq**, lint-fix 파일 단위·exit 2, Stop = **응답마다**(세션 종료는 SessionEnd). 비교표 5곳의 `guard.sh exit 1` 잔재도 소탕.
+  - AGENTS.md: 2.1.283 실측 — **CLAUDE.md가 있으면 자동 로드 안 됨**(없을 때만 대신 읽음) → `@AGENTS.md` import. concept 2·M4·M5·00 용어 통일.
+  - Loop: 종료 조건 3종(goal·resource·budget), 비용 완화책(게이트 먼저), 1차 출처 교정 반영, 설계 질문 번호 오매핑, 근거 없는 "15~25 스텝" 삭제.
+  - Advisor–Worker: 오버헤드 예외를 크기 → **동작 변경 기준**으로 concept·src 동기화. comparison의 가상 그래프 규칙을 실제 루브릭 엣지로 교체.
+  - 이론→실습 역링크 누락 다수 보강(concept 5개 → guide-harness-*).
+- **실제 실행 검증 (playground 복사본, 헤드리스 `claude -p`, Claude Code 2.1.283)**: 00 → demo → M1(A·B·C) → M2-D → M3 → M4(Planner·Coder·Critic) → M5-E 커밋 22개 체인 완주. 실습에서 실제로 막히던 것:
+  - **M4**: 루트 `src/` 경로(모노레포라 `git add … src/` 실패), Planner가 9태스크·"외부 패키지 확정"을 TASK-001로 생성(STOP 트리거가 bcrypt에 걸림) → 패키지 사전 승인·파일 배치 6줄 고정으로 **2회 동일 구조 재현**, Stop hook 테스트 상태 공란(`tail -3`→`grep '^Tests:'`), 수동 메모 덮어쓰기, JSON 손 머지 → jq, hook 경로 `$CLAUDE_PROJECT_DIR` + 스크립트 `cd` 루트 고정.
+  - **M3**: lint-fix가 모노레포 루트에서 무동작, 상대 경로 hook이 `cd api` 후 **조용히 무력화**, guard가 `.env.example`까지 차단, Step 6 차단 테스트가 hook까지 가지 않음, Step 7-2 `/health`가 이미 존재 → `GET /users/:id`로 교체.
+  - **00·M1·M2·M5**: package-lock 미추적(측정 오염), Vite 대화형 멈춤(`--no-immediate`), jq 필수화, M1 태스크 C 재현 안 됨 안내·빈 커밋 처리, CLAUDE.md 섹션 1 빈칸·없는 npm 스크립트, Rippable 커밋 실패 처리.
+  - 각 가이드에 "✅ 실행 검증됨 (2026-09-28)" 배너와 실측값. 로그: `raw/ai-engineering/harness-engineering/verification/`.
+- **남은 비결정성**: 모델 판단(거절·질문 후 멈춤)과 누적 테스트 수는 실행마다 다름 — 배너에 "본인 측정값 기록"으로 명시.
+
 ## [2026-09-03] ingest | Workout History 출시 여정 + 앱 설계 개념 3종 (새 카테고리 "앱 개발·출시")
 - **대상**: `raw/workout-history/` — TECH_NOTES.md(신규, 설계 원칙 6·함정 공개 요약) · TIMELINE.md(출시 후 표 추가) · README.md. 공유 기준선(2026-08-19) 준수 — 클래스·테이블·파일명 없이 개념만.
 - **신규 source**: [[src-workout-history-launch]] — 이정표(07-20~09-03)·6원칙→개념 승격표·삽질 로그 표·6역할 에이전트 프로세스↔위키 원리 대응표·in-flight 가드 코드.

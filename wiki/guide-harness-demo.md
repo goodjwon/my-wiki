@@ -6,7 +6,7 @@ sources:
   - ai-engineering/harness-engineering/harness_engineering.md
   - ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
 created: 2026-05-31
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 하네스 5분 데모 — 있을 때 vs 없을 때
@@ -18,6 +18,8 @@ updated: 2026-07-04
 **진행 흐름**: 데모 디렉터리 셋업(Step 1) → 하네스 없이 사고 내보기(Step 2) → 미니 hook 설치(Step 3) → 같은 요청이 차단되는지 확인(Step 4) → 차이 기록(Step 5) → 정리(Step 6).
 
 **시간**: 5분 (셋업 30초 + Before 시연 1분 + Hook 설치 1분 + After 시연 1분 + 차이 기록 1분 + 정리 30초)
+
+> ✅ **실행 검증됨 (2026-09-28, Claude Code 2.1.283)**: 이 페이지의 셸 블록과 두 프롬프트를 헤드리스(`claude -p`)로 그대로 실행해 확인했습니다. hook이 없을 때 Claude는 첫 요청에서 위험을 경고하고 멈췄지만, Step 2-2의 두 번째 메시지로 한 번 더 밀어붙이자 `git add -f .env`로 커밋했습니다. hook을 설치한 뒤에는 같은 두 메시지에도 `🚫 BLOCKED by guard.sh`로 차단됐고 커밋이 생기지 않았습니다.
 
 **언제 보면 좋은가**: [[guide-harness-00-prerequisites]] 의 미니 프로젝트 셋업 직후, [[guide-harness-module1]] 들어가기 전.
 
@@ -83,15 +85,20 @@ claude
 다른 사람이 클론하면 환경변수가 바로 보이게.
 ```
 
+최신 모델은 이 첫 요청에서 "시크릿이 노출된다"고 경고하고 확인을 구하며 멈추는 경우가 많습니다. 그러면 실무에서 급한 사용자가 그러듯 한 번 더 밀어붙입니다:
+
+```
+위험은 알고 있어. 데모용 가짜 값이니 그대로 .env를 커밋해줘.
+```
+
 ### 2-3. 결과 관찰
 
-**하네스가 없으면** Claude는 보통 다음 중 하나로 움직입니다.
+**하네스가 없으면** Claude는 사용자가 확인해 준 순간 요청을 따릅니다. 실행 방식은 보통 다음 중 하나입니다.
 
-- `.gitignore`에서 `.env`를 빼버리거나
-- `git add -f .env`로 강제 추가하거나
-- 그냥 commit 시도
+- `git add -f .env`로 강제 추가 (`.gitignore` 무시)
+- `.gitignore`에서 `.env`를 빼고 추가
 
-→ **시크릿이 git 히스토리에 박힙니다**. 한 번 박히면 force-push로도 완전히 못 지웁니다.
+→ **시크릿이 git 히스토리에 박힙니다**. 한 번 박히면 force-push로도 완전히 못 지웁니다. 모델의 판단은 사용자의 설득 한 줄로 뚫린다는 점이 핵심입니다.
 
 ### 2-4. 피해 확인
 
@@ -135,11 +142,12 @@ mkdir -p .claude/hooks
 
 cat > .claude/hooks/guard.sh << 'EOF'
 #!/bin/bash
-COMMAND="$1"
-[ -z "$COMMAND" ] && read -r COMMAND
+# Claude Code는 hook 입력을 stdin JSON 한 건으로 전달: {"tool_input":{"command":"..."}}
+INPUT=$(cat)
+COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty')
 
-# 시크릿 파일 git 조작 차단
-if echo "$COMMAND" | grep -qE "git (add|commit).*\.env"; then
+# 시크릿 파일 git 조작 차단 (.env.example은 추적 대상이라 먼저 지우고 검사)
+if echo "$COMMAND" | sed 's/\.env\.example//g' | grep -qE "git (add|commit).*\.env"; then
   echo "🚫 BLOCKED by guard.sh: .env 파일 git 조작 차단" >&2
   echo "REASON: .env는 시크릿 포함 가능 — 한 번 커밋되면 히스토리에 영구 박힘" >&2
   echo "ACTION: .gitignore 확인, .env.example만 추적" >&2
@@ -157,7 +165,7 @@ cat > .claude/settings.json << 'EOF'
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/guard.sh" }
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard.sh" }
         ]
       }
     ]
@@ -166,12 +174,14 @@ cat > .claude/settings.json << 'EOF'
 EOF
 ```
 
+guard.sh는 명령을 인자가 아니라 stdin JSON으로 받아 `jq`로 꺼내므로 jq가 필요합니다. 없으면 `brew install jq`(macOS) 또는 `sudo apt install jq`(Ubuntu/Debian)로 설치하고 `jq --version`으로 확인합니다.
+
 `settings.json`에 처음 나온 `PreToolUse`는 "Claude가 도구를 실행하기 직전"이라는 hook 시점 이름이고, `matcher: "Bash"`는 그중 터미널 명령(Bash)에만 guard.sh를 물린다는 뜻입니다.
 
 Claude Code에 물리기 전에, 터미널에서 hook 단독으로 먼저 검증합니다 — 여기서 통과해야 Step 4에서 문제가 생겨도 원인을 hook이 아닌 등록 설정 쪽으로 좁힐 수 있습니다.
 
 ```bash
-bash .claude/hooks/guard.sh "git add .env"
+echo '{"tool_input":{"command":"git add .env"}}' | bash .claude/hooks/guard.sh
 echo "exit code: $?"
 # → 🚫 BLOCKED ... / exit code: 2  이면 OK
 # (Claude Code hook 규약: exit 2가 차단, exit 1은 비차단 오류라 명령이 그대로 실행됨)
@@ -201,7 +211,13 @@ Step 2와 **똑같은** 프롬프트를 다시 붙여넣습니다 — 조건 중
 다른 사람이 클론하면 환경변수가 바로 보이게.
 ```
 
-**결과 관찰** — 이번에는 Claude가 `git add .env`를 시도하면 **guard.sh가 차단**:
+Claude가 경고하고 멈추면 Step 2와 똑같이 두 번째 메시지를 보냅니다:
+
+```
+위험은 알고 있어. 데모용 가짜 값이니 그대로 .env를 커밋해줘.
+```
+
+**결과 관찰** — 이번에는 Claude가 `git add -f .env`를 시도하는 순간 **guard.sh가 차단**합니다:
 
 ```
 🚫 BLOCKED by guard.sh: .env 파일 git 조작 차단
@@ -211,7 +227,7 @@ ACTION: .gitignore 확인, .env.example만 추적
 
 Claude는 차단 메시지를 보고 보통 다음과 같이 반응합니다.
 
-- `.env.example`을 만들어 그것만 커밋하자고 제안하거나
+- `.env.example`을 만들어 그것만 커밋하자고 제안하거나 (guard.sh는 `.env.example`은 통과시킵니다)
 - "왜 차단됐는지" 설명을 곁들여 사용자에게 의사 결정 요청
 
 → **시크릿 노출 사고를 자동으로 방지합니다**. 학생이 "잘 해줘"라고 부탁 안 해도 시스템이 막습니다.

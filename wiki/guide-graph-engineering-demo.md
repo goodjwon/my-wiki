@@ -9,7 +9,7 @@ external:
   - https://langchain-ai.github.io/langgraph/
   - https://code.claude.com/docs/en/headless
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-09-28
 ---
 
 # 그래프 엔지니어링 실습 — 블랙박스 에이전트 vs 노드·엣지 그래프
@@ -333,7 +333,7 @@ cd ~ && rm -rf ~/graph-demo
 |------|--------------------|---------------|------|
 | **그래프** | "최소 3곳·출처 1건" 프롬프트 지시 | 엣지의 `if` + 재시도 상한 (이 실습) | [[concept-graph-engineering]] |
 | Loop | 자기보고 "완료했습니다" | 테스트 exit code가 거부 신호 | [[guide-loop-engineering-demo]] |
-| Hooks | "위험 명령 하지 마" 부탁 | `guard.sh` exit 1 → 도구 차단 | [[concept-claude-hooks]] |
+| Hooks | "위험 명령 하지 마" 부탁 | `guard.sh` exit 2 → 도구 차단 | [[concept-claude-hooks]] |
 | Advisor–Worker | 역할 지시문만 | frontmatter `tools` 제한·검증 게이트 | [[concept-advisor-worker]] |
 
 → **공통 원리**: 확률 모델의 준수 의지를 믿지 말고, 어길 수 없는 층(코드·환경·권한)에 규칙을 내립니다.
@@ -360,4 +360,6 @@ cd ~ && rm -rf ~/graph-demo
 - [[src-graph-engineering]] — 원문 정리 + LangGraph 실행 골격
 - [[guide-loop-engineering-demo]] — 직전 단계: 루프 실습 (사이클·거부 신호·토큰 비용)
 - [[guide-advisor-worker-demo]] — 역할 분할 축의 실습 (그래프 관점에서는 2노드 최소 그래프)
+- [[guide-advisor-worker-advanced]] — 대조 실측: 장면 1 "프롬프트 규율의 한계" (규율을 해석해 우회 vs 이 실습의 코드 강제)
+- [[comparison-advisor-worker-vs-graph]] — 두 패턴의 축 차이·선택 기준 비교
 - [[concept-claude-hooks]] — 컨디션의 환경 층 구현 (exit code 거부)

@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, multi-agent, subagent, delegation, harness, context-engineering]
 sources: [ai-engineering/ai-advisor/]
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-09-28
 ---
 
 # Advisor–Worker 패턴 — 판단·구현 분리 위임
@@ -70,7 +70,7 @@ updated: 2026-07-06
 | 판단 (분해·설계·검증) | 최상위 | 오판 1건의 비용이 큼 — 잘못된 분해·통과시킨 결함은 하류 전체를 오염 |
 | 구현 (브리프대로 코딩) | 한 단계 아래 | 브리프가 좁혀 준 문제를 푸는 일 — 호출 횟수가 많아 단가 민감 |
 
-호출량이 많은 쪽에 저렴한 모델을 두는 구조라 [[src-copilot-token-pricing]]의 종량제 환경에서 비용 레버이기도 합니다. 단 환경변수(`CLAUDE_CODE_SUBAGENT_MODEL`)가 frontmatter 지정을 덮어쓰는 함정이 있습니다 — 상세는 [[src-ai-advisor-worker]].
+호출량이 많은 쪽에 저렴한 모델을 두는 구조라 [[src-copilot-token-pricing]]의 종량제 환경에서 비용 레버이기도 합니다. 단 환경변수(`CLAUDE_CODE_SUBAGENT_MODEL`)가 frontmatter 지정을 덮어쓰는 함정이 있습니다(심화편 장면 3에서 실측으로 확인했습니다) — 상세는 [[src-ai-advisor-worker]].
 
 ## 적용 기준 — 언제 쓰고, 언제 안 쓰나
 
@@ -80,8 +80,9 @@ updated: 2026-07-06
 |------|------|
 | 구현·테스트 작성 등 노동량 있는 작업 | Worker에 위임 (기본값) |
 | 서로 독립인 작업 여러 개 | 한 턴에 여러 Task로 **병렬 위임**, 의존 관계가 있으면 순차 |
-| 오타·임포트 누락 같은 사소한 마무리 | Advisor가 직접 Edit |
-| 한두 줄 수정 — 브리프 쓰는 게 더 비싼 일 | Advisor가 직접 처리 (위임 오버헤드 역전) |
+| 동작이 바뀌지 않는 수정(오타·주석·임포트 정리) | Advisor가 직접 Edit합니다 |
+
+테스트 기대값이 바뀌는 로직 수정은 한두 줄이라도 위임합니다. 크기 기준으로 적으면 규율이 해석돼 우회됩니다([[guide-advisor-worker-advanced]] 장면 1).
 
 단발 질문·소규모 수정이 주된 세션이라면 패턴 전체가 과합니다. 위임 사슬의 가치는 **검증할 가치가 있는 규모의 구현**이 반복될 때 나옵니다.
 
@@ -117,7 +118,7 @@ updated: 2026-07-06
 
 - [[src-ai-advisor-worker]] — 원본 스크립트 해설 (브리프 6항목·frontmatter 예시·3-tier 비교표)
 - [[guide-advisor-worker-demo]] — 이 패턴을 직접 실행하는 15분 실습 (실행 검증됨)
-- [[guide-advisor-worker-advanced]] — 심화 실습 (수정 브리프 재위임·병렬 위임·모델 티어링 실측)
+- [[guide-advisor-worker-advanced]] — 심화 실습 (수정 브리프 재위임·병렬 위임·모델 티어링 실측·오버헤드 예외)
 - [[concept-multi-agent-pattern]] — 3-tier(Planner/Coder/Critic) — 역할 수가 다른 형제 패턴
 - [[concept-harness-engineering]] — "부탁 대신 구조" 상위 원칙
 - [[concept-loop-engineering]] — 검증 게이트 = 루프 안의 거부 신호

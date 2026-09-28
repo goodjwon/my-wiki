@@ -2,9 +2,9 @@
 title: Loop 엔지니어링 — 사람을 시스템으로 대체하기
 type: concept
 tags: [loop-engineering, harness, ai-agent, react-pattern, claude-code]
-sources: [ai-engineering/loop-engineering/loop-engineering-notes.md]
+sources: [ai-engineering/loop-engineering/loop-engineering-notes.md, ai-engineering/loop-engineering/primary-sources.md]
 created: 2026-06-13
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Loop 엔지니어링 (Loop Engineering)
@@ -33,9 +33,12 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 
 | 날짜 | 인물 | 발언 |
 |------|------|------|
-| 2026-06-08 | Peter Steinberger (X) | "이제 코딩 에이전트에 프롬프트를 입력하지 말고, 에이전트에게 프롬프트를 주는 루프를 설계해야 한다" — **650만 조회** |
+| 2026-06-08* | Peter Steinberger (X, OpenAI) | "이제 코딩 에이전트에 프롬프트를 입력하지 말고, 에이전트에게 프롬프트를 주는 루프를 설계해야 한다" — 650만 조회* |
 | 2026-06 | Boris Cherny (Claude Code 책임자) | "내 일은 개별 프롬프트가 아니라 루프를 작성하는 것" |
-| 2026-06 | Addy Osmani | 초기 단계·회의적, **토큰 비용 절대 주의** |
+| 2026-06-07 | Addy Osmani | 초기 단계·회의적, **토큰 비용 절대 주의** (용어 명명 1차 글) |
+| 2026-06-11 | Sonar | "검증 없는 루프는 단순 자동화" · "A failing build is a fact" |
+
+\* 날짜·조회수는 2차 매체 주장이며 X 원본에서 직접 검증되지 않았습니다.
 
 자세한 인용·맥락은 [[src-loop-engineering]].
 
@@ -50,7 +53,7 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
                           종료 조건까지 반복
 ```
 
-종료 조건(작업 완료·중단 트리거)이 충족될 때까지 사이클이 돕니다.
+종료 조건이 충족될 때까지 사이클이 돕니다. 종료 조건은 ① 검증 통과(goal) ② 반복 상한(resource) ③ 토큰 예산(budget) 세 가지를 함께 둬야 합니다. 셋 중 하나라도 빠지면 루프는 조용히 실패합니다(Sonar: *"a loop doesn't fail loudly, it fails quietly."*).
 
 > 🧪 **직접 해보기**: [[guide-loop-engineering-demo]] — 거부 신호 없는 루프(메아리방)와 있는 루프를 Node mock + `claude -p` 로 짜서 8분 만에 체험.
 
@@ -70,14 +73,14 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 > 루프 설계의 절반은 사이클 자체. **나머지 절반은 루프 안에 거부할 수 있는 무언가(테스트·타입 체크·실제 에러)를 넣는 것**.
 > 밀어내는 게 없는 루프 = 에이전트가 자기 자신에게 반복해서 동의하는 메아리방.
 
-이게 Loop 엔지니어링의 가장 강한 한 줄입니다.
+이게 Loop 엔지니어링의 가장 강한 한 줄입니다. Sonar는 같은 원리를 *"A failing build is a fact"* 로 요약합니다 — 모델의 자기 보고는 의견이고, 실패한 빌드는 사실입니다([[src-loop-engineering]]).
 
 ### 같은 인사이트 패턴 — "거부 신호 없는 자동화는 폭주한다"
 
 | 영역 | 폭주 시나리오 | 거부 메커니즘 | 참조 |
 |------|---------------|---------------|------|
 | **AI 루프** | 검증 없이 LLM이 자기 출력에 동의 → 메아리방 | 테스트·타입체크·실제 에러를 루프 안에 | (이 페이지) |
-| **Hooks** | 에이전트가 위험 명령 자유 실행 → 사고 | `guard.sh` 종료 코드 1 → 도구 실행 차단 | [[concept-claude-hooks]] |
+| **Hooks** | 에이전트가 위험 명령 자유 실행 → 사고 | `guard.sh` 종료 코드 2 → 도구 실행 차단 | [[concept-claude-hooks]] |
 | **멀티 에이전트** | 단일 에이전트 자기검증 → 통과 편향 | Critic의 `CONDITIONAL REJECT` / 모델 교차 검증 (Claude+Codex 3라운드) | [[concept-multi-agent-pattern]] |
 | **선언 층** | 부정 명령("하지 마") 잊힘 | STOP 트리거 → 명시적 중단 조건 | [[concept-claude-md]] |
 | **TDD** | 실패 테스트 없이 코드 작성 → 검증 없는 누적 | 3법칙: 빨강(실패 테스트)이 사이클 안의 거부 신호 | [[concept-tdd-laws-and-first]] |
@@ -112,7 +115,7 @@ Addy Osmani는 토큰 비용에 **절대적으로 주의**해야 한다고 말�
 | 하네스 | 환경 1회 설계 | 매 호출마다 hook + 컨텍스트 |
 | **Loop** | **루프 1회 설계** | **사이클 1회당 N회 호출 (반복·재시도 포함)** |
 
-→ 사람 비용은 줄지만, 모델 비용은 폭증합니다. [[src-copilot-token-pricing]]의 종량제 전환(2026-06-01)과 정확히 같은 시점에 터진 게 우연이 아닙니다.
+→ 사람 비용은 줄지만, 모델 비용은 폭증할 수 있습니다. 단, 결정적 검증(테스트·린트)을 모델 호출 앞에 두면 검증이 실패한 사이클에서만 모델을 부르므로 비용을 억제할 수 있습니다([[guide-loop-engineering-demo]] Step 6.5). [[src-copilot-token-pricing]]의 종량제 전환(2026-06-01)과 정확히 같은 시점에 터진 게 우연이 아닙니다.
 
 ## 도메인 모델링 관점의 시작점
 
@@ -143,7 +146,7 @@ Addy Osmani는 토큰 비용에 **절대적으로 주의**해야 한다고 말�
 ## 원본 출처
 
 - `raw/ai-engineering/loop-engineering/loop-engineering-notes.md` — 외부 AI 어시스턴트에게 전달받은 정리본 (2026-06-13)
-- 원전(Peter Steinberger X, Boris Cherny 발언, Addy Osmani 글, ReAct 논문) 직접 확보는 후속 과제
+- `raw/ai-engineering/loop-engineering/primary-sources.md` — 1차 출처 검증 (2026-06-29, Osmani·Sonar 원문 확인, Steinberger·Cherny는 2차 매체 기준)
 
 ## 관련 페이지
 

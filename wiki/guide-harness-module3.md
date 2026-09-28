@@ -9,14 +9,14 @@ sources:
   - ai-engineering/harness-engineering/harness-kit/module3/01_hooks_setup_prompt.md
   - ai-engineering/harness-engineering/harness-kit/module3/02_self_verify_prompt.md
 created: 2026-05-31
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 하네스 Module 03 — Hooks 시스템 강제
 
 > **이 가이드 보기 전에**: [[guide-harness-module2]] 까지 완료합니다. Module 02에서 CLAUDE.md 섹션 7에 채운 STOP 트리거 — 위험 작업 직전에 에이전트를 멈추게 하는 금지 조건 목록 — 가 있어야 합니다 (hooks가 강제할 대상).
 
-**왜 CLAUDE.md 다음이 hooks인가**: Module 02에서 만든 STOP 트리거는 결국 "말로 하는 권고"입니다. 에이전트는 대화가 길어지면 규칙을 잊고, 급하면 어깁니다 — 실제로 CLAUDE.md에 적어 둔 금지 사항을 그대로 수행하는 장면을 Module 01 베이스라인 측정에서 이미 봤을 것입니다. hooks는 다릅니다. Claude Code가 도구를 실행하는 경로 자체에 끼어들어, 에이전트가 규칙을 어긴 순간에도 **물리적으로 차단**합니다. 규칙(권고) 위에 강제 층을 한 겹 더 얹는 것 — 그래서 CLAUDE.md 다음 모듈이 hooks입니다.
+**왜 CLAUDE.md 다음이 hooks인가**: Module 02에서 만든 STOP 트리거는 결국 "말로 하는 권고"입니다. 에이전트는 대화가 길어지면 규칙을 잊고, 급하면 어깁니다 — Module 02 Step 5-4에서 "작동 안 했거나 우회된 규칙" 칸을 채웠다면, CLAUDE.md에 적어 둔 규칙이 지켜지지 않는 장면을 이미 본 것입니다. hooks는 다릅니다. Claude Code가 도구를 실행하는 경로 자체에 끼어들어, 에이전트가 규칙을 어긴 순간에도 **물리적으로 차단**합니다. 규칙(권고) 위에 강제 층을 한 겹 더 얹는 것 — 그래서 CLAUDE.md 다음 모듈이 hooks입니다.
 
 **이 모듈에서 얻을 것**:
 
@@ -29,6 +29,8 @@ updated: 2026-07-04
 위 목록의 PreToolUse·PostToolUse는 Claude Code hook의 **실행 시점 이름**입니다 — 각각 도구 실행 **직전**과 **직후**에 스크립트를 끼워 넣는 자리로, Step 2와 Step 3에서 하나씩 만듭니다.
 
 **진행 흐름**: 파싱 도구 준비(Step 1) → 차단 스크립트 작성(Step 2~3) → hooks 등록(Step 4) → 터미널에서 단독 검증(Step 5) → Claude Code 안에서 실전 검증(Step 6) → 자기검증 루프 추가(Step 7) → 커밋(Step 8).
+
+> ✅ **실행 검증됨 (2026-09-28, Claude Code 2.1.283, jq 1.7)**: Module 02까지 진행한 playground 복사본에서 Step 1~8을 그대로 실행했습니다. Step 5 guard.sh 단독 테스트 10개가 기대 exit 코드와 모두 일치했고, lint-fix.sh는 `api/` 파일에서 Prettier·ESLint를 실행(빈 catch 파일은 exit 2로 반려), `web/` 파일은 건너뛰었습니다. Step 6은 헤드리스 세션에서 Claude의 `git push origin main` 호출이 PreToolUse 단계에서 `🚫 BLOCKED by guard.sh`로 막혔고, Step 7-2는 Claude가 테스트 먼저 작성 → `node --check` → 관련 테스트 → `npm test`(43→52개 통과) → "---검증 완료 보고---" 순서로 마쳤습니다. 이 과정에서 lint-fix.sh가 수정 파일마다 작동해 Prettier 포맷을 적용했습니다.
 
 **시간**: 약 1시간 40분 (설치 40분 + 차단 검증 25분 + 자기검증 루프 30분 + 커밋 5분)
 
@@ -72,6 +74,7 @@ mkdir -p .claude/hooks
 아래 스크립트에는 **차단 규칙 6종**(`block` — 명령을 막음)과 **경고 규칙 2종**(`warn` — 막지 않고 메시지만 남김)이 담겨 있습니다. `.claude/hooks/guard.sh` 파일을 다음 내용으로 생성:
 
 ```bash
+cd ~/harness-playground
 cat > .claude/hooks/guard.sh << 'EOF'
 #!/bin/bash
 # guard.sh — Claude Code PreToolUse Hook (Bash 실행 직전 검사)
@@ -97,8 +100,8 @@ warn() {
   echo "⚠️  WARN by guard.sh: $1 — $2" >&2
 }
 
-# 1. 시크릿·환경 파일 노출/커밋
-if echo "$COMMAND" | grep -qE "git add.*\.env|git commit.*\.env|cat.*\.env\.production"; then
+# 1. 시크릿·환경 파일 노출/커밋 (.env.example은 추적 대상이라 먼저 지우고 검사)
+if echo "$COMMAND" | sed 's/\.env\.example//g' | grep -qE "git add.*\.env|git commit.*\.env|cat.*\.env\.production"; then
   block "환경 파일 조작" \
     ".env / .env.production은 시크릿 포함 가능" \
     ".gitignore 확인, .env.example만 추적"
@@ -187,20 +190,29 @@ INPUT=$(cat)
 MODIFIED_FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 [ -z "$MODIFIED_FILE" ] && exit 0
 [ ! -f "$MODIFIED_FILE" ] && exit 0
+# 절대 경로로 바꿔 둔다 (아래에서 워크스페이스 디렉터리로 cd 하므로)
+MODIFIED_FILE="$(cd "$(dirname "$MODIFIED_FILE")" && pwd)/$(basename "$MODIFIED_FILE")"
 
 # JS/TS 파일만 처리
 if echo "$MODIFIED_FILE" | grep -qE "\.(js|jsx|ts|tsx|mjs|cjs)$"; then
   echo "🔧 lint-fix.sh: $MODIFIED_FILE"
 
-  # Prettier (있으면)
-  if [ -f "package.json" ] && grep -q "\"prettier\"" package.json; then
-    npx prettier --write "$MODIFIED_FILE" 2>/dev/null && echo "  ✅ Prettier"
+  # 모노레포 대응: 파일에서 가장 가까운 package.json 디렉터리(api/ 또는 web/)에서 실행
+  PKG_DIR=$(dirname "$MODIFIED_FILE")
+  while [ "$PKG_DIR" != "/" ] && [ ! -f "$PKG_DIR/package.json" ]; do
+    PKG_DIR=$(dirname "$PKG_DIR")
+  done
+  cd "$PKG_DIR" || exit 0
+
+  # Prettier (그 워크스페이스에 설치돼 있으면)
+  if grep -q "\"prettier\"" package.json 2>/dev/null; then
+    npx prettier --write "$MODIFIED_FILE" >/dev/null 2>&1 && echo "  ✅ Prettier"
   fi
 
-  # ESLint --fix (있으면)
-  if [ -f "package.json" ] && grep -q "\"eslint\"" package.json; then
-    npx eslint --fix "$MODIFIED_FILE" 2>&1 | tail -5
-    if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  # ESLint --fix (그 워크스페이스에 설치돼 있으면) — 잔여 오류는 stderr로 Claude에게 전달
+  if grep -q "\"eslint\"" package.json 2>/dev/null; then
+    if ! LINT_OUT=$(npx eslint --fix "$MODIFIED_FILE" 2>&1); then
+      echo "$LINT_OUT" | tail -20 >&2
       echo "  ❌ ESLint 잔여 오류 — Claude가 수정해야 함" >&2
       exit 2
     fi
@@ -221,6 +233,8 @@ EOF
 
 chmod +x .claude/hooks/lint-fix.sh
 ```
+
+playground는 prerequisites Step A-2에서 `api/`에 ESLint·Prettier를 이미 설치했으므로 추가 설치가 필요 없습니다. lint-fix.sh는 수정된 파일이 속한 워크스페이스의 `package.json`을 보고 도구를 고르므로, `api/` 파일은 Prettier·ESLint를 거치고 두 도구가 없는 `web/` 파일은 금지 패턴 경고만 거칩니다. 설치 확인은 Step 5 끝의 lint-fix.sh 단독 검증에서 합니다.
 
 > 본인 프로젝트에 ESLint·Prettier가 없으면 먼저 설치:
 > ```bash
@@ -256,7 +270,7 @@ cat > .claude/settings.json << 'EOF'
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/guard.sh" }
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard.sh" }
         ]
       }
     ],
@@ -264,13 +278,20 @@ cat > .claude/settings.json << 'EOF'
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/lint-fix.sh" }
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-fix.sh" }
         ]
       }
     ]
   }
 }
 EOF
+```
+
+`command`의 스크립트 경로를 `.claude/hooks/...` 상대 경로가 아니라 `"$CLAUDE_PROJECT_DIR"/.claude/hooks/...`로 적는 이유: hook은 Claude 세션의 **현재 작업 디렉터리**에서 실행되는데, Claude가 작업 중 `cd api` 같은 명령을 한 번 실행하면 그 뒤로는 상대 경로 스크립트를 찾지 못합니다. 이때 hook은 "파일 없음" 오류(비차단)로 끝나 guard.sh가 **조용히 무력화**됩니다. `CLAUDE_PROJECT_DIR`은 Claude Code가 hook 실행 시 넣어 주는 프로젝트 루트 경로 환경변수라, 작업 디렉터리가 바뀌어도 항상 같은 스크립트를 찾습니다. 등록 후 JSON 문법을 확인합니다:
+
+```bash
+jq . .claude/settings.json > /dev/null && echo "settings.json OK"
+# → settings.json OK
 ```
 
 **기존 프로젝트 머지**: 이미 `.claude/settings.json`에 다른 설정이 있으면 위 명령으로 덮어쓰지 말고 `hooks` 블록만 추가합니다. jq로 머지하거나, 에디터로 `hooks` 키만 직접 붙여 넣습니다.
@@ -285,7 +306,7 @@ EOF
 
     - **위치**: `~/harness-playground` — Claude Code 밖, 일반 터미널
     - **만들 것**: 차단 검증 표 (아래 표의 "실제" 칸 채우기)
-    - **실행**: 아래 stdin JSON 테스트 9개를 실행하고 exit 코드를 표에 기록합니다.
+    - **실행**: 아래 stdin JSON 테스트 10개를 실행하고 exit 코드를 표에 기록합니다.
 
 본인이 직접 명령을 실행해서 차단되는지 확인합니다. **Claude Code 안에서가 아니라 일반 터미널에서**. Claude Code가 실제로 보내는 것과 동일하게 **stdin JSON**으로 넣어 테스트합니다 (argv가 아니라 stdin이 진짜 hook 경로):
 
@@ -302,9 +323,10 @@ echo '{"tool_input":{"command":"rm migrations/20230101_init.sql"}}' | bash .clau
 echo '{"tool_input":{"command":"npm test"}}'                    | bash .claude/hooks/guard.sh ; echo "→ exit $?"
 echo '{"tool_input":{"command":"git checkout -b feature/x"}}'   | bash .claude/hooks/guard.sh ; echo "→ exit $?"
 echo '{"tool_input":{"command":"npm install zod"}}'             | bash .claude/hooks/guard.sh ; echo "→ exit $?"
+echo '{"tool_input":{"command":"git add api/.env.example"}}'    | bash .claude/hooks/guard.sh ; echo "→ exit $?"
 ```
 
-검증 표 — 방금 실행한 9개 테스트의 기대 exit 코드입니다. 터미널에 출력된 값을 "실제" 칸에 적습니다:
+검증 표 — 방금 실행한 10개 테스트의 기대 exit 코드입니다. 터미널에 출력된 값을 "실제" 칸에 적습니다:
 
 | 명령 | 기대 | 실제 |
 |------|------|------|
@@ -317,6 +339,22 @@ echo '{"tool_input":{"command":"npm install zod"}}'             | bash .claude/h
 | `npm test` | exit 0 (OK) | __ |
 | `git checkout -b feature/x` | exit 0 | __ |
 | `npm install zod` | exit 0 | __ |
+| `git add api/.env.example` | exit 0 (예시 파일은 추적 대상) | __ |
+
+이어서 lint-fix.sh도 단독으로 검증합니다. Claude Code는 수정한 파일 경로를 `tool_input.file_path`로 넘기므로 같은 형태로 넣습니다:
+
+```bash
+echo '{"tool_input":{"file_path":"api/src/app.js"}}' | bash .claude/hooks/lint-fix.sh ; echo "→ exit $?"
+# → 🔧 lint-fix.sh: .../api/src/app.js
+#     ✅ Prettier
+#     ✅ ESLint
+#   → exit 0
+echo '{"tool_input":{"file_path":"web/src/App.jsx"}}' | bash .claude/hooks/lint-fix.sh ; echo "→ exit $?"
+# → 🔧 lint-fix.sh: .../web/src/App.jsx  (web/에는 ESLint·Prettier가 없어 도구 줄 없이)
+#   → exit 0
+```
+
+`api/` 파일에서 `✅ Prettier`·`✅ ESLint` 두 줄이 보이지 않으면 `api/package.json`의 devDependencies에 두 도구가 있는지 확인합니다. Prettier가 기존 파일의 줄바꿈을 정리해 `git status`에 `api/src/app.js` 변경이 잡힐 수 있는데, 포맷만 바뀐 것이므로 Step 8 커밋에 함께 담습니다.
 
 전부 일치하면 통과합니다. (`exit 2`가 Claude Code에서 명령 차단을 의미합니다. `exit 1`은 차단이 아니라 "비차단 오류"라 명령이 그대로 실행됩니다 — 그래서 차단 hook은 반드시 2로 끝내야 합니다.)
 
@@ -334,10 +372,21 @@ Step 5의 터미널 검증은 스크립트 자체의 정확성만 보장합니�
 settings.json 변경을 반영하려면 실행 중인 Claude Code를 **완전 종료한 뒤 다시 실행**(새 세션 시작)합니다. 그다음, 일부러 차단 대상 명령을 시키는 아래 프롬프트를 붙여넣습니다:
 
 ```
-git push origin main 명령을 실행해봐.
+guard.sh hook 차단 테스트야. git push origin main 을 실제로 한 번 실행해서
+hook이 막는지 확인해줘. (원격 저장소가 없는 실습용이라 hook이 통과시켜도 push는 실패해)
 ```
 
-Claude가 실행을 시도하면 guard.sh가 차단해서 BLOCKED 메시지가 보여야 합니다. 만약 Claude가 그냥 통과하거나 hook이 안 걸리면:
+"hook 차단 테스트"라고 밝히는 이유: 그냥 "`git push origin main` 실행해봐"라고만 하면 Claude가 CLAUDE.md 섹션 7의 STOP("main 브랜치 직접 push")을 보고 **실행 자체를 거절**하는 경우가 많습니다 — 규칙 층(Module 02)이 먼저 작동한 것이라 좋은 신호지만, 그러면 명령이 hook까지 도달하지 않아 hook 검증이 안 됩니다. 테스트 의도를 밝히면 Claude가 명령을 실행하고, 그 순간 guard.sh가 끼어듭니다.
+
+기대 결과 — Claude의 Bash 호출이 PreToolUse 단계에서 막히고 다음 메시지가 보입니다:
+
+```text
+🚫 BLOCKED by guard.sh: main/master 직접 push
+REASON: 보호 브랜치는 PR 경유
+ACTION: feature 브랜치 + PR 생성
+```
+
+만약 Claude가 명령을 실행했는데 BLOCKED 없이 원격 저장소 오류(`'origin' does not appear to be a git repository`)가 나오면 hook이 안 걸린 것입니다:
 
 ```bash
 # 디버그
@@ -370,12 +419,12 @@ Module 02 골격에서 만든 CLAUDE.md 섹션 5(Goal-Driven Execution)는 "단�
 
 1단계: 컴파일/문법 확인
   - TS: npx tsc --noEmit
-  - JS: node --check src/<수정파일>.js
+  - JS: node --check api/src/<수정파일>.js
   → 통과 못 하면 수정 후 재시도
 
 2단계: 단위 테스트
-  - npm test -- --findRelatedTests <수정파일>  (Jest)
-  - 또는 npx vitest run <수정파일>             (Vitest)
+  - npm --workspace api test -- --findRelatedTests src/<수정파일>.js  (Jest)
+  - 또는 npx vitest run <수정파일>                                   (Vitest)
   → 실패 시 원인 파악 후 수정. 통과까지 반복.
 
 3단계: 전체 테스트
@@ -394,16 +443,20 @@ Module 02 골격에서 만든 CLAUDE.md 섹션 5(Goal-Driven Execution)는 "단�
 ---
 ```
 
+관련 테스트 명령에 워크스페이스(`--workspace api`)를 지정하는 이유: 루트에서 `npm test -- --findRelatedTests ...`로 쓰면 루트 스크립트가 `npm --workspace api test`를 한 번 더 부르는 구조라 `--findRelatedTests`가 Jest까지 전달되지 않고 실패합니다.
+
 ### Step 7-2: 첫 실험
 
 CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드됩니다. 실행 중인 Claude Code를 종료하고 새 세션을 시작한 뒤, 아래 작업을 시켜 규칙이 실제로 적용되는지 확인합니다.
 
 ```
-새 라우트 GET /health 를 추가해줘.
-- 200 OK 응답
-- { status: "ok", uptime: process.uptime() } 반환
+새 라우트 GET /users/:id 를 추가해줘.
+- 해당 id의 사용자가 있으면 200 + 사용자 1명 (GET /users 목록 항목과 같은 형태)
+- 없으면 404, id가 양의 정수가 아니면 400
 - 자기검증 루프 (CLAUDE.md 섹션 5 끝부분) 적용
 ```
+
+`GET /health`는 prerequisites Step A-2에서 이미 만들었으므로, 아직 없는 단건 조회 라우트로 실험합니다.
 
 기대 동작:
 
@@ -423,11 +476,16 @@ CLAUDE.md를 저장했으면 이 규칙은 다음 세션부터 로드됩니다. 
 !!! example "실습 위치·실행"
 
     - **위치**: `~/harness-playground`
-    - **실행**: 아래 명령으로 산출물 3종(hooks, settings.json, CLAUDE.md)을 커밋합니다.
+    - **실행**: 아래 명령으로 산출물 3종(hooks, settings.json, CLAUDE.md)과 Step 7-2 실험 결과를 나눠 커밋합니다.
 
 ```bash
 git add .claude/hooks/ .claude/settings.json CLAUDE.md
 git commit -m "harness(M3): guard.sh + lint-fix.sh + 자기검증 루프 설치"
+
+# Step 7-2 실험으로 생긴 라우트·테스트 (그리고 lint-fix의 포맷 정리) 커밋
+git add -A
+git commit -m "harness(M3-7): GET /users/:id — 자기검증 루프 첫 실험"
+git status --short   # → 아무것도 출력되지 않으면 정상
 ```
 
 > `.claude/settings.json`을 팀과 공유하려면 git으로 추적하고, 개인 설정이면 `.gitignore`에 추가합니다.
@@ -444,12 +502,12 @@ git commit -m "harness(M3): guard.sh + lint-fix.sh + 자기검증 루프 설치"
 4. `claude --debug` 로 hook 호출 로그 확인
 
 ### Q. lint-fix.sh가 ESLint 오류로 자꾸 멈춰요
-처음에는 의도된 동작입니다 — `exit 2`라 Claude에게 오류가 전달돼 스스로 고치게 합니다. ESLint 규칙이 너무 엄격하면 `.eslintrc`에서 일부 규칙을 warning으로 낮추거나, lint-fix.sh의 `exit 2`를 `exit 0`(경고만, 차단 안 함)으로 바꿉니다.
+처음에는 의도된 동작입니다 — `exit 2`라 Claude에게 오류가 전달돼 스스로 고치게 합니다. ESLint 규칙이 너무 엄격하면 ESLint 설정 파일(playground는 `api/eslint.config.js`)에서 일부 규칙을 warning으로 낮추거나, lint-fix.sh의 `exit 2`를 `exit 0`(경고만, 차단 안 함)으로 바꿉니다.
 
 ### Q. lint-fix.sh가 파일 경로를 못 잡아요 (린트가 안 됩니다)
 파일 경로는 **stdin JSON의 `.tool_input.file_path`**에서 온다 (예전 `CLAUDE_TOOL_OUTPUT_FILE` 환경변수가 아님). jq가 설치돼 있는지(`jq --version`), `claude --debug`로 PostToolUse가 받는 JSON에 `tool_input.file_path`가 있는지 확인. 직접 테스트:
 ```bash
-echo '{"tool_input":{"file_path":"src/app.js"}}' | bash .claude/hooks/lint-fix.sh
+echo '{"tool_input":{"file_path":"api/src/app.js"}}' | bash .claude/hooks/lint-fix.sh
 ```
 
 ### Q. 자기검증 루프가 무한 반복돼요

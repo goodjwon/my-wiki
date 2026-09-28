@@ -7,7 +7,7 @@ sources:
   - ai-engineering/harness-engineering/harness-kit/module2/01_draft_claude_md_prompt.md
   - ai-engineering/harness-engineering/harness-kit/module2/02_before_after_prompt.md
 created: 2026-05-31
-updated: 2026-07-12
+updated: 2026-09-28
 ---
 
 # 하네스 Module 02 — CLAUDE.md 작성
@@ -26,7 +26,7 @@ updated: 2026-07-12
 
 **시간**: 약 1.5시간 (초안 작성 30분 + Before/After 30분 + 보완 30분)
 
-> ✅ **Step 5 실행 검증됨 (2026-07-12, Node v24)**: Module 01 완료 상태(phone 구현·커밋)를 재현한 playground 복사본에서 태스크 D를 헤드리스(`claude -p` + stream-json 도구 호출 감사)로 실행해 확인했습니다 — CLAUDE.md를 먼저 읽고 섹션 8 체크리스트·섹션 7 STOP 대조 후 계획 제시, Zod Address 스키마(roadAddress 필수·detailAddress 선택·zipCode `^\d{5}$`)로 누락·형식 오류 400, api·web 동시 수정(섹션 6 모노레포 원칙 작동), 테스트 5→11개 전부 통과, `harness(M2-D)` 커밋까지 완주.
+> ✅ **실행 검증됨 (2026-09-28, Claude Code 2.1.283, Node v26)**: Module 01까지 문서대로 진행한 playground 복사본(태스크 A·B·C 커밋 포함)에서 Step 1·2·4 셸 블록을 그대로 실행하고, 태스크 D를 헤드리스(`claude -p` + stream-json 도구 호출 감사)로 실행했습니다. 첫 응답에서 Claude는 섹션 8 체크리스트·섹션 7 STOP을 표로 대조한 뒤 **"내부 모델 직접 반환" STOP에 걸린다며 코드를 고치지 않고 멈춰** 설계 질문 4개와 계획만 제시했고, "권장안대로 진행해줘" 한 번(메시지 2회)에 구현을 마쳤습니다 — 응답용 `UserResponse` Zod 스키마 신설(M1 태스크 A에서 노출하던 문제 해소), 테스트 먼저 작성, api·web 동시 수정, 테스트 23→43개 전부 통과, curl로 201/400 실측. Step 3(섹션 6 작성)은 LLM 대신 아래 출력 형식 트리로 채워 진행했습니다.
 
 이론 배경: [[concept-claude-md]]
 
@@ -34,7 +34,7 @@ updated: 2026-07-12
 
 ## Step 1 — CLAUDE.md 기본 골격 만들기 — 10분
 
-규칙을 옮기기 전에 규칙을 담을 그릇부터 만듭니다. 아래 골격은 기술 스택(섹션 1)부터 세션 시작 시 행동(섹션 12)까지, CLAUDE.md에 담을 내용을 12개 섹션으로 나눈 템플릿입니다. 이 중 섹션 6(프로젝트 구조)과 섹션 7(STOP 트리거)만 빈칸으로 남겨 두는데, 이 두 칸이 바로 Module 01 산출물이 들어갈 자리입니다. 실습은 Module 01과 같은 `~/harness-playground`에서 계속하고, 본인 프로젝트로의 이식은 5모듈 종료 후에 합니다.
+규칙을 옮기기 전에 규칙을 담을 그릇부터 만듭니다. 아래 골격은 기술 스택(섹션 1)부터 세션 시작 시 행동(섹션 12)까지, CLAUDE.md에 담을 내용을 12개 섹션으로 나눈 템플릿입니다. 이 중 섹션 6(프로젝트 구조)과 섹션 7(STOP 트리거)만 빈칸으로 남겨 두는데, 이 두 칸이 바로 Module 01 산출물이 들어갈 자리입니다. 섹션 1(기술 스택)과 섹션 9(명령어)는 playground의 실제 구성 — 루트에 `dev`·`build` 스크립트가 없고 `dev:api`·`dev:web`으로 나뉜 모노레포 — 에 맞춰 미리 채워 두었습니다. 에이전트가 없는 스크립트를 실행하다 헤매지 않게 하려는 것이며, 본인 프로젝트로 이식할 때 이 두 섹션을 실제 값으로 바꿉니다. 실습은 Module 01과 같은 `~/harness-playground`에서 계속하고, 본인 프로젝트로의 이식은 5모듈 종료 후에 합니다.
 
 !!! example "실습 위치·실행"
 
@@ -53,13 +53,13 @@ cat > CLAUDE.md << 'EOF'
 > 매 세션 시작 시 가장 먼저 읽힌다.
 
 ## 1. Tech Stack
-- Runtime: Node.js __ LTS
-- Framework: Express __ (또는 Fastify/NestJS)
-- DB: ____ (PostgreSQL / MongoDB / ...)
-- ORM/Driver: ____ (Prisma / Mongoose / Knex / ...)
-- Test: Jest (또는 Vitest)
-- Lint: ESLint + Prettier
-- Package Manager: npm (또는 pnpm/yarn)
+- Runtime: Node.js 20 LTS 이상
+- 구조: npm workspaces 모노레포 — api/(백엔드) + web/(프론트)
+- api/: Express + Zod 검증, 데이터는 in-memory 배열 (DB·ORM 없음)
+- web/: React + Vite
+- Test: Jest + supertest (api/)
+- Lint: ESLint + Prettier (api/), web/은 Vite 템플릿 기본 린터
+- Package Manager: npm
 
 ## 2. Think Before Coding
 - 가정을 명시한다. 불확실하면 먼저 질문한다.
@@ -95,12 +95,14 @@ cat > CLAUDE.md << 'EOF'
 - [ ] 외부 패키지 추가? → 정말 필요한가 다시 확인
 - [ ] 응답 스키마 변경? → API 문서/타입 동기화
 
-## 9. 빌드 & 테스트 명령어
-- 실행: npm run dev
-- 빌드: npm run build
-- 테스트: npm test
+## 9. 빌드 & 테스트 명령어 (모두 프로젝트 루트에서)
+- API 실행: npm run dev:api (http://localhost:3000)
+- 웹 실행: npm run dev:web (http://localhost:5173)
+- 웹 빌드: npm --workspace web run build
+- 테스트: npm test (api/ Jest 전체)
+- 관련 테스트만: npm --workspace api test -- --findRelatedTests src/<파일>.js
 - 린트: npm run lint
-- 포맷: npm run format
+- 포맷: npm --workspace api run format
 
 ## 10. 네이밍 컨벤션
 | 종류 | 패턴 | 예시 |
@@ -295,6 +297,8 @@ CLAUDE.md 섹션 7의 STOP 트리거 첫 3개를 그대로 인용해줘.
 시작 전 CLAUDE.md의 섹션 8 작업 전 체크리스트와
 섹션 7 STOP 트리거를 먼저 확인하고, 단계별 계획을 제시해줘.
 ```
+
+Claude가 계획과 확인 질문만 내놓고 멈추면(섹션 2 "불확실하면 먼저 질문한다"와 섹션 7 STOP이 작동한 결과) 답을 주고 이어서 진행시킵니다 — 예: `권장안대로 진행해줘.` 이 주고받음도 메시지 횟수에 셉니다.
 
 완료 후 측정 (Module 1 태스크 A와 **같은 7개 항목**):
 

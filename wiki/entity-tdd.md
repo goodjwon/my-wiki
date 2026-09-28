@@ -99,7 +99,7 @@ TDD 개발자는 코드를 짜기 전에 먼저 실패하는 테스트를 작성
 | **TDD** | 실패 테스트 (빨강) | 빨강 → 초록 → 리팩터 |
 | **자기검증 자동화** | 테스트·타입체크·`exit 1` | back-pressure 루프 |
 | **AI 루프** | 테스트·타입체크·실제 에러 | [[concept-loop-engineering]] "거부 신호 없는 루프 = 메아리방" |
-| **Hooks** | `guard.sh` exit 1 | [[concept-claude-hooks]] |
+| **Hooks** | `guard.sh` exit 2 | [[concept-claude-hooks]] |
 | **멀티 에이전트** | Critic의 REJECT | [[concept-multi-agent-pattern]] |
 | **트랜잭션** | unchecked 예외 자동 롤백 | [[concept-transactional-rollback-policy]] |
 | **DB 풀** | Leak 감지 + timeout | [[concept-db-connection-pool]] |

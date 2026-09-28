@@ -9,7 +9,7 @@ external:
   - https://addyosmani.com/blog/loop-engineering/
   - https://www.sonarsource.com/blog/loop-engineering-without-verification-is-just-automation/
 created: 2026-06-13
-updated: 2026-06-29
+updated: 2026-09-28
 ---
 
 # Loop 엔지니어링 — 2026-06 커뮤니티 발화 정리
@@ -87,6 +87,7 @@ Loop 엔지니어링은 **에이전트에게 프롬프트를 입력하는 '당�
 ## 관련 페이지
 
 - [[concept-loop-engineering]] — 개념 정리·설계 질문·메아리방 패턴
+- [[guide-loop-engineering-demo]] — 실습 (메아리방 vs 거부 신호 루프)
 - [[concept-harness-engineering]] — 직전 단계 (환경 설계)
 - [[concept-claude-hooks]] — back-pressure가 "거부할 수 있는 무언가"의 구현
 - [[concept-multi-agent-pattern]] — Critic이 거부 메커니즘의 다른 형태

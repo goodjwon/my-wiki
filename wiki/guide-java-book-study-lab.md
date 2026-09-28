@@ -4,7 +4,7 @@ type: guide
 tags: [java, book, lecture, study, lab, beginner]
 sources: [object/, effective_java/, refactoring/, clean-code/, tdd/]
 created: 2026-06-21
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Java 도서 실습 환경 가이드
@@ -99,10 +99,10 @@ Maven Wrapper가 없다면 `mvn test`로 시작해도 됩니다.
 
 | 책 | 주 실습 방식 | 확인할 것 |
 |----|--------------|-----------|
-| [[src-object-lecture]] | 한 객체가 남의 내부를 만지는 코드를 책임 이동으로 바꿈 | getter 호출이 메시지 전송으로 바뀌는가 |
+| [[src-clean-code-lecture]] | 이름·함수·주석·클래스 단위로 Before/After 작성 | 읽는 사람이 의도를 바로 아는가 |
 | [[src-effective-java-lecture]] | 각 Item을 작은 테스트/클래스로 확인 | API 선택의 장단점을 설명할 수 있는가 |
 | [[src-refactoring-lecture]] | 기존 테스트를 안전망으로 두고 작은 단계로 구조 변경 | 매 단계 테스트가 초록인가 |
-| [[src-clean-code-lecture]] | 이름·함수·주석·클래스 단위로 Before/After 작성 | 읽는 사람이 의도를 바로 아는가 |
+| [[src-object-lecture]] | 한 객체가 남의 내부를 만지는 코드를 책임 이동으로 바꿈 | getter 호출이 메시지 전송으로 바뀌는가 |
 | [[src-tdd-lecture]] | 실패 테스트를 먼저 쓰고 최소 구현 후 정련 | 빨강을 본 뒤 초록으로 갔는가 |
 
 ## 장별 셀프 체크

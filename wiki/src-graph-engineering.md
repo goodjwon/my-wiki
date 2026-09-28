@@ -4,7 +4,7 @@ type: source
 tags: [graph-engineering, ai-agent, langgraph, multi-agent, orchestration]
 sources: [ai-engineering/grap-engineering/또다른 트렌드 Graph Engineering 알려드림_1786315251439.md]
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-09-28
 ---
 
 # 그래프 엔지니어링 — 원문 정리
@@ -110,3 +110,4 @@ app = graph.compile()
 - [[concept-loop-engineering]] — 직전 단계 (원문 서사의 3단계)
 - [[concept-multi-agent-pattern]] — Planner/Coder/Critic = 노드 분할의 선행 사례
 - [[concept-advisor-worker]] — 2노드 + 검증 게이트의 최소 그래프
+- [[comparison-advisor-worker-vs-graph]] — Advisor–Worker와의 축 차이·선택 기준 비교

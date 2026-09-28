@@ -7,7 +7,7 @@ sources:
   - ai-engineering/ai-advisor/worker_script.md
   - ai-engineering/ai-advisor/claude_script.md
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-09-28
 ---
 
 # Advisor–Worker 실습 — 판단·구현 분리 직접 체험
@@ -20,7 +20,7 @@ updated: 2026-07-06
 
 **전제**: Claude Code 설치·로그인, Node 18+. Step 3부터는 실제 모델을 호출하므로 **토큰이 소모됩니다** — Advisor(메인) + Worker(서브에이전트) 이중 호출이라 일반 세션보다 비쌉니다.
 
-> ✅ **실행 검증됨 (2026-07-06, Node v26)**: Step 1~4를 실제로 돌려 확인했습니다 (Step 3은 헤드리스 `claude --agent advisor -p`로 실행, 도구 호출 로그 감사). 관찰 포인트 4장면 전부 재현 — ① Advisor가 [목표]~[범위 경계] 6항목을 모두 채운 브리프로 `worker`에 위임 ② cart.js의 Write는 Worker(서브에이전트)만 수행 ③ Worker의 완료 보고 후 Advisor가 변경 확인(`git status` + `cat cart.js`)과 `node cart.test.js` 재실행을 자기 손으로 다시 수행 ④ 커밋은 Advisor가 검증 후 실행. 1사이클에 3/3 케이스 통과.
+> ✅ **실행 검증됨 (2026-07-06, Node v26)**: Step 1~4를 실제로 돌려 확인했습니다 (Step 3은 헤드리스 `claude --agent advisor -p`로 실행, 도구 호출 로그 감사). 관찰 포인트 4장면 전부 재현 — ① Advisor가 [목표]~[범위 경계] 6항목을 모두 채운 브리프로 `worker`에 위임 ② cart.js의 Write는 Worker(서브에이전트)만 수행 ③ Worker의 완료 보고 후 Advisor가 변경 확인(규율상 `git diff`, 이 실행에서는 `git status` + `cat cart.js`로 확인)과 `node cart.test.js` 재실행을 자기 손으로 다시 수행 ④ 커밋은 Advisor가 검증 후 실행. 1사이클에 3/3 케이스 통과.
 
 ---
 
@@ -184,7 +184,7 @@ cd ~ && rm -rf ~/advisor-demo
 - [ ] 각 역할이 **하면 안 되는 일**이 지시문이 아니라 **도구 목록**으로 막혀 있는가? (Advisor에 Write 없음, Worker에 Task 없음)
 - [ ] 위임 인터페이스(브리프)에 **완료 기준**이 실행 가능한 명령으로 들어 있는가?
 - [ ] 검증자가 실행자의 보고를 **재실행으로** 확인하는가, 보고문을 읽고 끝내는가?
-- [ ] 위임 오버헤드가 더 큰 사소한 일(오타·한 줄 수정)의 **예외 규정**이 있는가?
+- [ ] 위임 오버헤드가 더 큰 사소한 일(동작이 바뀌지 않는 수정 — 오타·주석)의 **예외 규정**이 있는가?
 - [ ] 커밋(되돌리기 어려운 결정)의 권한이 **검증자 쪽에만** 있는가?
 
 ---
@@ -198,7 +198,7 @@ cd ~ && rm -rf ~/advisor-demo
 | **Advisor–Worker** | Worker의 "완료" 보고를 그대로 승인 | Advisor가 diff·테스트 직접 재실행 (이 실습) | [[src-ai-advisor-worker]] |
 | **AI 루프** | 에이전트 자기 보고로 종료 → 메아리방 | 테스트 exit code를 종료 조건으로 | [[guide-loop-engineering-demo]] |
 | **멀티 에이전트 3-tier** | Coder의 verify 없는 "완료" 선언 | Critic의 CONDITIONAL REJECT | [[concept-multi-agent-pattern]] |
-| **Hooks** | "위험 명령 안 쓸게요"라는 약속 | guard.sh exit 1 → 도구 차단 | [[concept-claude-hooks]] |
+| **Hooks** | "위험 명령 안 쓸게요"라는 약속 | guard.sh exit 2 → 도구 차단 | [[concept-claude-hooks]] |
 
 → **공통 원리**: 실행 주체의 자기 보고는 검증 대상이지 승인 근거가 아닙니다. 검증은 **독립 주체의 재실행**이어야 합니다.
 
@@ -220,4 +220,5 @@ cd ~ && rm -rf ~/advisor-demo
 - [[guide-harness-module4]] — 직전 단계: Planner/Coder/Critic 실습 (문서 규정 방식)
 - [[guide-loop-engineering-demo]] — 거부 신호 루프 실습 (검증 게이트의 루프 버전)
 - [[concept-multi-agent-pattern]] — 역할 분리 패턴 전반
+- [[comparison-advisor-worker-vs-graph]] — 그래프 엔지니어링과의 축 차이·선택 기준 비교
 - [[concept-harness-engineering]] — 부탁 대신 구조로 강제하는 상위 개념

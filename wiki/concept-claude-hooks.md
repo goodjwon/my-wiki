@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, hooks, harness, automation]
 sources: [ai-engineering/harness-engineering/harness-kit/module3/, ai-engineering/harness-engineering/harness_engineering.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # Claude Code Hooks — 시스템 레벨 강제
@@ -21,7 +21,7 @@ Claude Code의 에이전트 라이프사이클 이벤트에 **셸 스크립트�
 |--------|------|------|
 | **PreToolUse** | 도구 실행 직전 | 위험 명령 차단 (guard.sh) |
 | **PostToolUse** | 도구 실행 직후 | 자동 포맷, 린트, 검증 (lint-fix.sh) |
-| **Stop** | 세션 종료 시 | 진행 상황 저장 (update-progress.sh) |
+| **Stop** | Claude가 응답을 마칠 때마다 (세션 종료는 SessionEnd) | 진행 상황 저장 (update-progress.sh) |
 
 ## 설정 파일 예시
 
@@ -59,22 +59,22 @@ Claude Code의 에이전트 라이프사이클 이벤트에 **셸 스크립트�
 
 ## guard.sh — 위험 명령 차단
 
-Bash 실행 전 명령어를 검사해 차단하거나 경고하는 스크립트입니다. 종료 코드 1로 종료하면 실행이 막힙니다.
+Bash 실행 전 명령어를 검사해 차단하거나 경고하는 스크립트입니다. 종료 코드 2로 종료하면 실행이 막힙니다. exit 1은 비차단 오류라 명령이 그대로 실행됩니다.
+
+Claude Code는 hook 입력을 인자(argv)가 아니라 **stdin JSON 한 건**(`{"tool_name":"Bash","tool_input":{"command":"..."}}`)으로 넘기므로, 명령은 `jq`로 꺼냅니다.
 
 핵심 패턴:
 
 ```bash
 #!/bin/bash
-COMMAND="$1"
-if [ -z "$COMMAND" ]; then
-  read -r COMMAND
-fi
+INPUT=$(cat)
+COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty')
 
 block() {
   echo "🚫 BLOCKED by guard.sh: $1" >&2
   echo "REASON: $2" >&2
   echo "ACTION: $3" >&2
-  exit 1
+  exit 2
 }
 
 # 1. Migration 파일 수정/삭제
@@ -111,18 +111,28 @@ exit 0
 
 ## lint-fix.sh — Post-Tool Hook
 
-파일 수정 후 자동으로 포맷/린트를 돌려 스타일 규칙 위반을 잡습니다.
+파일 수정 후 자동으로 포맷/린트를 돌려 스타일 규칙 위반을 잡습니다. 저장소 전체가 아니라 stdin JSON의 `.tool_input.file_path`로 **방금 수정한 파일만** 처리하고, 린트가 남으면 exit 2로 Claude에게 되돌려 스스로 고치게 합니다.
 
 ```bash
-# 예시: Java 프로젝트
-./gradlew checkstyleMain --quiet
-# 또는 Node.js
-npx prettier --write . && npx eslint --fix .
+#!/bin/bash
+INPUT=$(cat)
+FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty')
+[ -z "$FILE" ] || [ ! -f "$FILE" ] && exit 0
+
+# 예시: Node.js (Java라면 ./gradlew checkstyleMain --quiet)
+npx prettier --write "$FILE"
+if ! npx eslint --fix "$FILE"; then
+  echo "❌ ESLint 잔여 오류 — Claude가 수정해야 함" >&2
+  exit 2
+fi
+exit 0
 ```
 
 ## Back-pressure 메커니즘
 
 타입체크, 테스트, 커버리지 결과를 에이전트의 **자기검증 도구**로 연결합니다. PostToolUse에서 `./gradlew test`를 돌리고 실패 시 에이전트가 스스로 수정하는 루프가 완성됩니다.
+
+실습(Module 03)에서는 역할을 나눕니다. 테스트 실행은 작업 절차 전체에 걸친 지시라 **CLAUDE.md 섹션 5 규칙**("완료" 선언 전 `npm test`)으로 두고, PostToolUse hook은 exit 2로 **린트 back-pressure**만 담당합니다.
 
 ```
 Edit 파일 → PostToolUse → ./gradlew test → 실패 → 에이전트가 stderr 보고 재수정
@@ -163,3 +173,5 @@ fi
 - [[concept-claude-md]] — Hooks와 짝을 이루는 선언 층
 - [[concept-multi-agent-pattern]] — 세션 인계 (Stop hook이 claude-progress.txt 업데이트)
 - [[src-harness-engineering]] — Module 03 전체 자료
+- [[guide-harness-module3]] — hooks 실습 (guard.sh·lint-fix.sh·자기검증 루프)
+- [[guide-harness-demo]] — 5분 데모 (hook 1개로 .env 커밋 차단)

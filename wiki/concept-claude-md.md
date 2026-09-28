@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, claude-md, karpathy]
 sources: [ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md, ai-engineering/harness-engineering/harness-engineering-tutor-prompt.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-07-06
+updated: 2026-09-28
 ---
 
 # CLAUDE.md — 에이전트 헌법
@@ -15,7 +15,7 @@ updated: 2026-07-06
 
 > 이 파일은 프롬프트가 아니다. 에이전트 실행 환경의 헌법이다.
 
-`AGENTS.md`는 같은 개념의 **모델 불가지론적** 버전입니다. 한 프로젝트만 쓴다면 `CLAUDE.md`를 우선하고, 멀티 모델 환경이면 `AGENTS.md`를 병용합니다.
+`AGENTS.md`는 같은 개념의 **모델 불가지론적** 버전입니다. 한 프로젝트만 쓴다면 `CLAUDE.md`를 우선하고, 멀티 모델 환경이면 `AGENTS.md`를 병용합니다. 단 Claude Code는 `CLAUDE.md`가 있는 디렉터리에서는 `AGENTS.md`를 읽지 않습니다(`CLAUDE.md`가 없을 때만 대신 읽음 — 2.1.283 실측). 두 파일을 함께 쓰려면 `CLAUDE.md` 맨 위에 `@AGENTS.md`로 import하거나 심볼릭 링크로 연결합니다.
 
 ## Karpathy 4원칙
 
@@ -103,6 +103,8 @@ CLAUDE.md 하단에는 반드시 다음 표를 둡니다 — 에이전트가 같
 5. 작업 전 반드시 도메인 레이어부터 설계
 ```
 
+Node 실습판은 12섹션으로 재구성합니다(자기검증 루프=섹션 5, 프로젝트 구조=섹션 6, STOP=섹션 7, 작업 전 체크리스트=섹션 8, 누적 실패 패턴=섹션 11, 세션 시작 행동=섹션 12) — [[guide-harness-module2]].
+
 ## 분량 가이드
 
 - 500줄 이하 유지 (길수록 컨텍스트 윈도우 압박)
@@ -115,6 +117,7 @@ CLAUDE.md 하단에는 반드시 다음 표를 둡니다 — 에이전트가 같
 - [[concept-claude-hooks]] — CLAUDE.md의 STOP 규칙을 물리적으로 강제
 - [[concept-multi-agent-pattern]] — AGENTS.md (모델 불가지론적 버전)
 - [[src-harness-engineering]] — 5모듈 커리큘럼
+- [[guide-harness-module2]] — CLAUDE.md 작성 실습 (Node 12섹션판)
 - [[guide-project-docs-setup]] — CLAUDE.md 템플릿 + 셋업 절차
 - [[src-ai-advisor-worker]] — 협업 모델(Advisor–Worker)을 CLAUDE.md에 심는 템플릿 사례
 - [[src-kakaopay-ddd]] — DDD 모델링 근거 (Entity/VO/Aggregate)

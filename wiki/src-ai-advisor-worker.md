@@ -4,7 +4,7 @@ type: source
 tags: [claude-code, multi-agent, subagent, harness, delegation]
 sources: [ai-engineering/ai-advisor/]
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-09-28
 ---
 
 # Advisor–Worker 에이전트 스크립트 (판단·구현 분리)
@@ -36,7 +36,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep  # Task 없음 — 재위임 불가
 model: claude-opus-4-8
 ```
 
-함정: `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 설정돼 있으면 Worker의 frontmatter 모델 지정을 덮어쓰므로 비워 둡니다.
+함정: `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 설정돼 있으면 Worker의 frontmatter 모델 지정을 덮어쓰므로 비워 둡니다(심화편 장면 3에서 실측으로 확인했습니다).
 
 ## 작업 브리프 형식 — 위임의 핵심 인터페이스
 
@@ -57,7 +57,7 @@ Advisor의 승인 절차가 이 모델의 안전판입니다.
 
 1. `git diff`로 **변경을 직접 읽습니다** — 범위 밖 변경, 몰래 낀 리팩터링, 빠진 부분을 확인합니다.
 2. 완료 기준 테스트/빌드/린트를 **직접 재실행합니다** — Worker가 이미 실행했더라도 다시 실행합니다.
-3. 실패하면 직접 고치지 않고 **수정 브리프로 재위임**합니다. 예외는 오타·임포트 누락 같은 사소한 마무리와, 브리프 작성이 더 비싼 한두 줄 수정뿐입니다.
+3. 실패하면 직접 고치지 않고 **수정 브리프로 재위임**합니다. 예외는 오타·주석·임포트 정리처럼 동작이 바뀌지 않는 수정뿐입니다. 테스트 기대값이 바뀌는 로직 수정은 한두 줄이라도 위임합니다 — 크기 기준 문구는 심화편 장면 1 실측에서 우회돼 동작 변경 기준으로 교정했습니다.
 4. 커밋은 검증 통과분만 합니다. `git commit`은 Advisor의 몫이고 Worker는 작업 트리만 변경한 채 둡니다.
 
 Worker 쪽 규율이 게이트를 받칩니다: 보고 전 완료 기준 명령을 직접 실행하고, 변경 요약 / 검증(명령·PASS·FAIL·핵심 출력) / 가정·블로커 / 브리프 대비 이탈의 4절 형식으로 검증 가능한 사실만 보고합니다.
@@ -87,6 +87,7 @@ Worker 쪽 규율이 게이트를 받칩니다: 보고 전 완료 기준 명령�
 - [[concept-advisor-worker]] — 이 스크립트를 일반화한 패턴 개념 (원리·적용 기준·검증 독립성)
 - [[guide-advisor-worker-demo]] — 이 모델을 데모 프로젝트에서 직접 실행하는 실습
 - [[guide-advisor-worker-advanced]] — 심화 실습 (기본편이 다루지 않은 규율 4가지)
+- [[comparison-advisor-worker-vs-graph]] — 그래프 엔지니어링과의 축 차이·선택 기준 비교
 - [[concept-multi-agent-pattern]] — 3-tier(Planner/Coder/Critic) 패턴과의 비교
 - [[concept-harness-engineering]] — 부탁 대신 구조(tools 제한·게이트)로 제어하는 상위 개념
 - [[concept-loop-engineering]] — 검증 게이트 = 루프 안의 거부 신호

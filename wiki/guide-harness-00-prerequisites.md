@@ -6,7 +6,7 @@ sources:
   - ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
   - ai-engineering/harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-07-04
+updated: 2026-09-28
 ---
 
 # 하네스 실습 사전 안내 (Module 00 — Prerequisites)
@@ -60,7 +60,7 @@ updated: 2026-07-04
 
 ### 필수 (모두 필요)
 
-아래 네 가지가 모두 준비돼야 module1을 시작할 수 있습니다. 확인 명령을 하나씩 실행해 버전이 나오는지 점검하세요.
+아래 항목이 모두 준비돼야 module1을 시작할 수 있습니다. 확인 명령을 하나씩 실행해 버전이 나오는지 점검하세요.
 
 | 도구              | 용도                                                          | 확인 명령                     | 권장 버전   |
 | --------------- | ----------------------------------------------------------- | ------------------------- | ------- |
@@ -68,6 +68,7 @@ updated: 2026-07-04
 | **npm**         | 패키지 매니저                                                     | `npm --version`           | 10+     |
 | **git**         | 변경 이력 분석 + 하네스 자산 커밋                                        | `git --version`           | 2.40+   |
 | **Claude Code** | 이 커리큘럼의 실행 도구                                               | `claude --version`        | 최신      |
+| **jq**          | hook 스크립트가 Claude Code의 입력 JSON을 파싱 (데모·module3)            | `jq --version`            | 1.6+    |
 | **실습용 프로젝트**    | 임시 프로젝트 권장. 본 페이지 아래 [실습용 미니 프로젝트 만들기](#실습용-미니-프로젝트-만들기-react--express-풀스택) 참고 | `ls ~/harness-playground` | —       |
 
 ### Claude Code 설치 (안 돼 있다면)
@@ -82,9 +83,11 @@ npm install -g @anthropic-ai/claude-code
 curl -fsSL https://claude.ai/install.sh | sh
 ```
 
-설치 후 본인 프로젝트로 이동해서 한 번 실행 → 로그인:
+jq가 없으면 함께 설치합니다 (macOS `brew install jq`, Ubuntu/Debian `sudo apt install jq`).
+
+설치 후 아무 디렉터리에서 한 번 실행해 로그인합니다. 로그인이 끝나면 `/exit`으로 종료합니다:
 ```bash
-cd <본인-node-프로젝트>
+cd ~
 claude
 ```
 
@@ -99,8 +102,9 @@ claude
 | **Jest / Vitest** | 테스트 러너 (자기검증 루프) |
 | **gcloud CLI** | 나중 GCP 배포 시 |
 
-빠르게 설치:
+실습용 미니 프로젝트에서는 아래 Step A-2가 ESLint·Prettier·Jest를 `api/`에 자동으로 설치하므로 따로 설치할 필요가 없습니다. 본인 프로젝트에 넣을 때는 **그 프로젝트 루트에서** 설치합니다 (package.json이 없는 디렉터리에서 실행하면 엉뚱한 곳에 package.json이 생깁니다):
 ```bash
+cd <본인-node-프로젝트>
 npm install --save-dev eslint prettier jest
 ```
 
@@ -302,7 +306,8 @@ PORT=3000
 EOF
 
 cd ..
-git add api
+# npm workspaces라 의존성 잠금 파일(package-lock.json)은 api/가 아니라 루트에 생긴다 — 함께 커밋
+git add api package-lock.json
 git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
 ```
 
@@ -316,7 +321,7 @@ git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
     - **만들 파일**: `src/App.jsx` — 사용자 목록 + 추가 폼 화면 (나머지는 Vite 기본 생성)
     - **실행**: 블록 1a → 1b → 2 순서로 나눠 붙여넣습니다. 이유는 아래 경고를 참고하세요.
 
-> ⚠️ **한 번에 붙여넣지 말 것.** 첫 줄 `npm create vite` 는 대화형 프롬프트(패키지 설치 확인 `Ok to proceed? (y)`, Vite 버전·롤다운 선택 등)가 뜰 수 있다. 아래 `cat ... << EOF` heredoc·`npm install` 과 한꺼번에 붙여넣으면 **프롬프트 대기 중 뒷줄이 응답으로 먹혀** 스캐폴딩이 깨진다. **블록 1을 먼저 끝내고(프롬프트엔 Enter / y), 그다음 블록 2를 붙여넣을 것.**
+> ⚠️ **한 번에 붙여넣지 말 것.** 첫 줄 `npm create vite` 는 대화형 프롬프트(패키지 설치 확인 `Ok to proceed? (y)` 등)가 뜰 수 있다. 아래 `cat ... << EOF` heredoc·`npm install` 과 한꺼번에 붙여넣으면 **프롬프트 대기 중 뒷줄이 응답으로 먹혀** 스캐폴딩이 깨진다. **블록 1을 먼저 끝내고(프롬프트엔 Enter / y), 그다음 블록 2를 붙여넣을 것.**
 
 **블록 1a — React 스캐폴딩** (이 한 줄만 먼저. 프롬프트 `Ok to proceed? (y)` 가 뜨면 `y` / Enter)
 
@@ -324,7 +329,9 @@ git commit -m "feat(api): Express User CRUD + Zod 검증 + 테스트"
 cd ~/harness-playground
 
 # Vite React 템플릿 — 프로젝트명(web)·템플릿을 인자로 줘 질문을 최소화
-npm create vite@latest web -- --template react
+# --no-immediate: "지금 설치하고 개발 서버 시작?" 단계를 끈다 (켜지면 서버가 떠서 터미널이 멈춤)
+npm create vite@latest web -- --template react --no-immediate
+# → 마지막에 "Done. Now run: cd web / npm install / npm run dev" 가 나오면 성공 (npm run dev는 실행하지 않음)
 ```
 
 **블록 1b — 의존성 설치** (1a 프롬프트가 완전히 끝난 뒤 붙여넣기)
@@ -409,8 +416,9 @@ EOF
 # 기본 main.jsx는 Vite가 생성한 그대로 유지
 
 cd ..
-git add web
+git add web package-lock.json
 git commit -m "feat(web): React 사용자 목록 + 추가 폼"
+git status --short   # → 아무것도 출력되지 않으면 정상 (추적 안 된 파일 없음)
 ```
 
 ### Step A-4: 동작 확인 (2분)
@@ -550,7 +558,7 @@ Module 1 (실패 패턴 찾기)
 | 용어 | 풀이 |
 |------|------|
 | **CLAUDE.md** | Claude Code가 **프로젝트 루트에서 자동으로 읽는** 규칙 파일. 매 세션 시작 시 가장 먼저 로드. 곧 "에이전트 헌법". |
-| **AGENTS.md** | CLAUDE.md와 같은 역할이지만 **모델 불가지론적** — Codex/Gemini 등 다른 에이전트도 읽는 공용 표준. |
+| **AGENTS.md** | CLAUDE.md와 같은 역할이지만 **모델 불가지론적** — Codex/Gemini 등 다른 에이전트도 읽는 공용 표준. Claude Code는 CLAUDE.md가 있는 프로젝트에서는 AGENTS.md를 자동으로 읽지 않으므로, CLAUDE.md에 `@AGENTS.md` 한 줄로 가져온다 (module4). |
 | **STOP 트리거** | "에이전트가 X를 하려 하면 즉시 멈춰라"의 규칙 목록. CLAUDE.md 섹션 7에 적음. |
 | **Karpathy 4원칙** | Think Before Coding / Simplicity First / Surgical Changes / Goal-Driven Execution. Andrej Karpathy가 자신의 CLAUDE.md에서 정리한 4가지. |
 

@@ -7,7 +7,7 @@ sources:
   - ai-engineering/ai-advisor/worker_script.md
   - ai-engineering/ai-advisor/claude_script.md
 created: 2026-07-06
-updated: 2026-07-12
+updated: 2026-09-28
 ---
 
 # Advisor–Worker 실습 심화편 — 재위임·병렬·모델 티어링·오버헤드 예외
@@ -251,7 +251,7 @@ cd ~ && rm -rf ~/advisor-demo
 | 수정 브리프 재위임 | 검증 실패 시 Advisor가 직접 고치기 시작 → 다음 검증부터 구현자가 검증자를 겸함 (독립성 붕괴) | [[concept-advisor-worker]] |
 | 병렬 위임 | 독립 작업이 직렬로 늘어져 대기 시간 낭비 — 반대로 의존 작업을 병렬로 던지면 충돌 | [[concept-multi-agent-pattern]] |
 | 모델 고정 | 환경변수·기본값이 조용히 모델을 바꿔 비용 구조와 품질이 예고 없이 변함 — "기본값과 가정의 함정"의 에이전트판 | [[concept-advisor-worker]] |
-| 오버헤드 예외 | 한 줄 수정에도 브리프+서브에이전트 비용 지출 — 위임이 목적이 되고 경제성이 사라짐 | [[src-ai-advisor-worker]] |
+| 오버헤드 예외 | 오타 수정에도 브리프+서브에이전트 비용 지출 — 위임이 목적이 되고 경제성이 사라짐 | [[src-ai-advisor-worker]] |
 
 ---
 
@@ -267,3 +267,4 @@ cd ~ && rm -rf ~/advisor-demo
 - [[concept-advisor-worker]] — 패턴 개념 (구성 요소 4가지·모델 티어링·적용 기준)
 - [[src-ai-advisor-worker]] — 원본 스크립트 해설
 - [[guide-loop-engineering-demo]] — 토큰 비용 원칙(Step 6.5)의 출처
+- [[comparison-advisor-worker-vs-graph]] — 장면 1(프롬프트 규율의 한계)을 그래프의 코드 강제와 대조한 비교

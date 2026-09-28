@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, multi-agent, agents-md, context-engineering]
 sources: [ai-engineering/harness-engineering/harness-kit/module4/, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-07-06
+updated: 2026-09-28
 ---
 
 # 멀티 에이전트 — Planner / Coder / Critic
@@ -17,12 +17,14 @@ updated: 2026-07-06
 > 메인 태스크와 무관한 세부 구현은 서브에이전트에 위임,
 > 서브에이전트는 결과만 메인으로 반환 (중간 과정 노이즈 차단).
 
+구현은 ① 역할별 새 세션(또는 `/clear`) 수동 전환 ② `.claude/agents/`의 네이티브 서브에이전트 두 방식이 있습니다(실습은 ①, ②는 [[guide-harness-module4]] FAQ).
+
 ## 3-tier 컨텍스트 인프라
 
 | 층위 | 파일 | 역할 |
 |------|------|------|
-| **전역** | `CLAUDE.md` / `AGENTS.md` | 모든 세션이 읽는 헌법 |
-| **태스크** | 스킬 파일 (`.claude/skills/*.md`) | 특정 태스크 유형에만 로드되는 가이드 |
+| **전역** | `CLAUDE.md` / `AGENTS.md` | 모든 세션이 읽는 헌법 — CLAUDE.md가 있으면 Claude Code는 `AGENTS.md`를 자동 로드하지 않으므로 CLAUDE.md에 `@AGENTS.md` import를 두거나 심링크로 연결함 (2.1.283 실측) |
+| **태스크** | 스킬 파일 (`.claude/skills/<이름>/SKILL.md`) | 특정 태스크 유형에만 로드되는 가이드 |
 | **세션** | `claude-progress.txt` | 세션 간 인계 메모 |
 
 ## 세 역할
@@ -85,6 +87,8 @@ updated: 2026-07-06
 [ ] 불필요한 코드가 추가되지 않았는가?
 ```
 
+실습(Node) 변형 체크리스트·verify(`npm test`)는 [[guide-harness-module4]] Step 1을 참조합니다.
+
 판정 형식:
 ```
 APPROVE: 구현이 DDD 원칙과 요구사항을 모두 만족함
@@ -111,7 +115,7 @@ OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL R
 
 ## AGENTS.md — 모델 불가지론적 표준
 
-`CLAUDE.md`는 Claude Code 전용이지만 `AGENTS.md`는 Claude/Codex/Gemini 등 어떤 모델이든 읽을 수 있는 공용 표준. 멀티 모델 환경(예: Coder는 Claude, Critic은 Codex)에서 필수.
+`CLAUDE.md`는 Claude Code 전용이지만 `AGENTS.md`는 Claude/Codex/Gemini 등 어떤 모델이든 읽을 수 있는 공용 표준. 멀티 모델 환경(예: Coder는 Claude, Critic은 Codex)에서 필수. 단 Claude Code는 `CLAUDE.md`가 있는 디렉터리에서 `AGENTS.md`를 자동 로드하지 않으므로(없을 때만 대신 읽음 — 2.1.283 실측), 함께 쓰려면 CLAUDE.md에 `@AGENTS.md` import를 두거나 심링크로 연결해야 합니다.
 
 → 한 프로젝트만 쓴다면 `CLAUDE.md` 우선. 멀티 모델이면 `AGENTS.md` 병용 ([[concept-claude-md]] 참조).
 
@@ -134,7 +138,7 @@ OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL R
 4. 다음 세션을 위한 컨텍스트 메모 작성
 ```
 
-이 종료 절차는 [[concept-claude-hooks]]의 Stop hook으로 자동화 가능.
+이 종료 절차는 [[concept-claude-hooks]]의 hook으로 자동화 가능. 단 Stop hook은 세션 종료가 아니라 Claude가 응답을 마칠 때마다 실행되며, 세션 종료 시점에 한 번만 돌리려면 SessionEnd hook을 씁니다.
 
 목표: 새 컨텍스트 윈도우에서 **5초 안에 현재 상태 파악**.
 
@@ -153,4 +157,6 @@ OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL R
 - [[concept-advisor-worker]] — 2-역할(Advisor–Worker) 변형 패턴, 역할별 이종 모델 배치
 - [[src-ai-advisor-worker]] — Advisor–Worker 원본 스크립트
 - [[concept-graph-engineering]] — 역할 분할(Planner/Coder/Critic)을 노드·엣지 형식으로 명시하는 다음 단계
+- [[guide-harness-module4]] — Planner/Coder/Critic 실습(Node)
+- [[guide-harness-module5]] — 주간 리뷰·Rippable 실습
 - [[src-workout-history-launch]] — 실전 적용: 병렬 세션 재구현 충돌을 diff로 이식한 6역할 운용 사례

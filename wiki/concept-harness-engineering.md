@@ -4,7 +4,7 @@ type: concept
 tags: [harness, ai-agent, claude-code, infrastructure]
 sources: [ai-engineering/harness-engineering/harness_engineering.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md, ai-engineering/harness-engineering/harness-kit/]
 created: 2026-05-30
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # 하네스 엔지니어링 (Harness Engineering)
@@ -68,7 +68,7 @@ OpenAI 5개월 내부 실험: 100만 줄의 코드를 생성했지만 인간이 
 장기 프로젝트에서 에이전트 출력이 점점 발산하는 문제(Drift)에 대응해 **주간 하네스 리뷰** 루틴을 둡니다. 동시에 **과적합 함정**을 피해야 합니다:
 
 - Opus 4.6 사례: 자기 하네스에서 33위였던 모델이 다른 하네스에서는 5위권이었습니다. 즉, **모델 개선 시 일부 하네스 규칙은 버려야 합니다**.
-- 삭제 기준: 지난 4주 동안 위반이 0건이면 삭제를 검토합니다.
+- 삭제 기준: 지난 4주 동안 위반이 0건이면 삭제를 검토합니다. 단 위반 0건이어도 한 번의 위반이 큰 피해로 이어지는 안전장치(예: `.env` 커밋 차단)는 유지합니다.
 
 이 점검을 **Rippable Harness 점검**이라 부릅니다.
 
@@ -76,7 +76,7 @@ OpenAI 5개월 내부 실험: 100만 줄의 코드를 생성했지만 인간이 
 
 1. **베이스라인 측정**: 하네스 없이 태스크 3개 실행, 성공률/불필요한 변경/방향 이탈 기록.
 2. **실패 패턴 감사**: 반복되는 실수 3가지를 "프롬프트로 막을 수 있는가 vs 시스템으로 막아야 하는가"로 분류.
-3. **CLAUDE.md 초안** → **hooks 설치** → **AGENTS.md 추가** → **주간 리뷰** 순으로 확장.
+3. **CLAUDE.md 초안** → **hooks 설치(+자기검증 루프)** → **AGENTS.md 추가** → **주간 리뷰** 순으로 확장.
 
 ## 관련 페이지
 
@@ -86,3 +86,10 @@ OpenAI 5개월 내부 실험: 100만 줄의 코드를 생성했지만 인간이 
 - [[concept-claude-hooks]] — 인프라 층 구현
 - [[concept-multi-agent-pattern]] — 컨텍스트 방화벽 구현
 - [[concept-compounding-knowledge]] — 하네스가 자산이 된다는 원칙의 일반화
+- [[guide-harness-00-prerequisites]] — 실습 사전 안내·환경 셋업
+- [[guide-harness-demo]] — 5분 데모: 하네스 있을 때 vs 없을 때
+- [[guide-harness-module1]] — 베이스라인 측정 + 실패 패턴 감사
+- [[guide-harness-module2]] — CLAUDE.md 작성
+- [[guide-harness-module3]] — Hooks 시스템 강제 + 자기검증 루프
+- [[guide-harness-module4]] — 멀티 에이전트 + 컨텍스트
+- [[guide-harness-module5]] — 진화·주간 리뷰·Rippable

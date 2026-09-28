@@ -4,7 +4,7 @@ type: concept
 tags: [graph-engineering, ai-agent, langgraph, orchestration, harness]
 sources: [ai-engineering/grap-engineering/또다른 트렌드 Graph Engineering 알려드림_1786315251439.md]
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-09-28
 ---
 
 # 그래프 엔지니어링 (Graph Engineering)
@@ -108,7 +108,7 @@ graph.add_conditional_edges("evaluate", should_retry,
 | 결제·발행 등 사람 승인 필수 지점 존재 | 도입 후보 |
 | 상태 영속화로 중간 지점 재개 필요 | 도입 후보 |
 
-시작은 **라우터 + 특화 노드 2개** 수준의 최소 그래프부터. 처음부터 10노드 그래프를 그리면 디버깅이 불가능합니다.
+시작은 **라우터 + 특화 노드 2개** 수준의 최소 그래프부터(라우터 포함 3노드. Advisor–Worker 같은 2노드 + 게이트도 최소 그래프에 해당합니다). 처음부터 10노드 그래프를 그리면 디버깅이 불가능합니다.
 
 ## 빠른 진단
 

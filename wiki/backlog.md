@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-07-12
+updated: 2026-09-28
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-07-12
 
 ## 📅 마지막 업데이트
 
-2026-07-12
+2026-09-28
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -36,7 +36,18 @@ updated: 2026-07-12
 - **"복리 지식"** (Karpathy/Hashimoto) — 위키가 누적될수록 페이지 간 교차참조 가치 ↑
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
-## ✅ 최근 완료 작업 (2026-06~07 누적)
+## ✅ 최근 완료 작업 (2026-06~09 누적)
+
+### 2026-09-28 — 이론↔실습 정합 + 하네스 00~M5 실제 실행 검증 + 메뉴 순서 정렬
+
+- ✅ **메뉴 순서** — 하네스·AI 에이전트: 개념·소스를 실습 순서로. 개발방법론: 개념 → 5권(권장 순서 CC→EJ→리팩터링→오브젝트→TDD) → DDD → 실습, 책 유래 개념 7개를 Java 레퍼런스에서 이동.
+- ✅ **이론↔실습 불일치 약 25개 파일 교정** — hooks(exit 2·stdin JSON·Stop=응답마다), AGENTS.md 로드(2.1.283 실측: CLAUDE.md 있으면 미로드), Loop 종료 조건 3종·비용 완화, Advisor–Worker 동작 변경 기준 동기화, 이론→실습 역링크.
+- ✅ **하네스 00~M5 실제 실행 검증** — 샌드박스 헤드리스로 커밋 22개 체인 완주, M4 Planner 결과 재현성 고정(2회 동일 구조). 전 가이드 배너 갱신, 로그 `raw/ai-engineering/harness-engineering/verification/`. 상세는 log 2026-09-28.
+
+### 2026-08-02~09-03 (요약 — 상세는 log)
+
+- ✅ object-dependency 영속 개념 3종(블로그→raw 2단계 연동 실전 1회), AI 트렌드 7주제 `raw/ai-engineering/` 통합, 그래프 엔지니어링 ingest·실습·첫 comparison, lint(깨진 sources 5건).
+- ✅ Workout History 출시 여정 + 앱 설계 개념 3종, 새 카테고리 "앱 개발·출시" (다른 PC 작업).
 
 ### 2026-07-12 — harness Before/After 검증 방식 전환: revert 재실행 → 같은 유형 새 태스크 (전부 배포 완료)
 
@@ -184,7 +195,8 @@ updated: 2026-07-12
 
 ### 다음 세션 최우선 (Pending)
 
-(비어 있음 — Advisor–Worker 심화편 실행 검증은 2026-07-12 완료, 위 완료 섹션 참고)
+- [ ] **raw harness-kit 원본에 2026-09-28 교정 주석** — 위키 가이드에서 고친 결함(루트 `src/` 경로, guard `.env.example` 오차단, lint-fix 모노레포 무동작, 상대 경로 hook 무력화, Stop hook 시점)이 `raw/ai-engineering/harness-engineering/harness-kit/`에도 남아 있을 가능성. 원본 불신 검증 정책대로 교정 근거 주석.
+- [ ] **사용자 로컬 `~/harness-playground` 정리** — 커밋된 `web/src/App.jsx`의 `'http://localhost:3000'\;` 오타, 미추적 `package-lock.json` (검증 시 발견, 원본은 건드리지 않음).
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 

@@ -12,6 +12,7 @@
 | `하네스엔지니어링_슬라이드해설_강의교안.md` | MD | 위 DOCX의 마크다운 변환본 (검색·열람용) |
 | `harness-engineering-tutor-prompt.md` | MD | 튜터(LLM)에게 주는 진행 프롬프트 |
 | `harness-kit/` | DIR | 5모듈 실습 키트 (module1~5) |
+| `verification/` | DIR | 위키 실습 가이드 실행 검증 기록 (2026-09-28: 00~M5 흐름·Module 04 헤드리스 실측) |
 
 ## 추천 읽기 순서
 

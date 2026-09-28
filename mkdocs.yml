@@ -109,10 +109,10 @@ nav:
   - 하네스·AI 에이전트:
     - 개념:
       - 하네스 엔지니어링: concept-harness-engineering.md
-      - "🆕 Loop 엔지니어링 (2026-06)": concept-loop-engineering.md
       - CLAUDE.md 헌법: concept-claude-md.md
       - Claude Hooks: concept-claude-hooks.md
       - 멀티 에이전트 패턴: concept-multi-agent-pattern.md
+      - "🆕 Loop 엔지니어링 (2026-06)": concept-loop-engineering.md
       - "🆕 Advisor–Worker 패턴": concept-advisor-worker.md
       - "🆕 그래프 엔지니어링": concept-graph-engineering.md
       - "🆕 Advisor–Worker vs 그래프 (비교)": comparison-advisor-worker-vs-graph.md
@@ -120,11 +120,11 @@ nav:
       - Claude Design: entity-claude-design.md
     - 소스:
       - 하네스 엔지니어링 키트: src-harness-engineering.md
-      - Claude Design 리뷰: src-claude-design-review.md
-      - Copilot 토큰 종량제 전환 (2026-06): src-copilot-token-pricing.md
       - "Loop 엔지니어링 커뮤니티 발화 (2026-06)": src-loop-engineering.md
       - "🆕 Advisor–Worker 에이전트 스크립트": src-ai-advisor-worker.md
       - "🆕 그래프 엔지니어링 원문 정리": src-graph-engineering.md
+      - Claude Design 리뷰: src-claude-design-review.md
+      - Copilot 토큰 종량제 전환 (2026-06): src-copilot-token-pricing.md
     - 실습:
       - 사전 안내 (Module 00): guide-harness-00-prerequisites.md
       - 5분 데모: guide-harness-demo.md
@@ -138,17 +138,65 @@ nav:
       - "🆕 Advisor–Worker 심화": guide-advisor-worker-advanced.md
       - "🆕 그래프 엔지니어링 실습": guide-graph-engineering-demo.md
   - 개발방법론:
-    - 가이드:
-      - 실습 환경 (5권 공통): guide-java-book-study-lab.md
-      - 코드 작성·점검 가이드: guide-code-authoring-and-review.md
-    - OO 개념:
+    - 개념:
       - 객체지향 (OOP): concept-oop.md
       - 디자인 패턴: concept-design-patterns.md
-    - DDD:
-      - 카카오페이 DDD: src-kakaopay-ddd.md
-      - "🆕 ID 참조 vs 객체 참조": concept-id-reference-vs-object-reference.md
-      - "🆕 애그리거트 경계": concept-aggregate-boundary.md
-      - "🆕 도메인 이벤트·최종 일관성": concept-domain-event-eventual-consistency.md
+      - "네이밍 규약": concept-naming-conventions.md
+      - "TDD 3법칙과 F.I.R.S.T.": concept-tdd-laws-and-first.md
+      - "단순 설계 4규칙": concept-simple-design-rules.md
+      - GRASP: concept-grasp.md
+      - SOLID: concept-solid.md
+      - "계약에 의한 설계": concept-design-by-contract.md
+      - "도메인 모델 3구분": concept-domain-model-kinds.md
+    - Clean Code:
+      - 책 카드: entity-clean-code.md
+      - "강의 인덱스": src-clean-code-lecture.md
+      - "1장 깨끗한 코드": lecture-clean-code-ch1.md
+      - "2장 의미 있는 이름": lecture-clean-code-ch2.md
+      - "3장 함수": lecture-clean-code-ch3.md
+      - "4장 주석": lecture-clean-code-ch4.md
+      - "5장 형식 맞추기": lecture-clean-code-ch5.md
+      - "6장 객체와 자료 구조": lecture-clean-code-ch6.md
+      - "7장 오류 처리": lecture-clean-code-ch7.md
+      - "8장 경계": lecture-clean-code-ch8.md
+      - "9장 단위 테스트": lecture-clean-code-ch9.md
+      - "10장 클래스": lecture-clean-code-ch10.md
+      - "11장 시스템": lecture-clean-code-ch11.md
+      - "12장 창발성": lecture-clean-code-ch12.md
+      - "13장 동시성": lecture-clean-code-ch13.md
+      - "14장 점진적 개선": lecture-clean-code-ch14.md
+      - "15장 JUnit": lecture-clean-code-ch15.md
+      - "16장 SerialDate 리팩터링": lecture-clean-code-ch16.md
+      - "17장 냄새와 휴리스틱": lecture-clean-code-ch17.md
+    - Effective Java:
+      - 책 카드: entity-effective-java.md
+      - "강의 인덱스": src-effective-java-lecture.md
+      - "2장 객체 생성과 파괴": lecture-effective-java-ch2.md
+      - "3장 공통 메서드": lecture-effective-java-ch3.md
+      - "4장 클래스와 인터페이스": lecture-effective-java-ch4.md
+      - "5장 제네릭": lecture-effective-java-ch5.md
+      - "6장 Enum·애너테이션": lecture-effective-java-ch6.md
+      - "7장 람다·스트림": lecture-effective-java-ch7.md
+      - "8장 메서드": lecture-effective-java-ch8.md
+      - "9장 일반 프로그래밍 원칙": lecture-effective-java-ch9.md
+      - "10장 예외": lecture-effective-java-ch10.md
+      - "11장 동시성": lecture-effective-java-ch11.md
+      - "12장 직렬화": lecture-effective-java-ch12.md
+    - Refactoring:
+      - 책 카드: entity-refactoring.md
+      - "강의 인덱스": src-refactoring-lecture.md
+      - "1장 첫 번째 예시": lecture-refactoring-ch1.md
+      - "2장 리팩터링 원칙": lecture-refactoring-ch2.md
+      - "3장 코드 악취 24개": lecture-refactoring-ch3.md
+      - "4장 테스트 구축하기": lecture-refactoring-ch4.md
+      - "5장 카탈로그 보는 법": lecture-refactoring-ch5.md
+      - "6장 기본적인 리팩터링": lecture-refactoring-ch6.md
+      - "7장 캡슐화": lecture-refactoring-ch7.md
+      - "8장 기능 이동": lecture-refactoring-ch8.md
+      - "9장 데이터 조직화": lecture-refactoring-ch9.md
+      - "10장 조건부 로직 간소화": lecture-refactoring-ch10.md
+      - "11장 API 리팩터링": lecture-refactoring-ch11.md
+      - "12장 상속 다루기": lecture-refactoring-ch12.md
     - Object:
       - 책 카드: entity-object.md
       - "강의 인덱스": src-object-lecture.md
@@ -170,20 +218,6 @@ nav:
       - "부록 A — 계약에 의한 설계": lecture-object-appendixA.md
       - "부록 B — 타입 계층의 구현": lecture-object-appendixB.md
       - "부록 C — 동적인 협력, 정적인 코드": lecture-object-appendixC.md
-    - Effective Java:
-      - 책 카드: entity-effective-java.md
-      - "강의 인덱스": src-effective-java-lecture.md
-      - "2장 객체 생성과 파괴": lecture-effective-java-ch2.md
-      - "3장 공통 메서드": lecture-effective-java-ch3.md
-      - "4장 클래스와 인터페이스": lecture-effective-java-ch4.md
-      - "5장 제네릭": lecture-effective-java-ch5.md
-      - "6장 Enum·애너테이션": lecture-effective-java-ch6.md
-      - "7장 람다·스트림": lecture-effective-java-ch7.md
-      - "8장 메서드": lecture-effective-java-ch8.md
-      - "9장 일반 프로그래밍 원칙": lecture-effective-java-ch9.md
-      - "10장 예외": lecture-effective-java-ch10.md
-      - "11장 동시성": lecture-effective-java-ch11.md
-      - "12장 직렬화": lecture-effective-java-ch12.md
     - TDD:
       - 책 카드: entity-tdd.md
       - "강의 인덱스": src-tdd-lecture.md
@@ -222,41 +256,14 @@ nav:
       - "부록 A — 영향도": lecture-tdd-appendixA.md
       - "부록 B — 피보나치": lecture-tdd-appendixB.md
       - "마치는 글 (Fowler)": lecture-tdd-afterword.md
-    - Clean Code:
-      - 책 카드: entity-clean-code.md
-      - "강의 인덱스": src-clean-code-lecture.md
-      - "1장 깨끗한 코드": lecture-clean-code-ch1.md
-      - "2장 의미 있는 이름": lecture-clean-code-ch2.md
-      - "3장 함수": lecture-clean-code-ch3.md
-      - "4장 주석": lecture-clean-code-ch4.md
-      - "5장 형식 맞추기": lecture-clean-code-ch5.md
-      - "6장 객체와 자료 구조": lecture-clean-code-ch6.md
-      - "7장 오류 처리": lecture-clean-code-ch7.md
-      - "8장 경계": lecture-clean-code-ch8.md
-      - "9장 단위 테스트": lecture-clean-code-ch9.md
-      - "10장 클래스": lecture-clean-code-ch10.md
-      - "11장 시스템": lecture-clean-code-ch11.md
-      - "12장 창발성": lecture-clean-code-ch12.md
-      - "13장 동시성": lecture-clean-code-ch13.md
-      - "14장 점진적 개선": lecture-clean-code-ch14.md
-      - "15장 JUnit": lecture-clean-code-ch15.md
-      - "16장 SerialDate 리팩터링": lecture-clean-code-ch16.md
-      - "17장 냄새와 휴리스틱": lecture-clean-code-ch17.md
-    - Refactoring:
-      - 책 카드: entity-refactoring.md
-      - "강의 인덱스": src-refactoring-lecture.md
-      - "1장 첫 번째 예시": lecture-refactoring-ch1.md
-      - "2장 리팩터링 원칙": lecture-refactoring-ch2.md
-      - "3장 코드 악취 24개": lecture-refactoring-ch3.md
-      - "4장 테스트 구축하기": lecture-refactoring-ch4.md
-      - "5장 카탈로그 보는 법": lecture-refactoring-ch5.md
-      - "6장 기본적인 리팩터링": lecture-refactoring-ch6.md
-      - "7장 캡슐화": lecture-refactoring-ch7.md
-      - "8장 기능 이동": lecture-refactoring-ch8.md
-      - "9장 데이터 조직화": lecture-refactoring-ch9.md
-      - "10장 조건부 로직 간소화": lecture-refactoring-ch10.md
-      - "11장 API 리팩터링": lecture-refactoring-ch11.md
-      - "12장 상속 다루기": lecture-refactoring-ch12.md
+    - DDD:
+      - 카카오페이 DDD: src-kakaopay-ddd.md
+      - "🆕 ID 참조 vs 객체 참조": concept-id-reference-vs-object-reference.md
+      - "🆕 애그리거트 경계": concept-aggregate-boundary.md
+      - "🆕 도메인 이벤트·최종 일관성": concept-domain-event-eventual-consistency.md
+    - 실습:
+      - 실습 환경 (5권 공통): guide-java-book-study-lab.md
+      - 코드 작성·점검 가이드: guide-code-authoring-and-review.md
   - Java·Spring:
     - "학습 경로 (전체 지도)": guide-java-learning-path.md
     - 1단계 — Java Core:
@@ -291,13 +298,6 @@ nav:
         - 표준 함수형 인터페이스: concept-functional-interfaces.md
         - "제네릭 PECS": concept-generics-pecs.md
         - "Java 직렬화 위험": concept-java-serialization-risk.md
-        - "네이밍 규약": concept-naming-conventions.md
-        - "TDD 3법칙과 F.I.R.S.T.": concept-tdd-laws-and-first.md
-        - "단순 설계 4규칙": concept-simple-design-rules.md
-        - SOLID: concept-solid.md
-        - GRASP: concept-grasp.md
-        - "계약에 의한 설계": concept-design-by-contract.md
-        - "도메인 모델 3구분": concept-domain-model-kinds.md
       - 도구·생태계:
         - JVM: entity-jvm.md
         - Querydsl: entity-querydsl.md
