@@ -4,7 +4,7 @@ type: synthesis
 tags: [가이드, 문서화, CLAUDE.md, 템플릿]
 sources: []
 created: 2026-04-25
-updated: 2026-07-02
+updated: 2026-09-28
 ---
 
 # 프로젝트 문서 시스템 셋업 가이드
@@ -267,7 +267,5 @@ updated: YYYY-MM-DD
 ## 관련 페이지
 
 - [[src-llm-wiki-pattern]] — LLM 위키 패턴 원본
-- [[concept-ingest]] — Ingest 워크플로
-- [[concept-query]] — Query 워크플로
-- [[concept-lint]] — Lint 워크플로
+- [[concept-wiki-workflow]] — Ingest·Query·Lint 워크플로
 - [[src-workout-history-launch]] — 실전 적용: PLANNING·CONCEPTS·ARCHITECTURE·BACKLOG 체계로 앱을 출시한 사례

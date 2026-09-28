@@ -7,7 +7,7 @@ sources:
 external:
   - https://www.youtube.com/watch?v=Ujuy6cSYa6g
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-09-28
 ---
 
 # GitHub Copilot 토큰 종량제 전환 (2026-06-01)
@@ -93,4 +93,4 @@ STOP: 같은 파일을 한 세션에서 3회 이상 재읽기 (캐시 활용 실
 - [[concept-harness-engineering]] — 하네스의 비용 관리 측면으로 확장
 - [[concept-claude-md]] — STOP 트리거에 비용 폭주 패턴 추가
 - [[guide-harness-module2]] / [[guide-harness-module5]] — 비용 관리 규칙 적용 지점
-- [[src-claude-design-review]] — 다른 AI 도구의 사용성·과금 정책 비교 맥락
+- [[entity-claude-design]] — 다른 AI 도구의 사용성·과금 정책 비교 맥락

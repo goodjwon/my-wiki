@@ -22,12 +22,12 @@ updated: 2026-09-28
 | 단계 | 챕터 | 트랙(학습 코스) | 마무리 실습(과제) |
 |------|------|----------------|------------------|
 | 1단계 Java Core | [[java-study-ch01]] 환경과 실행 · [[java-study-ch02]] Java 문법과 객체 · [[java-study-ch03]] 컬렉션과 함수형 | [[guide-java-track1-basics]] | 챕터 실전문제 (2.9·3.8) |
-| 1단계 Java Core | [[java-study-ch04]] 객체지향 설계와 패턴 (+ [[java-study-ch10]] JVM과 성능) | [[guide-java-track2-design]] | 🧪 [[guide-java-practice-core]] |
+| 1단계 Java Core | [[java-study-ch04]] 객체지향 설계와 패턴 | [[guide-java-track2-design]] | 🧪 [[guide-java-practice-core]] |
 | 1단계 Java Core | [[java-study-ch05]] 입출력과 네트워크 | [[guide-java-track3-io-network]] | 챕터 실전문제 (5.8·5.9) |
 | 2단계 Spring & 웹 | [[java-study-ch06]] Spring과 프로젝트 실행 · [[java-study-ch07]] 데이터 접근과 SQL · [[java-study-ch08]] 서버와 인증 (+ [[java-study-ch09]] 테스트와 품질) | [[guide-java-track4-spring-web]] | 🧪 [[guide-java-practice-spring-library]] |
 | 3단계 고급·품질 | [[java-study-ch09]] 테스트와 품질 · [[java-study-ch10]] JVM과 성능 · [[java-study-ch11]] 부록 | [[guide-java-track5-deep-dive]] | 🧪 [[guide-java-practice-layered-quotation]] |
 
-T2는 설계와 함께 JVM(ch10)을, T4는 Spring과 함께 테스트(ch09)를 다루므로 괄호 안 챕터는 3단계 소속이지만 해당 트랙에서 먼저 만납니다.
+T4는 Spring과 함께 테스트(ch09)를 다루므로 괄호 안 챕터는 3단계 소속이지만 T4에서 먼저 만납니다.
 
 ---
 

@@ -308,29 +308,17 @@ nav:
       - 그래프 엔지니어링: guide-graph-engineering-demo.md
     - AI 도구·동향:
       - Claude Design: entity-claude-design.md
-      - Claude Design 리뷰: src-claude-design-review.md
       - Copilot 종량제 전환: src-copilot-token-pricing.md
   - 위키 운영:
-    - 개념:
-      - 복리 지식: concept-compounding-knowledge.md
-      - Memex: concept-memex.md
-      - Vannevar Bush: entity-vannevar-bush.md
-      - Ingest 워크플로: concept-ingest.md
-      - Query 워크플로: concept-query.md
-      - Lint 워크플로: concept-lint.md
-    - 도구:
-      - Obsidian: entity-obsidian.md
-      - Obsidian Web Clipper: entity-obsidian-web-clipper.md
-      - Dataview: entity-dataview.md
-      - qmd: entity-qmd.md
-      - Marp: entity-marp.md
-    - 소스:
-      - LLM Wiki 패턴: src-llm-wiki-pattern.md
-      - 나의 링크: src-my-links.md
-    - 운영:
-      - 위키 배포: guide-deploy-mkdocs-firebase.md
-      - 프로젝트 문서 시스템: guide-project-docs-setup.md
-      - 위키 작성 표준: guide-wiki-authoring-standards.md
+    - 복리 지식: concept-compounding-knowledge.md
+    - Memex: concept-memex.md
+    - Vannevar Bush: entity-vannevar-bush.md
+    - 위키 워크플로: concept-wiki-workflow.md
+    - Obsidian: entity-obsidian.md
+    - LLM Wiki 패턴: src-llm-wiki-pattern.md
+    - 위키 배포: guide-deploy-mkdocs-firebase.md
+    - 프로젝트 문서 시스템: guide-project-docs-setup.md
+    - 위키 작성 표준: guide-wiki-authoring-standards.md
 
 extra:
   generator: false

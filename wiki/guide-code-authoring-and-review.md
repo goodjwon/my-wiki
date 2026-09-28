@@ -628,5 +628,5 @@ EJ Item 49 — public 메서드 첫 줄에 매개변수 검증 추가
 - 5권 entity: [[entity-object]] / [[entity-effective-java]] / [[entity-refactoring]] / [[entity-clean-code]] / [[entity-tdd]]
 - 5권 강의 교재 인덱스: [[src-object-lecture]] / [[src-effective-java-lecture]] / [[src-refactoring-lecture]] / [[src-clean-code-lecture]] / [[src-tdd-lecture]]
 - 위키 작성 표준 (이 가이드의 작성 원칙): [[guide-wiki-authoring-standards]]
-- 위키 워크플로: [[concept-ingest]] / [[concept-query]] / [[concept-lint]]
+- 위키 워크플로: [[concept-wiki-workflow]]
 - 같은 패턴 다른 영역: [[concept-harness-engineering]] / [[concept-loop-engineering]] / [[concept-claude-hooks]]

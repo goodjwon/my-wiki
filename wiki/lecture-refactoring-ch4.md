@@ -4,14 +4,14 @@ type: source
 tags: [book, refactoring, fowler, lecture]
 sources: [refactoring/리팩터링 실전 강의 교재 4장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-28
 ---
 
 # 리팩터링 실전 강의 교재
 
 ## 4장 — 테스트 구축하기
 
-> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 따라하기 → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5, Spring Boot 3.x
+> **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 따라하기 → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5, Spring Boot 4.x (start.spring.io 기본값)
 
 ---
 

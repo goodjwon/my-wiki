@@ -202,11 +202,7 @@ updated: 2026-09-28
 
 (비어 있음 — 2026-09-28 작업은 모두 완료·배포)
 
-**보류된 구조 제안** (2026-09-28 전체 검토에서 사용자가 ★만 승인, 아래는 필요 시 재검토):
-- 위키 워크플로 개념 3개(ingest·lint·query) 1페이지 병합, 도구 4개(Clipper·Dataview·qmd·Marp)를 entity-obsidian으로 흡수, Claude Design 2페이지 병합
-- ch00 "안내"의 Spring 프로파일 내용(0.0)을 ch06 6.3에 합치기 / JVM(ch10)을 T2→T5로 이동
-- 북마크 페이지(src-my-links) 삭제 / 홈(index.md)을 유형별→주제별로 개편 + 소개·진입점
-- lecture 32개 본문의 "전제 환경: Spring Boot 3.x" 표기, raw `clean-code/toc.md`·`refactoring/toc.md`의 "(추정)"
+**구조 제안 9~13 완료 (2026-09-28)**: 위키 워크플로 3→1([[concept-wiki-workflow]]), 도구 4개→[[entity-obsidian]], Claude Design 2→1, 북마크 페이지 삭제(옛 URL은 firebase.json 301 리다이렉트 9개), ch00 안내 축소·0.0→ch06 6.3, JVM T2→T5, 홈 주제별 개편, lecture 32개 Boot 4.x 표기, raw toc "(추정)" 교정.
 
 알려진 한계(급하지 않음):
 - **Windows 명령 미실측** — Java 챕터·과제·하네스의 Windows 분기(`gradlew.bat`, `setenv.bat`, PowerShell curl 등)는 macOS에서만 실측. Windows PC가 생기면 1회 점검.
@@ -239,7 +235,7 @@ updated: 2026-09-28
 | concept-ingest | 32 | 낮음 (위키 운영 내부 개념) |
 | concept-memex | 33 | 중간 (역사 자료 보강 가능) |
 | concept-compounding-knowledge | 38 | 중간 |
-| entity-claude-design | 43 | 중간 (Anthropic 도구) |
+| entity-claude-design | 86 | 낮음 (리뷰 페이지 병합으로 보강됨) |
 
 → 우선순위 낮음. 외부 자료 부재 또는 위키 자체 메타 콘텐츠.
 
@@ -341,6 +337,6 @@ claude
 ## 관련 페이지
 
 - [[guide-wiki-authoring-standards]] — 다이어그램·분량·마킹 표준
-- [[concept-ingest]] / [[concept-query]] / [[concept-lint]] — 위키 운영 워크플로
+- [[concept-wiki-workflow]] — 위키 운영 워크플로
 - [[concept-compounding-knowledge]] — 위키가 복리로 자라는 원리
 - [[src-llm-wiki-pattern]] — 이 위키의 출발 패턴

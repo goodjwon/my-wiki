@@ -4,7 +4,7 @@
 
 - **저자**: Martin Fowler
 - **원서 2판**: *Refactoring: Improving the Design of Existing Code*, 2nd Edition (Addison-Wesley, 2018)
-- **한국어판(추정)**: *리팩터링 2판* (한빛미디어, 2020, 개앞맵시 옮김)
+- **한국어판**: *리팩터링 2판* (한빛미디어, 2020, 개앞맵시(이복연)·남기혁 옮김) <!-- 교정(2026-09-28): 번역본 정보 확인 — 출판사 도서 페이지 -->
 - **언어 예제**: JavaScript (1판은 Java)
 - **분량**: 약 580페이지, 12장 + 부록 A·B
 

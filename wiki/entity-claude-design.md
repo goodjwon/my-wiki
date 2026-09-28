@@ -1,7 +1,7 @@
 ---
 title: Claude Design
 type: entity
-tags: [anthropic, claude, 디자인, 프로토타이핑, AI-디자인]
+tags: [anthropic, claude, claude-design, 디자인, 프로토타이핑, AI-디자인]
 sources: [ai-engineering/claude-design/클로드 디자인! 디자인 스타트업 폐업시켜 버리기~.ko-orig.srt]
 created: 2026-04-18
 updated: 2026-09-28
@@ -36,8 +36,51 @@ ZIP, PDF, PPTX, Canva, Claude Code 핸드오프
 
 기존 AI 디자인 도구(Stitch, Paper, Pencil)와 유사하나, Anthropic 생태계 내에서 **디자인 → 코드** 파이프라인을 단일 컨텍스트로 완결시킨다는 점이 차별점입니다. 2026년 4월 기준 리서치 프리뷰 상태입니다.
 
+## 리뷰 요약
+
+YouTube 영상 "클로드 디자인! 디자인 스타트업 폐업시켜 버리기~"(아키모링 쏘지, https://www.youtube.com/watch?v=1GFbmyDJgqk)의 소개·실습 리뷰를 정리합니다. 리뷰는 기존 AI 디자인 도구와의 차이를 Anthropic 자체의 "주관적 의견"이 반영된 설계 방식에서 찾습니다.
+
+### 디자인 시스템 셋업
+
+- 회사 정보, GitHub 링크, 소스 코드, Figma 파일을 입력하면 디자인 시스템을 자동 생성합니다.
+- 액센트 컬러, 아바타, 배지 등 컴포넌트 미리보기를 제공하고, 채팅으로 요소를 바꿀 수 있습니다.
+
+### 와이어프레임 → 프로토타입 데모
+
+1. 와이어프레임 모드에서 "SNS 만들어 줘"로 시작합니다.
+2. Claude가 SNS 유형, 플랫폼, 타깃, 필요 화면 등 의도 파악 질문을 합니다.
+3. 시안 개수(예: 3개)와 변형 축(피드백 형태, 레이아웃, 내비게이션 등)을 정합니다.
+4. 생성된 와이어프레임을 옵션별로 비교·선택합니다.
+5. 선택한 옵션으로 완전한 프로토타입을 생성합니다.
+6. 버튼 클릭, 다이얼로그 등 실제 인터랙션이 작동합니다.
+
+### 수정·변수 조절
+
+| 방식 | 내용 |
+|------|------|
+| Edit 모드 | 특정 요소를 선택해 정렬·너비 등을 직접 수정합니다 |
+| Comment | 특정 요소에 프롬프트를 붙여 부분 변경을 요청합니다 |
+| 변수 조절 | 다크/라이트 모드, 콤팩트/편안 밀도, 열 수 등을 바꿉니다 |
+
+### 슬라이드덱과 핸드오프
+
+- 같은 프로젝트 안에서 디자인한 웹사이트를 소개하는 프레젠테이션을 자동 생성합니다. 디자인 시스템 컨텍스트가 유지되어 스타일이 일관됩니다.
+- **Claude Code 핸드오프**: 복사한 명령을 Claude Code에 붙여 넣으면 디자인 시스템 레퍼런스를 가져와 바로 구현할 수 있습니다.
+
+### 핵심 인사이트
+
+- 기존에는 Claude Code의 구현 능력은 뛰어났지만, 그 앞단(디자인·와이어프레이밍)은 외부 도구에 의존해야 했습니다.
+- Claude Design으로 **디자인 → 프로토타입 → 코드 구현**이 하나의 컨텍스트에서 완결됩니다.
+- Stitch, Paper, Pencil 등 AI 디자인 스타트업에는 직접적인 위협입니다.
+- 리서치 프리뷰 단계라 버그가 있습니다 (예: 페이지 이탈 시 스트림 싱크 문제).
+
+## 원본 출처
+
+- raw: `raw/ai-engineering/claude-design/클로드 디자인! 디자인 스타트업 폐업시켜 버리기~.ko-orig.srt` (리뷰 영상 자막)
+- 외부: [YouTube 리뷰 영상](https://www.youtube.com/watch?v=1GFbmyDJgqk)
+
 ## 관련 페이지
 
-- [[src-claude-design-review]] — 리뷰 영상 요약
+- [[src-llm-wiki-pattern]] — LLM 활용 지식 관리 패턴 (Claude Code 연계 관점)
 - [[entity-obsidian]] — 로컬 지식 관리 도구 (Claude Design과 다른 접근)
 - [[concept-compounding-knowledge]] — AI 도구로 지식을 복리적으로 축적하는 관점

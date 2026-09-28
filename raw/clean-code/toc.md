@@ -4,7 +4,7 @@
 
 - **저자**: Robert C. Martin (Uncle Bob)
 - **원서**: *Clean Code: A Handbook of Agile Software Craftsmanship* (Prentice Hall, 2008)
-- **한국어판(추정)**: *클린 코드 — 애자일 소프트웨어 장인 정신* (인사이트, 2013, 박재호·이해영 옮김)
+- **한국어판**: *클린 코드 — 애자일 소프트웨어 장인 정신* (인사이트, 2013, 박재호·이해영 옮김) <!-- 교정(2026-09-28): 번역본 정보 확인 — 출판사 도서 페이지 -->
 - **언어 예제**: Java
 - **분량**: 17장 + 부록 A·B·C, 약 580페이지
 - **공동 저자**: Michael Feathers, Tim Ottinger, Jeff Langr, Brett Schuchert, Kyle Brown 등 다수 (장별 분담)

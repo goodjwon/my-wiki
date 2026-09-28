@@ -88,3 +88,4 @@ OpenAI 5개월 내부 실험: 100만 줄의 코드를 생성했지만 인간이 
 - [[guide-harness-module3]] — Hooks 시스템 강제 + 자기검증 루프
 - [[guide-harness-module4]] — 멀티 에이전트 + 컨텍스트
 - [[guide-harness-module5]] — 진화·주간 리뷰·Rippable
+- [[concept-wiki-workflow]] — 같은 인사이트 패턴 "생성 뒤에 검증 게이트를 둔다" (위키 운영의 lint 게이트)

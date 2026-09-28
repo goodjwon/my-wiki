@@ -756,7 +756,7 @@ spring:
 - 기본 로컬 실행 프로파일입니다.
 - `application-h2.yml`이 함께 로드됩니다.
 - `jdbc:h2:mem:localdb`를 사용합니다.
-- `ddl-auto: create-drop`으로 빠르게 실습하기 좋습니다.
+- `ddl-auto: create-drop`(기동할 때 테이블을 새로 만들고 종료할 때 지우는 JPA 스키마 전략)으로 빠르게 실습하기 좋습니다.
 - H2 콘솔(`/h2-console`)이 활성화되어 있습니다.
 
 #### dev-my
@@ -791,6 +791,8 @@ spring:
 
 ### 4. 실행 방법
 
+아래 명령은 모두 `demo` 프로젝트 루트에서 실행합니다.
+
 #### 기본 실행
 ```bash
 ./mvnw spring-boot:run
@@ -805,6 +807,7 @@ Tomcat started on port 8080
 ```
 
 #### h2 명시 실행
+프로파일을 직접 지정할 때는 `-Dspring-boot.run.profiles` 옵션을 붙입니다.
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=h2
 ```

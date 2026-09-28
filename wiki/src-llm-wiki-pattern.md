@@ -32,9 +32,9 @@ LLM이 **영구적이고 복리로 성장하는 위키**를 점진적으로 구�
 
 ## 3가지 핵심 작업
 
-- **[[concept-ingest|Ingest]]** — 소스를 추가하면 요약을 만들고 entity/concept 페이지와 index·log를 갱신합니다.
-- **[[concept-query|Query]]** — index를 읽고 관련 페이지를 찾아 답변을 합성합니다. 좋은 답변은 위키에 다시 편입합니다.
-- **[[concept-lint|Lint]]** — 모순을 검사하고 고아 페이지를 정리하며, 누락된 교차참조를 보완하고 새 탐구 방향을 제안합니다.
+- **[[concept-wiki-workflow|Ingest]]** — 소스를 추가하면 요약을 만들고 entity/concept 페이지와 index·log를 갱신합니다.
+- **[[concept-wiki-workflow|Query]]** — index를 읽고 관련 페이지를 찾아 답변을 합성합니다. 좋은 답변은 위키에 다시 편입합니다.
+- **[[concept-wiki-workflow|Lint]]** — 모순을 검사하고 고아 페이지를 정리하며, 누락된 교차참조를 보완하고 새 탐구 방향을 제안합니다.
 
 ## 인덱싱·로깅
 
@@ -44,10 +44,10 @@ LLM이 **영구적이고 복리로 성장하는 위키**를 점진적으로 구�
 ## 도구 생태계
 
 - [[entity-obsidian|Obsidian]] — 위키 뷰어·편집기입니다 (그래프 뷰, Dataview, Marp 플러그인).
-- [[entity-obsidian-web-clipper|Obsidian Web Clipper]] — 웹 기사를 마크다운으로 변환합니다.
-- [[entity-qmd|qmd]] — 마크다운용 로컬 검색 엔진입니다 (BM25 + 벡터 하이브리드).
-- [[entity-marp|Marp]] — 마크다운으로 슬라이드를 만듭니다.
-- [[entity-dataview|Dataview]] — frontmatter를 기준으로 동적 쿼리를 실행합니다.
+- [[entity-obsidian|Obsidian Web Clipper]] — 웹 기사를 마크다운으로 변환합니다.
+- [[entity-obsidian|qmd]] — 마크다운용 로컬 검색 엔진입니다 (BM25 + 벡터 하이브리드).
+- [[entity-obsidian|Marp]] — 마크다운으로 슬라이드를 만듭니다.
+- [[entity-obsidian|Dataview]] — frontmatter를 기준으로 동적 쿼리를 실행합니다.
 
 ## 왜 작동하는가
 

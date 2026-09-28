@@ -4,6 +4,14 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-28] refactor | 보류 구조 제안 9~13 반영 — 병합·삭제·재배치·홈 개편
+- **병합**: concept-ingest·query·lint → [[concept-wiki-workflow]](179줄), Web Clipper·Dataview·qmd·Marp → [[entity-obsidian]] "플러그인·주변 도구", src-claude-design-review → [[entity-claude-design]]. 북마크 페이지(src-my-links) 삭제(보강 정책 3: 본문 없는 링크 목록).
+- **링크·URL**: 인바운드 링크 치환(10개 파일, 중복 링크 정리), 옛 URL 9개는 firebase.json 301 리다이렉트(병합 절 앵커로). "생성 뒤 검증 게이트" 패턴 역링크 3곳.
+- **Java**: ch00을 짧은 안내로 축소(0.0 프로파일 가이드의 고유 내용 3가지는 ch06 6.3으로), JVM(ch10)을 T2→T5로 이동(T2=ch04 설계 전용).
+- **홈**: 유형별 카탈로그 → 소개 2문장 + "처음이라면" 진입점 4개 + nav 순서 주제별 목록.
+- **정리**: lecture 32개 "Spring Boot 3.x" → 4.x 표기, raw toc 3개 번역본 "(추정)" 교정(리팩터링 역자 남기혁 추가).
+- 메뉴 위키 운영 섹션 평탄화(9개 항목). style-lint·scaffold-lint 0, 끊긴 링크 0.
+
 ## [2026-09-28] lint+refactor | 전체 섹션 검토 반영 — A(오류·오래된 정보·문체) + ★ 구조 개편
 - **검토**: 4개 영역 병렬 읽기 전용 감사 → 사용자 승인 "A + ★".
 - **메뉴(★1~5)**: 최상위 순서 Java·Spring → 개발방법론 → DB·운영 → 앱 → 하네스·AI → 위키 운영(맨 뒤). 환경설정→"위키 운영", backlog·plan-*·log는 `not_in_nav`. 단일 항목 그룹 해체(인물·DB 개념·앱 회고 평탄화), 하네스 실습을 "하네스 코스"/"에이전트 패턴 실습"으로 분리 + "AI 도구·동향". Java 레퍼런스 4단→3단, 얇은 src-spring-* 4개 nav 제외(entity 링크 유지). 긴 제목 약 25개 단축, `navigation.footer`(강의 장 앞/뒤 이동).

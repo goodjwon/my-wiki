@@ -36,4 +36,5 @@ updated: 2026-09-28
 ## 관련 개념
 
 - [[concept-memex|Memex]] — 연상적 연결을 통한 지식 축적의 원형
-- [[concept-ingest|Ingest]] — 복리를 실현하는 구체적 작업
+- [[concept-wiki-workflow|Ingest]] — 복리를 실현하는 구체적 작업
+- [[concept-wiki-workflow]] — 같은 인사이트 패턴 "생성 뒤에 검증 게이트를 둔다" (위키 운영의 lint 게이트)

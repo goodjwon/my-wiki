@@ -488,6 +488,5 @@ fswatch -o wiki/ | xargs -n1 -I{} bash scripts/build-site.sh
 
 - [[guide-deploy-mkdocs-firebase]] — 배포 인프라 자체의 셋업
 - [[concept-compounding-knowledge]] — 위키가 복리로 가치 쌓이는 원리
-- [[concept-ingest]] — 새 소스를 위키에 통합하는 워크플로
-- [[concept-lint]] — 위키 정비 워크플로
+- [[concept-wiki-workflow]] — 새 소스 통합(Ingest)·위키 정비(Lint) 워크플로
 - [[plan-tone-consistency]] — §7 문체 표준을 적용하는 정합 계획·실행 프롬프트

@@ -12,14 +12,67 @@
       {
         "source": "**/*.@(css|js|woff2|svg|png|jpg|jpeg|webp|ico)",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
         ]
       },
       {
         "source": "**/*.html",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=300, must-revalidate"
+          }
         ]
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/concept-ingest{,/**}",
+        "destination": "/concept-wiki-workflow#ingest",
+        "type": 301
+      },
+      {
+        "source": "/concept-query{,/**}",
+        "destination": "/concept-wiki-workflow#query",
+        "type": 301
+      },
+      {
+        "source": "/concept-lint{,/**}",
+        "destination": "/concept-wiki-workflow#lint",
+        "type": 301
+      },
+      {
+        "source": "/entity-obsidian-web-clipper{,/**}",
+        "destination": "/entity-obsidian#obsidian-web-clipper",
+        "type": 301
+      },
+      {
+        "source": "/entity-dataview{,/**}",
+        "destination": "/entity-obsidian#dataview",
+        "type": 301
+      },
+      {
+        "source": "/entity-qmd{,/**}",
+        "destination": "/entity-obsidian#qmd",
+        "type": 301
+      },
+      {
+        "source": "/entity-marp{,/**}",
+        "destination": "/entity-obsidian#marp",
+        "type": 301
+      },
+      {
+        "source": "/src-claude-design-review{,/**}",
+        "destination": "/entity-claude-design",
+        "type": 301
+      },
+      {
+        "source": "/src-my-links{,/**}",
+        "destination": "/",
+        "type": 301
       }
     ]
   }
