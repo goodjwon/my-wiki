@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-28] fix+verify | 잔여 정리 — ch08 외장 Tomcat 실행 검증, raw harness-kit 교정, ch09 분류 이유
+- **ch08 8.0 외장 Tomcat** (Tomcat 11.0.26 scratchpad 설치, JDK 21): 기동·종료·포트 변경·setenv·catalina.out·Boot 4.1.1 WAR 배포(`/demo`)까지 실측. 메모리 옵션 `JAVA_OPTS`→`CATALINA_OPTS`(공식 RUNNING.txt), 설치 절차·setenv 위치·`CATALINA_BASE` 빈 경로·WAR 3단계 보강, 참고 링크 11.0 문서로.
+- **raw harness-kit**: hooks-config 경로 `$CLAUDE_PROJECT_DIR`, Stop hook 시점 교정 + README 교정 이력.
+- **ch09 분류**: 본문 3단계 유지, T4에 "지식 계층 ≠ 학습 동선" 이유 명시(사용자 결정).
+- **로컬 `~/harness-playground`**: App.jsx 오타 + package-lock.json 커밋(위키 외부, push 없음).
+
 ## [2026-09-28] feat+verify | Java·Spring 실습 과제 3편 신설 (H2 실행·스크린샷) + 패키지 dev.wonslab 통일 + 챕터 Boot 4 재검증
 - **계기**: 사용자 "Java·Spring 다시 보고 예제를 구성부터 스샷까지, H2로 실행, 개인 저장소 3개로 실습 과제, 고유명사 피하고 dev.wonslab으로 통일".
 - **실습 과제 3편** (메뉴 Java·Spring › 실습 과제, 원본 추적 `raw/java-study/practice/README.md` — 저장소명은 raw에만):

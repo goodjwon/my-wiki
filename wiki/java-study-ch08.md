@@ -137,14 +137,33 @@ Tomcat 공식 문서를 따라가다 보면 `CATALINA_HOME`과 `CATALINA_BASE`�
 
 Tomcat 설치 자체는 복잡하지 않습니다. 공식 배포판을 풀고, Java가 준비된 상태에서 `bin` 스크립트로 실행하면 됩니다.
 
+> **버전 선택**: Spring Boot 4.x(Servlet 6.1)의 공식 지원 컨테이너는 **Tomcat 11.0**입니다. 아래는 11.0.26 기준이며, [다운로드 페이지](https://tomcat.apache.org/download-11.cgi)의 최신 11.0.x로 숫자만 바꿔도 됩니다. Tomcat 10.1은 Servlet 6.0이라 Boot 4 공식 지원 대상이 아닙니다.
+
+```bash
+# Mac/Linux — 원하는 폴더에서 내려받아 풀고 CATALINA_HOME을 지정
+curl -O https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.26/bin/apache-tomcat-11.0.26.tar.gz
+tar xzf apache-tomcat-11.0.26.tar.gz
+export CATALINA_HOME="$PWD/apache-tomcat-11.0.26"
+# Windows: 같은 페이지에서 zip을 받아 압축을 풀고  set "CATALINA_HOME=C:\tomcat\apache-tomcat-11.0.26"
+```
+
+`export`는 현재 터미널에서만 유효하므로, 새 터미널을 열면 다시 지정합니다.
+
 macOS 또는 Linux에서는 보통 아래 스크립트를 사용합니다.
 
 ```bash
-$CATALINA_HOME/bin/startup.sh
-$CATALINA_HOME/bin/shutdown.sh
+$CATALINA_HOME/bin/startup.sh     # 백그라운드로 기동 — 프롬프트가 바로 돌아옴
+curl -I http://localhost:8080/    # 새 터미널 불필요, 같은 터미널에서 확인
+$CATALINA_HOME/bin/shutdown.sh    # 종료(출력 없음이 정상)
 ```
 
-Windows에서는 `startup.bat`, `shutdown.bat`를 사용합니다.
+```text
+예상 결과
+startup.sh → "Tomcat started." 한 줄 출력
+curl       → HTTP/1.1 200  (Tomcat 기본 환영 페이지)
+```
+
+Windows에서는 `%CATALINA_HOME%\bin\startup.bat`, `shutdown.bat`를 사용합니다. `startup.bat`는 Tomcat 로그가 흐르는 새 콘솔 창을 띄웁니다.
 
 실습 수준에서는 `http://localhost:8080` 접속으로 확인하면 충분합니다. 다만 여기서 중요한 건 "페이지가 뜬다"보다 **어떤 프로세스가 어떤 포트를 열고 있는지**를 이해하는 것입니다.
 
@@ -152,7 +171,7 @@ Windows에서는 `startup.bat`, `shutdown.bat`를 사용합니다.
 
 ##### 7.1 포트
 
-Tomcat은 기본적으로 8080 포트를 많이 사용합니다. 외장 톰캣에서는 `conf/server.xml`의 Connector 설정을 통해 포트를 바꿀 수 있습니다.
+Tomcat은 기본적으로 8080 포트를 많이 사용합니다. 외장 톰캣에서는 `$CATALINA_HOME/conf/server.xml`의 Connector 설정을 통해 포트를 바꿀 수 있습니다. 새 Connector를 추가하지 말고, 이미 있는 `<Connector port="8080" protocol="HTTP/1.1" ...>`의 숫자만 바꾼 뒤 Tomcat을 재시작합니다.
 
 ```xml
 <Connector port="9090" protocol="HTTP/1.1"
@@ -171,21 +190,45 @@ netstat -ano | findstr :8080         # Windows (마지막 열이 PID)
 
 Tomcat도 결국 Java 프로세스이므로 JVM 옵션이 중요합니다. 다만 `startup.sh`를 직접 고치기보다, 공식 문서가 권장하는 방식처럼 `setenv.sh` 또는 `setenv.bat`로 분리하는 편이 관리에 유리합니다.
 
+`setenv.sh`는 배포판에 들어 있지 않으므로 `$CATALINA_BASE/bin/setenv.sh`(실습처럼 `CATALINA_BASE`를 따로 두지 않으면 `$CATALINA_HOME/bin/`)에 새로 만듭니다. `catalina.sh`가 읽어 들이는 파일이라 실행 권한은 필요 없습니다.
+
 ```bash
 # Mac/Linux (setenv.sh)
-export JAVA_OPTS="$JAVA_OPTS -Xms512m -Xmx1024m"
-# Windows (setenv.bat):  set "JAVA_OPTS=%JAVA_OPTS% -Xms512m -Xmx1024m"
+export CATALINA_OPTS="$CATALINA_OPTS -Xms512m -Xmx1024m"
+# Windows (setenv.bat):  set "CATALINA_OPTS=%CATALINA_OPTS% -Xms512m -Xmx1024m"
 ```
 
-이 방식이 좋은 이유는 Tomcat 기본 스크립트를 건드리지 않고 환경별 설정만 따로 관리할 수 있기 때문입니다.
+메모리 옵션은 `JAVA_OPTS`가 아니라 `CATALINA_OPTS`에 둡니다. `JAVA_OPTS`는 `shutdown.sh`가 띄우는 종료용 JVM에도 붙기 때문에, 공식 `RUNNING.txt`도 메모리 설정은 `CATALINA_OPTS`에 두라고 안내합니다. 재시작 후 아래로 적용 여부를 확인합니다.
+
+```bash
+ps -ax -o command | grep '[c]atalina.startup.Bootstrap' | grep -o -- '-Xm[sx][0-9]*m'   # Mac/Linux
+```
+
+```text
+예상 결과
+-Xms512m
+-Xmx1024m
+```
+
+`catalina.out` 앞부분의 `명령 행 아규먼트:  -Xmx1024m` 줄로도 같은 내용을 볼 수 있습니다. 이 방식이 좋은 이유는 Tomcat 기본 스크립트를 건드리지 않고 환경별 설정만 따로 관리할 수 있기 때문입니다.
 
 ##### 7.3 로그
 
 실행 실패 원인은 대개 로그에 먼저 남습니다. Tomcat이 안 뜨거나 배포가 실패하면 브라우저보다 로그를 먼저 보는 습관이 중요합니다.
 
 ```bash
-tail -f $CATALINA_BASE/logs/catalina.out
+tail -f $CATALINA_HOME/logs/catalina.out   # CATALINA_BASE를 따로 지정했다면 $CATALINA_BASE/logs/ — 종료는 Ctrl+C
 ```
+
+```text
+예상 결과 (시스템 언어가 한국어면 Tomcat 메시지도 한국어로 찍힘)
+... VersionLoggerListener.log 서버 버전 이름:    Apache Tomcat/11.0.26
+... VersionLoggerListener.log 명령 행 아규먼트:  -Xmx1024m
+... AbstractProtocol.start 프로토콜 핸들러 ["http-nio-8080"]을(를) 시작합니다.
+... Catalina.start 서버가 [239] 밀리초 내에 시작되었습니다.
+```
+
+영문 환경에서는 `Starting ProtocolHandler ["http-nio-8080"]`, `Server startup in [239] milliseconds`로 찍힙니다. Windows의 `startup.bat`는 `catalina.out`을 만들지 않으므로, 새 콘솔 창이나 `logs\catalina.<날짜>.log`를 봅니다.
 
 #### 8. Spring Boot에서는 무엇이 달라지는가
 
@@ -217,6 +260,65 @@ server:
 - 실행 주체는 `java -jar`가 아니라 외장 Tomcat입니다.
 - 애플리케이션은 독립 실행형 JAR이 아니라 배포 대상 WAR입니다.
 - 컨테이너가 애플리케이션을 로딩하고 시작합니다.
+
+직접 해 보려면 ch06 `demo`를 **복사본**으로 바꿔 봅니다(원본은 JAR 실행용으로 둡니다). 공식 How-to의 세 가지 변경이면 됩니다. 먼저 `pom.xml`의 `<version>` 아래에 패키징을, `<dependencies>` 안에 내장 톰캣을 `provided`로 선언합니다.
+
+```xml
+<packaging>war</packaging>
+
+<!-- <dependencies> 안 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-tomcat</artifactId>
+    <scope>provided</scope>
+</dependency>
+```
+
+다음으로 메인 클래스가 `SpringBootServletInitializer`를 상속하게 합니다. 외장 Tomcat은 `main()`을 부르지 않고 이 초기화 클래스를 통해 애플리케이션을 시작합니다.
+
+**파일**: src/main/java/dev/wonslab/demo/DemoApplication.java
+
+```java
+package dev.wonslab.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+@SpringBootApplication
+public class DemoApplication extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(DemoApplication.class);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+```
+
+마지막으로 WAR를 만들어 `webapps/`에 넣고 Tomcat을 기동합니다. WAR 파일 이름이 곧 컨텍스트 경로가 되므로 `demo.war`로 복사하면 `/demo`로 배포됩니다.
+
+```bash
+./mvnw -DskipTests package                                   # Windows: mvnw.cmd -DskipTests package
+cp target/demo-0.0.1-SNAPSHOT.war $CATALINA_HOME/webapps/demo.war   # Windows: copy target\demo-0.0.1-SNAPSHOT.war %CATALINA_HOME%\webapps\demo.war
+$CATALINA_HOME/bin/startup.sh
+curl -i http://localhost:8080/demo/                          # 배포에 몇 초 걸리므로 404가 Tomcat HTML이면 잠시 후 다시
+```
+
+```text
+예상 결과
+catalina.out → ... Started DemoApplication in 2.646 seconds ...
+               ... HostConfig.deployWAR 웹 애플리케이션 아카이브 [.../webapps/demo.war]의 배치가 [3,724] 밀리초에 완료되었습니다.
+curl         → HTTP/1.1 404
+               {"timestamp":"...","status":404,"error":"Not Found","path":"/demo/"}
+```
+
+매핑이 없어 404지만, **본문이 JSON이고 `path`가 `/demo/`**라는 점이 Spring 애플리케이션이 `/demo` 컨텍스트에서 떠 있다는 증거입니다. WAR가 배포되지 않았다면 Tomcat 자체의 HTML 404 페이지가 나옵니다. 확인이 끝나면 `shutdown.sh`로 종료합니다.
+
 이 차이를 이해하면 내장 톰캣 기반 프로젝트와 전통적인 엔터프라이즈 배포 구조를 비교하기 쉬워집니다.
 
 #### 10. 자주 만나는 문제와 해석 방법
@@ -272,10 +374,10 @@ chmod +x $CATALINA_HOME/bin/*.sh
 
 #### 공식 문서 기준으로 더 보면 좋은 자료
 
-- [Tomcat Introduction](https://tomcat.apache.org/tomcat-10.1-doc/introduction.html)
-- [Tomcat Setup](https://tomcat.apache.org/tomcat-10.1-doc/setup.html)
-- [Tomcat RUNNING.txt](https://tomcat.apache.org/tomcat-10.1-doc/RUNNING.txt)
-- [Tomcat Configuration Reference](https://tomcat.apache.org/tomcat-10.1-doc/config/index.html)
+- [Tomcat Introduction](https://tomcat.apache.org/tomcat-11.0-doc/introduction.html)
+- [Tomcat Setup](https://tomcat.apache.org/tomcat-11.0-doc/setup.html)
+- [Tomcat RUNNING.txt](https://tomcat.apache.org/tomcat-11.0-doc/RUNNING.txt)
+- [Tomcat Configuration Reference](https://tomcat.apache.org/tomcat-11.0-doc/config/index.html)
 - [Spring Boot Reference: Servlet Web Applications](https://docs.spring.io/spring-boot/reference/web/servlet.html)
 - [Spring Boot How-to: Traditional Deployment](https://docs.spring.io/spring-boot/how-to/deployment/traditional-deployment.html)
 

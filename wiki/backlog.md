@@ -42,7 +42,7 @@ updated: 2026-09-28
 
 - ✅ 과제 3편(콘솔 앱·도서 대여 API·4계층 견적) — 페이지만으로 빌드·H2 실행·curl·스샷 11장 실측. 원본 추적 `raw/java-study/practice/`.
 - ✅ `com.example`→`dev.wonslab` 375건, ch01~ch10 Boot 4.1.1 기준 컴파일·실행 재검증(ch07 Querydsl·테스트 import, ch08 401/403·jjwt, ch10 OOM 등 교정).
-- 남은 것: ch08 8.0 외장 Tomcat 설정은 미실행, ch09 분류(3단계 vs T4) 엇갈림은 보류.
+- ch09 분류: 본문 3단계 유지 + T4에 "지식 계층 ≠ 학습 동선" 이유 명시(사용자 결정).
 
 ### 2026-09-28 — 이론↔실습 정합 + 하네스 00~M5 실제 실행 검증 + 메뉴 순서 정렬
 
@@ -201,8 +201,8 @@ updated: 2026-09-28
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **raw harness-kit 원본에 2026-09-28 교정 주석** — 위키 가이드에서 고친 결함(루트 `src/` 경로, guard `.env.example` 오차단, lint-fix 모노레포 무동작, 상대 경로 hook 무력화, Stop hook 시점)이 `raw/ai-engineering/harness-engineering/harness-kit/`에도 남아 있을 가능성. 원본 불신 검증 정책대로 교정 근거 주석.
-- [ ] **사용자 로컬 `~/harness-playground` 정리** — 커밋된 `web/src/App.jsx`의 `'http://localhost:3000'\;` 오타, 미추적 `package-lock.json` (검증 시 발견, 원본은 건드리지 않음).
+- [x] **raw harness-kit 교정 주석** — 완료(2026-09-28): hooks-config 경로 `$CLAUDE_PROJECT_DIR`, Stop hook 시점. 모노레포 전용 결함은 Java/Gradle 키트에 해당 없음. 이력은 harness-kit/README.md.
+- [x] **`~/harness-playground` 정리** — 완료(2026-09-28): App.jsx 오타 + package-lock.json 커밋 `8fff7e6` (push 없음).
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 

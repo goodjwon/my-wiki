@@ -11,7 +11,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/guard.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard.sh"
           }
         ]
       }
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/lint-fix.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-fix.sh"
           }
         ]
       }
@@ -36,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/update-progress.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/update-progress.sh"
           }
         ]
       }

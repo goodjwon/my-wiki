@@ -73,13 +73,16 @@
 
 ---
 
-## update-progress.sh (세션 종료 시 자동 실행)
+## update-progress.sh (Stop hook — 응답을 마칠 때마다 자동 실행)
+
+<!-- 교정(2026-09-28, 위키 실습 실행 검증): Stop hook은 "세션 종료 시"가 아니라 Claude가 응답을 마칠 때마다 실행된다(세션 종료 이벤트는 SessionEnd). 매 응답 재작성으로 수동 메모가 지워지지 않게 하는 방법은 wiki/guide-harness-module4.md Step 3 참조. -->
 
 아래 스크립트를 `.claude/hooks/update-progress.sh`에 저장:
 
 ```bash
 #!/bin/bash
-# 세션 종료 시 claude-progress.txt 자동 업데이트
+# Stop hook: 응답을 마칠 때마다 claude-progress.txt 자동 업데이트
+cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0   # 교정(2026-09-28): 세션이 하위 디렉터리로 cd해도 루트 기준 실행
 
 DATE=$(date '+%Y-%m-%d %H:%M')
 LAST_COMMIT=$(git log --oneline -1)

@@ -99,3 +99,9 @@ module5/02_weekly_review_prompt.md 실행
 - [OpenAI Harness Engineering](https://openai.com/index/harness-engineering/)
 - [Mitchell Hashimoto 블로그](https://mitchellh.com)
 - [Claude Code Hooks 공식 문서](https://docs.anthropic.com/claude-code/hooks)
+
+## 교정 이력 (원본 불신 검증)
+
+- **2026-09-28** (위키 실습 헤드리스 실행 검증 결과, 근거 로그 `../verification/`):
+  - `module3/hooks-config.json` — hook 스크립트 경로를 `.claude/hooks/...` 상대 경로에서 `"$CLAUDE_PROJECT_DIR"/.claude/hooks/...`로 교정. hook은 세션의 현재 작업 디렉터리에서 실행되므로, Claude가 하위 디렉터리로 `cd`한 뒤에는 상대 경로 스크립트를 찾지 못해 비차단 오류로 끝나고 guard가 조용히 무력화됨.
+  - `module3/02_self_verify_prompt.md`, `module4/claude-progress.txt` — Stop hook 실행 시점 "세션 종료 시" → "응답을 마칠 때마다"(세션 종료는 SessionEnd). update-progress.sh 앞에 루트 `cd` 추가.
