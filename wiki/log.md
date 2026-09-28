@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-28] meta | backlog 최신화 + 과제 스크린샷 raw/assets 이동 + 모범 답안 main 반영
+- backlog: 6개 nav 카테고리로 Strategy 갱신, 09-28 완료 작업 통합 요약, Pending 비움 + 알려진 한계 3건(Windows 미실측·과제 분량·Obsidian 이미지), 결정 사항 3건(Java 실습 기준·🆕 자동·ch09 분류), 운영 환경·규모(216페이지·201커밋) 갱신.
+- 과제 스크린샷 11장 `wiki/assets/practice/` → `raw/assets/practice/` (결정 사항 "이미지는 raw/assets 한 곳" 준수, 사이트 경로 불변).
+- 모범 답안 브랜치 `wiki-practice-2026-09-28`을 원본 저장소 3곳 main에 fast-forward 반영(사용자 허용).
+
 ## [2026-09-28] fix+verify | 잔여 정리 — ch08 외장 Tomcat 실행 검증, raw harness-kit 교정, ch09 분류 이유
 - **ch08 8.0 외장 Tomcat** (Tomcat 11.0.26 scratchpad 설치, JDK 21): 기동·종료·포트 변경·setenv·catalina.out·Boot 4.1.1 WAR 배포(`/demo`)까지 실측. 메모리 옵션 `JAVA_OPTS`→`CATALINA_OPTS`(공식 RUNNING.txt), 설치 절차·setenv 위치·`CATALINA_BASE` 빈 경로·WAR 3단계 보강, 참고 링크 11.0 문서로.
 - **raw harness-kit**: hooks-config 경로 `$CLAUDE_PROJECT_DIR`, Stop hook 시점 교정 + README 교정 이력.

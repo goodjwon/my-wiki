@@ -25,12 +25,14 @@ updated: 2026-09-28
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
-이 위키는 4개 카테고리로 누적 중:
+이 위키는 6개 카테고리(nav 최상위)로 누적 중:
 
 1. **위키·지식관리** — Obsidian·Memex·LLM Wiki 패턴 (메타·인프라)
-2. **하네스·AI 에이전트** — Claude Code 하네스 5모듈 실습 + AI 도구 비용 관리
-3. **Java·Spring·DDD** — Spring 7.0, JVM, OOP, 디자인 패턴, DDD 모델링
-4. **DB·운영·인프라** — DB 운영 함정, 네트워크, K8s, "기본값 사고" 패턴 누적
+2. **하네스·AI 에이전트** — 하네스 5모듈 실습(실행 검증) + Loop·Advisor–Worker·그래프 엔지니어링
+3. **개발방법론** — 개념 → 5권 도서 강의(CC→EJ→리팩터링→오브젝트→TDD) → DDD → 실습
+4. **Java·Spring** — 3단계 챕터 + 트랙 T1~T5 + **실습 과제 3편** + 레퍼런스 (Boot 4.1.1 기준)
+5. **DB·운영·인프라** — DB 운영 함정, 네트워크, K8s, "기본값 사고" 패턴 누적
+6. **앱 개발·출시** — Workout History 출시 여정 + 앱 설계 개념
 
 핵심 인사이트가 두 가지로 자라는 중:
 - **"복리 지식"** (Karpathy/Hashimoto) — 위키가 누적될수록 페이지 간 교차참조 가치 ↑
@@ -38,17 +40,14 @@ updated: 2026-09-28
 
 ## ✅ 최근 완료 작업 (2026-06~09 누적)
 
-### 2026-09-28 — Java·Spring 실습 과제 3편 + dev.wonslab 통일 + Boot 4 재검증
+### 2026-09-28 — 이론↔실습 정합·실행 검증 대정비 (전부 배포 완료, 상세는 log 2026-09-28 4건)
 
-- ✅ 과제 3편(콘솔 앱·도서 대여 API·4계층 견적) — 페이지만으로 빌드·H2 실행·curl·스샷 11장 실측. 원본 추적 `raw/java-study/practice/`.
-- ✅ `com.example`→`dev.wonslab` 375건, ch01~ch10 Boot 4.1.1 기준 컴파일·실행 재검증(ch07 Querydsl·테스트 import, ch08 401/403·jjwt, ch10 OOM 등 교정).
-- ch09 분류: 본문 3단계 유지 + T4에 "지식 계층 ≠ 학습 동선" 이유 명시(사용자 결정).
-
-### 2026-09-28 — 이론↔실습 정합 + 하네스 00~M5 실제 실행 검증 + 메뉴 순서 정렬
-
-- ✅ **메뉴 순서** — 하네스·AI 에이전트: 개념·소스를 실습 순서로. 개발방법론: 개념 → 5권(권장 순서 CC→EJ→리팩터링→오브젝트→TDD) → DDD → 실습, 책 유래 개념 7개를 Java 레퍼런스에서 이동.
-- ✅ **이론↔실습 불일치 약 25개 파일 교정** — hooks(exit 2·stdin JSON·Stop=응답마다), AGENTS.md 로드(2.1.283 실측: CLAUDE.md 있으면 미로드), Loop 종료 조건 3종·비용 완화, Advisor–Worker 동작 변경 기준 동기화, 이론→실습 역링크.
-- ✅ **하네스 00~M5 실제 실행 검증** — 샌드박스 헤드리스로 커밋 22개 체인 완주, M4 Planner 결과 재현성 고정(2회 동일 구조). 전 가이드 배너 갱신, 로그 `raw/ai-engineering/harness-engineering/verification/`. 상세는 log 2026-09-28.
+- ✅ **메뉴 순서** — AI 에이전트 개념·소스를 실습 순서로, 개발방법론을 개념→5권(권장 순서)→DDD→실습으로 재편(책 유래 개념 7개 이동).
+- ✅ **이론↔실습 불일치 약 25개 파일 교정** — hooks(exit 2·stdin JSON·Stop=응답마다), AGENTS.md 로드(2.1.283 실측: CLAUDE.md 있으면 미로드), Loop 종료 조건 3종, Advisor–Worker 동작 변경 기준, 이론→실습 역링크.
+- ✅ **하네스 00~M5 실제 실행 검증** — 헤드리스로 커밋 22개 체인 완주. M4(루트 `src/` 경로·Planner 재현성·Stop hook), M3(lint-fix 무동작·상대 경로 hook 무력화·guard `.env.example` 오차단) 등 교정, 배너·로그(`raw/ai-engineering/harness-engineering/verification/`). raw harness-kit 교정 주석, `~/harness-playground` 정리(`8fff7e6`, 원격 없음).
+- ✅ **메뉴 🆕 자동화** — `scripts/new_badge.py`(MkDocs hook): frontmatter `created` 30일 이내 페이지만 빌드 시 🆕.
+- ✅ **Java·Spring 실습 과제 3편** — [[guide-java-practice-core]]·[[guide-java-practice-spring-library]]·[[guide-java-practice-layered-quotation]]. 페이지 코드만으로 빌드·테스트·H2 기동·curl 실측, 스샷 11장(`raw/assets/practice/`). 모범 답안 소스는 원본 저장소 3곳 `practice/` (브랜치 + main 반영, `raw/java-study/practice/README.md`).
+- ✅ **패키지 `dev.wonslab` 통일**(375건) + **ch01~ch10 Boot 4.1.1 실행 재검증** — ch07 Querydsl·테스트 import, ch08 401/403·jjwt·외장 Tomcat 11, ch10 OOM·로컬 불가 옵션 교정. 트랙 장 번호 라벨 수정.
 
 ### 2026-08-02~09-03 (요약 — 상세는 log)
 
@@ -201,8 +200,12 @@ updated: 2026-09-28
 
 ### 다음 세션 최우선 (Pending)
 
-- [x] **raw harness-kit 교정 주석** — 완료(2026-09-28): hooks-config 경로 `$CLAUDE_PROJECT_DIR`, Stop hook 시점. 모노레포 전용 결함은 Java/Gradle 키트에 해당 없음. 이력은 harness-kit/README.md.
-- [x] **`~/harness-playground` 정리** — 완료(2026-09-28): App.jsx 오타 + package-lock.json 커밋 `8fff7e6` (push 없음).
+(비어 있음 — 2026-09-28 작업은 모두 완료·배포)
+
+알려진 한계(급하지 않음):
+- **Windows 명령 미실측** — Java 챕터·과제·하네스의 Windows 분기(`gradlew.bat`, `setenv.bat`, PowerShell curl 등)는 macOS에서만 실측. Windows PC가 생기면 1회 점검.
+- **과제 페이지 분량** — 과제 3편이 980~1,700줄(코드 대부분은 접힘 모범 답안). 독자 피드백이 "길다"면 모범 답안을 저장소 브랜치 링크로 대체하는 방안 검토.
+- **Obsidian에서 과제 스크린샷 미표시** — 이미지가 `raw/assets/`에 있고 페이지는 `assets/...` 상대 경로(사이트 빌드 기준)라 Obsidian 미리보기에서는 안 보임. 사이트는 정상.
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
 
@@ -243,6 +246,10 @@ updated: 2026-09-28
 
 ## ⚠️ 주의사항·결정 사항
 
+- **Java 실습 기준 (2026-09-28)**: 패키지·groupId는 `dev.wonslab.*` 통일, Spring Boot는 start.spring.io 기본값(현재 **4.1.1**) 그대로 — 3.x로 되돌리는 안내 금지, 경로가 바뀐 import는 Boot 3.x 경로를 주석으로 병기. 실습 과제 소재 저장소명·고유명사(S2B 등)는 독자 콘텐츠 노출 금지(raw 추적층에만). 모범 답안 소스는 원본 저장소 3곳의 `practice/` 폴더(브랜치 `wiki-practice-2026-09-28` → 사용자 허용으로 main에도 fast-forward 반영).
+- **🆕 배지는 손으로 달지 않음 (2026-09-28)**: `scripts/new_badge.py`가 `created` 30일 이내만 자동 부착 — 빌드 시점 기준이라 30일 후 다음 배포에서 사라짐.
+- **ch09 분류 (2026-09-28)**: 본문은 3단계(고급·품질) 유지, T4 트랙은 학습 동선상 함께 다룸 — "지식 계층 ≠ 학습 동선" 이유를 T4에 명시.
+
 - **원본 불신 검증 원칙 (2026-07-04)**: raw/원본(Notion·개인 정리)도 틀릴 수 있다 — ingest·복구 시 기술 사실은 **공식 문서·정평 있는 도서와 대조**해 교정하고 raw에 교정 근거 주석을 남긴다 (CLAUDE.md 보강 정책 6번 명문화). 첫 적용: ch01 Java vs C/C++ 표 원본 오류 3건 교정("C는 함수형"→절차적, C++11 std::thread, JIT 반영).
 - **새 자료 트랙도 동일 구성 규칙 (2026-07-04)**: 앞으로 Python·C 등 자료 트랙을 계속 추가할 예정 — 새 트랙은 처음부터 기존 구성 규칙을 그대로 따른다: §7 문체(합니다체) + §7-7 실습 스캐폴드 4요소(언어 무관 원칙 명시됨, 실행 명령 표준형만 언어별 추가) + §7-8 불쑥 등장 금지(선행 소개) + 붙은 리스트·top-level 펜스 규칙. nav는 java-study처럼 "학습 트랙 vs 레퍼런스" 분리 구조.
 - **불쑥 등장 금지 §7-8 신설 (2026-07-04)**: 사용자 피드백("태스크 B가 왜 만드는지 설명 없이 등장, [베이스라인 측정 중]이 갑자기 튀어나옴") → 선행 소개 4규칙(블록 리드인·표기 첫 등장 정의·태스크 의도 문장·산출물 반문장 재소개)을 guide-wiki-authoring-standards §7-8 + CLAUDE.md 셀프체크에 명문화. 판정 기준: "절만 떼어 읽어도 '이게 뭐지?'가 없는가".
@@ -271,8 +278,10 @@ updated: 2026-09-28
 | Git 원격 | `git@github.com:goodjwon/my-wiki.git` |
 | 로컬 path | PC별 상이 (예: `/Users/jungwonpark/VsCodeProjects/my-wiki/`, `/Users/jwon/VsCodeProjects/my-wiki/`) |
 | 품질 게이트 | `scripts/style-lint.sh`(§7 문체) · `scripts/scaffold-lint.sh`(§7-7 실습 스캐폴드) — 토큰 0 |
+| 빌드 hook | `scripts/new_badge.py` — nav 🆕 자동(30일) |
+| 이미지 | `raw/assets/` (빌드 시 `docs/assets/`로 복사) — 현재 `raw/assets/practice/` 스샷 11장 |
 
-## 📊 위키 규모 (2026-07-04 기준)
+## 📊 위키 규모 (2026-09-28 기준)
 
 ```bash
 # 빠른 통계 (다른 PC에서 확인)
@@ -284,11 +293,11 @@ git log --oneline | wc -l
 
 | 구분 | 수 |
 |------|---|
-| wiki 페이지 | **198개** (entity·concept·src·guide·lecture·plan·index·log·backlog 종합) |
+| wiki 페이지 | **216개** (guide 25 포함) |
 | 5권 도서 강의 교재 | **93편** (lecture-*) |
-| raw 원본 | 159 파일 (14개 주제 디렉터리) |
-| nav 카테고리 | 5개 (위키관리·하네스·Java/Spring·DB운영·📚도서) |
-| 커밋 | 162 (5월 30일~) |
+| raw 원본 | 185 파일 (13개 주제 디렉터리 + assets) |
+| nav 카테고리 | 6개 (위키관리·하네스/AI 에이전트·개발방법론·Java/Spring·DB운영·앱 개발/출시) |
+| 커밋 | 201 (5월 30일~) |
 
 ## 🗺️ 새 세션 시작 가이드
 
