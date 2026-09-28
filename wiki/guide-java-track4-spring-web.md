@@ -123,4 +123,4 @@ updated: 2026-09-29
 - [[concept-db-connection-pool]] · [[concept-varchar-length-prefix]] — DB 운영 함정
 - [[concept-api-versioning]] · [[concept-api-backward-compatibility]] — API 진화
 - [[guide-java-track3-io-network]] · [[guide-java-track5-deep-dive]] — 이전·다음 트랙
-- [[guide-java-practice-library-ui]] · [[guide-java-practice-library-merge]] — 과제 2 이어서: 화면 만들기와 API 병합
+- [[guide-java-practice-library-ui]] · [[guide-java-practice-library-merge]] — 과제 2 이어서: 화면 만들기, API 병합

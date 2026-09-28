@@ -9,7 +9,7 @@ updated: 2026-09-29
 
 # 과제 2-2. 도서 대여 화면 — React + Vite
 
-> **이 과제의 목표**: [[guide-java-practice-spring-library]](과제 2)에서 만든 도서 대여 API를 사람이 쓰는 **웹 화면**으로 옮깁니다. React·Vite·TypeScript로 도서 목록·회원 등록·대출·반납 화면을 만들고, API 서버 없이도 돌아가는 **목업 모드**와 **컴포넌트 테스트**까지 갖춥니다. 실제 API와 연결하는 일은 다음 과제 [[guide-java-practice-library-merge]]에서 합니다.
+> **이 과제의 목표**: [[guide-java-practice-spring-library]](과제 2)에서 만든 도서 대여 API를 사람이 쓰는 **웹 화면**으로 옮깁니다. React·Vite·TypeScript로 메인·도서 목록·회원 등록·대출·반납 화면을 만들고, API 서버 없이도 돌아가는 **목업 모드**와 **컴포넌트 테스트**까지 갖춥니다. 실제 API와 연결하는 일은 다음 과제 [[guide-java-practice-library-merge]]에서 합니다.
 >
 > **선수 학습**: 과제 2의 API 명세와 오류 응답 모양 `{"status", "code", "message"}` — 이 과제의 화면은 그 명세를 그대로 따릅니다. Node.js 20 이상이 설치돼 있어야 합니다(`node -v`로 확인).
 
@@ -21,7 +21,7 @@ updated: 2026-09-29
 
 | 항목 | 내용 |
 |------|------|
-| 결과물 | 화면 3개(도서 목록·검색, 회원 등록, 대출·반납)를 가진 단일 페이지 앱(SPA) |
+| 결과물 | 화면 4개(메인, 도서 목록·검색, 회원 등록, 대출·반납)를 가진 단일 페이지 앱(SPA) |
 | 기술 | Vite 8 · React 19 · TypeScript 6 · React Router 8 · axios · Tailwind CSS 4 · Vitest 5 + Testing Library |
 | 예상 소요 | 3~5시간 (단계별 모범 답안을 보면 1.5시간) |
 | 프로젝트 | `library-ui` — 과제 2의 `library` 디렉터리와 **같은 위치(형제)** 에 만듭니다 |
@@ -42,17 +42,18 @@ practice/
 | 2 | 서버 응답을 TypeScript 타입으로 선언하고, axios 호출을 한 모듈에 모을 수 있습니다 | `src/api/` 구조 |
 | 3 | 같은 인터페이스를 지키는 목업 구현으로 서버 없이 화면을 실행할 수 있습니다 | `npm run dev:mock` |
 | 4 | 서버 오류 코드를 한글 안내로 바꿔 보여 줄 수 있습니다 | 중복 대출 시 안내 문구 |
-| 5 | Testing Library로 사용자 관점(버튼 클릭·문구 확인)의 컴포넌트 테스트를 쓸 수 있습니다 | `npm test` 7개 통과 |
+| 5 | Testing Library로 사용자 관점(버튼 클릭·문구 확인)의 컴포넌트 테스트를 쓸 수 있습니다 | `npm test` 9개 통과 |
 
 ---
 
 ## 요구사항
 
-화면 요구사항입니다. 번호(S1~S6)는 본문과 채점 기준에서 같은 뜻으로 씁니다.
+화면 요구사항입니다. 번호(S0~S6)는 본문과 채점 기준에서 같은 뜻으로 씁니다.
 
 | 번호 | 화면 | 요구사항 |
 |------|------|---------|
-| S1 | 도서 목록 (`/`) | 전체 도서를 표(번호·제목·저자·ISBN)로 보여 줍니다. 검색어를 넣고 **검색**을 누르면 제목·저자 부분 일치 결과만 남깁니다 |
+| S0 | 메인 (`/`) | 짧은 소개 문구와 검색창, **신착 도서** 3권(최근 등록 순) 카드, 화면별 **바로가기**를 보여 줍니다. 검색하면 `/books?keyword=검색어`로 이동합니다 |
+| S1 | 도서 목록 (`/books`) | 전체 도서를 표(번호·제목·저자·ISBN)로 보여 줍니다. 검색어를 넣고 **검색**을 누르면 제목·저자 부분 일치 결과만 남깁니다. 검색어는 주소의 `?keyword=`에서 읽으므로, 메인에서 검색해 들어와도 같은 결과가 나옵니다 |
 | S2 | 회원 등록 (`/members/new`) | 이름·이메일을 받아 가입시키고 "N번 회원으로 가입되었습니다"를 보여 줍니다. 이름이 비었거나 이메일 형식이 틀리면 **요청을 보내지 않고** 안내합니다 |
 | S3 | 대출·반납 (`/loans`) | 회원 번호를 입력하고 도서를 목록에서 골라 **대출**합니다. 성공하면 반납 기한을 안내합니다 |
 | S4 | 대출·반납 (`/loans`) | **대출 목록 보기**로 회원의 대출 목록(대출 번호·도서·대출일·반납 기한·상태)을 봅니다. 대출 중인 행에는 **반납** 버튼이 있고, 기한이 지난 대출은 "연체"로 표시합니다 |
@@ -78,6 +79,7 @@ S5의 오류 코드별 안내 문구입니다. 서버 메시지("이미 대출 �
 
 | 화면 동작 | 메서드 · 경로 | 과제 2에 있는가 |
 |------|------|------|
+| 메인 신착 도서 | `GET /api/books` (번호가 큰 3권을 화면에서 고름) | 있음 |
 | 도서 목록·검색 | `GET /api/books?keyword=` | 있음 |
 | 회원 등록 | `POST /api/members` | 있음 |
 | 대출 | `POST /api/loans` | 있음 |
@@ -145,7 +147,7 @@ library-ui/
 └── src/
     ├── main.tsx               라우터로 App 감싸기
     ├── App.tsx                상단 메뉴 + 주소별 화면
-    ├── App.test.tsx           컴포넌트 테스트 7개
+    ├── App.test.tsx           컴포넌트 테스트 9개
     ├── index.css              Tailwind 불러오기
     ├── api/
     │   ├── types.ts           응답 타입 + LibraryApi 인터페이스
@@ -154,6 +156,7 @@ library-ui/
     │   ├── mock.ts            메모리 목업 구현
     │   └── index.ts           둘 중 하나를 고르는 Context
     ├── pages/
+    │   ├── HomePage.tsx       S0
     │   ├── BooksPage.tsx      S1
     │   ├── MemberPage.tsx     S2
     │   └── LoanPage.tsx       S3·S4
@@ -473,17 +476,20 @@ npx tsc -b
 
 ---
 
-## 4. 화면 — 라우팅과 페이지 3개
+## 4. 화면 — 라우팅과 페이지 4개
 
-**과제**: 주소별로 화면을 바꾸는 `App`과 페이지 컴포넌트 3개를 만듭니다. 이 단계의 목표는 **모든 페이지가 같은 흐름(입력 → `useApi()` 호출 → 성공 안내 또는 `toMessage`로 오류 안내)을 따르게** 하는 것입니다.
+**과제**: 주소별로 화면을 바꾸는 `App`과 페이지 컴포넌트 4개를 만듭니다. 이 단계의 목표는 **모든 페이지가 같은 흐름(입력 → `useApi()` 호출 → 성공 안내 또는 `toMessage`로 오류 안내)을 따르게** 하는 것입니다.
 
 | 파일 | 요구 사항 |
 |------|----------|
 | `main.tsx` | `App`을 `BrowserRouter`로 감싸서 렌더링 |
-| `App.tsx` | 상단 메뉴(`NavLink` 3개) + `Routes`로 `/`·`/members/new`·`/loans` 연결. 목업 모드면 메뉴 오른쪽에 "목업 데이터" 표시 |
-| `BooksPage.tsx` | S1. 처음에는 전체 목록, **검색** 버튼을 누를 때만 다시 조회 |
+| `App.tsx` | 상단 메뉴(제목 "도서 대여"는 메인으로 가는 `Link`, 화면 메뉴는 `NavLink` 3개) + `Routes`로 `/`·`/books`·`/members/new`·`/loans` 연결. 목업 모드면 메뉴 오른쪽에 "목업 데이터" 표시 |
+| `HomePage.tsx` | S0. 검색은 `useNavigate()`로 `/books?keyword=...`에 이동, 신착 도서는 `searchBooks()` 결과를 번호 역순으로 3권 |
+| `BooksPage.tsx` | S1. 검색어를 `useSearchParams()`로 주소에서 읽고, **검색** 버튼을 누르면 주소의 검색어를 바꿈 |
 | `MemberPage.tsx` | S2. `<form noValidate>`로 브라우저 기본 검증을 끄고 직접 검증 |
 | `LoanPage.tsx` | S3·S4. 도서 선택 목록은 `searchBooks()`로 채움. 대출·반납 후에는 대출 목록을 다시 조회 |
+
+검색어를 페이지 안의 `useState`가 아니라 **주소**(`?keyword=`)에 두는 것이 이 단계의 요점입니다. 그래야 메인에서 검색해 들어와도, 결과 화면을 새로 고치거나 주소를 복사해 보내도 같은 검색 결과가 나옵니다. React Router의 `useSearchParams()`가 주소의 검색어를 읽고 바꾸는 훅입니다.
 
 안내 문구 요소에는 역할을 붙입니다 — 오류는 `role="alert"`, 성공은 `role="status"`. 화면 낭독기가 문구를 읽어 주고, 6단계의 테스트가 이 역할로 문구를 찾습니다. 입력 칸은 `<label>`로 감싸 이름을 붙이면 테스트에서 `getByLabelText('회원 번호')`처럼 사용자가 보는 이름으로 찾을 수 있습니다.
 
@@ -509,13 +515,14 @@ npx tsc -b
     )
     ```
 
-    메뉴와 주소별 화면입니다. `NavLink`는 현재 주소와 맞는 메뉴에 `isActive`를 알려 줘 굵게 표시할 수 있습니다. `/`에 `end`를 붙이지 않으면 모든 주소가 `/`로 시작하므로 "도서 목록"이 늘 강조됩니다.
+    메뉴와 주소별 화면입니다. `NavLink`는 현재 주소와 맞는 메뉴에 `isActive`를 알려 줘 굵게 표시할 수 있습니다. 왼쪽 제목 "도서 대여"는 강조할 필요가 없어 `NavLink`가 아닌 `Link`로 메인(`/`)에 연결합니다. `/books?keyword=자바`처럼 뒤에 검색어가 붙어도 경로는 `/books`이므로 같은 `BooksPage`가 그려집니다.
 
     **파일**: src/App.tsx
 
     ```tsx
-    import { NavLink, Route, Routes } from 'react-router'
+    import { Link, NavLink, Route, Routes } from 'react-router'
     import BooksPage from './pages/BooksPage'
+    import HomePage from './pages/HomePage'
     import LoanPage from './pages/LoanPage'
     import MemberPage from './pages/MemberPage'
 
@@ -527,8 +534,8 @@ npx tsc -b
         <div className="min-h-screen bg-slate-50 text-slate-900">
           <header className="border-b border-slate-200 bg-white">
             <nav className="mx-auto flex max-w-4xl items-center gap-6 px-6 py-4">
-              <span className="text-lg font-bold">도서 대여</span>
-              <NavLink to="/" end className={linkClass}>도서 목록</NavLink>
+              <Link to="/" className="text-lg font-bold">도서 대여</Link>
+              <NavLink to="/books" className={linkClass}>도서 목록</NavLink>
               <NavLink to="/members/new" className={linkClass}>회원 등록</NavLink>
               <NavLink to="/loans" className={linkClass}>대출·반납</NavLink>
               {import.meta.env.VITE_USE_MOCK === 'true' && (
@@ -538,7 +545,8 @@ npx tsc -b
           </header>
           <main className="mx-auto max-w-4xl px-6 py-8">
             <Routes>
-              <Route path="/" element={<BooksPage />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/books" element={<BooksPage />} />
               <Route path="/members/new" element={<MemberPage />} />
               <Route path="/loans" element={<LoanPage />} />
             </Routes>
@@ -548,33 +556,120 @@ npx tsc -b
     }
     ```
 
-??? example "모범 답안 — pages (3개 파일)"
+??? example "모범 답안 — pages (4개 파일)"
 
-    도서 목록입니다. 입력 중인 글자(`input`)와 실제 검색어(`keyword`)를 나눠, 글자를 칠 때마다가 아니라 **검색** 버튼을 누를 때만 서버에 묻습니다.
+    메인 화면입니다. 신착 도서를 위해 새 API를 만들지 않고, 목록 API 결과를 번호 역순으로 정렬해 앞의 3권만 씁니다 — 번호는 등록 순서대로 커지기 때문입니다. 검색은 서버에 묻지 않고 `navigate()`로 도서 목록 화면에 검색어를 넘기기만 합니다. `URLSearchParams`는 `자바` 같은 한글을 주소에 쓸 수 있는 형태(`%EC%9E%90...`)로 바꿔 줍니다.
+
+    **파일**: src/pages/HomePage.tsx
+
+    ```tsx
+    import { useEffect, useState, type FormEvent } from 'react'
+    import { Link, useNavigate } from 'react-router'
+    import { useApi } from '../api'
+    import { toMessage } from '../api/errors'
+    import type { Book } from '../api/types'
+
+    const MENUS = [
+      { to: '/books', title: '도서 목록', description: '전체 도서를 보고 제목·저자로 검색합니다' },
+      { to: '/members/new', title: '회원 등록', description: '이름과 이메일로 새 회원을 가입시킵니다' },
+      { to: '/loans', title: '대출·반납', description: '회원 번호로 대출하고, 대출 목록에서 반납합니다' },
+    ]
+
+    export default function HomePage() {
+      const api = useApi()
+      const navigate = useNavigate()
+      const [input, setInput] = useState('')
+      const [latest, setLatest] = useState<Book[]>([])
+      const [error, setError] = useState('')
+
+      // 신착 도서 = 번호가 큰(나중에 등록된) 도서 3권 — 새 API 없이 목록 API 결과로 계산한다
+      useEffect(() => {
+        api.searchBooks().then(
+          (books) => setLatest([...books].sort((a, b) => b.id - a.id).slice(0, 3)),
+          (e) => setError(toMessage(e)),
+        )
+      }, [api])
+
+      // 검색어를 주소(/books?keyword=...)에 실어 도서 목록 화면으로 보낸다
+      const onSubmit = (e: FormEvent) => {
+        e.preventDefault()
+        navigate(`/books?${new URLSearchParams({ keyword: input.trim() })}`)
+      }
+
+      return (
+        <section className="space-y-8">
+          <div className="rounded bg-white p-8 shadow-sm">
+            <h1 className="text-2xl font-bold">우리 동네 작은 도서관</h1>
+            <p className="mt-2 text-slate-600">읽고 싶은 책을 찾고, 회원 번호 하나로 빌리고 반납하세요. 대출 기간은 14일입니다.</p>
+            <form onSubmit={onSubmit} className="mt-6 flex gap-2">
+              <input
+                aria-label="검색어"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="제목 또는 저자로 도서 검색"
+                className="flex-1 rounded border border-slate-300 px-3 py-2"
+              />
+              <button className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">검색</button>
+            </form>
+          </div>
+
+          <div>
+            <h2 className="mb-3 text-lg font-semibold">신착 도서</h2>
+            {error && <p role="alert" className="rounded bg-red-50 p-3 text-red-700">{error}</p>}
+            <ul aria-label="신착 도서" className="grid gap-4 sm:grid-cols-3">
+              {latest.map((b) => (
+                <li key={b.id} className="rounded bg-white p-4 shadow-sm">
+                  <p className="font-medium">{b.title}</p>
+                  <p className="mt-1 text-sm text-slate-600">{b.author}</p>
+                  <p className="mt-2 font-mono text-xs text-slate-400">{b.isbn}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="mb-3 text-lg font-semibold">바로가기</h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {MENUS.map((m) => (
+                <Link key={m.to} to={m.to} className="rounded border border-slate-200 bg-white p-4 hover:border-blue-400">
+                  <span className="font-medium text-blue-700">{m.title}</span>
+                  <span className="mt-1 block text-sm text-slate-600">{m.description}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+    ```
+
+    도서 목록입니다. 입력 중인 글자(`input`)와 실제 검색어(`keyword`)를 나눠, 글자를 칠 때마다가 아니라 **검색** 버튼을 누를 때만 서버에 묻습니다. 실제 검색어는 주소에 있으므로 **검색** 버튼은 `setParams()`로 주소만 바꾸고, 주소가 바뀌면 `useEffect`가 다시 조회합니다. 검색어가 있을 때는 표 위에 결과 권수를 보여 줍니다.
 
     **파일**: src/pages/BooksPage.tsx
 
     ```tsx
     import { useEffect, useState, type FormEvent } from 'react'
+    import { useSearchParams } from 'react-router'
     import { useApi } from '../api'
     import { toMessage } from '../api/errors'
     import type { Book } from '../api/types'
 
     export default function BooksPage() {
       const api = useApi()
-      const [input, setInput] = useState('')
-      const [keyword, setKeyword] = useState('')
+      const [params, setParams] = useSearchParams()
+      const keyword = params.get('keyword') ?? '' // 검색어는 주소(?keyword=)가 기억한다
+      const [input, setInput] = useState(keyword)
       const [books, setBooks] = useState<Book[]>([])
       const [error, setError] = useState('')
 
-      // 검색어(keyword)가 바뀔 때마다 다시 조회한다 — 처음에는 빈 검색어로 전체 목록
+      // 주소의 검색어가 바뀔 때마다 다시 조회한다 — 검색어가 없으면 전체 목록
       useEffect(() => {
         api.searchBooks(keyword).then(setBooks, (e) => setError(toMessage(e)))
       }, [api, keyword])
 
       const onSubmit = (e: FormEvent) => {
         e.preventDefault()
-        setKeyword(input.trim())
+        setParams(input.trim() ? { keyword: input.trim() } : {})
       }
 
       return (
@@ -590,6 +685,7 @@ npx tsc -b
             />
             <button className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">검색</button>
           </form>
+          {keyword && <p className="mb-2 text-sm text-slate-600">'{keyword}' 검색 결과 {books.length}권</p>}
           {error && <p role="alert" className="mb-4 rounded bg-red-50 p-3 text-red-700">{error}</p>}
           <table className="w-full border-collapse bg-white text-left shadow-sm">
             <thead className="bg-slate-100 text-sm">
@@ -819,7 +915,7 @@ npx tsc -b
 
 ## 5. 목업 모드로 실행하기
 
-이 단계에서는 API 서버 없이 화면을 띄워 S1~S6을 눈으로 확인합니다. 개발 서버가 터미널을 붙잡으므로, 끝나면 `Ctrl+C`로 내립니다.
+이 단계에서는 API 서버 없이 화면을 띄워 S0~S6을 눈으로 확인합니다. 개발 서버가 터미널을 붙잡으므로, 끝나면 `Ctrl+C`로 내립니다.
 
 ```bash
 npm run dev:mock
@@ -835,17 +931,33 @@ npm run dev:mock
 
 `ready` 줄의 `mock`이 현재 모드입니다. 브라우저에서 `http://localhost:5173/`을 엽니다.
 
+![메인 화면 (목업 모드)](assets/practice/ui/05-home.png)
+
+*그림 1. 메인 화면 — 소개 문구와 검색창, 신착 도서 3권, 화면별 바로가기*
+
+첫 화면은 메인(S0)입니다. 가운데 **신착 도서**에는 목업 도서 4권 중 번호가 큰 3권(오브젝트·클린 코드·자바 ORM 표준 JPA 프로그래밍)이 최근 등록 순으로 나옵니다. 아래 **바로가기** 카드는 상단 메뉴와 같은 화면으로 이동합니다. 오른쪽 위의 "목업 데이터" 표시는 `.env.mock`의 `VITE_USE_MOCK=true`가 적용됐다는 뜻입니다.
+
+검색창에 `자바`를 넣고 **검색**을 누릅니다.
+
+![메인에서 검색한 결과 (목업 모드)](assets/practice/ui/06-search-result.png)
+
+*그림 2. 검색 결과 — 메인의 검색이 도서 목록 화면(`/books?keyword=자바`)으로 이어짐*
+
+화면이 도서 목록으로 바뀌고, 주소는 `http://localhost:5173/books?keyword=%EC%9E%90%EB%B0%94`가 됩니다. `%EC%9E%90%EB%B0%94`는 `자바`를 주소에 쓸 수 있게 바꾼 값이고, 브라우저에 따라 주소창에는 `자바`로 풀어서 보여 줍니다. 검색창에는 `자바`가 그대로 들어 있고, 표 위의 "'자바' 검색 결과 2권" 아래로 제목에 "자바"가 들어간 2권만 남았습니다(S0 → S1). 이 상태에서 새로 고침해도 같은 결과가 나오는 것은 검색어가 주소에 있기 때문입니다.
+
+상단 메뉴의 **도서 목록**을 누르면 검색어 없이 `/books`로 이동해 전체 목록이 보입니다.
+
 ![도서 목록 화면 (목업 모드)](assets/practice/ui/01-book-list.png)
 
-*그림 1. 도서 목록 — 목업의 시드 도서 4권과 오른쪽 위 "목업 데이터" 표시*
+*그림 3. 도서 목록 — 검색어가 없으면 목업의 시드 도서 4권 전체*
 
-첫 화면에는 과제 2의 `data.sql`과 같은 도서 4권이 보입니다. 오른쪽 위의 "목업 데이터" 표시는 `.env.mock`의 `VITE_USE_MOCK=true`가 적용됐다는 뜻입니다. 검색 칸에 `자바`를 넣고 **검색**을 누르면 제목에 "자바"가 들어간 2권만 남습니다(S1).
+검색어가 없으므로 과제 2의 `data.sql`과 같은 도서 4권이 번호순으로 모두 보입니다(S1). 검색창에 다른 검색어를 넣고 **검색**을 누르면 주소의 `?keyword=`가 바뀌면서 목록이 다시 걸러집니다.
 
 상단 메뉴의 **대출·반납**으로 이동해 회원 번호 `1`, 도서 `1. 이펙티브 자바`를 고르고 **대출**을 누릅니다.
 
 ![대출 성공 화면](assets/practice/ui/02-loan-form.png)
 
-*그림 2. 대출 성공 — 초록 안내에 반납 기한, 아래에 회원 1번의 대출 목록*
+*그림 4. 대출 성공 — 초록 안내에 반납 기한, 아래에 회원 1번의 대출 목록*
 
 초록 안내의 반납 기한이 오늘로부터 14일 뒤(과제 2의 R6)이고, 아래 대출 목록에 방금 빌린 도서가 "대출 중"과 **반납** 버튼으로 나타납니다(S3·S4). 대출 번호가 2인 이유는 시드의 연체 대출이 1번을 먼저 차지했기 때문입니다 — 과제 2 서버와 같은 동작입니다.
 
@@ -853,7 +965,7 @@ npm run dev:mock
 
 ![중복 대출 409 안내](assets/practice/ui/03-loan-409.png)
 
-*그림 3. 중복 대출 — 목업이 409 `BOOK_ALREADY_LOANED`를 던지고, 화면이 한글 안내로 바꿔 보여 줌*
+*그림 5. 중복 대출 — 목업이 409 `BOOK_ALREADY_LOANED`를 던지고, 화면이 한글 안내로 바꿔 보여 줌*
 
 목업이 서버와 같은 `ApiError(409, 'BOOK_ALREADY_LOANED', ...)`를 던지고, `toMessage()`가 요구사항 표의 안내 문구로 바꿨습니다(S5). 이어서 대출 목록의 **반납**을 누르면 상태가 "반납 완료"로 바뀝니다. 회원 번호를 `2`로 바꿔 대출을 시도하면 연체 안내가, **대출 목록 보기**를 누르면 빨간 "연체" 표시가 붙은 시드 대출이 보입니다.
 
@@ -867,13 +979,15 @@ npm run dev:mock
 
 | # | 테스트 | 확인하는 요구사항 |
 |---|------|------|
-| 1 | 시드 도서 4권을 표로 보여 줌 | S1 목록 |
-| 2 | 검색어로 걸러 냄 | S1 검색 |
-| 3 | 대출하면 완료 안내와 "대출 중" 행 | S3 |
-| 4 | 같은 도서를 다시 빌리면 409 안내 | S5 (`BOOK_ALREADY_LOANED`) |
-| 5 | 연체 회원 대출 시 안내 | S5 (`OVERDUE_MEMBER`) |
-| 6 | 반납하면 "반납 완료" | S4 |
-| 7 | 이메일 형식 오류면 요청을 보내지 않음 → 고치면 가입 | S2 |
+| 1 | 신착 도서 3권을 최근 등록 순으로 보여 줌 | S0 신착 도서 |
+| 2 | 메인에서 검색하면 도서 목록 화면으로 이동해 결과를 보여 줌 | S0 검색 → S1 |
+| 3 | 시드 도서 4권을 표로 보여 줌 | S1 목록 |
+| 4 | 검색어로 걸러 냄 | S1 검색 |
+| 5 | 대출하면 완료 안내와 "대출 중" 행 | S3 |
+| 6 | 같은 도서를 다시 빌리면 409 안내 | S5 (`BOOK_ALREADY_LOANED`) |
+| 7 | 연체 회원 대출 시 안내 | S5 (`OVERDUE_MEMBER`) |
+| 8 | 반납하면 "반납 완료" | S4 |
+| 9 | 이메일 형식 오류면 요청을 보내지 않음 → 고치면 가입 | S2 |
 
 Testing Library는 컴포넌트 내부 상태가 아니라 **사용자가 보는 것**(버튼 이름, 라벨, 안내 문구)으로 요소를 찾습니다. 그래서 내부 구현을 바꿔도 화면 동작이 같으면 테스트가 깨지지 않습니다. `userEvent`는 실제 사용자처럼 글자를 한 자씩 입력하고 클릭합니다.
 
@@ -891,7 +1005,7 @@ Testing Library는 컴포넌트 내부 상태가 아니라 **사용자가 보는
     afterEach(cleanup) // 테스트마다 렌더한 화면을 지운다
     ```
 
-    화면 테스트입니다. `renderAt()`은 테스트마다 **새 목업**을 `ApiContext`로 끼우고, `MemoryRouter`로 원하는 주소에서 시작합니다. 7번 테스트는 `vi.spyOn`으로 목업의 `registerMember` 호출 여부를 감시해 "요청을 보내지 않았다"를 확인합니다.
+    화면 테스트입니다. `renderAt()`은 테스트마다 **새 목업**을 `ApiContext`로 끼우고, `MemoryRouter`로 원하는 주소에서 시작합니다. 2번 테스트는 메인(`/`)에서 시작해 검색 버튼 하나로 화면이 바뀌는지를, 9번 테스트는 `vi.spyOn`으로 목업의 `registerMember` 호출 여부를 감시해 "요청을 보내지 않았다"를 확인합니다.
 
     **파일**: src/App.test.tsx
 
@@ -926,15 +1040,34 @@ Testing Library는 컴포넌트 내부 상태가 아니라 **사용자가 보는
       await user.click(screen.getByRole('button', { name: '대출' }))
     }
 
+    describe('메인 화면', () => {
+      it('신착 도서 3권을 최근 등록 순으로 보여 준다', async () => {
+        renderAt('/')
+        const latest = screen.getByRole('list', { name: '신착 도서' })
+        expect(await within(latest).findByText('오브젝트')).toBeInTheDocument()
+        expect(within(latest).getAllByRole('listitem')).toHaveLength(3)
+        expect(within(latest).queryByText('이펙티브 자바')).not.toBeInTheDocument() // 가장 먼저 등록된 1번 도서는 빠진다
+      })
+
+      it('검색하면 도서 목록 화면으로 이동해 결과를 보여 준다', async () => {
+        const { user } = renderAt('/')
+        await user.type(screen.getByLabelText('검색어'), '자바')
+        await user.click(screen.getByRole('button', { name: '검색' }))
+        expect(await screen.findByRole('heading', { name: '도서 목록' })).toBeInTheDocument()
+        expect(await screen.findByText("'자바' 검색 결과 2권")).toBeInTheDocument()
+        expect(screen.getAllByRole('row')).toHaveLength(3) // 머리글 1 + 도서 2
+      })
+    })
+
     describe('도서 목록', () => {
       it('시드 도서 4권을 표로 보여 준다', async () => {
-        renderAt('/')
+        renderAt('/books')
         expect(await screen.findByText('이펙티브 자바')).toBeInTheDocument()
         expect(screen.getAllByRole('row')).toHaveLength(5) // 머리글 1 + 도서 4
       })
 
       it('검색어로 제목·저자를 걸러 낸다', async () => {
-        const { user } = renderAt('/')
+        const { user } = renderAt('/books')
         await screen.findByText('클린 코드')
         await user.type(screen.getByLabelText('검색어'), '자바')
         await user.click(screen.getByRole('button', { name: '검색' }))
@@ -1002,21 +1135,23 @@ npm test -- --reporter=verbose
 
 ```text
 예상 결과
- ✓ src/App.test.tsx > 도서 목록 > 시드 도서 4권을 표로 보여 준다 199ms
- ✓ src/App.test.tsx > 도서 목록 > 검색어로 제목·저자를 걸러 낸다 90ms
- ✓ src/App.test.tsx > 대출·반납 > 대출하면 완료 안내와 대출 중 행이 보인다 153ms
- ✓ src/App.test.tsx > 대출·반납 > 이미 대출 중인 도서를 다시 빌리면 409 안내를 보여 준다 128ms
- ✓ src/App.test.tsx > 대출·반납 > 연체 회원은 대출할 수 없다는 안내를 보여 준다 114ms
- ✓ src/App.test.tsx > 대출·반납 > 반납하면 상태가 반납 완료로 바뀐다 124ms
- ✓ src/App.test.tsx > 회원 등록 > 이메일 형식이 틀리면 요청을 보내지 않고 안내한다 159ms
+ ✓ src/App.test.tsx > 메인 화면 > 신착 도서 3권을 최근 등록 순으로 보여 준다 168ms
+ ✓ src/App.test.tsx > 메인 화면 > 검색하면 도서 목록 화면으로 이동해 결과를 보여 준다 82ms
+ ✓ src/App.test.tsx > 도서 목록 > 시드 도서 4권을 표로 보여 준다 17ms
+ ✓ src/App.test.tsx > 도서 목록 > 검색어로 제목·저자를 걸러 낸다 51ms
+ ✓ src/App.test.tsx > 대출·반납 > 대출하면 완료 안내와 대출 중 행이 보인다 113ms
+ ✓ src/App.test.tsx > 대출·반납 > 이미 대출 중인 도서를 다시 빌리면 409 안내를 보여 준다 99ms
+ ✓ src/App.test.tsx > 대출·반납 > 연체 회원은 대출할 수 없다는 안내를 보여 준다 75ms
+ ✓ src/App.test.tsx > 대출·반납 > 반납하면 상태가 반납 완료로 바뀐다 103ms
+ ✓ src/App.test.tsx > 회원 등록 > 이메일 형식이 틀리면 요청을 보내지 않고 안내한다 155ms
 
  Test Files  1 passed (1)
-      Tests  7 passed (7)
+      Tests  9 passed (9)
 ```
 
 ![Vitest 실행 결과](assets/practice/ui/04-vitest.png)
 
-*그림 4. `npm test -- --reporter=verbose` — 7개 테스트 모두 통과*
+*그림 6. `npm test -- --reporter=verbose` — 9개 테스트 모두 통과*
 
 `describe` 이름 > `it` 이름 순서로 한 줄씩 찍히므로, 결과만 읽어도 어떤 요구사항이 지켜지는지 알 수 있습니다. 밀리초 숫자는 PC마다 다릅니다.
 
@@ -1030,17 +1165,17 @@ npm run lint
 ```text
 예상 결과
 vite v8.3.1 building client environment for production...
-✓ 154 modules transformed.
+✓ 155 modules transformed.
 dist/index.html                   0.46 kB │ gzip:   0.31 kB
-dist/assets/index-BQFwZa9v.css   12.36 kB │ gzip:   3.22 kB
-dist/assets/index-CiLgPCVB.js   316.87 kB │ gzip: 102.57 kB
-✓ built in 699ms
+dist/assets/index-BmvtXgMr.css   13.17 kB │ gzip:   3.38 kB
+dist/assets/index-CXhSjJ8L.js   320.39 kB │ gzip: 103.52 kB
+✓ built in 608ms
 
 > library-ui@0.0.0 lint
 > oxlint
 ```
 
-`oxlint`는 문제가 없으면 아무것도 출력하지 않고 끝납니다. 파일 이름의 해시(`BQFwZa9v` 등)는 내용이 바뀔 때마다 달라집니다 — 브라우저가 옛 파일을 캐시해 두어도 새 배포에서 새 파일을 받게 하는 장치입니다.
+`oxlint`는 문제가 없으면 아무것도 출력하지 않고 끝납니다. 파일 이름의 해시(`BmvtXgMr` 등)는 내용이 바뀔 때마다 달라집니다 — 브라우저가 옛 파일을 캐시해 두어도 새 배포에서 새 파일을 받게 하는 장치입니다.
 
 ### 자주 나는 에러 → 원인
 
@@ -1054,6 +1189,8 @@ dist/assets/index-CiLgPCVB.js   316.87 kB │ gzip: 102.57 kB
 | 테스트에서 `toBeInTheDocument is not a function` | `setup.ts`의 jest-dom import 누락, 또는 `vite.config.ts`의 `setupFiles` 경로 오타 | 6단계 `setup.ts`와 2단계 설정 확인 |
 | 테스트에서 `Found multiple elements with the role "alert"` | `cleanup`이 없어 앞 테스트의 화면이 남아 있음 | `setup.ts`의 `afterEach(cleanup)` 확인 |
 | 테스트에서 `Unable to find an element with the text` | 목록이 비동기로 채워지기 전에 `getBy...`로 찾음 | 처음 나타나는 요소는 `await screen.findBy...`로 기다림 |
+| 메인에서 검색했는데 도서 목록이 전체로 나옴 | `BooksPage`가 검색어를 `useState('')`로 따로 들고 있어 주소의 `?keyword=`를 읽지 않음 | `useSearchParams()`로 주소에서 읽기 (4단계 모범 답안) |
+| 메인 화면의 검색 버튼이 아무 반응 없음 | `<form onSubmit>` 대신 버튼 `onClick`만 달았거나 `e.preventDefault()` 누락으로 페이지 전체가 새로 고쳐짐 | 폼 제출에서 `preventDefault()` 후 `navigate()` |
 
 ---
 
@@ -1063,14 +1200,15 @@ dist/assets/index-CiLgPCVB.js   316.87 kB │ gzip: 102.57 kB
 
 | 영역 | 기준 | 배점 |
 |------|------|------|
-| 화면 기능 | S1~S4 동작 — 목록·검색, 회원 등록, 대출, 대출 목록·반납·연체 표시 | 30 |
+| 화면 기능 | S0~S4 동작 — 메인(신착 도서·검색 이동), 목록·검색, 회원 등록, 대출, 대출 목록·반납·연체 표시 | 30 |
 | 오류 처리 | 오류 코드별 한글 안내(S5), 연결 실패 안내, 입력 검증 실패 시 요청을 보내지 않음 | 20 |
 | API 계층 분리 | 화면 컴포넌트에 axios·URL이 없음, `LibraryApi` 인터페이스 하나로 실제 구현·목업 교체(S6) | 20 |
 | 타입 | 응답 타입이 과제 2의 DTO 필드와 일치, `npm run build`(`tsc -b`) 통과 | 10 |
-| 테스트 | Testing Library 테스트 6개 이상(목록·검색·대출·409·반납·검증), `npm test` 통과 | 20 |
+| 테스트 | Testing Library 테스트 8개 이상(메인·목록·검색·대출·409·반납·검증), `npm test` 통과 | 20 |
 
-- [ ] `npm test`가 `Tests  7 passed`로 끝납니다
+- [ ] `npm test`가 `Tests  9 passed`로 끝납니다
 - [ ] `npm run build`와 `npm run lint`가 오류 없이 끝납니다
+- [ ] `npm run dev:mock`으로 띄운 메인에서 `자바`를 검색하면 주소가 `/books?keyword=...`로 바뀌고 2권이 보입니다
 - [ ] `npm run dev:mock`으로 띄운 화면에서 대출 → 중복 대출 안내 → 반납이 됩니다
 - [ ] `src/pages/` 파일에 `axios`나 `/api/`라는 글자가 없습니다
 - [ ] 목업의 오류 `code`가 과제 2 `ErrorCode`의 상수 이름과 같습니다
@@ -1084,7 +1222,7 @@ dist/assets/index-CiLgPCVB.js   316.87 kB │ gzip: 102.57 kB
 | # | 과제 | 배우는 것 |
 |---|------|----------|
 | 1 | 도서 등록 화면(`/books/new`) — ISBN 13자리 검증, `DUPLICATE_ISBN` 안내 | 폼 검증 복습, 오류 코드 추가 |
-| 2 | 도서 목록 각 행에 **대출하기** 링크 → `/loans?bookId=3`으로 이동하면 도서가 미리 선택됨 | `useSearchParams`로 주소의 값 읽기 |
+| 2 | 도서 목록 각 행에 **대출하기** 링크 → `/loans?bookId=3`으로 이동하면 도서가 미리 선택됨 | `useSearchParams` 복습 (`BooksPage`의 `keyword`와 같은 방식) |
 | 3 | 요청 중에는 버튼을 비활성화하고 "처리 중…" 표시 — 두 번 누르기 방지 | 로딩 상태, 중복 요청 방지 |
 | 4 | 목업에 `setTimeout`으로 300ms 지연을 넣고, 테스트가 여전히 통과하는지 확인 | `findBy`가 기다리는 원리 |
 | 5 | `toMessage`만 따로 테스트하는 `errors.test.ts` — 모든 코드와 연결 실패 경우 | 순수 함수 단위 테스트 |

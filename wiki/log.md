@@ -4,6 +4,10 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-29] feat+verify | 과제 2-2 메인 화면·검색 추가 + 과제 2-3 실제 API 캡처 / 과제 2-4(네이버) 보류
+- 사용자 지적("메인화면·검색 캡처가 없다") → 2-2에 메인 화면(`/`: 소개·검색창·신착 도서·바로가기) 추가, 도서 목록은 `/books?keyword=`로 이동. Vitest 7→9. 2-3은 SpaForwardController에 `/books`, Playwright 첫 시나리오를 메인 검색→결과로. 페이지 코드 재추출로 전 단계 재검증. 캡처 4장 추가(목업 메인·검색, 실제 API 메인·검색).
+- **과제 2-4(네이버 책 검색) 보류**: 실측 중 `/v1/search/book.json`이 404 `SE05`(같은 키로 블로그 검색은 200) → 네이버 공지로 확인한 결과 책·쇼핑·전문자료 검색 API가 **2026-07-31 종료**, 대체 API 없음. 알라딘 OpenAPI도 2026-10-30 종료 예정. 사용자 결정으로 **카카오 책 검색(v3)**으로 재작성 예정 — 네이버판 초안은 게시하지 않음.
+
 ## [2026-09-29] feat+verify | 과제 2-2 도서 대여 화면 + 과제 2-3 API·화면 병합 (실행 검증·스크린샷)
 - [[guide-java-practice-library-ui]] (1101줄): React 19 + Vite 8 + TS 6 + Tailwind 4 + react-router, `LibraryApi` 인터페이스로 실제 서버/목업(`npm run dev:mock`) 교체, 오류 코드 → 한글 안내, Vitest 7개. 스샷 4장(`raw/assets/practice/ui/`).
 - [[guide-java-practice-library-merge]] (893줄): API 추가 `GET /api/members/{id}/loans`(+테스트 2, 총 11), Vite 프록시(권장)·CORS(`WebMvcConfigurer`) 병기, 실제 대출 201→409→반납 200, Playwright 3 spec(2회 연속 통과), exec-maven-plugin + resources 복사로 한 jar 배포 + SPA 새로고침 대응. 스샷 5장(`raw/assets/practice/merge/`).

@@ -11,7 +11,7 @@ updated: 2026-09-29
 
 > **이 과제의 목표**: [[guide-java-practice-spring-library]](과제 2)의 Spring API와 [[guide-java-practice-library-ui]](과제 2-2)의 React 화면을 **하나의 서비스로 합칩니다.** 개발할 때는 두 서버를 띄워 Vite 프록시로 잇고, 화면에 필요한 API 하나를 Spring에 추가하고, 브라우저를 자동으로 조작하는 Playwright E2E 테스트로 흐름 전체를 지킵니다. 마지막에는 화면을 jar 안에 넣어 `java -jar` 하나로 UI와 API를 함께 서비스합니다.
 >
-> **선수 학습**: 과제 2의 `library` 프로젝트(포트 8090, `h2` 프로파일, 테스트 9개 통과)와 과제 2-2의 `library-ui` 프로젝트(목업 모드 동작, 테스트 7개 통과)가 같은 디렉터리 아래 형제로 있어야 합니다.
+> **선수 학습**: 과제 2의 `library` 프로젝트(포트 8090, `h2` 프로파일, 테스트 9개 통과)와 과제 2-2의 `library-ui` 프로젝트(목업 모드 동작, 테스트 9개 통과)가 같은 디렉터리 아래 형제로 있어야 합니다.
 
 ---
 
@@ -48,8 +48,8 @@ updated: 2026-09-29
 | M2 | 화면을 다른 출처에서 서비스하는 경우를 위해 `/api/**`에 한해 `http://localhost:5173`의 GET·POST를 허용하는 CORS 설정을 둡니다 | 사전 요청 200, 다른 출처 403 |
 | M3 | `GET /api/members/{id}/loans` — 회원의 대출 목록을 최신순(대출 번호 역순)으로, 반납 건까지 돌려줍니다. 없는 회원이면 404 `MEMBER_NOT_FOUND` | API 테스트 2개 |
 | M4 | 실제 API로 대출 → 중복 대출 → 반납 시나리오가 화면에서 동작하고, 409 안내가 과제 2-2의 한글 문구로 보입니다 | 화면 확인 |
-| M5 | Playwright E2E 테스트 3개(검색, 대출→409→반납, 연체)가 개발 모드와 jar 배포 양쪽에서 통과합니다. 여러 번 실행해도 결과가 같습니다 | `npx playwright test` |
-| M6 | `./mvnw package`가 화면을 빌드해 jar에 넣고, `java -jar` 하나로 `/`·`/loans`·`/members/new`(화면)와 `/api/**`(API)가 모두 8090에서 서비스됩니다 | curl 상태 코드 |
+| M5 | Playwright E2E 테스트 3개(메인 검색, 대출→409→반납, 연체)가 개발 모드와 jar 배포 양쪽에서 통과합니다. 여러 번 실행해도 결과가 같습니다 | `npx playwright test` |
+| M6 | `./mvnw package`가 화면을 빌드해 jar에 넣고, `java -jar` 하나로 `/`·`/books`·`/loans`·`/members/new`(화면)와 `/api/**`(API)가 모두 8090에서 서비스됩니다 | curl 상태 코드 |
 
 두 프로젝트의 최종 구조입니다. 이 과제에서 **추가하거나 바꾸는 파일에만** 표시를 붙였습니다.
 
@@ -491,21 +491,49 @@ npm run dev
   ➜  Network: use --host to expose
 ```
 
-과제 2-2의 `dev:mock`과 달리 `ready` 줄에 `mock`이 없습니다. 브라우저에서 `http://localhost:5173/loans`를 열고 회원 번호 `1`, 도서 `1. 이펙티브 자바`로 **대출**을 누릅니다.
+과제 2-2의 `dev:mock`과 달리 `ready` 줄에 `mock`이 없습니다. 먼저 화면이 H2의 데이터를 읽는지 확인하기 위해, 새 터미널에서 도서를 한 권 curl로 등록합니다. 목업에는 없는 도서입니다.
+
+```bash
+curl -s -w '\n%{http_code}\n' -X POST http://localhost:8090/api/books -H 'Content-Type: application/json' -d '{"isbn":"9791162242025","title":"모던 자바 인 액션","author":"라울-게이브리얼 우르마"}'
+```
+
+```text
+예상 결과
+{"id":5,"isbn":"9791162242025","title":"모던 자바 인 액션","author":"라울-게이브리얼 우르마"}
+201
+```
+
+> **Windows**: PowerShell에서는 1-2의 안내처럼 `curl.exe`로 실행합니다. JSON 따옴표가 번거로우면 Git Bash에서 실행하거나, Swagger UI(`http://localhost:8090/swagger-ui.html`)의 **도서 등록**으로 같은 본문을 보냅니다.
+
+브라우저에서 `http://localhost:5173/`을 엽니다.
+
+![실제 API와 연결된 메인 화면](assets/practice/merge/06-home-real.png)
+
+*그림 1. 실제 API 연결 메인 — 방금 curl로 등록한 5번 도서가 신착 도서 맨 앞에 보임*
+
+신착 도서 맨 앞의 "모던 자바 인 액션"은 curl로 Spring에 등록한 도서입니다. 화면 코드는 과제 2-2 그대로인데, 목업 대신 `GET /api/books`의 실제 응답으로 신착 도서를 골랐습니다. 메뉴 오른쪽에 "목업 데이터" 표시가 없는 것으로도 실제 API 모드임을 알 수 있습니다. 검색창에 `자바`를 넣고 **검색**을 누릅니다.
+
+![실제 API의 검색 결과](assets/practice/merge/07-search-real.png)
+
+*그림 2. 실제 API 검색 — `/books?keyword=자바`가 H2에서 3권을 찾음*
+
+목업에서는 2권이던 결과가 3권입니다. 검색어가 프록시를 거쳐 Spring의 `findByTitleContainingOrAuthorContaining`까지 전달돼, H2에 새로 들어간 5번 도서까지 찾았습니다.
+
+이제 대출 흐름을 확인합니다. `http://localhost:5173/loans`를 열고 회원 번호 `1`, 도서 `1. 이펙티브 자바`로 **대출**을 누릅니다.
 
 ![실제 API와 연결된 대출 화면](assets/practice/merge/01-integrated.png)
 
-*그림 1. 실제 API 연결 — 메뉴 오른쪽에 "목업 데이터" 표시가 없고, 대출 목록은 H2 DB의 데이터*
+*그림 3. 실제 API 연결 — 메뉴 오른쪽에 "목업 데이터" 표시가 없고, 대출 목록은 H2 DB의 데이터*
 
-화면 모양은 과제 2-2와 같지만, 대출 번호·날짜가 모두 Spring이 H2에 저장한 값입니다. 메뉴 오른쪽의 "목업 데이터" 표시가 사라진 것으로 실제 API 모드임을 알 수 있습니다. 같은 상태에서 **대출**을 한 번 더 누릅니다.
+화면 모양은 과제 2-2와 같지만, 대출 번호·날짜가 모두 Spring이 H2에 저장한 값입니다. 같은 상태에서 **대출**을 한 번 더 누릅니다.
 
 ![실제 API의 409 안내](assets/practice/merge/02-409-real.png)
 
-*그림 2. 중복 대출 — Spring이 돌려준 409 `BOOK_ALREADY_LOANED`를 화면이 한글 안내로 표시*
+*그림 4. 중복 대출 — Spring이 돌려준 409 `BOOK_ALREADY_LOANED`를 화면이 한글 안내로 표시*
 
 이번 409는 목업이 아니라 과제 2의 `LoanService`가 R3 위반으로 던진 `LibraryException`이 `GlobalExceptionHandler`를 거쳐 나온 응답입니다. 목업과 실제 서버가 같은 `code`를 쓰기로 약속했기 때문에 화면 코드는 한 줄도 바꾸지 않았습니다. 이어서 대출 목록의 **반납**을 누르면 "반납 완료"로 바뀝니다.
 
-터미널 2에는 1단계에서 넣은 프록시 로그가 요청마다 찍혀 있습니다.
+터미널 2에는 1단계에서 넣은 프록시 로그가 요청마다 찍혀 있습니다. 아래는 `/loans`를 연 뒤의 줄만 옮긴 것입니다(그 앞에는 메인·검색 화면이 부른 `GET /api/books`, `GET /api/books?keyword=%EC%9E%90%EB%B0%94` 줄이 있습니다).
 
 ```text
 예상 결과
@@ -520,7 +548,7 @@ npm run dev
 
 ![프록시 로그](assets/practice/merge/03-proxy-log.png)
 
-*그림 3. 터미널 2의 프록시 로그 — 화면의 요청이 8090으로 전달되고 돌아온 상태 코드*
+*그림 5. 터미널 2의 프록시 로그 — 화면의 요청이 8090으로 전달되고 돌아온 상태 코드*
 
 한 줄이 요청 하나입니다. 대출(201) → 목록 갱신 → 중복 대출(409) → 반납(200) → 목록 갱신 순서가 화면에서 누른 순서와 같습니다. 첫 두 줄에서 `GET /api/books`가 두 번 나가는 것은 버그가 아닙니다 — 개발 모드의 React `StrictMode`는 부수 효과를 잘못 짠 코드를 드러내려고 `useEffect`를 일부러 두 번 실행합니다. 배포용 빌드에서는 한 번만 나갑니다.
 
@@ -537,7 +565,7 @@ npm run dev
 | 테스트 | 도구 | 무엇을 띄우나 | 무엇을 지키나 | 개수 |
 |------|------|------|------|------|
 | API 테스트 | JUnit + MockMvc | Spring 컨텍스트 (포트 없음) | 업무 규칙·상태 코드 | 11 |
-| 화면 테스트 | Vitest + Testing Library | jsdom + 목업 | 화면 동작·안내 문구 | 7 |
+| 화면 테스트 | Vitest + Testing Library | jsdom + 목업 | 화면 동작·안내 문구 | 9 |
 | E2E 테스트 | Playwright | 실제 브라우저 + 두 서버 | 화면과 API의 **약속**(경로·JSON 모양·오류 코드) | 3 |
 
 화면 테스트는 목업이 서버와 같다고 **가정**하고, API 테스트는 화면이 무엇을 부르는지 **모릅니다.** 둘 사이의 약속이 어긋나는 것(예: 서버가 `bookTitle`을 `title`로 바꿈)은 E2E만 잡을 수 있습니다.
@@ -571,19 +599,21 @@ export default defineConfig({
 })
 ```
 
-E2E 테스트 파일입니다. 요소는 Testing Library와 같은 방식(역할·라벨·보이는 글자)으로 찾습니다. 두 번째 테스트는 빌린 도서를 마지막에 반납하므로 **몇 번을 다시 실행해도** 같은 결과가 나옵니다 — 공유 DB를 쓰는 E2E 테스트는 자기가 바꾼 상태를 되돌려 놓아야 합니다. `'대출'` 버튼에 `exact: true`를 붙이는 이유는 "대출 목록 보기" 버튼도 이름에 "대출"을 포함하기 때문입니다.
+E2E 테스트 파일입니다. 요소는 Testing Library와 같은 방식(역할·라벨·보이는 글자)으로 찾습니다. 첫 번째 테스트는 메인(`/`)의 검색창에서 시작해 주소가 `/books?keyword=...`로 바뀌는지(`toHaveURL`)까지 확인합니다 — 화면 테스트가 `MemoryRouter`로 흉내 낸 주소 이동을 실제 브라우저에서 다시 지키는 것입니다. 두 번째 테스트는 빌린 도서를 마지막에 반납하므로 **몇 번을 다시 실행해도** 같은 결과가 나옵니다 — 공유 DB를 쓰는 E2E 테스트는 자기가 바꾼 상태를 되돌려 놓아야 합니다. `'대출'` 버튼에 `exact: true`를 붙이는 이유는 "대출 목록 보기" 버튼도 이름에 "대출"을 포함하기 때문입니다.
 
 **파일**: library-ui/e2e/library.spec.ts
 
 ```ts
 import { expect, test } from '@playwright/test'
 
-test('도서 검색 — 실제 API의 시드 도서를 보여 준다', async ({ page }) => {
-  await page.goto('/')
+test('메인 화면 검색 — 실제 API의 시드 도서를 걸러 보여 준다', async ({ page }) => {
+  await page.goto('/books')
   await expect(page.getByRole('row')).toHaveCount(5) // 머리글 1 + 시드 도서 4
+  await page.goto('/')
   await page.getByLabel('검색어').fill('자바')
   await page.getByRole('button', { name: '검색' }).click()
-  await expect(page.getByRole('row')).toHaveCount(3)
+  await expect(page).toHaveURL(/\/books\?keyword=/)
+  await expect(page.getByRole('row')).toHaveCount(3) // 머리글 1 + "자바" 도서 2
 })
 
 test('대출 → 중복 대출 409 → 반납', async ({ page }) => {
@@ -620,7 +650,7 @@ playwright-report/
 test-results/
 ```
 
-3단계의 두 서버가 떠 있는 상태에서 `library-ui`의 새 터미널로 E2E를 실행합니다.
+첫 번째 테스트는 시드 도서 4권을 기대합니다. 3단계에서 curl로 5번 도서를 등록했으므로, **터미널 1의 API를 `Ctrl+C`로 내렸다가 같은 명령으로 다시 띄워** 시드 상태로 돌립니다(`create-drop`이라 재시작하면 DB가 초기화됩니다). 터미널 2의 화면 개발 서버는 그대로 둡니다. 그다음 `library-ui`의 새 터미널에서 E2E를 실행합니다.
 
 ```bash
 npx playwright test
@@ -630,14 +660,14 @@ npx playwright test
 예상 결과
 Running 3 tests using 1 worker
 
-  ✓  1 e2e/library.spec.ts:3:1 › 도서 검색 — 실제 API의 시드 도서를 보여 준다 (992ms)
-  ✓  2 e2e/library.spec.ts:11:1 › 대출 → 중복 대출 409 → 반납 (624ms)
-  ✓  3 e2e/library.spec.ts:27:1 › 연체 회원 — 서버의 OVERDUE_MEMBER를 한글 안내로 보여 준다 (386ms)
+  ✓  1 e2e/library.spec.ts:3:1 › 메인 화면 검색 — 실제 API의 시드 도서를 걸러 보여 준다 (1.2s)
+  ✓  2 e2e/library.spec.ts:13:1 › 대출 → 중복 대출 409 → 반납 (923ms)
+  ✓  3 e2e/library.spec.ts:29:1 › 연체 회원 — 서버의 OVERDUE_MEMBER를 한글 안내로 보여 준다 (433ms)
 
-  3 passed (3.3s)
+  3 passed (3.8s)
 ```
 
-같은 명령을 한 번 더 실행해도 3개가 모두 통과해야 합니다(M5의 "여러 번 실행해도"). 첫 번째 테스트가 도서 4권을 기대하므로, 3단계에서 도서를 새로 등록했다면 터미널 1의 API를 재시작해 시드 상태로 돌린 뒤 실행합니다. HTML 리포트는 아래 명령으로 엽니다.
+같은 명령을 한 번 더 실행해도 3개가 모두 통과해야 합니다(M5의 "여러 번 실행해도"). 두 번째 테스트가 빌린 도서를 반납하고 끝나므로, 도서 수와 대출 가능 상태가 실행 전과 같게 남기 때문입니다. HTML 리포트는 아래 명령으로 엽니다.
 
 ```bash
 npx playwright show-report
@@ -645,7 +675,7 @@ npx playwright show-report
 
 ![Playwright HTML 리포트](assets/practice/merge/04-playwright-report.png)
 
-*그림 4. Playwright HTML 리포트 — 3개 테스트 모두 통과, 테스트마다 실행 시간*
+*그림 6. Playwright HTML 리포트 — 3개 테스트 모두 통과, 테스트마다 실행 시간*
 
 리포트에서 테스트 이름을 누르면 단계별(`goto` → `fill` → `click` → `expect`) 실행 내역이 보입니다. 테스트가 실패하면 그 시점의 화면 스크린샷과 오류 메시지가 함께 남아, 어느 단계에서 무엇이 달랐는지 바로 알 수 있습니다. 리포트 서버는 `Ctrl+C`로 내립니다.
 
@@ -720,7 +750,7 @@ Spring Boot는 클래스패스의 `static/` 디렉터리에 있는 파일을 그
 
 jar로 띄운 뒤 메뉴를 눌러 `/loans`로 이동하는 것은 문제가 없습니다. 화면 안에서 React Router가 주소만 바꾸고 서버에는 묻지 않기 때문입니다. 그런데 그 상태에서 **새로 고침**하거나 주소창에 `http://localhost:8090/loans`를 직접 치면, 브라우저가 서버에 `/loans`를 요청하고 Spring에는 그런 파일도 컨트롤러도 없어 404가 납니다. 개발 서버(Vite)는 모르는 주소에 `index.html`을 대신 주도록 되어 있어서 3단계에서는 드러나지 않았던 문제입니다.
 
-화면의 주소를 받아 `index.html`로 넘겨 주는 컨트롤러를 추가합니다. `forward:`는 브라우저 주소를 바꾸지 않고 서버 안에서 `/index.html`을 대신 내려 주므로, 화면이 뜬 뒤 React Router가 주소(`/loans`)를 보고 알맞은 페이지를 그립니다. 경로를 명시해 두면 `/api/...`나 오타 주소는 지금처럼 404로 남습니다.
+검색어가 붙은 `/books?keyword=자바`도 마찬가지입니다. `?` 뒤의 검색어는 경로가 아니므로 서버는 `/books`만 보고 판단합니다. 화면의 주소를 받아 `index.html`로 넘겨 주는 컨트롤러를 추가합니다. `forward:`는 브라우저 주소를 바꾸지 않고 서버 안에서 `/index.html`을 대신 내려 주므로, 화면이 뜬 뒤 React Router가 주소(`/loans`)를 보고 알맞은 페이지를 그립니다. 경로를 명시해 두면 `/api/...`나 오타 주소는 지금처럼 404로 남습니다.
 
 **파일**: library/src/main/java/dev/wonslab/library/controller/SpaForwardController.java
 
@@ -734,7 +764,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SpaForwardController {
 
     // React 라우터가 그리는 주소를 새로 고침하거나 직접 열면 index.html을 내려 준다 (/api는 해당 없음)
-    @GetMapping({"/loans", "/members/new"})
+    @GetMapping({"/books", "/loans", "/members/new"})
     public String forward() {
         return "forward:/index.html";
     }
@@ -758,7 +788,7 @@ cd library
 [INFO] --- exec:3.6.4:exec (build-ui) @ library ---
 > library-ui@0.0.0 build
 > tsc -b && vite build
-✓ built in 130ms
+✓ built in 780ms
 [INFO] --- resources:3.5.0:copy-resources (copy-ui) @ library ---
 [INFO] Copying 4 resources from ../library-ui/dist to target/classes/static
 [INFO] --- jar:3.5.1:jar (default-jar) @ library ---
@@ -776,8 +806,8 @@ jar tf target/library-0.0.1-SNAPSHOT.jar | grep static        # Windows: jar tf 
 BOOT-INF/classes/static/
 BOOT-INF/classes/static/assets/
 BOOT-INF/classes/static/index.html
-BOOT-INF/classes/static/assets/index-BQFwZa9v.css
-BOOT-INF/classes/static/assets/index-CiLgPCVB.js
+BOOT-INF/classes/static/assets/index-BmvtXgMr.css
+BOOT-INF/classes/static/assets/index-CXhSjJ8L.js
 BOOT-INF/classes/static/favicon.svg
 ```
 
@@ -790,12 +820,13 @@ java -jar target/library-0.0.1-SNAPSHOT.jar --spring.profiles.active=h2
 새 터미널에서 화면 주소와 API 주소가 모두 8090에서 응답하는지 확인합니다. `-w`는 상태 코드와 응답 형식만 출력하게 합니다.
 
 ```bash
-for p in / /loans /members/new /api/books /api/members/1/loans /nope; do echo "$p $(curl -s -o /dev/null -w '%{http_code} %{content_type}' http://localhost:8090$p)"; done
+for p in / /books /loans /members/new /api/books /api/members/1/loans /nope; do echo "$p $(curl -s -o /dev/null -w '%{http_code} %{content_type}' http://localhost:8090$p)"; done
 ```
 
 ```text
 예상 결과
 / 200 text/html
+/books 200 text/html
 /loans 200 text/html
 /members/new 200 text/html
 /api/books 200 application/json
@@ -805,11 +836,11 @@ for p in / /loans /members/new /api/books /api/members/1/loans /nope; do echo "$
 
 > **Windows**: 위 `for` 명령은 Git Bash에서 실행합니다. PowerShell에서는 `curl.exe -s -o NUL -w "%{http_code}" http://localhost:8090/loans`처럼 주소를 하나씩 확인합니다.
 
-화면 주소 3개는 `text/html`(같은 `index.html`), API 2개는 `application/json`, 없는 주소는 404입니다. 브라우저에서 `http://localhost:8090/members/new`를 **직접** 열고 회원을 한 명 가입시킵니다.
+화면 주소 4개는 `text/html`(같은 `index.html`), API 2개는 `application/json`, 없는 주소는 404입니다. 브라우저에서 `http://localhost:8090/members/new`를 **직접** 열고 회원을 한 명 가입시킵니다.
 
 ![jar 하나로 서비스되는 화면](assets/practice/merge/05-jar-8090.png)
 
-*그림 5. `java -jar`로 띄운 8090 — 주소를 직접 연 회원 등록 화면에서 가입 성공*
+*그림 7. `java -jar`로 띄운 8090 — 주소를 직접 연 회원 등록 화면에서 가입 성공*
 
 주소를 직접 열었는데도 화면이 뜨는 것은 5-1의 전달 컨트롤러 덕분이고, "3번 회원" 번호는 jar 안의 Spring이 H2에 저장한 값입니다. 화면과 API가 같은 출처(8090)이므로 프록시도 CORS도 쓰이지 않았습니다.
 
@@ -823,11 +854,11 @@ BASE_URL=http://localhost:8090 npx playwright test        # Windows(PowerShell):
 예상 결과
 Running 3 tests using 1 worker
 
-  ✓  1 e2e/library.spec.ts:3:1 › 도서 검색 — 실제 API의 시드 도서를 보여 준다 (403ms)
-  ✓  2 e2e/library.spec.ts:11:1 › 대출 → 중복 대출 409 → 반납 (405ms)
-  ✓  3 e2e/library.spec.ts:27:1 › 연체 회원 — 서버의 OVERDUE_MEMBER를 한글 안내로 보여 준다 (267ms)
+  ✓  1 e2e/library.spec.ts:3:1 › 메인 화면 검색 — 실제 API의 시드 도서를 걸러 보여 준다 (880ms)
+  ✓  2 e2e/library.spec.ts:13:1 › 대출 → 중복 대출 409 → 반납 (624ms)
+  ✓  3 e2e/library.spec.ts:29:1 › 연체 회원 — 서버의 OVERDUE_MEMBER를 한글 안내로 보여 준다 (344ms)
 
-  3 passed (1.7s)
+  3 passed (3.0s)
 ```
 
 개발 모드(5173 + 프록시)와 배포 모드(8090 jar)에서 같은 테스트가 통과하므로, 두 배치에서 화면이 똑같이 동작한다는 것이 확인됩니다. 확인이 끝나면 jar 터미널에서 `Ctrl+C`로 서버를 내립니다.
@@ -840,7 +871,7 @@ Running 3 tests using 1 worker
 | 대출 목록 보기에서 "서버에 연결할 수 없습니다", 프록시 로그는 `-> 404` | 2단계 API 추가 전 코드로 띄운 서버 — 404 본문이 과제 2의 오류 JSON이 아님 | 2단계 적용 후 API 재시작 |
 | `npm run dev -- --mode direct`에서 목록이 안 보이고 콘솔에 `blocked by CORS policy` | `CorsConfig` 없음, 또는 `allowedOrigins`와 화면 주소(포트 포함)가 다름 | 1-2 설정 확인, `http://localhost:5173`와 정확히 일치시킴 |
 | Playwright `Executable doesn't exist ... chromium` | 테스트용 브라우저 미설치 | `npx playwright install chromium` |
-| E2E 첫 테스트가 `Expected: 5, Received: 6`처럼 행 수 불일치 | 앞서 도서를 등록해 DB가 시드 상태가 아님 | API 재시작 후 다시 실행 |
+| E2E 첫 테스트가 `Expected: 5, Received: 6`처럼 행 수 불일치 | 3단계에서 curl로 도서를 등록해 DB가 시드 상태가 아님 | API 재시작 후 다시 실행 |
 | `./mvnw package`에서 `Cannot run program "npm"` | PATH에 Node.js가 없거나(Windows는) `npm.cmd` 이름 문제 | `node -v` 확인, Windows는 `<executable>npm.cmd</executable>` |
 | `./mvnw package`의 `build-ui`에서 `npm error ... package.json`(또는 `Missing script: "build"`) 후 `Command execution failed` | `library-ui`가 `library`의 형제 위치에 없어 npm이 엉뚱한 디렉터리에서 실행됨 | 두 디렉터리를 같은 부모 아래에 둠 (`../library-ui`) |
 | jar에서 `/`는 되는데 `/loans` 새로 고침이 404 | `SpaForwardController` 누락, 또는 새 화면 주소를 목록에 추가하지 않음 | 5-1 확인 |

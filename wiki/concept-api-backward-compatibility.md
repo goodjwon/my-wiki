@@ -8,7 +8,7 @@ external:
   - https://www.youtube.com/watch?v=LBWefG5zjxk
   - https://martinfowler.com/bliki/TolerantReader.html
 created: 2026-06-06
-updated: 2026-09-28
+updated: 2026-09-29
 ---
 
 # API 하위 호환성과 JSON Tolerant Reader 계약
