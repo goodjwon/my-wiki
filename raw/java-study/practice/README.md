@@ -11,3 +11,13 @@
 
 - 패키지 교체: `com.example.*`, `kr.s2b.*` → `dev.wonslab.*`
 - 검증: 과제 페이지의 코드 블록만으로 프로젝트를 새로 만들어 테스트·H2 실행·스크린샷까지 실측 (2026-09-28).
+
+## 모범 답안 소스 보관 (2026-09-28)
+
+검증에 쓴 프로젝트를 각 원본 저장소의 별도 브랜치 `wiki-practice-2026-09-28` 의 `practice/` 폴더에 커밋·푸시했다 (main 무변경).
+
+| 과제 | 저장소 · 경로 | 커밋 |
+|------|---------------|------|
+| 과제 1 | day-by-java · `practice/order-console/` | `ff82a51` |
+| 과제 2 | day_by_spring · `practice/library-api/` (Boot 4.1.1) | `8a993a4` |
+| 과제 3 | s2b-prototype-orm · `practice/quotation-layered/` (Boot 4.1.1 + MyBatis 4.1.0) | `38c3d59` |
