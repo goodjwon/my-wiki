@@ -1234,6 +1234,7 @@ dist/assets/index-CXhSjJ8L.js   320.39 kB │ gzip: 103.52 kB
 
 - [[guide-java-practice-spring-library]] — 과제 2. 이 화면이 부르는 도서 대여 REST API
 - [[guide-java-practice-library-merge]] — 과제 2-3. 이 화면을 실제 API와 연결하고 한 jar로 배포
+- [[guide-java-practice-library-book-search]] — 과제 2-4. 카카오 책 검색으로 도서를 가져와 등록하는 화면 추가
 - [[guide-java-track4-spring-web]] — Spring 웹 트랙 코스 안내
 - [[java-study-ch06]] — Spring Boot 프로젝트·프로파일 (API 쪽 설정)
 - [[java-study-ch09]] — 테스트 전략 (단위·통합·E2E의 역할 나누기)

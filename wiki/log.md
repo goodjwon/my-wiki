@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-29] feat+verify | 과제 2-4 외부 도서 검색 — 카카오 책 검색 v3로 재작성
+- [[guide-java-practice-library-book-search]] (1483줄): 네이버 책 검색 종료(2026-07-31, 공지 32564)를 📌 교재 포인트로 → `BookSearchClient` 인터페이스 뒤에 `KakaoBookClient`(RestClient, `Authorization: KakaoAK`), 키는 `application-local.yml`(git 제외)·환경 변수 `KAKAO_REST_API_KEY`만. 실패는 502 `EXTERNAL_API_ERROR`로, 카카오 401 본문이 키를 되돌려 주므로 상태 코드만 로그. `@RestClientTest`+MockRestServiceServer 3개(Spring 14), 가져오기 화면 `/books/import`(Vitest 12), 표준 라이브러리 대역 서버, 기존 E2E 3개 통과.
+- 캡처 5장(`raw/assets/practice/book-search/`): 검색·등록·409는 대역 서버, 502는 실제 카카오 401 응답. 실제 키로 재촬영은 backlog Pending.
+- 2-3 "다음 과제"·2-2·T4·API 하위 호환성 페이지에 링크 복구.
+
 ## [2026-09-29] feat+verify | 과제 2-2 메인 화면·검색 추가 + 과제 2-3 실제 API 캡처 / 과제 2-4(네이버) 보류
 - 사용자 지적("메인화면·검색 캡처가 없다") → 2-2에 메인 화면(`/`: 소개·검색창·신착 도서·바로가기) 추가, 도서 목록은 `/books?keyword=`로 이동. Vitest 7→9. 2-3은 SpaForwardController에 `/books`, Playwright 첫 시나리오를 메인 검색→결과로. 페이지 코드 재추출로 전 단계 재검증. 캡처 4장 추가(목업 메인·검색, 실제 API 메인·검색).
 - **과제 2-4(네이버 책 검색) 보류**: 실측 중 `/v1/search/book.json`이 404 `SE05`(같은 키로 블로그 검색은 200) → 네이버 공지로 확인한 결과 책·쇼핑·전문자료 검색 API가 **2026-07-31 종료**, 대체 API 없음. 알라딘 OpenAPI도 2026-10-30 종료 예정. 사용자 결정으로 **카카오 책 검색(v3)**으로 재작성 예정 — 네이버판 초안은 게시하지 않음.

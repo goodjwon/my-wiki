@@ -123,6 +123,7 @@ nav:
         - "과제 2. 도서 대여 API": guide-java-practice-spring-library.md
         - "과제 2-2. 도서 대여 화면": guide-java-practice-library-ui.md
         - "과제 2-3. API·화면 병합": guide-java-practice-library-merge.md
+        - "과제 2-4. 외부 도서 검색": guide-java-practice-library-book-search.md
       - "T5. 심화·워크북·종합":
         - 코스 안내: guide-java-track5-deep-dive.md
         - "과제 3. 견적·계약 업무": guide-java-practice-layered-quotation.md

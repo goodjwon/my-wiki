@@ -188,3 +188,4 @@ grep -rn "ignoreUnknownKeys\s*=\s*false\|FAIL_ON_UNKNOWN_PROPERTIES.*true\|deny_
 - [[src-spring-data-access-ref]] — Spring Data 응답 매핑 맥락
 - [[concept-transactional-rollback-policy]] / [[concept-cronjob-concurrency-trap]] — 같은 "기본값 함정" 패턴
 - [[concept-claude-md]] — STOP 트리거 후보: "응답 구조 wrapping 변경 금지"
+- [[guide-java-practice-library-book-search]] — 실습: 카카오 책 검색 응답을 필요한 필드만 읽는 Tolerant Reader record로 받기

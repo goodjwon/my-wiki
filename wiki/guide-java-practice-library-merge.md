@@ -915,10 +915,17 @@ Running 3 tests using 1 worker
 
 ---
 
+## 다음 과제
+
+화면과 API가 한 서비스로 합쳐졌으니, 이번에는 **바깥 서비스**를 부를 차례입니다. [[guide-java-practice-library-book-search]](과제 2-4)에서는 카카오(다음) 책 검색 API를 Spring의 `RestClient`로 호출해 표지·제목·ISBN을 받아 오고, 사서가 결과를 골라 이 과제의 H2 DB에 바로 등록하는 화면(`/books/import`)을 만듭니다. API 키를 커밋하지 않고 다루는 법, 외부 제공자를 인터페이스 뒤에 두어 바꿔 끼울 수 있게 하는 법, 네트워크 없이 외부 API 호출을 테스트하는 법이 핵심입니다.
+
+---
+
 ## 관련 페이지
 
 - [[guide-java-practice-spring-library]] — 과제 2. 이 과제에서 보강한 도서 대여 REST API
 - [[guide-java-practice-library-ui]] — 과제 2-2. 이 과제에서 실제 API와 연결한 React 화면
+- [[guide-java-practice-library-book-search]] — 과제 2-4. 다음 과제: 카카오 책 검색 API로 도서를 가져와 등록
 - [[guide-java-track4-spring-web]] — Spring 웹 트랙 코스 안내
 - [[java-study-ch06]] — Spring Boot 프로젝트·프로파일·정적 리소스
 - [[java-study-ch09]] — 테스트 전략 (단위·통합·E2E의 역할 나누기)

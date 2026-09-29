@@ -38,6 +38,7 @@ updated: 2026-09-28
 - [[guide-java-practice-spring-library]] — 과제 2. 도서 대여 REST API (Spring Boot + JPA + H2)
 - [[guide-java-practice-library-ui]] — 과제 2-2. 도서 대여 화면 (React + Vite, 목업 모드)
 - [[guide-java-practice-library-merge]] — 과제 2-3. API와 화면 병합 (Vite 프록시·CORS·Playwright·한 jar 배포)
+- [[guide-java-practice-library-book-search]] — 과제 2-4. 외부 API 연동: 카카오 책 검색으로 도서 등록 (RestClient·키 관리·MockRestServiceServer)
 - [[guide-java-track5-deep-dive]] — T5. 심화·워크북·종합
 - [[guide-java-practice-layered-quotation]] — 과제 3. 견적·계약 업무 (4계층 + Command/Query 분리 + MyBatis)
 

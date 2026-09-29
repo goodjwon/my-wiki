@@ -32,3 +32,6 @@
 모범 답안 소스 보관 (2026-09-29, main에 커밋·푸시):
 - 과제 2-2: day_by_spring_sm_ui · `practice/library-ui/` — `6a11200`
 - 과제 2-3: day_by_spring · `practice/library-fullstack/` (API `library/` + 화면 `library-ui/`) — `a111b34`
+
+과제 2-4 (2026-09-29): `wiki/guide-java-practice-library-book-search.md` — 카카오 책 검색 v3 연동. 네이버 책 검색 API는 2026-07-31 종료(https://developers.naver.com/notice/article/32564)로 네이버판 초안 폐기. 모범 답안은 과제 2-3과 같은 위치(`practice/library-fullstack/`, `practice/library-ui/`)를 최종 상태로 갱신.
+- 최종본 갱신 커밋(2026-09-29): day_by_spring `96f1c84`, day_by_spring_sm_ui `1f19432`

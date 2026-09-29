@@ -92,7 +92,7 @@ updated: 2026-09-29
 
 이 트랙의 Spring·JPA·트랜잭션·예외 처리·테스트를 [[guide-java-practice-spring-library]]에서 프로젝트 하나로 확인합니다. 도서·회원·대출 REST API를 계층별로 구현하고, 대출 업무 규칙(중복 대출·연체·권수 제한)을 409 응답으로 표현한 뒤, H2 콘솔·Swagger·curl 시나리오와 테스트 9개로 검증합니다.
 
-이어서 [[guide-java-practice-library-ui]]에서 이 API를 쓰는 화면을 만들고, [[guide-java-practice-library-merge]]에서 둘을 합쳐 한 jar로 배포합니다.
+이어서 [[guide-java-practice-library-ui]]에서 이 API를 쓰는 화면을 만들고, [[guide-java-practice-library-merge]]에서 둘을 합쳐 한 jar로 배포합니다. 마지막으로 [[guide-java-practice-library-book-search]]에서 카카오 책 검색 API를 `RestClient`로 연동해 도서를 가져와 등록합니다.
 
 **보충 연습** (챕터 실전문제, 시간이 남으면):
 
@@ -123,4 +123,4 @@ updated: 2026-09-29
 - [[concept-db-connection-pool]] · [[concept-varchar-length-prefix]] — DB 운영 함정
 - [[concept-api-versioning]] · [[concept-api-backward-compatibility]] — API 진화
 - [[guide-java-track3-io-network]] · [[guide-java-track5-deep-dive]] — 이전·다음 트랙
-- [[guide-java-practice-library-ui]] · [[guide-java-practice-library-merge]] — 과제 2 이어서: 화면 만들기, API 병합
+- [[guide-java-practice-library-ui]] · [[guide-java-practice-library-merge]] · [[guide-java-practice-library-book-search]] — 과제 2 이어서: 화면 만들기, API 병합, 외부 API 연동
