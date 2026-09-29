@@ -213,7 +213,7 @@ updated: 2026-09-29
 
 사용자 직접 조치 권장(위키 밖):
 - [ ] **카카오 REST API 키 재발급** — 2026-09-29 채팅에 노출됨. 재발급 후 `~/.config/wonslab/kakao.env`만 교체(저장소·사이트엔 키 없음).
-- [ ] **UI 저장소 `.env.production` 정리** — 비공개 저장소에 네이버 시크릿·관리자 비밀번호가 커밋돼 있음. 네이버 책 검색은 종료됐으므로 해당 키는 불필요, 관리자 비밀번호 변경 + `.env.production`에는 `VITE_API_BASE_URL`만 남기고 나머지는 git 제외 `.env.local`로.
+- [x] **UI 저장소 `.env.production` 정리** — 완료(2026-09-29, 커밋 `3d16461`): `VITE_API_BASE_URL`만 남기고 비밀 값 제거, `.env.example` 추가, `.gitignore`에 `.env.*.local`. **남은 것**: 옛 값이 git 히스토리에 남아 있음 → 관리자 비밀번호 변경(가장 급함)·네이버 앱 삭제/키 재발급으로 무력화. 히스토리 재작성(filter-repo + force push)은 필요 시 별도 결정.
 
 알려진 한계(급하지 않음):
 - **Windows 명령 미실측** — Java 챕터·과제·하네스의 Windows 분기(`gradlew.bat`, `setenv.bat`, PowerShell curl 등)는 macOS에서만 실측. Windows PC가 생기면 1회 점검.
