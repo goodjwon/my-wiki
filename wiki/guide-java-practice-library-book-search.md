@@ -706,8 +706,8 @@ curl -s -w '\n%{http_code}\n' -G http://localhost:8090/api/external/books --data
 ```
 
 ```text
-예상 결과 (값은 카카오 데이터에 따라 다름)
-[{"title":"...","author":"...","publisher":"...","isbn":"978...","image":"https://search1.kakaocdn.net/..."}, ...]
+예상 결과 (2026-09-29 실측, 값은 카카오 데이터에 따라 다름 — 10건 중 첫 건만 표시)
+[{"title":"코딩 자율학습 HTML + CSS + 자바스크립트","author":"김기수","publisher":"길벗","isbn":"9791165219468","image":"https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6052846%3Ftimestamp%3D20250716142640"}, ...]
 200
 ```
 
@@ -750,7 +750,7 @@ curl -s -G https://dapi.kakao.com/v3/search/book --data-urlencode "query=자바"
 | `429` | 쿼터 초과 | 카카오디벨로퍼스의 사용량 |
 | `I/O error ... timed out` | 3초 안에 연결되지 않았거나 5초 안에 응답이 없음 | 네트워크·방화벽, `application.yml`의 타임아웃 |
 
-> **이 글의 검증 환경에서**: 모범 답안을 검증할 때는 REST API 키 없이 진행해, 실제 카카오 책 데이터로는 화면을 찍지 않았습니다. 그래서 6단계의 검색·등록 그림은 다음 4-2의 대역 서버로 찍었습니다. 위의 401 → 502 흐름과 6단계의 502 그림은 실제 카카오 응답으로 확인한 결과입니다. 여러분의 키로 200이 오면 4-2는 건너뛰어도 됩니다.
+> **이 글의 검증 환경에서**: 모범 답안은 실제 카카오 REST API 키로 검증했습니다(2026-09-29). 위 200 응답과 6단계의 검색·등록·중복 그림은 실제 카카오 데이터이고, 401 → 502 흐름은 키를 뺀 실행으로 확인했습니다. 4-2의 대역 서버는 키 발급 전이나 네트워크가 없을 때 흐름을 확인하는 용도입니다.
 
 ### 4-2. 키 없이 흐름 확인 — 로컬 대역 서버
 
@@ -1361,7 +1361,7 @@ java -jar target/library-0.0.1-SNAPSHOT.jar --spring.profiles.active=h2,local
 [INFO] BUILD SUCCESS
 ```
 
-`java -jar`도 `library`에서 실행해야 루트의 `application-local.yml`이 읽힙니다. 4-2의 대역 서버로 확인한다면 `--spring.profiles.active=h2 --kakao.base-url=http://localhost:9999 --kakao.rest-api-key=stub-key`로 실행합니다. 아래 검색·등록 그림은 대역 서버로 찍었습니다.
+`java -jar`도 `library`에서 실행해야 루트의 `application-local.yml`이 읽힙니다. 4-2의 대역 서버로 확인한다면 `--spring.profiles.active=h2 --kakao.base-url=http://localhost:9999 --kakao.rest-api-key=stub-key`로 실행합니다. 아래 검색·등록 그림은 실제 카카오 응답으로 찍었습니다.
 
 새 터미널에서 새 화면 주소를 직접 열어도 화면이 뜨는지 확인합니다.
 
@@ -1374,19 +1374,19 @@ curl -s -o /dev/null -w '%{http_code} %{content_type}\n' http://localhost:8090/b
 200 text/html
 ```
 
-브라우저에서 `http://localhost:8090/books/import`를 열고 `자바`로 **외부 검색**을 누릅니다.
+브라우저에서 `http://localhost:8090/books/import`를 열고 `이펙티브 자바`로 **외부 검색**을 누릅니다.
 
 ![외부 도서 검색 결과 카드](assets/practice/book-search/01-search-results.png)
 
-*그림 2. 검색 결과 — 표지가 있는 결과와 "표지 없음" 결과가 섞인 카드 3장 (4-2 대역 서버 응답)*
+*그림 2. 검색 결과 — 실제 카카오 응답을 우리 모양으로 다듬어 그린 카드 (표지·저자·출판사·13자리 ISBN)*
 
-카드마다 제목, 이어 붙인 저자·출판사, 13자리 ISBN이 보입니다. 두 번째 카드는 응답의 `thumbnail` 주소로 표지를 그렸고, 나머지는 `thumbnail`이 비어 "표지 없음" 자리를 보여 줍니다. 실제 카카오 응답이라면 대부분의 카드에 표지가 나옵니다. 두 번째 카드 "모던 자바 인 액션"의 **등록**을 누릅니다.
+카드마다 제목, 이어 붙인 저자·출판사, 13자리 ISBN이 보이고, 표지는 응답의 `thumbnail` 주소로 그렸습니다(`thumbnail`이 빈 결과는 "표지 없음" 자리가 나옵니다). 첫 번째 카드 "Effective Java(이펙티브 자바)"(2판, ISBN 9788966261161)의 **등록**을 누릅니다.
 
 ![등록 성공 안내](assets/practice/book-search/02-register-success.png)
 
 *그림 3. 등록 성공 — `POST /api/books`가 H2에 5번 도서로 저장*
 
-"5번 도서로 등록했습니다"의 5는 H2가 매긴 번호입니다(시드 도서가 4권). 메뉴의 **도서 목록**이나 메인의 신착 도서 맨 앞에서 이 도서를 볼 수 있습니다. 이번에는 첫 번째 카드 "이펙티브 자바"의 **등록**을 누릅니다.
+"5번 도서로 등록했습니다"의 5는 H2가 매긴 번호입니다(시드 도서가 4권). 메뉴의 **도서 목록**이나 메인의 신착 도서 맨 앞에서 이 도서를 볼 수 있습니다. 이번에는 두 번째 카드 "이펙티브 자바"(3판, ISBN 9788966262281)의 **등록**을 누릅니다.
 
 ![중복 ISBN 409 안내](assets/practice/book-search/03-register-409.png)
 

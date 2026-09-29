@@ -4,6 +4,9 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-09-29] verify | 과제 2-4 실제 카카오 키로 재촬영
+- 사용자 제공 REST API 키를 저장소 밖 `~/.config/wonslab/kakao.env`(600)에 두고 앱 실행 셸에서만 환경 변수로 주입. 실제 검색 "이펙티브 자바" → 표지·ISBN 카드, 2판 등록 성공, 3판(시드 ISBN) 409 캡처 교체. 4-1 curl 예상 결과를 실측(10건, 200)으로, "대역 서버로 찍음" 설명을 실제 데이터 기준으로 수정. 서버 로그·저장소·사이트에 키 문자열 0건 확인.
+
 ## [2026-09-29] feat+verify | 과제 2-4 외부 도서 검색 — 카카오 책 검색 v3로 재작성
 - [[guide-java-practice-library-book-search]] (1483줄): 네이버 책 검색 종료(2026-07-31, 공지 32564)를 📌 교재 포인트로 → `BookSearchClient` 인터페이스 뒤에 `KakaoBookClient`(RestClient, `Authorization: KakaoAK`), 키는 `application-local.yml`(git 제외)·환경 변수 `KAKAO_REST_API_KEY`만. 실패는 502 `EXTERNAL_API_ERROR`로, 카카오 401 본문이 키를 되돌려 주므로 상태 코드만 로그. `@RestClientTest`+MockRestServiceServer 3개(Spring 14), 가져오기 화면 `/books/import`(Vitest 12), 표준 라이브러리 대역 서버, 기존 E2E 3개 통과.
 - 캡처 5장(`raw/assets/practice/book-search/`): 검색·등록·409는 대역 서버, 502는 실제 카카오 401 응답. 실제 키로 재촬영은 backlog Pending.

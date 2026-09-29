@@ -200,7 +200,7 @@ updated: 2026-09-28
 
 ### 다음 세션 최우선 (Pending)
 
-- [ ] **과제 2-4 실제 카카오 키로 캡처 재촬영** — `~/.config/wonslab/kakao.env`(KAKAO_REST_API_KEY) 생성 후 검증 세션 scratchpad의 `practice-kakao/reshoot-real.sh` 방식으로 01~03 재촬영, 페이지의 "대역 서버" 문구·4-1 curl 예상 결과를 실측값으로. (scratchpad는 세션 한정 — 새 세션이면 페이지 코드로 프로젝트 재구성 후 촬영)
+- [x] **과제 2-4 실제 카카오 키로 캡처 재촬영** — 완료(2026-09-29): 검색·등록·409 그림과 4-1 curl 결과를 실제 카카오 데이터로 교체. 키는 `~/.config/wonslab/kakao.env`(권한 600, 저장소 밖)에만 보관.
 
 **구조 제안 9~13 완료 (2026-09-28)**: 위키 워크플로 3→1([[concept-wiki-workflow]]), 도구 4개→[[entity-obsidian]], Claude Design 2→1, 북마크 페이지 삭제(옛 URL은 firebase.json 301 리다이렉트 9개), ch00 안내 축소·0.0→ch06 6.3, JVM T2→T5, 홈 주제별 개편, lecture 32개 Boot 4.x 표기, raw toc "(추정)" 교정.
 
