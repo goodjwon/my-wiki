@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-04] fix+verify | 루프 엔지니어링 실습 Step 2·3 재작성 (사용자 피드백)
+- 사용자 지적: Step 2 설명이 어렵고 중간 `echo`의 용도가 불분명, Step 3은 무엇을 하라는지 모름.
+- Step 2: 블록을 ① 메아리방 루프 / ② 루프 밖 채점으로 나누고 `echo`가 가짜 에이전트의 자기 보고를 대신한다고 설명, ②의 PASS/FAIL 출력 해석 표, 10회 일괄 실행 한 줄 추가.
+- Step 3: 실행할 것 없던 단락 → `$?`로 종료 코드를 직접 확인하는 명령 + Step 2↔4 종료 조건 비교 표.
+- 재실측(bash·zsh): 1회 통과 55/150, Step 4 루프 40/40 통과. 10회 한 줄의 `$i회`가 변수명 파싱으로 깨져 `${i}회`로 수정.
+
 ## [2026-10-04] fix | 루프 엔지니어링 실습 Step 1 실행 안내 문구 명확화
 - [[guide-loop-engineering-demo]] Step 1 안내 박스: 코드블록은 파일 생성만 하고 `agent.js`는 Step 2에서 `node agent.js > solution.js`로 처음 실행한다는 점, Step 1 직후 `node test.js`는 `solution.js` 부재로 오류가 난다는 점을 명시.
 
