@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-04] fix+verify | 루프 엔지니어링 실습 — agent.js가 직접 "완료" 보고, 초보자 연결 보강
+- 사용자 지적: 가짜 에이전트 대신 `echo`로 보고를 찍는 건 앞뒤가 안 맞음, 10회 한 줄은 실행법을 모르겠음, 초보가 따라 하기엔 연결점 부족.
+- `agent.js`: 후보를 `solution.js`에 직접 쓰고 늘 "완료"라고 보고(Step 6의 실제 Claude와 같은 모양). Step 2 종료 조건을 `if node agent.js | grep "완료"`로 바꿔 Step 4 `if node test.js`와 대칭. Step 3은 두 종료 조건의 `$?`를 나란히 비교.
+- 초보자 보강: "명령 실행 방법" 팁(터미널·복사·주석·위치), 10회 블록을 줄별 주석 여러 줄로, 파이프·`/dev/null`·`2>&1`·`break` 설명.
+- 실측: macOS 기본 zsh(interactivecomments 꺼짐)에 붙여넣으면 `command not found: #` + 10회 블록이 전부 FAIL로 틀어짐 → 팁에 `setopt interactivecomments` 추가 후 재실행 정상. bash·zsh에서 Step 1~4 블록 전부 실행 확인.
+
 ## [2026-10-04] fix+verify | 루프 엔지니어링 실습 Step 2·3 재작성 (사용자 피드백)
 - 사용자 지적: Step 2 설명이 어렵고 중간 `echo`의 용도가 불분명, Step 3은 무엇을 하라는지 모름.
 - Step 2: 블록을 ① 메아리방 루프 / ② 루프 밖 채점으로 나누고 `echo`가 가짜 에이전트의 자기 보고를 대신한다고 설명, ②의 PASS/FAIL 출력 해석 표, 10회 일괄 실행 한 줄 추가.
