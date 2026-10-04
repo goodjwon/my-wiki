@@ -9,7 +9,7 @@ Claude Code에서 **판단(Advisor)과 구현(Worker)을 분리**하는 협업 �
 | `advisor_script.md` | Advisor 에이전트 정의 — 요구사항 분석·작업 분해·브리프 작성·검증·커밋 승인 (Fable 5) | `.claude/agents/advisor.md` |
 | `worker_script.md` | Worker 에이전트 정의 — 브리프대로 구현·자체 검증·구조화 보고 (Opus 4.8) | `.claude/agents/worker.md` |
 | `claude_script.md` | 프로젝트 지침 템플릿 — 협업 모델·위임 규율·설계 원칙·브리프 형식 | 프로젝트 루트 `CLAUDE.md` |
-| `a.md` | (빈 파일) | — |
+| `verification/2026-10-05-demo-run.md` | 실습 실행 검증 증적 — 기본편·심화편 실측(도구 호출 순서·브리프·모델 집계·비용) | — |
 
 ## 읽기 순서
 

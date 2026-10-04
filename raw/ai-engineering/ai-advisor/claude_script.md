@@ -12,6 +12,7 @@
 - **기본 실행:** `claude --agent advisor` — 메인 세션이 Advisor(Fable 5)가 되어 판단·검증에 집중하고, 구현은 `Task`로 `worker`(Opus 4.8)에게 위임한다.
 - **모델은 각 에이전트 frontmatter에 고정**되어 있다. `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 설정돼 있으면 Worker의 Opus 4.8 지정을 강제로 덮어쓰므로, 이 변수는 비워둔다.
   > ✅ 실측 확인 (2026-07-12): 변수 설정 시 Worker 서브에이전트 메시지의 `model` 필드가 전부 환경변수 값으로 바뀜(frontmatter 무시, haiku 0건) — 경고 그대로임.
+  > ⚠️ 교정 (2026-10-05): 위 경고·실측은 Claude Code 2.1.250 이하 기준이다. 2.1.251부터 우선순위가 바뀌어 frontmatter `model`이 `CLAUDE_CODE_SUBAGENT_MODEL`보다 우선한다([공식 문서](https://code.claude.com/docs/en/sub-agents)). 2.1.289 실측: 변수를 `claude-opus-5-5`로 설정해도 Worker 메시지 7건 모두 frontmatter의 haiku 유지. 근거: `raw/ai-engineering/ai-advisor/verification/2026-10-05-demo-run.md`.
 - 아래 규율은 **메인 세션(Advisor) 기준**이다. 네가 Worker로 실행 중이라면 위임하지 말고 브리프대로 구현만 하라 — 각 역할의 상세 행동은 해당 에이전트 파일이 정의한다.
 
 ## 위임·검증 규율 (Advisor)

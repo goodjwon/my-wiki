@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, multi-agent, subagent, delegation, harness, context-engineering]
 sources: [ai-engineering/ai-advisor/]
 created: 2026-07-06
-updated: 2026-09-28
+updated: 2026-10-05
 ---
 
 # Advisor–Worker 패턴 — 판단·구현 분리 위임
@@ -70,7 +70,7 @@ updated: 2026-09-28
 | 판단 (분해·설계·검증) | 최상위 | 오판 1건의 비용이 큼 — 잘못된 분해·통과시킨 결함은 하류 전체를 오염 |
 | 구현 (브리프대로 코딩) | 한 단계 아래 | 브리프가 좁혀 준 문제를 푸는 일 — 호출 횟수가 많아 단가 민감 |
 
-호출량이 많은 쪽에 저렴한 모델을 두는 구조라 [[src-copilot-token-pricing]]의 종량제 환경에서 비용 레버이기도 합니다. 단 환경변수(`CLAUDE_CODE_SUBAGENT_MODEL`)가 frontmatter 지정을 덮어쓰는 함정이 있습니다(심화편 장면 3에서 실측으로 확인했습니다) — 상세는 [[src-ai-advisor-worker]].
+호출량이 많은 쪽에 저렴한 모델을 두는 구조라 [[src-copilot-token-pricing]]의 종량제 환경에서 비용 레버이기도 합니다. 환경변수 `CLAUDE_CODE_SUBAGENT_MODEL`과의 우선순위는 버전에 따라 다릅니다. Claude Code 2.1.250까지는 환경변수가 frontmatter 지정을 덮어썼고(2026-07-12 실측), 2.1.251부터는 frontmatter가 우선합니다([공식 문서](https://code.claude.com/docs/en/sub-agents), 2026-10-05 2.1.289 실측) — 상세는 [[guide-advisor-worker-advanced]] 장면 3.
 
 ## 적용 기준 — 언제 쓰고, 언제 안 쓰나
 

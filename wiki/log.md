@@ -4,6 +4,19 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-05] fix+verify | Advisor–Worker 실습 기본편·심화편 초보자용 다듬기 + 2.1.289 재실측
+- 기본편: 명령 실행 방법 상자, 등장인물 역할 대응표(감리·시공팀 비유)·서브에이전트 설명, frontmatter 키 표, 셸 문법 첫 등장 설명, 모든 블록 `cd ~/advisor-demo`(새 터미널에서 실행 시 `No such file or directory` 버그), 실측 출력·브리프 원문, Step별 "방금 본 것", 막힐 때 표, 헤드리스 로그 선택 블록.
+- 심화편: 배너 재작성, `cat >>`·`||`·`$( )` 설명, 장면 1 실패 출력·수정 브리프 원문, 장면 2 병렬 실측, 장면 3 실측 출력·버전별 모델 우선순위 표, 장면별 "방금 본 것", 막힐 때 표.
+- 사실 교정: `CLAUDE_CODE_SUBAGENT_MODEL`은 2.1.251부터 frontmatter `model`을 덮어쓰지 않음(2.1.289 실측 Worker haiku 7/7 유지, 공식 docs "Before v2.1.251 … came first" 직접 확인) — 두 가이드 + [[concept-advisor-worker]]·[[src-ai-advisor-worker]] 서술 교정 + `raw/ai-engineering/ai-advisor/claude_script.md` 교정 주석. `Task`→`Agent` 이름 변경(2.1.63, 별칭 유지) 명시. "Write 없음 = 물리적 차단"을 "Bash 우회 가능, 기본 경로 차단"으로 정정.
+- 실측(헤드리스 6회, 합계 $1.22): 기본편 4장면 재현, 장면 1 재위임 재현(단 위임 전 테스트 실행 대신 코드 읽기), 장면 2 한 메시지에 위임 2개, 장면 4 위임 0회 직접 Edit.
+- 증적 신설: `raw/ai-engineering/ai-advisor/verification/2026-10-05-demo-run.md` (raw README에 등재, 원시 jsonl 미커밋).
+
+## [2026-10-05] fix+verify | 그래프 엔지니어링 실습 초보자용 재작성 + Step 6 실제 Claude 실측
+- [[guide-graph-engineering-demo]]: "명령 실행 방법" 팁, "이 실습의 등장인물" 절(실제 역할 ↔ 실습 파일 대응표·식당 주방 비유), 모든 블록 `cd ~/graph-demo`, 셸 문법 첫 등장 설명, Step 2·4 10회 일괄 블록, 엣지 규칙 말풀이 표, 실제 출력 4종(완료·수집 중단·요약 중단·블랙박스 위반), 단계별 "방금 본 것", Step 6을 6-1 도구 끔 / 6-2 도구 열어 둠 대조 / 6-3 막힐 때로 재구성.
+- 발견: 파일 생성 블록에 `cd` 없음 → 다른 셸에서 `Cannot find module`. Step 6이 도구를 열어 둔 채 호출 → Claude가 작업 디렉터리의 `nodes.js`·이전 `report.json`에서 예시 URL을 가져와 루브릭 통과(2/2, Claude 스스로 "자리표시자" 명시) → 기본 `--tools ""`. 도구를 끄면 Claude가 URL을 지어내지 않고 3/3 거절 → 상한 중단(서술 교체). URL 정규식이 뒤 구두점까지 잡던 것 교정. "어느 단계인지 알 수 없다" → "결과만 남고 과정은 남지 않는다"로 교정.
+- 실측: 블랙박스 규칙 위반 209/300(이론 70%), 그래프 중단 55/300(이론 18.1%)·위반 완료 0/300, Step 6 기록 비용 $0.906(도구 끔 첫 호출 $0.58, 호출당 약 2분).
+- 증적 신설: `raw/ai-engineering/grap-engineering/verification/2026-10-05-demo-run.md`.
+
 ## [2026-10-05] feat+verify | 루프 엔지니어링 실습 — 실전 루프 프롬프트 모음
 - 사용자 요청: 루프 엔지니어링에 쓸 좋은 프롬프트 예제.
 - [[guide-loop-engineering-demo]] "실전 루프 프롬프트 모음" 절 신설(정리 앞): 기본 틀 + 빈칸 표(빈칸 ↔ 루프 역할), 상황별 예제 5종(실패 테스트·TDD·컴파일 에러·리팩터링·린트, Gradle 기준), 확인 명령 바꿔 끼우기 표(npm·Gradle·Maven + 성공 신호), 나쁜 → 좋은 프롬프트 표, 권한·CLAUDE.md 팁.

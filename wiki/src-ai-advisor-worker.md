@@ -4,7 +4,7 @@ type: source
 tags: [claude-code, multi-agent, subagent, harness, delegation]
 sources: [ai-engineering/ai-advisor/]
 created: 2026-07-06
-updated: 2026-09-28
+updated: 2026-10-05
 ---
 
 # Advisor–Worker 에이전트 스크립트 (판단·구현 분리)
@@ -36,7 +36,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep  # Task 없음 — 재위임 불가
 model: claude-opus-4-8
 ```
 
-함정: `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 설정돼 있으면 Worker의 frontmatter 모델 지정을 덮어쓰므로 비워 둡니다(심화편 장면 3에서 실측으로 확인했습니다).
+함정(버전 주의): 원본은 `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 Worker의 frontmatter 모델 지정을 덮어쓴다고 경고합니다. 이는 Claude Code 2.1.250 이하의 동작이고(2026-07-12 실측), 2.1.251부터는 frontmatter가 우선합니다([공식 문서](https://code.claude.com/docs/en/sub-agents), 2026-10-05 2.1.289 실측). 근거: `raw/ai-engineering/ai-advisor/verification/2026-10-05-demo-run.md`.
 
 ## 작업 브리프 형식 — 위임의 핵심 인터페이스
 
