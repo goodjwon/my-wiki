@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-04] fix+verify | 루프 엔지니어링 실습 — 실패 기록 피드백 루프(Step 4-2) 추가
+- 사용자 질문: "이 흐름으로 loop를 이해하라는 건가?" → 무료 구간이 '주사위 다시 던지기'에 그쳐 Act→Observe→Reason이 안 보이던 문제.
+- `agent.js`: `node agent.js test.log`로 부르면 실패 입력과 현재 코드를 보고 원인 하나(대문자 → 소문자화, 공백·구두점 → 영숫자만)를 고침. 인자 없이 부르면 기존처럼 무작위.
+- `test.js`: `RaceCar` 케이스 추가(6개) → 실패 수가 3 → 2 → 0으로 줄어드는 게 보임.
+- Step 4를 4-1(테스트로만 종료·재시도)과 4-2(test.log 피드백)로 분리, Step 2·3·4-1·4-2 끝에 "방금 본 것" 해설, Step 6 도입을 4-2 → `cat test.log | claude -p`로 연결.
+- 실측: 4-2 60회 모두 3사이클 이내, 출력 예시 글자 단위 일치, 기본 zsh(setopt 후)·bash 실행 확인.
+
 ## [2026-10-04] fix+verify | 루프 엔지니어링 실습 — agent.js가 직접 "완료" 보고, 초보자 연결 보강
 - 사용자 지적: 가짜 에이전트 대신 `echo`로 보고를 찍는 건 앞뒤가 안 맞음, 10회 한 줄은 실행법을 모르겠음, 초보가 따라 하기엔 연결점 부족.
 - `agent.js`: 후보를 `solution.js`에 직접 쓰고 늘 "완료"라고 보고(Step 6의 실제 Claude와 같은 모양). Step 2 종료 조건을 `if node agent.js | grep "완료"`로 바꿔 Step 4 `if node test.js`와 대칭. Step 3은 두 종료 조건의 `$?`를 나란히 비교.
