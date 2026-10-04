@@ -5,6 +5,7 @@ tags: [loop-engineering, harness, demo, react-pattern, claude-code, hands-on, no
 sources:
   - ai-engineering/loop-engineering/loop-engineering-notes.md
   - ai-engineering/loop-engineering/primary-sources.md
+  - ai-engineering/loop-engineering/verification/2026-10-04-demo-run.md
 external:
   - https://addyosmani.com/blog/loop-engineering/
   - https://www.sonarsource.com/blog/loop-engineering-without-verification-is-just-automation/
@@ -13,7 +14,7 @@ external:
   - https://arxiv.org/abs/2303.17651
   - https://code.claude.com/docs/en/headless
 created: 2026-06-26
-updated: 2026-10-04
+updated: 2026-10-05
 ---
 
 # Loop 엔지니어링 실습 — 메아리방 vs 거부 신호 루프
@@ -43,7 +44,7 @@ updated: 2026-10-04
         bash를 쓰거나 이 줄을 이미 입력했다면 주석까지 함께 붙여넣어도 됩니다.
     - 모든 명령은 `~/loop-demo` 디렉터리 안에서 실행합니다. 블록 첫 줄의 `cd ~/loop-demo`가 그 위치로 이동시킵니다.
 
-> ✅ **실행 검증됨 (2026-10-04, Node v26, bash·zsh)**: Step 1~4의 블록을 새 디렉터리에서 그대로 실행해 본문 출력과 수치를 확인했습니다 — 후보 (A)는 3개, (B)는 2개 케이스에서 실패하고 (C)만 통과(결정적), 무작위 1회 실행은 약 1/3만 통과(150번 중 55번), Step 4-2 피드백 루프는 60번 모두 3사이클 이내 통과(1사이클 17·2사이클 23·3사이클 20), 4-2 출력 예시는 실제 출력과 글자 단위로 일치. Step 6도 같은 날 Claude Code 2.1.289로 실제 실행했습니다 — 사이클 2에서 통과, 약 20초, 호출 1번 약 $0.05. 이때 `--allowedTools`에 `Write`가 없으면 수정이 막히는 함정을 발견해 본문에 반영했습니다. (명령 구문은 [공식 헤드리스 docs](https://code.claude.com/docs/en/headless) 기준)
+> ✅ **실행 검증됨 (2026-10-04, Node v26, bash·zsh)**: Step 1~4의 블록을 새 디렉터리에서 그대로 실행해 본문 출력과 수치를 확인했습니다 — 후보 (A)는 3개, (B)는 2개 케이스에서 실패하고 (C)만 통과(결정적), 무작위 1회 실행은 약 1/3만 통과(150번 중 55번), Step 4-2 피드백 루프는 60번 모두 3사이클 이내 통과(1사이클 17·2사이클 23·3사이클 20), 4-2 출력 예시는 실제 출력과 글자 단위로 일치. Step 6도 같은 날 Claude Code 2.1.289로 실제 실행했습니다 — 사이클 2에서 통과, 약 20초, 호출 1번 약 $0.05. 이때 `--allowedTools`에 `Write`가 없으면 수정이 막히는 함정을 발견해 본문에 반영했습니다. 6-5 프롬프트 비교(루프 없음·있음 × 권한)도 2026-10-05에 3번씩 실행했습니다. 증적: `raw/ai-engineering/loop-engineering/verification/2026-10-04-demo-run.md`. (명령 구문은 [공식 헤드리스 docs](https://code.claude.com/docs/en/headless) 기준)
 
 ---
 
@@ -485,6 +486,95 @@ module.exports = (s) => {
 
 > ⚠️ **토큰 비용**: Claude를 부를 때마다 비용이 듭니다. 이 실습은 실측에서 호출 1번에 약 $0.05(API 종량제 환산, Opus 5.5 기준, 2026-10-04)였고, 구독 요금제라면 그만큼 사용량 한도를 씁니다. 저장소가 크거나 실패가 복잡하면 호출당 비용이 훨씬 커집니다. 그래서 반복 상한(`MAX=5`)과 "테스트 먼저" 순서가 필요합니다. Addy Osmani의 신중론 — *"토큰 비용에 절대적으로 주의"* — 과 [[src-copilot-token-pricing]]의 종량제 전환이 같은 맥락입니다. 다음 Step 6.5에서 이 비용을 더 자세히 봅니다.
 
+### 6-5. 프롬프트로 루프 맡기기 — 대화 화면에서
+
+6-2까지는 셸의 `for` 문이 루프를 돌렸습니다. 실제로는 Claude Code 대화 화면에 프롬프트를 입력해 일을 맡기는 경우가 더 많습니다. 이때 루프는 Claude 안에서 돌고, 그 루프를 만드는 것은 **프롬프트와 권한** 두 가지입니다. 여기서는 루프를 시키지 않는 프롬프트와 루프를 시키는 프롬프트를 나란히 써 보고, 실제로 무엇이 달라지는지 봅니다.
+
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/loop-demo`
+    - **실행**: 아래 준비 블록으로 `solution.js`를 다시 틀린 코드로 되돌리고 대화 화면을 엽니다. 프롬프트 ①과 ② 중 하나를 붙여넣고, 다른 쪽을 해 보려면 `/exit`로 나와 준비 블록부터 다시 실행합니다. **토큰이 듭니다** — 실측 기준 프롬프트 1번에 $0.04~0.18.
+
+```bash
+cd ~/loop-demo
+echo "module.exports = (s) => s === [...s].reverse().join('');" > solution.js   # 다시 틀린 코드로
+claude                                 # 대화 화면 열기
+```
+
+**프롬프트 ① — 루프 없음.** 고쳐 달라고만 하고, 끝났는지 어떻게 확인할지는 말하지 않습니다:
+
+```text
+solution.js의 isPalindrome 함수가 제대로 동작하지 않아. 고쳐줘.
+```
+
+**프롬프트 ② — 루프 있음.** 같은 부탁에 끝내는 조건과 반복 규칙을 붙입니다:
+
+```text
+solution.js의 isPalindrome 함수가 제대로 동작하지 않아. 고쳐줘.
+완료 조건: `node test.js`가 "PASS"를 출력해야 한다.
+- 고친 뒤 반드시 `node test.js`를 직접 실행해 확인해.
+- 실패하면 출력을 읽고 원인을 찾아 다시 고친 뒤 또 실행해. 통과할 때까지 반복해.
+- 5번 고쳐도 통과하지 못하면 멈추고, 마지막 실패 출력을 보여 줘.
+- test.js는 고치지 마.
+- 마지막에 통과한 테스트 출력을 그대로 보여 줘.
+```
+
+②의 각 줄은 이 실습에서 셸로 짰던 루프의 부품을 말로 옮긴 것입니다:
+
+| ②의 줄 | 루프에서 맡는 역할 | 셸 루프에서 대응하는 부분 |
+|---|---|---|
+| 완료 조건 (`node test.js`가 "PASS" 출력) | 종료 조건(goal) — 무엇을 보고 끝낼지 | `if node test.js; then ... break` |
+| 고친 뒤 반드시 직접 실행해 확인해 | 관찰(Observe) | `node test.js > test.log` |
+| 실패하면 출력을 읽고 다시 고쳐 | 추론(Reason)과 재시도 | `cat test.log \| claude -p` |
+| 5번 고쳐도 안 되면 멈추고 보고해 | 반복 상한(resource)과 사람에게 넘기기 | `MAX=5`, `⛔ 반복 상한` |
+| test.js는 고치지 마 | 거부 신호 보호 — 테스트를 고쳐 통과시키는 꼼수 차단 | Step 6 지시문의 같은 문장 |
+| 통과한 테스트 출력을 그대로 보여 줘 | 증거 — "통과했다"는 말 대신 출력 원문 | `cat test.log` |
+
+대화 화면에서 Claude가 `node test.js`를 실행하려 하면 실행해도 되는지 묻는 창이 뜹니다. **Yes**를 고르면 Claude가 테스트를 돌리고, **No**를 고르면 테스트 없이 진행합니다. 이 선택이 아래 실험의 "권한" 조건입니다.
+
+#### 실험 결과 — 9번 실행해 본 것
+
+같은 시작 상태(후보 (A), 3개 케이스 실패)에서 세 조건을 3번씩 헤드리스로 실행했습니다. 프롬프트 ①은 테스트 실행 권한이 없을 때(No를 고른 경우)와 있을 때(Yes) 두 조건으로 나눴습니다:
+
+| 조건 | Claude가 한 일 | Claude의 마지막 보고 | 실행 후 실제 테스트 | 시간 · 비용 (3번 범위) |
+|---|---|---|---|---|
+| ① + 권한 없음 | 파일을 찾아 고친 뒤 `node test.js`를 실행하려다 거부됨 | "고쳤지만 테스트로 확인하지 못했다" | 3번 모두 PASS | 127~137초 · $0.06~0.18 |
+| ① + 권한 있음 | `ls`·`grep`으로 확인 방법을 찾고, 고치고, 스스로 테스트 실행 | "6개 케이스가 모두 통과했다"는 문장 | 3번 모두 PASS | 12~16초 · $0.06~0.10 |
+| ② + 권한 있음 | `solution.js`·`test.js`를 바로 읽고, 고치고, 테스트 실행 | 통과 사실 + `PASS — 6개 케이스 전부 통과` 출력 원문 | 3번 모두 PASS | 10~14초 · $0.04~0.15 |
+
+!!! note "방금 본 것 — 루프를 만드는 건 권한과 완료 조건"
+
+    이 문제는 Claude에게 쉬워서 9번 모두 첫 수정에 정답이 나왔고, "실패 → 다시 고치기" 반복은 한 번도 일어나지 않았습니다. 그런데도 세 조건은 "완료"를 보고하는 방식에서 갈렸습니다.
+
+    - **권한이 없으면 확인할 수 없습니다.** ①+권한 없음에서 Claude는 3번 모두 스스로 테스트를 돌리려 했지만 막혔고, "확인하지 못했다"고 정직하게 말하고 끝났습니다. 코드는 맞았지만 그걸 아는 사람은 아무도 없었습니다. 확인되지 않은 "완료"라는 점에서 Step 2의 메아리방과 같은 처지입니다.
+    - **권한만 줘도 요즘 Claude는 스스로 확인합니다.** ①+권한 있음에서는 루프를 시키지 않았는데도 3번 모두 테스트를 돌렸습니다. 이 실험에서 결과를 가장 크게 가른 것은 프롬프트 문구보다 테스트 실행 권한이었습니다.
+    - **완료 조건은 "말"을 "증거"로 바꿉니다.** ①+권한 있음은 테스트를 돌리고도 "통과했다"는 문장으로만 보고했습니다(출력 원문 0/3). ②는 3번 모두 출력 원문을 붙였고, 무엇으로 확인할지 찾아다니지 않고 바로 `test.js`를 읽었습니다. 사람이 보고를 믿는 대신 출력을 직접 볼 수 있게 된 것입니다.
+    - **상한과 "테스트 수정 금지"는 이번에 드러나지 않았습니다.** 문제가 쉬워 반복이 없었기 때문입니다. 이 둘은 Claude가 끝내 못 고치는 어려운 문제에서 루프가 헛돌거나 테스트를 고쳐 통과시키는 일을 막는 장치이고, 이번 실험으로 그 효과를 확인하지는 못했습니다.
+
+    정리하면, 대화 화면에서 루프를 맡길 때는 **테스트를 실행할 권한을 주고**(허락 창에서 Yes), 프롬프트에 **무엇이 통과하면 끝인지와 그 출력을 보여 달라는 요구**를 넣습니다.
+
+같은 실험을 헤드리스로 재현하려면 아래 블록을 씁니다. 프롬프트 ②는 여러 줄이라 파일로 저장해 넘기고, 각 실행 전에 `solution.js`를 되돌립니다:
+
+```bash
+cd ~/loop-demo
+cat > prompt-loop.txt << 'EOF'
+solution.js의 isPalindrome 함수가 제대로 동작하지 않아. 고쳐줘.
+완료 조건: `node test.js`가 "PASS"를 출력해야 한다.
+- 고친 뒤 반드시 `node test.js`를 직접 실행해 확인해.
+- 실패하면 출력을 읽고 원인을 찾아 다시 고친 뒤 또 실행해. 통과할 때까지 반복해.
+- 5번 고쳐도 통과하지 못하면 멈추고, 마지막 실패 출력을 보여 줘.
+- test.js는 고치지 마.
+- 마지막에 통과한 테스트 출력을 그대로 보여 줘.
+EOF
+reset_solution() { echo "module.exports = (s) => s === [...s].reverse().join('');" > solution.js; }
+
+reset_solution; claude -p "solution.js의 isPalindrome 함수가 제대로 동작하지 않아. 고쳐줘." --allowedTools "Read,Edit,Write"                      # ① + 권한 없음
+reset_solution; claude -p "solution.js의 isPalindrome 함수가 제대로 동작하지 않아. 고쳐줘." --allowedTools "Read,Edit,Write,Bash(node test.js)"   # ① + 권한 있음
+reset_solution; claude -p "$(cat prompt-loop.txt)" --allowedTools "Read,Edit,Write,Bash(node test.js)"                                         # ② + 권한 있음
+```
+
+실행별 도구 호출 순서·턴·비용과 Claude의 최종 답 원문은 증적 파일 `raw/ai-engineering/loop-engineering/verification/2026-10-04-demo-run.md`에 남겨 두었습니다.
+
 ---
 
 ## Step 6.5 — 토큰 비용 심화 (무인 루프의 진짜 리스크)
@@ -567,6 +657,8 @@ cd ~ && rm -rf ~/loop-demo
 **개념·발화 (2026-06)**: [[concept-loop-engineering]] / [[src-loop-engineering]] (1차 출처 검증 2026-06-29)
 
 - Addy Osmani [Loop Engineering](https://addyosmani.com/blog/loop-engineering/) (2026-06-07, ✅용어 명명 1차 글) · Boris Cherny [Acquired](https://www.youtube.com/watch?v=RkQQ7WEor7w) "write loops" (⚠️자구·날짜 매체별 편차) · Peter Steinberger [X](https://x.com/steipete/status/2063697162748260627) (⚠️402, "650만 조회"는 2차 주장)
+
+**실행 검증 증적**: `raw/ai-engineering/loop-engineering/verification/2026-10-04-demo-run.md` — Step 1~4 셸 실측, Step 6 헤드리스 실측(`Write` 누락 함정 포함), 6-5 프롬프트 비교 실험 9회의 도구 호출 순서·비용·최종 답 원문.
 
 **이론 (1차 출처)**:
 
