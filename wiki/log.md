@@ -4,6 +4,9 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-04] fix | 루프 엔지니어링 실습 Step 1 실행 안내 문구 명확화
+- [[guide-loop-engineering-demo]] Step 1 안내 박스: 코드블록은 파일 생성만 하고 `agent.js`는 Step 2에서 `node agent.js > solution.js`로 처음 실행한다는 점, Step 1 직후 `node test.js`는 `solution.js` 부재로 오류가 난다는 점을 명시.
+
 ## [2026-09-29] verify | 과제 2-4 실제 카카오 키로 재촬영
 - 사용자 제공 REST API 키를 저장소 밖 `~/.config/wonslab/kakao.env`(600)에 두고 앱 실행 셸에서만 환경 변수로 주입. 실제 검색 "이펙티브 자바" → 표지·ISBN 카드, 2판 등록 성공, 3판(시드 ISBN) 409 캡처 교체. 4-1 curl 예상 결과를 실측(10건, 200)으로, "대역 서버로 찍음" 설명을 실제 데이터 기준으로 수정. 서버 로그·저장소·사이트에 키 문자열 0건 확인.
 

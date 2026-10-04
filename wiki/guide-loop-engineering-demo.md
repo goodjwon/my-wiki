@@ -13,7 +13,7 @@ external:
   - https://arxiv.org/abs/2303.17651
   - https://code.claude.com/docs/en/headless
 created: 2026-06-26
-updated: 2026-09-28
+updated: 2026-10-04
 ---
 
 # Loop 엔지니어링 실습 — 메아리방 vs 거부 신호 루프
@@ -59,7 +59,7 @@ updated: 2026-09-28
 
     - **위치**: `~/loop-demo` (이 Step에서 새로 만드는 데모 디렉터리)
     - **만들 파일**: `agent.js` — 후보 구현을 무작위로 내놓는 가짜 에이전트 / `test.js` — pass/fail을 종료 코드로 돌려주는 거부 신호
-    - **실행**: 아래 코드블록 3개를 차례로 붙여넣어 실행합니다.
+    - **실행**: 아래 코드블록 3개를 차례로 붙여넣으면 디렉터리와 두 파일이 생성됩니다. 이 Step에서는 파일만 만들고, `agent.js`는 Step 2에서 `node agent.js > solution.js`로 처음 실행합니다. `solution.js`가 아직 없으므로 지금 `node test.js`를 돌리면 `Cannot find module './solution'` 오류가 납니다.
 
 먼저 실습 전용 디렉터리를 만들고 이동합니다:
 
