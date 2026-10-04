@@ -22,7 +22,7 @@ updated: 2026-10-04
 
 문서 전체에서 쓰는 두 용어를 먼저 잡습니다. **메아리방(echo chamber)**은 에이전트의 "다 됐어요" 자기 보고를 검증 없이 믿고 종료하는 루프를, **거부 신호(reject signal)**는 테스트·타입체크·빌드처럼 실패를 객관적으로 돌려줘 그 종료를 막는 검사를 가리킵니다.
 
-**시간**: 9분 (셋업 2분 + Before 메아리방 2분 + 거부 신호 추가 1분 + After 검증 루프 3분 + 실제 Claude 연결 1분)
+**시간**: 11분 (셋업 2분 + Before 메아리방 2분 + 거부 신호 추가 1분 + After 검증 루프 3분 + 실제 Claude 연결 3분)
 
 **진행 흐름**: 1분 이론으로 "관찰(Observe)이 무엇이냐"의 두 갈래를 확인 → 비교 실험용 공통 재료 만들기(Step 1) → 거부 신호 없는 메아리방 체험(Step 2) → 종료 조건 교체(Step 3) → 검증 루프 체험 — 재시도만(Step 4-1)과 실패 기록 피드백(Step 4-2) → 차이 정리(Step 5) → 가짜 에이전트를 진짜 Claude로 교체(Step 6) → 토큰 비용 심화(Step 6.5).
 
@@ -43,7 +43,7 @@ updated: 2026-10-04
         bash를 쓰거나 이 줄을 이미 입력했다면 주석까지 함께 붙여넣어도 됩니다.
     - 모든 명령은 `~/loop-demo` 디렉터리 안에서 실행합니다. 블록 첫 줄의 `cd ~/loop-demo`가 그 위치로 이동시킵니다.
 
-> ✅ **실행 검증됨 (2026-10-04, Node v26, bash·zsh)**: Step 1~4의 블록을 새 디렉터리에서 그대로 실행해 본문 출력과 수치를 확인했습니다 — 후보 (A)는 3개, (B)는 2개 케이스에서 실패하고 (C)만 통과(결정적), 무작위 1회 실행은 약 1/3만 통과(150번 중 55번), Step 4-2 피드백 루프는 60번 모두 3사이클 이내 통과(1사이클 17·2사이클 23·3사이클 20), 4-2 출력 예시는 실제 출력과 글자 단위로 일치. (Step 6은 토큰이 들어 본 검증에서 제외 — 명령 구문은 [공식 헤드리스 docs](https://code.claude.com/docs/en/headless) 기준)
+> ✅ **실행 검증됨 (2026-10-04, Node v26, bash·zsh)**: Step 1~4의 블록을 새 디렉터리에서 그대로 실행해 본문 출력과 수치를 확인했습니다 — 후보 (A)는 3개, (B)는 2개 케이스에서 실패하고 (C)만 통과(결정적), 무작위 1회 실행은 약 1/3만 통과(150번 중 55번), Step 4-2 피드백 루프는 60번 모두 3사이클 이내 통과(1사이클 17·2사이클 23·3사이클 20), 4-2 출력 예시는 실제 출력과 글자 단위로 일치. Step 6도 같은 날 Claude Code 2.1.289로 실제 실행했습니다 — 사이클 2에서 통과, 약 20초, 호출 1번 약 $0.05. 이때 `--allowedTools`에 `Write`가 없으면 수정이 막히는 함정을 발견해 본문에 반영했습니다. (명령 구문은 [공식 헤드리스 docs](https://code.claude.com/docs/en/headless) 기준)
 
 ---
 
@@ -370,39 +370,120 @@ PASS — 6개 케이스 전부 통과
 
 ---
 
-## Step 6 — 실제 Claude로 (선택, 1분)
+## Step 6 — 실제 Claude로 (선택, 3분)
 
-Step 4-2의 가짜 에이전트는 미리 정해 둔 두 가지 원인(대문자, 공백·구두점)만 알아봅니다. 처음 보는 실패를 만나면 고치지 못합니다. 이제 가짜 에이전트를 **진짜 Claude Code 헤드리스(headless) 호출**로 바꿉니다 — 헤드리스는 대화 화면 없이 터미널 명령 한 줄로 Claude를 실행하고 결과만 돌려받는 방식입니다. 핵심은 **실패한 테스트 출력을 stdin 으로 피드백**해 다음 시도가 실제로 개선되게 하는 것입니다 (공식 패턴: `cat … | claude -p "…"`).
+Step 4-2의 가짜 에이전트는 미리 정해 둔 두 가지 원인(대문자, 공백·구두점)만 알아봅니다. 처음 보는 실패를 만나면 고치지 못합니다. 이 Step에서는 가짜 에이전트 자리에 **진짜 Claude**를 넣습니다. 루프 모양은 Step 4-2와 같고, `node agent.js test.log`로 실패 기록을 넘기던 자리가 `cat test.log | claude -p "…"`로 바뀔 뿐입니다.
 
 !!! example "실습 위치·실행"
 
-    - **위치**: `~/loop-demo` (Step 1의 `test.js` 그대로 사용)
-    - **만들 파일**: `solution.js` — 일부러 틀린 구현으로 덮어쓰고 루프가 고치게 합니다
-    - **실행**: Claude Code 로그인 상태에서 아래 블록을 붙여넣어 실행합니다 (토큰이 소모됩니다).
+    - **위치**: `~/loop-demo` (Step 1의 `test.js` 그대로 사용, `agent.js`는 쓰지 않음)
+    - **만들 파일**: `solution.js` — 일부러 틀린 구현으로 덮어쓰고 Claude가 고치게 합니다 / `test.log` — Claude에게 넘길 실패 기록
+    - **실행**: 6-1에서 준비를 확인한 뒤 6-2의 블록을 붙여넣습니다. **토큰(사용량)이 듭니다** — 실측 기준 Claude 호출 1~2번, 약 20초.
 
-루프 골격은 Step 4-2 그대로입니다. `node agent.js test.log`로 실패 기록을 넘기던 자리가 `cat test.log | claude -p "…"`로 바뀌었을 뿐입니다:
+### 6-1. 준비 확인
+
+Claude Code가 설치돼 있고 로그인돼 있어야 합니다. 아래 두 명령으로 확인합니다:
+
+```bash
+claude --version
+claude -p "안녕이라고만 답해"
+```
+
+| 결과 | 뜻 | 할 일 |
+|---|---|---|
+| 버전 번호(예: `2.1.289 (Claude Code)`)가 나오고, 두 번째 명령이 `안녕`이라고 답함 | 준비 완료 | 6-2로 진행 |
+| `command not found: claude` | Claude Code가 설치되지 않음 | [공식 설치 안내](https://code.claude.com/docs/en/setup)대로 설치 |
+| 로그인하라는 안내가 나옴 | 로그인이 안 됨 | 터미널에 `claude`를 입력해 대화 화면에서 로그인한 뒤 `/exit`로 나옴 |
+
+`claude -p`의 `-p`는 `--print`의 줄임으로, 대화 화면을 띄우지 않고 질문 하나를 처리한 뒤 답만 출력하고 끝나는 방식입니다. 이를 헤드리스(headless) 실행이라고 합니다. 한 번 실행하고 끝나므로 `for` 루프 안에 넣을 수 있습니다.
+
+### 6-2. 루프 실행
+
+블록을 통째로 붙여넣습니다. 줄마다 붙은 주석이 각 줄의 역할입니다:
 
 ```bash
 cd ~/loop-demo
-# 일부러 틀린 구현으로 시작 (정규화 없음 → 공백·구두점 케이스 실패)
+MAX=5                                  # 반복 상한 — 많아야 5번까지 시도
+# 일부러 틀린 구현으로 시작한다 (후보 (A)와 같음 → 3개 케이스 실패)
 echo "module.exports = (s) => s === [...s].reverse().join('');" > solution.js
 
-for i in $(seq 1 5); do
+for i in $(seq 1 $MAX); do
   echo "── 사이클 $i ──"
-  if node test.js > test.log 2>&1; then
-    echo "✅ 통과 — 종료"; cat test.log; break
+  if node test.js > test.log 2>&1; then  # 먼저 테스트 — 통과하면 Claude를 부르지 않고 끝낸다
+    cat test.log
+    echo "✅ 사이클 $i 에서 통과 — 루프 종료"
+    break
   fi
-  echo "↻ 실패 — 에러를 Claude 에 피드백해 수정 요청"
-  cat test.log | claude -p "solution.js 의 isPalindrome 구현이 아래 테스트에서 실패한다. 근본 원인을 찾아 solution.js 만 수정하라. 에러를 숨기지 말 것. 대소문자·공백·구두점은 무시해야 한다." \
-    --allowedTools "Read,Edit,Bash(node *)"
+  cat test.log
+  if [ "$i" -eq "$MAX" ]; then         # 상한에 닿으면 더 부르지 않고 사람에게 넘긴다
+    echo "⛔ 반복 상한($MAX회)에 도달 — 여기서 멈추고 사람이 확인한다"
+    break
+  fi
+  echo "↻ 실패 — 실패 기록을 Claude에게 넘겨 수정을 맡긴다"
+  cat test.log | claude -p "solution.js의 isPalindrome 구현이 아래 테스트에서 실패한다. 실패 원인을 찾아 solution.js만 고쳐라. 테스트 파일은 고치지 말고, 테스트는 직접 실행하지 마라. 대소문자·공백·구두점은 무시해야 한다." \
+    --allowedTools "Read,Edit,Write"
 done
 ```
 
-- `claude -p`(=`--print`)는 **비대화형으로 1회 실행 후 종료**하므로 `for` 루프로 감싸기에 딱 맞습니다 ([공식 docs](https://code.claude.com/docs/en/headless)).
-- `--allowedTools` 로 도구를 좁혀 자동 승인합니다 — 프롬프트 없이 무인 실행됩니다.
-- 이게 **Reflexion·Self-Refine** 의 핵심입니다: 실패 신호를 언어로 받아 다음 시도를 개선 ([Reflexion](https://arxiv.org/abs/2303.11366) · [Self-Refine](https://arxiv.org/abs/2303.17651)).
+Step 4-2와 순서가 조금 다릅니다. 4-2는 에이전트를 먼저 부르고 테스트했지만, 여기서는 **테스트를 먼저** 돌립니다. 테스트는 공짜이고 Claude 호출은 비용이 들기 때문에, 이미 통과한 코드라면 Claude를 아예 부르지 않기 위해서입니다. 상한에 닿았을 때도 마지막 Claude 호출을 건너뛰고 멈춥니다. 고친 결과를 확인할 기회가 없는 호출은 비용만 들기 때문입니다.
 
-> ⚠️ **토큰 비용**: 사이클마다 모델을 호출합니다. Addy Osmani 의 신중론 — *"토큰 비용에 절대적으로 주의"*. 반드시 반복 상한(위 코드의 `seq 1 5`)과 검증 게이트를 두고, 무인 루프는 비용을 모니터링해야 합니다. [[src-copilot-token-pricing]] 의 종량제 전환과 같은 맥락입니다.
+`claude -p` 줄을 나눠 읽으면 다음과 같습니다:
+
+| 부분 | 뜻 |
+|---|---|
+| `cat test.log \|` | 실패 기록을 파이프로 Claude에게 넘깁니다. Claude는 따옴표 안의 지시와 함께 이 기록을 받습니다 |
+| `"solution.js의 … 무시해야 한다."` | 지시문입니다. 고칠 파일을 하나로 좁히고, 테스트를 고쳐서 통과시키는 꼼수를 막습니다. 테스트 실행은 루프가 하므로 Claude에게는 맡기지 않습니다 |
+| `\` | 명령이 다음 줄로 이어진다는 표시입니다 |
+| `--allowedTools "Read,Edit,Write"` | Claude가 묻지 않고 쓸 수 있는 도구 목록입니다. 파일 읽기(Read)·부분 수정(Edit)·전체 쓰기(Write)만 허용하고, 셸 명령 같은 나머지는 막습니다 |
+
+### 6-3. 출력 읽기
+
+2026-10-04에 실제로 실행한 출력입니다. Claude가 실패 원인을 설명하고 `solution.js`를 고친 뒤, 사이클 2의 테스트가 통과를 확인했습니다. Claude의 답 문장은 실행할 때마다 조금씩 다릅니다:
+
+```
+── 사이클 1 ──
+  ❌ isPalindrome("RaceCar") = false (기대값 true)
+  ❌ isPalindrome("A man, a plan, a canal: Panama") = false (기대값 true)
+  ❌ isPalindrome("No lemon, no melon") = false (기대값 true)
+FAIL — 3개 케이스 실패
+↻ 실패 — 실패 기록을 Claude에게 넘겨 수정을 맡긴다
+`solution.js`만 고쳤습니다. 지시대로 테스트는 실행하지 않았습니다.
+
+**원인:** 기존 코드는 입력 문자열을 그대로 뒤집어서 비교했습니다. 그래서 `"RaceCar"`처럼
+대소문자가 섞이거나 공백·구두점이 있으면 회문이어도 `false`가 나왔습니다.
+
+**수정:** 비교 전에 문자열을 소문자로 바꾸고, 글자와 숫자만 남기고 나머지는 모두 지우도록 했습니다.
+(… 고친 코드 …)
+── 사이클 2 ──
+PASS — 6개 케이스 전부 통과
+✅ 사이클 2 에서 통과 — 루프 종료
+```
+
+Claude가 무엇을 고쳤는지는 `cat solution.js`로 직접 봅니다. 실측에서는 아래처럼 고쳤습니다:
+
+```js
+module.exports = (s) => {
+  const t = s.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+  return t === [...t].reverse().join('');
+};
+```
+
+가짜 에이전트의 정답 (C)는 `[^a-z0-9]`로 영문자와 숫자만 남겼는데, Claude는 `\p{L}\p{N}`(모든 언어의 글자와 숫자)을 써서 한글 같은 입력도 처리하게 했습니다. 정해진 후보 안에서만 고르는 가짜 에이전트와 달리, 진짜 에이전트는 실패 기록을 읽고 자기 방식으로 고칩니다.
+
+!!! note "방금 본 것 — 같은 루프, 진짜 추론"
+
+    루프 코드는 Step 4-2와 거의 같은데, 추론(Reason)을 맡은 쪽이 미리 짜 둔 규칙에서 언어 모델로 바뀌었습니다. 실패를 언어로 받아 다음 시도를 고치는 이 방식이 **Reflexion·Self-Refine**의 핵심입니다 ([Reflexion](https://arxiv.org/abs/2303.11366) · [Self-Refine](https://arxiv.org/abs/2303.17651)). 그리고 Claude가 "고쳤습니다"라고 말해도 루프는 그 말로 끝나지 않았습니다. 끝을 정한 것은 사이클 2의 `PASS`였습니다. Step 2의 메아리방과 갈리는 지점이 바로 여기입니다.
+
+### 6-4. 막힐 때
+
+| 증상 | 원인 | 해결 |
+|---|---|---|
+| Claude가 "파일 쓰기 권한이 거부돼 고치지 못했습니다"라고 답하고, 같은 실패가 사이클마다 반복됨 | `--allowedTools`에 `Write`가 빠짐 — Claude가 파일 전체를 다시 쓰려 하면 `Edit`만으로는 막힘 (실측) | `--allowedTools "Read,Edit,Write"`가 그대로 들어갔는지 확인 |
+| 위와 같은 권한 거부가 `Write`를 넣어도 계속됨 | Claude Code 대화 화면 안에서(`!` 명령 등) 실행해 바깥 세션의 권한 설정을 물려받음 | Claude Code 밖의 일반 터미널 창에서 실행 |
+| 아무 출력 없이 오래 멈춤 | Claude가 응답을 생성 중이거나 네트워크 지연 | 1분 정도 기다리고, 그래도 멈춰 있으면 `Ctrl+C`로 중단 후 6-1부터 확인 |
+| 5사이클 모두 실패하고 `⛔ 반복 상한` 출력 | Claude가 끝내 못 고침 | 상한이 제 역할을 한 것입니다. `cat solution.js`로 결과를 보고 사람이 판단합니다 |
+
+> ⚠️ **토큰 비용**: Claude를 부를 때마다 비용이 듭니다. 이 실습은 실측에서 호출 1번에 약 $0.05(API 종량제 환산, Opus 5.5 기준, 2026-10-04)였고, 구독 요금제라면 그만큼 사용량 한도를 씁니다. 저장소가 크거나 실패가 복잡하면 호출당 비용이 훨씬 커집니다. 그래서 반복 상한(`MAX=5`)과 "테스트 먼저" 순서가 필요합니다. Addy Osmani의 신중론 — *"토큰 비용에 절대적으로 주의"* — 과 [[src-copilot-token-pricing]]의 종량제 전환이 같은 맥락입니다. 다음 Step 6.5에서 이 비용을 더 자세히 봅니다.
 
 ---
 
@@ -432,7 +513,7 @@ done
 if node test.js > test.log 2>&1; then
   echo "✅ 이미 통과 — 모델 호출 0회, 토큰 0"
 else
-  cat test.log | claude -p "…수정…" --allowedTools "Read,Edit,Bash(node *)"
+  cat test.log | claude -p "…수정…" --allowedTools "Read,Edit,Write"
 fi
 ```
 
