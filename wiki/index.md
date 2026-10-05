@@ -154,6 +154,9 @@ updated: 2026-09-28
 - [[guide-advisor-worker-demo]] — Advisor–Worker 기본: 도구 제한과 검증 게이트
 - [[guide-advisor-worker-advanced]] — Advisor–Worker 심화: 재위임·병렬 위임·모델 티어링
 - [[guide-graph-engineering-demo]] — 그래프 엔지니어링: 블랙박스 에이전트와 명시적 그래프 비교
+- [[lecture-loop-engineering]] — 강의 노트(Loop): 입문 수강생용 강의 순서·실측 결과·진행 팁 (PPT 동반)
+- [[lecture-advisor-worker]] — 강의 노트(Advisor–Worker): 기본·심화 4장면 실측과 자주 틀리는 사실 (PPT 동반)
+- [[lecture-graph-engineering]] — 강의 노트(그래프): 블랙박스 vs 그래프 실측과 진짜 Claude 노드 (PPT 동반)
 
 ### AI 도구·동향
 

@@ -343,6 +343,7 @@ cd ~ && rm -rf ~/advisor-demo
 ## 관련 페이지
 
 - [[guide-advisor-worker-demo]] — 기본편 (셋업 Step 1~2·관찰 포인트 4장면, 실행 검증됨)
+- [[lecture-advisor-worker]] — 강의 노트: 기본편·심화편을 입문 수강생 강의 순서로 정리
 - [[concept-advisor-worker]] — 패턴 개념 (구성 요소 4가지·모델 티어링·적용 기준)
 - [[src-ai-advisor-worker]] — 원본 스크립트 해설
 - [[guide-loop-engineering-demo]] — 토큰 비용 원칙(Step 6.5)의 출처

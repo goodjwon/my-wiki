@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-05] synthesis | 에이전트 패턴 실습 강의 노트 3종 + PPT 3종
+- 사용자 요청: 설명용 md와 ppt — 세 실습 각각, 입문 수강생 강의용, md는 위키 synthesis, ppt는 .pptx.
+- 신설: [[lecture-loop-engineering]](185줄) · [[lecture-advisor-worker]](197줄) · [[lecture-graph-engineering]](160줄) — 가이드 복사가 아닌 강의 순서(왜 필요한가 → 등장인물·비유 → 핵심 비교 → 실측 → 함정 → 강의 진행 팁), 실측 수치는 각 verification 증적만 사용. 각 가이드 관련 페이지에 역링크, mkdocs nav "에이전트 패턴 실습"·index 등록.
+- PPT(위키 외부, `~/Downloads/wonslab-lectures/`): loop-engineering 17장 · advisor-worker 19장 · graph-engineering 16장, 16:9, 전 슬라이드 발표자 노트, 공통 디자인(네이비·블루·경고 레드). PowerPoint로 PDF 렌더해 3덱 전 슬라이드 육안 확인(넘침·잘림 없음), Advisor–Worker 제목 가운데 정렬 → 좌측으로 통일.
+- 알려진 한계: graph 12번 막대 차트는 PowerPoint 기본 차트라 Keynote에서 안 보임(loop 10번은 도형 막대). 테마 폰트 Apple SD Gothic Neo만 지정 — Windows에선 대체 폰트.
+- 부수 교정: [[comparison-advisor-worker-vs-graph]] 실측 출처 칸의 옛 수치(20회 중 13회) → 300회 중 209회(2026-10-05).
+
 ## [2026-10-05] fix+verify | Advisor–Worker 실습 기본편·심화편 초보자용 다듬기 + 2.1.289 재실측
 - 기본편: 명령 실행 방법 상자, 등장인물 역할 대응표(감리·시공팀 비유)·서브에이전트 설명, frontmatter 키 표, 셸 문법 첫 등장 설명, 모든 블록 `cd ~/advisor-demo`(새 터미널에서 실행 시 `No such file or directory` 버그), 실측 출력·브리프 원문, Step별 "방금 본 것", 막힐 때 표, 헤드리스 로그 선택 블록.
 - 심화편: 배너 재작성, `cat >>`·`||`·`$( )` 설명, 장면 1 실패 출력·수정 브리프 원문, 장면 2 병렬 실측, 장면 3 실측 출력·버전별 모델 우선순위 표, 장면별 "방금 본 것", 막힐 때 표.

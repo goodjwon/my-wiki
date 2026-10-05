@@ -540,3 +540,4 @@ cd ~ && rm -rf ~/graph-demo
 - [[guide-advisor-worker-advanced]] — 대조 실측: 장면 1 "프롬프트 규율의 한계" (규율을 해석해 우회 vs 이 실습의 코드 강제)
 - [[comparison-advisor-worker-vs-graph]] — 두 패턴의 축 차이·선택 기준 비교
 - [[concept-claude-hooks]] — 컨디션의 환경 층 구현 (exit code 거부)
+- [[lecture-graph-engineering]] — 이 실습을 강의로 진행할 때 쓰는 강의 노트 (입문 수강생용)

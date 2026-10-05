@@ -923,6 +923,7 @@ cd ~ && rm -rf ~/loop-demo
 ## 관련 페이지
 
 - [[concept-loop-engineering]] — 이 실습의 이론 (메커니즘 자체를 설계)
+- [[lecture-loop-engineering]] — 이 개념을 다룬 강의 노트 (입문 수강생 강의 순서·진행 팁)
 - [[guide-harness-demo]] — 직전 단계: 하네스 5분 데모 (환경 설계)
 - [[concept-claude-hooks]] — back-pressure 가 "거부할 수 있는 무언가" 의 또 다른 구현
 - [[concept-multi-agent-pattern]] — Critic 이 거부 메커니즘의 또 다른 구현

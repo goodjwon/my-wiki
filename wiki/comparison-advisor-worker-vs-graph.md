@@ -6,7 +6,7 @@ sources:
   - ai-engineering/ai-advisor/advisor_script.md
   - ai-engineering/grap-engineering/또다른 트렌드 Graph Engineering 알려드림_1786315251439.md
 created: 2026-08-10
-updated: 2026-09-28
+updated: 2026-10-05
 ---
 
 # Advisor–Worker vs 그래프 엔지니어링
@@ -36,7 +36,7 @@ updated: 2026-09-28
 | 규칙 | "한두 줄 수정은 직접 처리" 프롬프트 규율 (초판) | `rubric(s.items, s.draft).length === 0 ? 'report' : summarizeTries < 3 ? 'summarize' : 'ABORT'` 조건부 엣지 |
 | 위반 형태 | Advisor가 2회 모두 직접 Edit — 규율을 "해석"해서 우회 | 위반 경로 자체가 없음 — `report` 노드에 도달 불가 |
 | 교정 방식 | 크기 기준 문구를 동작 변경 기준으로 구체화한 뒤에야 위임이 재현됐습니다 (사후 검증·교정) | 교정할 일 없음 (사전 강제) |
-| 실측 출처 | [[guide-advisor-worker-advanced]] 장면 1 (2026-07-12 검증) | [[guide-graph-engineering-demo]] — 블랙박스 20회 중 13회 오답-완료 vs 그래프 0회 (2026-08-10 검증) |
+| 실측 출처 | [[guide-advisor-worker-advanced]] 장면 1 (2026-07-12 검증, 2026-10-05 2.1.289 재현) | [[guide-graph-engineering-demo]] — 블랙박스 300회 중 209회 규칙 위반-완료 vs 그래프 0회 (2026-10-05 재실측, 첫 검증 2026-08-10은 20회 중 13회) |
 
 LLM이 규칙을 **해석**하는 한 어기는 경로가 항상 남습니다. 그래프는 그 규칙을 해석 불가능한 층(코드)으로 내립니다 — 이것이 두 패턴 사이의 유일한 공학적 델타입니다.
 

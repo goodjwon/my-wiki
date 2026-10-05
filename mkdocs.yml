@@ -312,6 +312,9 @@ nav:
       - Advisor–Worker 기본: guide-advisor-worker-demo.md
       - Advisor–Worker 심화: guide-advisor-worker-advanced.md
       - 그래프 엔지니어링: guide-graph-engineering-demo.md
+      - 강의 노트 — Loop: lecture-loop-engineering.md
+      - 강의 노트 — Advisor–Worker: lecture-advisor-worker.md
+      - 강의 노트 — 그래프: lecture-graph-engineering.md
     - AI 도구·동향:
       - Claude Design: entity-claude-design.md
       - Copilot 종량제 전환: src-copilot-token-pricing.md
