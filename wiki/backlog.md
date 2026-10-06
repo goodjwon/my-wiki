@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-09-29
+updated: 2026-10-06
 ---
 
 # 위키 백로그
@@ -21,7 +21,7 @@ updated: 2026-09-29
 
 ## 📅 마지막 업데이트
 
-2026-09-29
+2026-10-06
 
 ## 🎯 현재 위키의 큰 줄기 (Strategy)
 
@@ -39,7 +39,15 @@ updated: 2026-09-29
 - **"복리 지식"** (Karpathy/Hashimoto) — 위키가 누적될수록 페이지 간 교차참조 가치 ↑
 - **"기본값과 가정의 함정"** — 인프라/프레임워크 기본값이 그대로 사고로 이어진다는 패턴 (6+ 페이지에 비교표)
 
-## ✅ 최근 완료 작업 (2026-06~09 누적)
+## ✅ 최근 완료 작업 (2026-06~10 누적)
+
+### 2026-10-04~05 — 에이전트 패턴 실습 3종 초보자용 재작성 + 실측 + 강의 노트 (전부 배포 완료, 상세는 log 2026-10-04~05 8건)
+
+- ✅ **루프 엔지니어링 실습** [[guide-loop-engineering-demo]] — `agent.js` 직접 "완료" 보고, Step 4-2 실패 기록(`test.log`) 피드백 루프, "등장인물" 절(비행 시뮬레이터 비유), Step 6 실제 Claude 실행(`--allowedTools`에 `Write` 누락 함정 교정), 6-5 루프 없음·있음 프롬프트 9회 비교, 6.5 금액 예산 루프(`--max-budget-usd`는 사후 확인이라 초과함), 실전 루프 프롬프트 모음 5종(TDD만 실측).
+- ✅ **그래프 엔지니어링 실습** [[guide-graph-engineering-demo]] — 등장인물 절(식당 주방 비유), 모든 블록 `cd`, Step 6 도구 끔(`--tools ""`) / 열어 둠 대조. 실측: 블랙박스 위반 209/300, 그래프 중단 55/300·위반 완료 0/300.
+- ✅ **Advisor–Worker 기본편·심화편** — 초보자용 다듬기 + 2.1.289 재실측. 사실 교정: `CLAUDE_CODE_SUBAGENT_MODEL`은 2.1.251부터 frontmatter `model`을 덮어쓰지 않음, `Task`→`Agent` 이름 변경(2.1.63), "Write 없음"은 Bash 우회 가능.
+- ✅ **강의 노트 3종** — [[lecture-loop-engineering]]·[[lecture-advisor-worker]]·[[lecture-graph-engineering]] (nav "에이전트 패턴 실습"). PPT 3덱(17·19·16장)은 위키 밖 `~/Downloads/wonslab-lectures/`.
+- ✅ 증적: `raw/ai-engineering/{loop-engineering,grap-engineering,ai-advisor}/verification/` 3건(원시 jsonl은 이 PC 훅·플러그인 설정이 섞여 미커밋).
 
 ### 2026-09-29 — Java 과제 확장(화면·병합·외부 API) + 메뉴 계층 (전부 배포 완료, 상세는 log 2026-09-29)
 
@@ -209,7 +217,7 @@ updated: 2026-09-29
 
 ### 다음 세션 최우선 (Pending)
 
-(비어 있음 — 2026-09-29 작업은 모두 완료·배포)
+(비어 있음 — 2026-10-05 작업까지 모두 완료·배포)
 
 사용자 직접 조치 권장(위키 밖):
 - [ ] **카카오 REST API 키 재발급** — 2026-09-29 채팅에 노출됨. 재발급 후 `~/.config/wonslab/kakao.env`만 교체(저장소·사이트엔 키 없음).
@@ -218,6 +226,8 @@ updated: 2026-09-29
 알려진 한계(급하지 않음):
 - **Windows 명령 미실측** — Java 챕터·과제·하네스의 Windows 분기(`gradlew.bat`, `setenv.bat`, PowerShell curl 등)는 macOS에서만 실측. Windows PC가 생기면 1회 점검.
 - **과제 페이지 분량** — 과제 6편이 900~1,700줄(코드 대부분은 접힘 모범 답안). 독자 피드백이 "길다"면 모범 답안을 저장소 브랜치 링크로 대체하는 방안 검토.
+- **에이전트 패턴 실습 미실측 부분** — 실전 루프 프롬프트 ①③④⑤(TDD ②만 실측), 6-5에서 9회 모두 첫 수정에 정답이라 반복·상한 효과는 미확인.
+- **강의 PPT** — graph 12번 막대 차트(PowerPoint 기본 차트)는 Keynote에서 안 보임, 테마 폰트 Apple SD Gothic Neo만 지정(Windows 대체 폰트).
 - **Obsidian에서 과제 스크린샷 미표시** — 이미지가 `raw/assets/`에 있고 페이지는 `assets/...` 상대 경로(사이트 빌드 기준)라 Obsidian 미리보기에서는 안 보임. 사이트는 정상.
 
 자율 진행 후보가 필요하면: ① 아이디어 섹션의 "원본 재감사 루틴" 스크립트 영구화(`scripts/notion-audit.py`) ② 보강 후보 표의 concept-memex·concept-compounding-knowledge 외부 자료 보강.
@@ -295,7 +305,7 @@ updated: 2026-09-29
 | 빌드 hook | `scripts/new_badge.py` — nav 🆕 자동(30일) |
 | 이미지 | `raw/assets/` (빌드 시 `docs/assets/`로 복사) — 현재 `raw/assets/practice/` 스샷 11장 |
 
-## 📊 위키 규모 (2026-09-29 기준)
+## 📊 위키 규모 (2026-10-06 기준)
 
 ```bash
 # 빠른 통계 (다른 PC에서 확인)
@@ -307,11 +317,11 @@ git log --oneline | wc -l
 
 | 구분 | 수 |
 |------|---|
-| wiki 페이지 | **211개** (guide 28 포함, 09-28 병합으로 9개 감소) |
-| 5권 도서 강의 교재 | **93편** (lecture-*) |
-| raw 원본 | 203 파일 (13개 주제 디렉터리 + assets 스크린샷 29장) |
+| wiki 페이지 | **214개** (guide 28 포함) |
+| 강의 노트 | **96편** (lecture-* — 5권 도서 93 + 에이전트 패턴 실습 3) |
+| raw 원본 | 206 파일 (13개 주제 디렉터리 + assets 스크린샷 29장) |
 | nav 카테고리 | 6개 (Java/Spring·개발방법론·DB운영·앱 개발/출시·하네스/AI 에이전트·위키 운영) |
-| 커밋 | 211 (5월 30일~) |
+| 커밋 | 224 (5월 30일~, 이 갱신 포함) |
 
 ## 🗺️ 새 세션 시작 가이드
 

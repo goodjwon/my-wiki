@@ -4,6 +4,9 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-06] meta | backlog 2026-10-04~05 작업 반영
+- [[backlog]]: 최근 완료에 에이전트 패턴 실습 3종 재작성·실측·강의 노트 묶음 추가, 알려진 한계에 미실측 프롬프트·PPT 호환 한계 추가, 규모 표 갱신(페이지 214·raw 206·lecture 96).
+
 ## [2026-10-05] synthesis | 에이전트 패턴 실습 강의 노트 3종 + PPT 3종
 - 사용자 요청: 설명용 md와 ppt — 세 실습 각각, 입문 수강생 강의용, md는 위키 synthesis, ppt는 .pptx.
 - 신설: [[lecture-loop-engineering]](185줄) · [[lecture-advisor-worker]](197줄) · [[lecture-graph-engineering]](160줄) — 가이드 복사가 아닌 강의 순서(왜 필요한가 → 등장인물·비유 → 핵심 비교 → 실측 → 함정 → 강의 진행 팁), 실측 수치는 각 verification 증적만 사용. 각 가이드 관련 페이지에 역링크, mkdocs nav "에이전트 패턴 실습"·index 등록.
