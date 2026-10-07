@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-08] fix | Search Console "리디렉션이 포함된 페이지" — URL 끝 슬래시 불일치 해소
+- 증상: 전 페이지(예: `/guide-harness-00-prerequisites`)가 "리디렉션이 포함된 페이지"로 색인 제외(처음 감지 2026-07-01, 사이트맵 "알려진 모든 페이지").
+- 원인: MkDocs(`use_directory_urls` 기본값)는 사이트맵·canonical·내부 링크를 `/page/`로 만드는데 Firebase `trailingSlash: false`가 `/page/` → `/page`로 301. 사이트맵 URL이 전부 리디렉션이고, 200을 주는 `/page`의 canonical은 다시 `/page/`를 가리켜 정본이 하나도 없었음.
+- 교정: `firebase.json` `trailingSlash: true`(MkDocs 산출물에 맞춤) + 리디렉션 목적지 8개에 `/` 추가(2단 리디렉션 방지). 에뮬레이터 실측: `/page/` 200, `/page` → `/page/` 301, `/concept-ingest` → `/concept-wiki-workflow/#ingest` 1회.
+- "기본값과 가정의 함정" 사례: 두 도구의 URL 기본값이 서로 반대.
+
 ## [2026-10-06] meta | backlog 2026-10-04~05 작업 반영
 - [[backlog]]: 최근 완료에 에이전트 패턴 실습 3종 재작성·실측·강의 노트 묶음 추가, 알려진 한계에 미실측 프롬프트·PPT 호환 한계 추가, 규모 표 갱신(페이지 214·raw 206·lecture 96).
 

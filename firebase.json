@@ -7,7 +7,7 @@
       "**/node_modules/**"
     ],
     "cleanUrls": true,
-    "trailingSlash": false,
+    "trailingSlash": true,
     "headers": [
       {
         "source": "**/*.@(css|js|woff2|svg|png|jpg|jpeg|webp|ico)",
@@ -31,42 +31,42 @@
     "redirects": [
       {
         "source": "/concept-ingest{,/**}",
-        "destination": "/concept-wiki-workflow#ingest",
+        "destination": "/concept-wiki-workflow/#ingest",
         "type": 301
       },
       {
         "source": "/concept-query{,/**}",
-        "destination": "/concept-wiki-workflow#query",
+        "destination": "/concept-wiki-workflow/#query",
         "type": 301
       },
       {
         "source": "/concept-lint{,/**}",
-        "destination": "/concept-wiki-workflow#lint",
+        "destination": "/concept-wiki-workflow/#lint",
         "type": 301
       },
       {
         "source": "/entity-obsidian-web-clipper{,/**}",
-        "destination": "/entity-obsidian#obsidian-web-clipper",
+        "destination": "/entity-obsidian/#obsidian-web-clipper",
         "type": 301
       },
       {
         "source": "/entity-dataview{,/**}",
-        "destination": "/entity-obsidian#dataview",
+        "destination": "/entity-obsidian/#dataview",
         "type": 301
       },
       {
         "source": "/entity-qmd{,/**}",
-        "destination": "/entity-obsidian#qmd",
+        "destination": "/entity-obsidian/#qmd",
         "type": 301
       },
       {
         "source": "/entity-marp{,/**}",
-        "destination": "/entity-obsidian#marp",
+        "destination": "/entity-obsidian/#marp",
         "type": 301
       },
       {
         "source": "/src-claude-design-review{,/**}",
-        "destination": "/entity-claude-design",
+        "destination": "/entity-claude-design/",
         "type": 301
       },
       {
