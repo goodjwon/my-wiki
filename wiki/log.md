@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-08] fix | Search Console "크롤링됨 - 현재 색인이 생성되지 않음" — 페이지별 검색 메타데이터
+- 원인 진단: 212페이지 전부 같은 meta description(`site_description`) → 구글 입장에선 구분 없는 페이지 묶음. 사이트맵 lastmod도 전부 빌드 날짜. 저자용 메모(backlog·plan-*)까지 색인 대상. 앞 항목의 슬래시 불일치(canonical이 리디렉션 URL)도 같은 증상의 원인.
+- `scripts/seo.py` hook 신설: description을 H1 뒤 첫 문단에서 추출(코드블록·표·제목 건너뜀, 큰따옴표 → 작은따옴표 — Material이 속성을 이스케이프하지 않음, 짧거나 "다음과 같습니다."로 끝나면 제목 접두), lastmod = frontmatter `updated`, backlog·plan-*는 `noindex`. 결과: description 212/212 고유, lastmod 실제 수정일 분포.
+- `overrides/main.html`: robots·Open Graph(og:title은 frontmatter 제목)·JSON-LD `TechArticle`(created/updated). `overrides/sitemap.xml`: noindex 페이지 제외(210 URL).
+- 페이지에서 description을 직접 지정하려면 frontmatter `description:`을 쓰면 추출보다 우선.
+
 ## [2026-10-08] fix | Search Console "리디렉션이 포함된 페이지" — URL 끝 슬래시 불일치 해소
 - 증상: 전 페이지(예: `/guide-harness-00-prerequisites`)가 "리디렉션이 포함된 페이지"로 색인 제외(처음 감지 2026-07-01, 사이트맵 "알려진 모든 페이지").
 - 원인: MkDocs(`use_directory_urls` 기본값)는 사이트맵·canonical·내부 링크를 `/page/`로 만드는데 Firebase `trailingSlash: false`가 `/page/` → `/page`로 301. 사이트맵 URL이 전부 리디렉션이고, 200을 주는 `/page`의 canonical은 다시 `/page/`를 가리켜 정본이 하나도 없었음.

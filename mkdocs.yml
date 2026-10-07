@@ -55,6 +55,7 @@ theme:
 
 hooks:
   - scripts/new_badge.py
+  - scripts/seo.py
 
 plugins:
   - search:

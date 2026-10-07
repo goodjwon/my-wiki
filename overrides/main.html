@@ -3,4 +3,19 @@
 {% block extrahead %}
   {{ super() }}
   <meta name="google-site-verification" content="FEXLg3eiVOytaXRbarnH1phWQQAsDEz6wzrzclEAFwE" />
+  {% if page and page.meta %}
+    {% if page.meta.robots %}<meta name="robots" content="{{ page.meta.robots }}">{% endif %}
+    {% set desc = page.meta.description or config.site_description %}
+    <meta property="og:type" content="{{ 'website' if page.is_homepage else 'article' }}">
+    <meta property="og:site_name" content="{{ config.site_name }}">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:title" content="{{ (page.meta.title or page.title) | striptags }}">
+    <meta property="og:description" content="{{ desc }}">
+    {% if page.canonical_url %}<meta property="og:url" content="{{ page.canonical_url }}">{% endif %}
+    {% if not page.is_homepage and page.meta.created %}
+    <script type="application/ld+json">
+      {{ {"@context": "https://schema.org", "@type": "TechArticle", "headline": (page.meta.title or page.title) | striptags, "description": desc, "inLanguage": "ko", "datePublished": page.meta.created | string, "dateModified": (page.meta.updated or page.meta.created) | string, "author": {"@type": "Person", "name": config.site_author}, "mainEntityOfPage": page.canonical_url} | tojson }}
+    </script>
+    {% endif %}
+  {% endif %}
 {% endblock %}

@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-10-06
+updated: 2026-10-08
 ---
 
 # 위키 백로그
@@ -303,7 +303,7 @@ updated: 2026-10-06
 | Git 원격 | `git@github.com:goodjwon/my-wiki.git` |
 | 로컬 path | PC별 상이 (예: `/Users/jungwonpark/VsCodeProjects/my-wiki/`, `/Users/jwon/VsCodeProjects/my-wiki/`) |
 | 품질 게이트 | `scripts/style-lint.sh`(§7 문체) · `scripts/scaffold-lint.sh`(§7-7 실습 스캐폴드) — 토큰 0 |
-| 빌드 hook | `scripts/new_badge.py` — nav 🆕 자동(30일) |
+| 빌드 hook | `scripts/new_badge.py` — nav 🆕 자동(30일) · `scripts/seo.py` — 페이지별 description·sitemap lastmod(`updated`)·backlog/plan-* noindex |
 | 이미지 | `raw/assets/` (빌드 시 `docs/assets/`로 복사) — 현재 `raw/assets/practice/` 스샷 11장 |
 
 ## 📊 위키 규모 (2026-10-06 기준)
