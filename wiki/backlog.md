@@ -4,7 +4,7 @@ type: synthesis
 tags: [meta, backlog, project-status]
 sources: []
 created: 2026-06-07
-updated: 2026-10-08
+updated: 2026-10-11
 ---
 
 # 위키 백로그
@@ -43,7 +43,7 @@ updated: 2026-10-08
 
 ### 2026-10-04~05 — 에이전트 패턴 실습 3종 초보자용 재작성 + 실측 + 강의 노트 (전부 배포 완료, 상세는 log 2026-10-04~05 8건)
 
-- ✅ **루프 엔지니어링 실습** [[guide-loop-engineering-demo]] — `agent.js` 직접 "완료" 보고, Step 4-2 실패 기록(`test.log`) 피드백 루프, "등장인물" 절(비행 시뮬레이터 비유), Step 6 실제 Claude 실행(`--allowedTools`에 `Write` 누락 함정 교정), 6-5 루프 없음·있음 프롬프트 9회 비교, 6.5 금액 예산 루프(`--max-budget-usd`는 사후 확인이라 초과함), 실전 루프 프롬프트 모음 5종(TDD만 실측).
+- ✅ **루프 엔지니어링 실습** [[guide-loop-engineering-demo]] — `agent.js` 직접 "완료" 보고, Step 4-2 실패 기록(`test.log`) 피드백 루프, "등장인물" 절(비행 시뮬레이터 비유), Step 6 실제 Claude 실행(`--allowedTools`에 `Write` 누락 함정 교정), 6-5 루프 없음·있음 프롬프트 9회 비교, 6.5 금액 예산 루프(`--max-budget-usd`는 사후 확인이라 초과함), 실전 루프 프롬프트 모음 — 2026-10-11 연습 라이브러리(`~/loop-practice`) 하나를 이어 고치는 4종(버그·TDD·리팩터링·README+check-docs.js)으로 재구성, 4종 모두 실측.
 - ✅ **그래프 엔지니어링 실습** [[guide-graph-engineering-demo]] — 등장인물 절(식당 주방 비유), 모든 블록 `cd`, Step 6 도구 끔(`--tools ""`) / 열어 둠 대조. 실측: 블랙박스 위반 209/300, 그래프 중단 55/300·위반 완료 0/300.
 - ✅ **Advisor–Worker 기본편·심화편** — 초보자용 다듬기 + 2.1.289 재실측. 사실 교정: `CLAUDE_CODE_SUBAGENT_MODEL`은 2.1.251부터 frontmatter `model`을 덮어쓰지 않음, `Task`→`Agent` 이름 변경(2.1.63), "Write 없음"은 Bash 우회 가능.
 - ✅ **강의 노트 3종** — [[lecture-loop-engineering]]·[[lecture-advisor-worker]]·[[lecture-graph-engineering]] (nav "에이전트 패턴 실습"). PPT 3덱(17·19·16장)은 위키 밖 `~/Downloads/wonslab-lectures/`.
@@ -226,7 +226,7 @@ updated: 2026-10-08
 알려진 한계(급하지 않음):
 - **Windows 명령 미실측** — Java 챕터·과제·하네스의 Windows 분기(`gradlew.bat`, `setenv.bat`, PowerShell curl 등)는 macOS에서만 실측. Windows PC가 생기면 1회 점검.
 - **과제 페이지 분량** — 과제 6편이 900~1,700줄(코드 대부분은 접힘 모범 답안). 독자 피드백이 "길다"면 모범 답안을 저장소 브랜치 링크로 대체하는 방안 검토.
-- **에이전트 패턴 실습 미실측 부분** — 실전 루프 프롬프트 ①③④⑤(TDD ②만 실측), 6-5에서 9회 모두 첫 수정에 정답이라 반복·상한 효과는 미확인.
+- **에이전트 패턴 실습 미실측 부분** — 실전 루프 프롬프트 4종은 모두 첫 수정에 통과해 "다시 고치기" 미발생, 6-5에서 9회 모두 첫 수정에 정답이라 반복·상한 효과는 미확인.
 - **강의 PPT** — graph 12번 막대 차트(PowerPoint 기본 차트)는 Keynote에서 안 보임, 테마 폰트 Apple SD Gothic Neo만 지정(Windows 대체 폰트).
 - **Obsidian에서 과제 스크린샷 미표시** — 이미지가 `raw/assets/`에 있고 페이지는 `assets/...` 상대 경로(사이트 빌드 기준)라 Obsidian 미리보기에서는 안 보임. 사이트는 정상.
 

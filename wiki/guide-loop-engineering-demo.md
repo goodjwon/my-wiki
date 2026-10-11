@@ -14,7 +14,7 @@ external:
   - https://arxiv.org/abs/2303.17651
   - https://code.claude.com/docs/en/headless
 created: 2026-06-26
-updated: 2026-10-05
+updated: 2026-10-11
 ---
 
 # Loop 엔지니어링 실습 — 메아리방 vs 거부 신호 루프
@@ -751,26 +751,101 @@ PASS — 6개 케이스 전부 통과
 |---|---|---|
 | `<할 일>` | 무엇을 바꿀지 한 문장으로 씁니다 | 행동(Act) |
 | `<확인 명령>` | 사람이 직접 쳐도 결과가 같은 명령을 씁니다. 범위가 좁을수록 빠르고 쌉니다 | 관찰(Observe), 거부 신호 |
-| `<성공 신호>` | 그 명령이 성공할 때만 찍는 글자를 씁니다 (`fail 0`, `BUILD SUCCESSFUL` 등) | 종료 조건(goal) |
+| `<성공 신호>` | 그 명령이 성공할 때만 찍는 글자를 씁니다 (`fail 0`, `DOCS OK` 등) | 종료 조건(goal) |
 | `<N>` | 3~5가 무난합니다. 한 번 고치는 비용이 크면 줄입니다 | 반복 상한(resource) |
 | `<건드리면 안 되는 것>` | 테스트 코드, 설정 파일, 공개 API처럼 고쳐서 통과시키면 안 되는 것을 씁니다 | 거부 신호 보호 |
 
-### 상황별 예제
+### 상황별 예제 — 작은 라이브러리 하나를 네 번 고쳐 가며
 
-**① 실패하는 테스트 고치기** — 가장 흔한 경우입니다. 테스트를 고치거나 끄는 꼼수를 막는 줄이 핵심입니다:
+예제 네 개는 모두 같은 연습 프로젝트에서 이어집니다. 문자열 함수 세 개가 든 `stringutil.js`에서 출발해 ① 버그를 고치고, ② 기능을 더하고, ③ 코드를 정리하고, ④ 사용 설명서(README)를 씁니다. 앞 예제의 결과물이 다음 예제의 출발점이므로 순서대로 진행합니다.
 
-```text
-OrderServiceTest가 실패해. 원인을 찾아 고쳐줘.
-완료 조건: `./gradlew test --tests OrderServiceTest`의 출력에 "BUILD SUCCESSFUL"이 있어야 한다.
-- 고친 뒤 반드시 위 명령을 직접 실행해 확인해.
-- 실패하면 출력을 읽고 원인을 찾아 다시 고친 뒤 또 실행해. 통과할 때까지 반복해.
-- 5번 고쳐도 통과하지 못하면 멈추고, 마지막 실패 출력과 원인 추정을 보여 줘.
-- 테스트 코드는 고치지 마. @Disabled를 붙이거나 assert를 지우는 것도 안 돼.
-- 통과하면 `./gradlew test`로 전체 테스트도 한 번 돌려서 다른 테스트를 깨뜨리지 않았는지 확인해.
-- 마지막에 두 명령의 출력 원문을 그대로 보여 줘.
+!!! example "실습 위치·실행"
+
+    - **위치**: `~/loop-practice` (아래 준비 블록이 새로 만듦)
+    - **만들 파일**: `stringutil.js`(연습 대상 라이브러리), `stringutil.test.js`(테스트 3개)
+    - **실행**: 준비 블록을 붙여넣은 뒤 `claude`로 대화 화면을 열고, 예제의 프롬프트를 하나씩 붙여넣습니다. 확인 명령을 실행해도 되는지 물으면 **Yes**를 고릅니다. **토큰이 듭니다** — 실측 기준 예제 1개에 $0.16~0.21.
+
+준비 블록은 라이브러리와 테스트를 만들고 테스트를 한 번 돌려 봅니다. `truncate` 함수에 일부러 버그를 하나 넣어 두었으므로 테스트 1개가 실패하는 것이 정상입니다:
+
+```bash
+mkdir -p ~/loop-practice && cd ~/loop-practice
+
+cat > stringutil.js << 'EOF'
+// 문자열 유틸 — 실전 루프 프롬프트 연습용
+function isPalindrome(s) {
+  const t = s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return t === [...t].reverse().join('');
+}
+
+function isAnagram(a, b) {
+  const x = a.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const y = b.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return [...x].sort().join('') === [...y].sort().join('');
+}
+
+// 길이가 max를 넘으면 잘라서 끝에 '…'를 붙인다 (결과 길이 = max)
+function truncate(s, max) {
+  return s.length > max ? s.slice(0, max) + '…' : s;
+}
+
+module.exports = { isPalindrome, isAnagram, truncate };
+EOF
+
+cat > stringutil.test.js << 'EOF'
+const test = require('node:test');
+const assert = require('node:assert');
+const { isPalindrome, isAnagram, truncate } = require('./stringutil');
+
+test('isPalindrome', () => {
+  assert.strictEqual(isPalindrome('RaceCar'), true);
+  assert.strictEqual(isPalindrome('A man, a plan, a canal: Panama'), true);
+  assert.strictEqual(isPalindrome('hello'), false);
+});
+
+test('isAnagram', () => {
+  assert.strictEqual(isAnagram('Listen', 'Silent'), true);
+  assert.strictEqual(isAnagram('Dormitory', 'dirty room'), true);
+  assert.strictEqual(isAnagram('hello', 'world'), false);
+});
+
+test('truncate', () => {
+  assert.strictEqual(truncate('hello world', 5), 'hell…');
+  assert.strictEqual(truncate('hi', 5), 'hi');
+  assert.strictEqual(truncate('hello', 5), 'hello');
+});
+EOF
+
+node --test 2>&1 | grep -E "^ℹ (tests|pass|fail)"
 ```
 
-**② 새 기능을 테스트 먼저 (TDD)** — "먼저 실패하는 것을 보여 줘"가 들어가면 테스트가 정말 그 기능을 검사하는지까지 확인됩니다. 이 예제는 아래 "실측"에서 실제로 돌려 본 프롬프트 원문입니다:
+`node --test`는 Node에 내장된 테스트 실행기로, `*.test.js` 파일을 찾아 돌리고 마지막에 개수를 요약합니다. 이 요약의 `fail 0`이 네 예제 중 세 개의 성공 신호입니다. 지금은 다음처럼 나옵니다:
+
+```
+ℹ tests 3
+ℹ pass 2
+ℹ fail 1
+```
+
+**① 실패하는 테스트 고치기** — 가장 흔한 경우입니다. 시작 상태는 방금 본 `fail 1`입니다. 테스트를 고치거나 건너뛰게 만들어 "통과"시키는 꼼수를 막는 줄이 핵심입니다:
+
+```text
+stringutil.test.js의 truncate 테스트가 실패해. 원인을 찾아 고쳐줘.
+완료 조건: `node --test`의 출력에 "fail 0"이 있어야 한다.
+- 고친 뒤 반드시 `node --test`를 직접 실행해 확인해.
+- 실패하면 출력을 읽고 원인을 찾아 다시 고친 뒤 또 실행해. 통과할 때까지 반복해.
+- 5번 고쳐도 통과하지 못하면 멈추고, 마지막 실패 출력과 원인 추정을 보여 줘.
+- 테스트 코드는 고치지 마. 테스트를 건너뛰게(skip) 만들거나 assert를 지우는 것도 안 돼.
+- 마지막에 `node --test` 출력 원문을 그대로 보여 줘.
+```
+
+결과물은 `stringutil.js`의 한 줄입니다. 주석은 "결과 길이 = max"라고 약속하는데, 원래 코드는 `max`글자를 다 남긴 뒤 `…`를 붙여 한 글자가 넘쳤습니다. Claude는 `…`가 들어갈 자리 한 칸을 비우도록 고쳤습니다:
+
+```diff
+-  return s.length > max ? s.slice(0, max) + '…' : s;
++  return s.length > max ? s.slice(0, max - 1) + '…' : s;
+```
+
+**② 새 기능을 테스트 먼저 (TDD)** — 모음 개수를 세는 `countVowels`를 더합니다. "먼저 실패하는 것을 보여 줘"가 들어가면, 새 테스트가 정말 그 기능을 검사하는지까지 확인됩니다. 아무것도 없는 상태에서 통과하는 테스트는 아무것도 검사하지 않는 테스트이기 때문입니다:
 
 ```text
 stringutil.js에 문자열 속 모음(a, e, i, o, u, 대소문자 무시) 개수를 세는 countVowels 함수를 추가해줘. 테스트를 먼저 쓰는 순서로 해.
@@ -778,78 +853,158 @@ stringutil.js에 문자열 속 모음(a, e, i, o, u, 대소문자 무시) 개수
 - 먼저 countVowels 테스트를 stringutil.test.js에 추가하고, `node --test`를 실행해 그 테스트가 실패하는 것을 확인해. 실패 출력을 보여 줘.
 - 그다음 구현하고 다시 `node --test`를 실행해. 실패하면 출력을 읽고 고친 뒤 또 실행해. 통과할 때까지 반복해.
 - 5번 고쳐도 통과하지 못하면 멈추고, 마지막 실패 출력과 원인 추정을 보여 줘.
-- 기존 isPalindrome 테스트는 고치거나 지우지 마. 테스트를 건너뛰게(skip) 만들지도 마.
+- 기존 테스트는 고치거나 지우지 마. 테스트를 건너뛰게(skip) 만들지도 마.
 - 마지막에 `node --test` 출력 원문을 그대로 보여 줘.
 ```
 
-**③ 빌드(컴파일) 에러 고치기** — 에러를 숨기는 방법을 막아 둡니다:
+결과물은 테스트 하나와 함수 하나입니다. 테스트를 먼저 추가해 돌렸을 때 `pass 3`, `fail 1`(`countVowels is not a function`)이 나왔고, 구현 뒤 `tests 4`, `fail 0`이 됐습니다:
 
-```text
-`./gradlew compileJava`가 실패해. 컴파일 에러를 고쳐줘.
-완료 조건: `./gradlew compileJava`의 출력에 "BUILD SUCCESSFUL"이 있어야 한다.
-- 고친 뒤 반드시 위 명령을 직접 실행해 확인해. 실패하면 출력을 읽고 다시 고쳐. 통과할 때까지 반복해.
-- 5번 고쳐도 통과하지 못하면 멈추고, 남은 에러 목록을 보여 줘.
-- 에러가 나는 코드를 주석 처리하거나 지우는 것, @SuppressWarnings로 덮는 것은 안 돼.
-- 마지막에 출력 원문을 그대로 보여 줘.
+```js
+// stringutil.test.js에 추가된 테스트
+test('countVowels', () => {
+  assert.strictEqual(countVowels('hello'), 2);
+  assert.strictEqual(countVowels('AEIOU aeiou'), 10);
+  assert.strictEqual(countVowels('rhythm'), 0);
+  assert.strictEqual(countVowels(''), 0);
+});
+
+// stringutil.js에 추가된 함수 (module.exports에도 추가됨)
+function countVowels(s) {
+  return (s.match(/[aeiou]/gi) || []).length;
+}
 ```
 
-**④ 동작을 바꾸지 않는 리팩터링** — 리팩터링은 "테스트가 그대로 통과하는 것"이 완료 조건입니다. 시작 전 기준을 먼저 찍게 합니다:
+**③ 동작을 바꾸지 않는 리팩터링** — `isPalindrome`과 `isAnagram`은 문자열을 정리하는 코드(소문자로 바꾸고 영문자·숫자만 남기기)를 똑같이 세 번 반복합니다. 리팩터링은 "테스트가 그대로 통과하는 것"이 완료 조건이고, 테스트 수가 줄지 않았는지도 함께 봐야 합니다. 테스트를 지워서 통과시키는 꼼수를 막기 위해 시작 전 기준을 먼저 찍게 합니다:
 
 ```text
-OrderService의 중복 코드를 정리해줘. 동작은 바꾸지 마.
-완료 조건: 리팩터링 후 `./gradlew test` 출력에 "BUILD SUCCESSFUL"이 있고, 실행된 테스트 수가 시작 전과 같아야 한다.
-- 시작 전에 `./gradlew test`를 실행해 통과 여부와 테스트 수를 기록해 보여 줘.
-- 리팩터링한 뒤 다시 실행해. 실패하면 고치고 또 실행해. 통과할 때까지 반복해.
-- 3번 고쳐도 통과하지 못하면 리팩터링을 되돌리고 멈춰.
-- 테스트 코드와 public 메서드 시그니처는 바꾸지 마.
-- 마지막에 시작 전·후 출력 원문을 나란히 보여 줘.
+stringutil.js에서 isPalindrome과 isAnagram이 문자열을 정리하는 코드(소문자로 바꾸고 영문자·숫자만 남기기)를 똑같이 반복하고 있어. 이 부분을 normalize 함수 하나로 뽑아 중복을 없애줘. 동작은 바꾸지 마.
+완료 조건: `node --test`의 출력에 "fail 0"이 있고, "tests" 수가 시작 전과 같아야 한다.
+- 시작 전에 `node --test`를 실행해 tests·pass·fail 수를 기록해 보여 줘.
+- 고친 뒤 다시 실행해. 실패하면 출력을 읽고 고친 뒤 또 실행해. 통과할 때까지 반복해.
+- 3번 고쳐도 통과하지 못하면 고친 것을 되돌리고 멈춰.
+- 테스트 코드와 module.exports는 바꾸지 마. normalize는 내보내지 않는 내부 함수로 둬.
+- 마지막에 시작 전·후 `node --test` 출력의 tests·pass·fail 줄을 나란히 보여 줘.
 ```
 
-**⑤ 린트 경고 정리** — 규칙을 끄는 꼼수가 가장 흔한 작업입니다:
+결과물은 내부 함수 `normalize` 하나와, 그것을 부르도록 바뀐 두 함수입니다. 시작 전과 후 모두 `tests 4`, `pass 4`, `fail 0`이었습니다:
+
+```js
+function normalize(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function isPalindrome(s) {
+  const t = normalize(s);
+  return t === [...t].reverse().join('');
+}
+
+function isAnagram(a, b) {
+  const x = normalize(a);
+  const y = normalize(b);
+  return [...x].sort().join('') === [...y].sort().join('');
+}
+```
+
+**④ 사용 설명서(README) 쓰기** — 문서에도 루프를 걸 수 있습니다. 문제는 거부 신호입니다. 코드에는 테스트가 있지만, 문서는 "잘 썼다"를 판정할 명령이 없습니다. 그래서 문서가 지켜야 할 규칙을 검사하는 작은 스크립트를 **사람이 먼저** 만듭니다. 이 검사기는 두 가지를 봅니다. 공개 함수마다 `## 함수명` 제목과 예제 줄이 있는지, 그리고 `함수(인자) // → 결과` 형식의 예제 줄을 실제로 실행했을 때 문서에 적힌 결과가 나오는지입니다. 두 번째 규칙 덕분에 "예제가 실제 동작과 다른 문서"가 거부됩니다:
+
+```bash
+cd ~/loop-practice
+cat > check-docs.js << 'EOF'
+// README.md 검사기 — 문서용 거부 신호. 사람이 만들고, 에이전트는 고치지 않는다.
+const fs = require('fs');
+const lib = require('./stringutil');
+const doc = fs.existsSync('README.md') ? fs.readFileSync('README.md', 'utf8') : '';
+const errors = [];
+
+// 규칙 1: 공개 함수마다 "## 함수명" 제목과 예제 줄이 하나 이상 있어야 한다
+for (const name of Object.keys(lib)) {
+  if (!new RegExp(`^## ${name}$`, 'm').test(doc)) errors.push(`"## ${name}" 제목이 없음`);
+  if (!new RegExp(`^${name}\\(.*\\) // → `, 'm').test(doc)) errors.push(`${name} 예제 줄이 없음`);
+}
+
+// 규칙 2: 예제 줄 "함수(인자) // → 결과"를 실제로 실행해 결과가 같아야 한다
+for (const [, call, expected] of doc.matchAll(/^(\w+\(.*\)) \/\/ → (.+)$/gm)) {
+  let actual;
+  try {
+    actual = JSON.stringify(new Function(...Object.keys(lib), `return ${call}`)(...Object.values(lib)));
+  } catch (e) {
+    actual = `에러: ${e.message}`;
+  }
+  if (actual !== expected.trim()) errors.push(`예제가 틀림: ${call} → 문서 ${expected.trim()}, 실제 ${actual}`);
+}
+
+errors.forEach((e) => console.error(`  ❌ ${e}`));
+console.log(errors.length ? `DOCS FAIL — ${errors.length}건` : 'DOCS OK');
+process.exit(errors.length ? 1 : 0);
+EOF
+node check-docs.js
+```
+
+README가 아직 없으므로 함수 4개마다 제목·예제가 없다는 줄 8개와 `DOCS FAIL — 8건`이 나옵니다. 이 상태에서 프롬프트를 붙여넣습니다:
 
 ```text
-`npm run lint`에서 나오는 경고를 모두 정리해줘.
-완료 조건: `npm run lint`의 출력에 error와 warning이 하나도 없어야 한다.
-- 고친 뒤 반드시 `npm run lint`를 직접 실행해 확인해. 남아 있으면 다시 고쳐. 깨끗해질 때까지 반복해.
-- 5번 반복해도 남으면 멈추고, 남은 경고 목록을 보여 줘.
-- eslint-disable 주석을 넣거나 린트 설정 파일을 바꾸는 것은 안 돼.
-- 고친 뒤 `npm test`도 한 번 돌려서 동작이 깨지지 않았는지 확인해.
-- 마지막에 두 명령의 출력 원문을 그대로 보여 줘.
+stringutil.js의 공개 함수 사용법을 정리한 README.md를 새로 써줘.
+완료 조건: `node check-docs.js`의 출력에 "DOCS OK"가 있어야 한다.
+- 먼저 check-docs.js를 읽고 README가 지켜야 할 규칙을 파악해.
+- 함수마다 "## 함수명" 제목, 한두 문장 설명, `함수(인자) // → 결과` 형식의 예제 줄을 2개 이상 넣어. 결과는 JSON 형식으로 써(문자열은 큰따옴표).
+- 쓴 뒤 반드시 `node check-docs.js`를 직접 실행해 확인해. 실패하면 출력을 읽고 README를 고친 뒤 또 실행해. 통과할 때까지 반복해.
+- 5번 고쳐도 통과하지 못하면 멈추고, 마지막 실패 출력을 보여 줘.
+- check-docs.js와 stringutil.js는 고치지 마. 예제가 틀리면 예제를 고쳐.
+- 마지막에 `node check-docs.js` 출력 원문을 그대로 보여 줘.
 ```
 
-### 확인 명령 바꿔 끼우기
+"check-docs.js와 stringutil.js는 고치지 마" 줄이 ①의 "테스트 코드는 고치지 마"와 같은 역할입니다. 검사기를 느슨하게 고치거나, 예제에 맞춰 코드를 바꿔 통과시키는 길을 막습니다. 결과물인 `README.md`의 일부는 다음과 같습니다:
 
-예제의 명령은 프로젝트의 빌드 도구에 맞게 바꿉니다:
+````markdown
+## truncate
+
+문자열 길이가 `max`를 넘으면 잘라서 끝에 `…`를 붙인다. 결과 길이는 `max`이고, `max` 이하면 그대로 돌려준다.
+
+```js
+truncate("hello world", 5) // → "hell…"
+truncate("hi", 5) // → "hi"
+```
+````
+
+검사기가 무엇을 잡는지 보려면 README의 `"hell…"`을 `"hello…"`로 바꾸고 `node check-docs.js`를 다시 실행해 봅니다. ①에서 고치기 전의 버그 동작을 그대로 문서에 적은 셈인데, 검사기는 `❌ 예제가 틀림: truncate("hello world", 5) → 문서 "hello…", 실제 "hell…"`과 `DOCS FAIL — 1건`을 내고 종료 코드 1로 끝납니다. 문서가 코드와 어긋나는 순간 루프가 멈추지 않고 한 바퀴 더 돕니다.
+
+### 실측 — 네 예제를 실제로 돌려 본 결과
+
+위 준비 블록과 프롬프트를 그대로 써서 ①→④를 이어서 헤드리스로 1번씩 실행했습니다(2026-10-11). 확인 명령은 `--allowedTools`에 적었습니다. ①~③은 `"Read,Edit,Write,Bash(node --test)"`, ④는 `"Read,Edit,Write,Bash(node check-docs.js)"`입니다:
+
+| 예제 | 결과물 | 확인 명령 결과 | 다시 고친 횟수 | 턴·시간·비용 |
+|---|---|---|---|---|
+| ① 실패 테스트 | `truncate`의 `slice(0, max)` → `slice(0, max - 1)` | `fail 1` → `fail 0` | 0 | 4턴, 13초, $0.17 |
+| ② TDD | `countVowels` 테스트 4개 + 함수 | `fail 1`(먼저 실패 확인) → `tests 4`, `fail 0` | 0 | 8턴, 144초, $0.21 |
+| ③ 리팩터링 | 내부 함수 `normalize`, 두 함수가 호출 | 전·후 모두 `tests 4`, `fail 0` | 0 | 4턴, 15초, $0.16 |
+| ④ README | `README.md` (함수 4개 × 예제 2개) | `DOCS FAIL — 8건` → `DOCS OK` | 0 | 4턴, 17초, $0.17 |
+
+네 예제 모두 테스트 코드·검사기·`module.exports`처럼 고치지 말라고 한 것은 그대로였고, 최종 답에 확인 명령의 출력 원문이 들어 있었습니다. ②가 오래 걸린 것은 Claude가 테스트를 셸 명령(`cat >>`)으로 덧붙이려다 `--allowedTools`에 없는 명령이라 거부되고, Edit 도구로 다시 쓴 탓입니다. 허락한 명령만 실행된다는 것을 보여 주는 장면입니다. 네 번 모두 첫 수정에 통과해 "실패 출력을 읽고 다시 고치기"는 일어나지 않았습니다. 그 반복이 어떻게 생기는지는 Step 4-2의 셸 루프와 ④의 틀린 예제 실험에서 확인합니다.
+
+### 내 프로젝트로 옮길 때 — 확인 명령 바꿔 끼우기
+
+연습은 Node로 했지만, 프롬프트의 뼈대는 언어와 상관없습니다. 바뀌는 것은 확인 명령과 성공 신호뿐입니다. 예를 들어 Java 프로젝트라면 ①의 `node --test`를 `./gradlew test --tests OrderServiceTest`로, `"fail 0"`을 `"BUILD SUCCESSFUL"`로 바꾸면 그대로 쓸 수 있습니다:
 
 | 목적 | Node (npm) | Gradle | Maven |
 |---|---|---|---|
-| 전체 테스트 | `npm test` 또는 `node --test` | `./gradlew test` | `./mvnw test` |
+| 전체 테스트 | `node --test` 또는 `npm test` | `./gradlew test` | `./mvnw test` |
 | 테스트 하나만 | `node --test <파일>` | `./gradlew test --tests <클래스명>` | `./mvnw test -Dtest=<클래스명>` |
 | 컴파일 | `npx tsc --noEmit` (TypeScript) | `./gradlew compileJava` | `./mvnw compile` |
+| 린트 | `npm run lint` | `./gradlew check` | `./mvnw verify` |
 | 성공 신호 | `fail 0` (`node --test`) | `BUILD SUCCESSFUL` | `BUILD SUCCESS` |
+
+린트나 컴파일 에러를 맡길 때는 ①의 "테스트 코드는 고치지 마" 자리에 그 작업에서 흔한 꼼수를 막는 줄을 넣습니다. 린트라면 "eslint-disable 주석이나 린트 설정 변경은 안 돼", 컴파일 에러라면 "에러 나는 코드를 주석 처리하거나 지우는 것은 안 돼"입니다.
 
 ### 나쁜 프롬프트 → 좋은 프롬프트
 
 | 나쁜 표현 | 문제 | 고친 표현 |
 |---|---|---|
 | "고쳐줘" | 무엇이 되면 끝인지 없어, 끝을 Claude의 판단에 맡김 | "완료 조건: `<명령>`의 출력에 `<신호>`가 있어야 한다" |
-| "테스트 통과시켜" | 테스트를 고치거나 끄는 것도 "통과"가 됨 | "테스트 코드는 고치지 마. skip·@Disabled도 안 돼" |
+| "테스트 통과시켜" | 테스트를 고치거나 건너뛰게 만드는 것도 "통과"가 됨 | "테스트 코드는 고치지 마. skip도 안 돼" |
 | "될 때까지 해" | 상한이 없어 못 고치는 문제에서 끝없이 돎 | "5번 고쳐도 안 되면 멈추고 마지막 실패 출력을 보여 줘" |
 | "확인해 줘" | "확인했습니다"라는 말로 보고함 (6-5 ①+권한 있음: 출력 원문 0/3) | "출력 원문을 그대로 보여 줘" |
+| "README 잘 써줘" | "잘"을 판정할 명령이 없어 Claude의 자기 평가로 끝남 | 검사기(`check-docs.js`)를 먼저 만들고 "`node check-docs.js`가 DOCS OK" |
 | "전체 테스트 돌려가며 고쳐" (큰 프로젝트) | 한 바퀴가 느리고 비쌈 | 고치는 동안은 좁은 명령, 마지막에 한 번만 전체 명령 |
-
-### 실측 — ② TDD 프롬프트를 실제로 돌려 본 결과
-
-빈 프로젝트(`stringutil.js`에 `isPalindrome`만 있고 테스트 1개)에서 ② 프롬프트를 헤드리스로 1번 실행했습니다(`--allowedTools "Read,Edit,Write,Bash(node --test)"`, 2026-10-05):
-
-| 순서 | Claude가 한 일 | `node --test` 결과 |
-|---|---|---|
-| 1 | 두 파일을 읽고 `countVowels` 테스트 4개를 먼저 추가 | — |
-| 2 | 테스트 실행 | `pass 1`, `fail 1` — `countVowels is not a function` |
-| 3 | `countVowels` 구현 | — |
-| 4 | 테스트 다시 실행 | `pass 2`, `fail 0` |
-
-기존 `isPalindrome` 테스트는 그대로였고, 최종 답에 실패 출력과 통과 출력의 원문이 모두 들어 있었습니다. 9턴, 27초, $0.23이었습니다. 이번에는 첫 구현이 바로 통과해 "다시 고치기"는 일어나지 않았습니다. ①·③·④·⑤는 같은 뼈대로 쓴 예제이고, 각 프로젝트에서 실제로 돌려 보지는 않았습니다.
 
 !!! tip "권한과 반복 사용"
 
@@ -861,10 +1016,10 @@ OrderService의 중복 코드를 정리해줘. 동작은 바꾸지 마.
 
 ## 정리 (30초)
 
-실습이 끝났으면 데모 디렉터리를 삭제합니다. 다시 해보고 싶으면 Step 1부터 2분이면 재구성됩니다.
+실습이 끝났으면 데모 디렉터리와 연습 프로젝트를 삭제합니다. 다시 해보고 싶으면 Step 1부터 2분이면 재구성됩니다.
 
 ```bash
-cd ~ && rm -rf ~/loop-demo
+cd ~ && rm -rf ~/loop-demo ~/loop-practice
 ```
 
 ---

@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-11] fix+verify | 루프 엔지니어링 실습 — 실전 루프 프롬프트 예제를 연습 라이브러리 하나로 재구성
+- 사용자 지적: 상황별 예제가 뜬금없음(Node 실습 중 갑자기 Java/Gradle), 특정 프롬프트 → 특정 결과물이 보이게, 문서 만들기 예제도 좋겠음.
+- [[guide-loop-engineering-demo]] "실전 루프 프롬프트 모음": 5종(Gradle 기준 가상 프로젝트) → `~/loop-practice` 준비 블록 + 이어 고치는 4종(① truncate 버그 ② TDD countVowels ③ normalize 리팩터링 ④ README — 사람이 만든 `check-docs.js`가 문서용 거부 신호, 예제 줄을 실제 실행해 대조). 예제마다 시작 상태 → 프롬프트 → 결과물(diff·코드·README 발췌). 린트·컴파일은 "내 프로젝트로 옮길 때" 표(Gradle·Maven은 여기서만)와 꼼수 차단 문장으로 흡수. 나쁜→좋은 표에 "README 잘 써줘" 행 추가.
+- 실측: 4종 모두 claude -p 1회씩, 전부 첫 수정 통과, 예제당 $0.16~0.21. 검사기가 틀린 예제를 거부하는 것도 수동 확인. 증적 6절 추가.
+- [[lecture-loop-engineering]] 8절·[[backlog]] 문구 동기화.
+
 ## [2026-10-08] fix | Search Console "크롤링됨 - 현재 색인이 생성되지 않음" — 페이지별 검색 메타데이터
 - 원인 진단: 212페이지 전부 같은 meta description(`site_description`) → 구글 입장에선 구분 없는 페이지 묶음. 사이트맵 lastmod도 전부 빌드 날짜. 저자용 메모(backlog·plan-*)까지 색인 대상. 앞 항목의 슬래시 불일치(canonical이 리디렉션 URL)도 같은 증상의 원인.
 - `scripts/seo.py` hook 신설: description을 H1 뒤 첫 문단에서 추출(코드블록·표·제목 건너뜀, 큰따옴표 → 작은따옴표 — Material이 속성을 이스케이프하지 않음, 짧거나 "다음과 같습니다."로 끝나면 제목 접두), lastmod = frontmatter `updated`, backlog·plan-*는 `noindex`. 결과: description 212/212 고유, lastmod 실제 수정일 분포.
