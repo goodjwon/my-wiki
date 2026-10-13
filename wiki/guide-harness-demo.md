@@ -6,7 +6,7 @@ sources:
   - ai-engineering/harness-engineering/harness_engineering.md
   - ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
 created: 2026-05-31
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # 하네스 5분 데모 — 있을 때 vs 없을 때
@@ -283,3 +283,9 @@ cd ~ && rm -rf ~/harness-demo
 - [[guide-harness-module1]] — 다음 단계
 - [[concept-harness-engineering]] — "표지판 vs 중앙분리대" 비유
 - [[concept-claude-hooks]] — Hooks 이론
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [AI를 단순한 도구가 아닌 자율적인 팀원으로 만드는 법: 하네스 엔지니어링의 실무적 접근](https://blog.wonslab.dev/2026-04-11-ai-as-autonomous-teammate-harness/)

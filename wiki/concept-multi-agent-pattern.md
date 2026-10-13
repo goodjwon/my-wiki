@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, multi-agent, agents-md, context-engineering]
 sources: [ai-engineering/harness-engineering/harness-kit/module4/, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # 멀티 에이전트 — Planner / Coder / Critic
@@ -160,3 +160,10 @@ OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL R
 - [[guide-harness-module4]] — Planner/Coder/Critic 실습(Node)
 - [[guide-harness-module5]] — 주간 리뷰·Rippable 실습
 - [[src-workout-history-launch]] — 실전 적용: 병렬 세션 재구현 충돌을 diff로 이식한 6역할 운용 사례
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [커서(Cursor) 대신 클로드 코드를 선택한 이유: 1인 개발자의 AI 에이전트 혁명](https://blog.wonslab.dev/2025-12-23-cursor-1-ai/)
+- [안드레이 카파시 + 하네스 멀티 에이전트 = 이제 무적입니다 (v2.1)](https://blog.wonslab.dev/2026-07-05-karpathy-harness-multi-agent/)

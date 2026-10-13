@@ -6,7 +6,7 @@ sources: [object/toc.md]
 external:
   - https://wikibook.co.kr/object/
 created: 2026-06-20
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # 오브젝트 — 코드로 이해하는 객체지향 설계
@@ -155,3 +155,9 @@ updated: 2026-09-28
 - [[src-kakaopay-ddd]] — DDD 실전 사례 (책의 부록 C 도메인 모델 + 본문 책임 주도 설계)
 - [[concept-id-reference-vs-object-reference]] / [[concept-aggregate-boundary]] / [[concept-domain-event-eventual-consistency]] — 저자 조영호의 우아한객체지향 세미나(2019) 유래 개념 3종 (의존성으로 설계 진화시키기)
 - [[concept-db-connection-pool]] / [[concept-varchar-length-prefix]] / [[concept-api-backward-compatibility]] — "데이터 먼저 함정" 패턴 비교
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [[우아한테크세미나] 190620 우아한객체지향 by 우아한형제들 개발실장 조영호님](https://blog.wonslab.dev/2026-08-04-object-oriented-dependency-management/)

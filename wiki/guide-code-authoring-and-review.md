@@ -4,7 +4,7 @@ type: synthesis
 tags: [guide, code-quality, code-review, prompt]
 sources: [object/, effective_java/, refactoring/, clean-code/, tdd/]
 created: 2026-06-21
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # 코드 작성·점검 가이드
@@ -630,3 +630,9 @@ EJ Item 49 — public 메서드 첫 줄에 매개변수 검증 추가
 - 위키 작성 표준 (이 가이드의 작성 원칙): [[guide-wiki-authoring-standards]]
 - 위키 워크플로: [[concept-wiki-workflow]]
 - 같은 패턴 다른 영역: [[concept-harness-engineering]] / [[concept-loop-engineering]] / [[concept-claude-hooks]]
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [AI 생성 코드 절반으로 줄이는 수만 스타 스킬, Ponytail 집중 분석](https://blog.wonslab.dev/2026-07-14-ponytail-ai-code-yagni-efficiency/)

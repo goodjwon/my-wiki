@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, multi-agent, subagent, delegation, harness, context-engineering]
 sources: [ai-engineering/ai-advisor/]
 created: 2026-07-06
-updated: 2026-10-05
+updated: 2026-10-14
 ---
 
 # Advisor–Worker 패턴 — 판단·구현 분리 위임
@@ -127,3 +127,9 @@ updated: 2026-10-05
 - [[comparison-advisor-worker-vs-graph]] — 두 패턴의 축 차이·선택 기준 비교 분석
 - [[src-workout-history-launch]] — 실전 적용: 앱 출시에 6역할(advisor·app/ui-developer·qa-reviewer·tester·release-manager)로 확장한 사례
 - [[concept-wiki-workflow]] — 같은 인사이트 패턴 "생성 뒤에 검증 게이트를 둔다" (위키 운영의 lint 게이트)
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [클로드 Fable 5 비용 아끼는 법 | Advisor Strategy](https://blog.wonslab.dev/2026-07-08-claude-fable-advisor-strategy-cost/)

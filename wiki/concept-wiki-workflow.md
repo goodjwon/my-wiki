@@ -4,7 +4,7 @@ type: concept
 tags: [워크플로, 위키운영, 질의응답, LLM-Wiki]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-09-28
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # LLM 위키 워크플로 — Ingest·Query·Lint
@@ -177,3 +177,9 @@ LLM이 index.md 읽음 → 관련 페이지 식별
 - [[guide-wiki-authoring-standards]] — 문체·다이어그램·정본 표 작성 표준
 - [[guide-project-docs-setup]] — Query 결과를 페이지로 보존한 예
 - [[guide-advisor-worker-demo]] — 실행 검증 배너 예시
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [안드레이 카파시의 Claude Code 활용법 분석: 마크다운으로 구축하는 AI 세컨드 브레인 메모](https://blog.wonslab.dev/2026-04-18-claude-code-ai/)

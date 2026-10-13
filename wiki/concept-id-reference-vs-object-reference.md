@@ -4,7 +4,7 @@ type: concept
 tags: [ddd, aggregate, jpa, 트랜잭션, 객체설계]
 sources: [object-dependency/id-reference-vs-object-reference.md]
 created: 2026-08-10
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # ID 참조 vs 객체 참조
@@ -123,3 +123,9 @@ public class OrderValidator {          // 도메인 서비스 — 여러 애그�
 - [[entity-object]] — 조영호 *오브젝트* — 의존성 관리(8장)의 책 배경
 - [[concept-db-connection-pool]] — 잠금 대기가 커넥션 풀 고갈로 이어지는 인프라 측면
 - [[guide-java-practice-layered-quotation]] — 🧪 실습 과제 3 — 견적·계약 업무 (4계층 + Command/Query + MyBatis)
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [[우아한테크세미나] 190620 우아한객체지향 by 우아한형제들 개발실장 조영호님](https://blog.wonslab.dev/2026-08-04-object-oriented-dependency-management/)

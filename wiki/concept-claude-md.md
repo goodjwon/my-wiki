@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, claude-md, karpathy]
 sources: [ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md, ai-engineering/harness-engineering/harness-engineering-tutor-prompt.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # CLAUDE.md — 에이전트 헌법
@@ -124,3 +124,10 @@ Node 실습판은 12섹션으로 재구성합니다(자기검증 루프=섹션 5
 - [[src-ai-advisor-worker]] — 협업 모델(Advisor–Worker)을 CLAUDE.md에 심는 템플릿 사례
 - [[src-kakaopay-ddd]] — DDD 모델링 근거 (Entity/VO/Aggregate)
 - [[src-workout-history-launch]] — 실전 적용: "문서가 진실, 충돌 시 문서 수정부터" 규칙으로 앱 출시까지 운용한 사례
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [커서(Cursor) 대신 클로드 코드를 선택한 이유: 1인 개발자의 AI 에이전트 혁명](https://blog.wonslab.dev/2025-12-23-cursor-1-ai/)
+- [AI 코딩 성능을 바꾸는 하네스 엔지니어링의 4가지 핵심 원칙](https://blog.wonslab.dev/2026-05-02-harness-engineering-karpathy-ai-coding-01418635105/)

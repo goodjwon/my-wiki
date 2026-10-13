@@ -4,7 +4,7 @@ type: source
 tags: [LLM, 지식관리, 세컨드브레인, 위키, PKM]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # LLM Wiki — 소스 요약
@@ -56,3 +56,9 @@ LLM이 **영구적이고 복리로 성장하는 위키**를 점진적으로 구�
 ## 사상적 계보
 
 [[entity-vannevar-bush|Vannevar Bush]]의 **[[concept-memex|Memex]]** (1945)와 사상적으로 이어집니다. 개인이 큐레이팅하는 지식 저장소이며, 문서 간 연상적 연결이 문서 자체만큼 가치 있다는 비전입니다. Bush가 풀지 못한 유지보수 주체의 문제를 LLM이 맡습니다.
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [안드레이 카파시의 Claude Code 활용법 분석: 마크다운으로 구축하는 AI 세컨드 브레인 메모](https://blog.wonslab.dev/2026-04-18-claude-code-ai/)

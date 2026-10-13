@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, hooks, harness, automation]
 sources: [ai-engineering/harness-engineering/harness-kit/module3/, ai-engineering/harness-engineering/harness_engineering.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # Claude Code Hooks — 시스템 레벨 강제
@@ -175,3 +175,9 @@ fi
 - [[src-harness-engineering]] — Module 03 전체 자료
 - [[guide-harness-module3]] — hooks 실습 (guard.sh·lint-fix.sh·자기검증 루프)
 - [[guide-harness-demo]] — 5분 데모 (hook 1개로 .env 커밋 차단)
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [AI 에이전트로 일하는 법이 바뀝니다: 클로드 코드와 하네스 엔지니어링 실무 메모](https://blog.wonslab.dev/2026-04-11-claude-code-harness-engineering-notes/)

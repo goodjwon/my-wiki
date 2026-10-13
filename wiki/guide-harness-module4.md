@@ -8,7 +8,7 @@ sources:
   - ai-engineering/harness-engineering/harness-kit/module4/claude-progress.txt
   - ai-engineering/harness-engineering/harness-kit/module4/01_threettier_workflow_prompt.md
 created: 2026-05-31
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # 하네스 Module 04 — 멀티 에이전트 + 컨텍스트
@@ -661,3 +661,9 @@ a1b2c3d harness(M4): task-list·progress 템플릿 + Stop hook 등록
 - [[concept-multi-agent-pattern]] — Planner/Coder/Critic 이론
 - [[concept-claude-md]] — AGENTS.md ↔ CLAUDE.md 관계
 - [[src-harness-engineering]] — 전체 커리큘럼
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [안드레이 카파시 + 하네스 멀티 에이전트 = 이제 무적입니다 (v2.1)](https://blog.wonslab.dev/2026-07-05-karpathy-harness-multi-agent/)

@@ -9,7 +9,7 @@ sources:
 external:
   - https://wonslab.dev/workout-history
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-10-14
 ---
 
 # Workout History 출시 여정 — 회고와 설계 원칙 6개
@@ -112,3 +112,9 @@ Claude Code 에이전트를 advisor(판단·범위·문서 정합) · app-develo
 - [[concept-thin-client-idempotent-sync]] — 원칙 4의 영속 개념 + 증분 가져오기 앵커 함정
 - [[concept-advisor-worker]] — 6역할 프로세스의 원형
 - [[guide-project-docs-setup]] — PLANNING·ARCHITECTURE·BACKLOG 문서 체계의 템플릿
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [운동 기록 앱을 45일 만에 App Store에 올리기까지 — 혼자, 그리고 여섯 에이전트와](https://blog.wonslab.dev/2026-09-03-workout-history-45-days-six-agents/)

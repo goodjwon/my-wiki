@@ -8,7 +8,7 @@ sources:
   - ai-engineering/ai-advisor/claude_script.md
   - ai-engineering/ai-advisor/verification/2026-10-05-demo-run.md
 created: 2026-07-06
-updated: 2026-10-05
+updated: 2026-10-14
 ---
 
 # Advisor–Worker 실습 — 판단·구현 분리 직접 체험
@@ -360,3 +360,9 @@ cd ~ && rm -rf ~/advisor-demo
 - [[concept-multi-agent-pattern]] — 역할 분리 패턴 전반
 - [[comparison-advisor-worker-vs-graph]] — 그래프 엔지니어링과의 축 차이·선택 기준 비교
 - [[concept-harness-engineering]] — 부탁 대신 구조로 강제하는 상위 개념
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [클로드 Fable 5 비용 아끼는 법 | Advisor Strategy](https://blog.wonslab.dev/2026-07-08-claude-fable-advisor-strategy-cost/)

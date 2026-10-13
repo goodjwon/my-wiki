@@ -8,7 +8,7 @@ external:
   - https://www.mkdocs.org/
   - https://firebase.google.com/docs/hosting
 created: 2026-05-31
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # 위키 배포 가이드 — MkDocs Material + Firebase Hosting
@@ -715,3 +715,9 @@ flowchart TD
 - Firebase Hosting: https://firebase.google.com/docs/hosting
 - FastAPI 문서 (Material for MkDocs 사용 예): https://fastapi.tiangolo.com/
 - 관련 위키 페이지: [[entity-obsidian]], [[guide-project-docs-setup]], [[guide-wiki-authoring-standards]]
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [MkDocs Material 블로그를 Firebase Hosting에 배포하기: 이 사이트가 올라가는 방법](https://blog.wonslab.dev/2026-06-27-mkdocs-material-firebase-hosting-deploy/)

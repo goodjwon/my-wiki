@@ -4,7 +4,7 @@ type: concept
 tags: [harness, ai-agent, claude-code, infrastructure]
 sources: [ai-engineering/harness-engineering/harness_engineering.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md, ai-engineering/harness-engineering/harness-kit/]
 created: 2026-05-30
-updated: 2026-09-28
+updated: 2026-10-14
 ---
 
 # 하네스 엔지니어링 (Harness Engineering)
@@ -89,3 +89,11 @@ OpenAI 5개월 내부 실험: 100만 줄의 코드를 생성했지만 인간이 
 - [[guide-harness-module4]] — 멀티 에이전트 + 컨텍스트
 - [[guide-harness-module5]] — 진화·주간 리뷰·Rippable
 - [[concept-wiki-workflow]] — 같은 인사이트 패턴 "생성 뒤에 검증 게이트를 둔다" (위키 운영의 lint 게이트)
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [AI를 단순한 도구가 아닌 자율적인 팀원으로 만드는 법: 하네스 엔지니어링의 실무적 접근](https://blog.wonslab.dev/2026-04-11-ai-as-autonomous-teammate-harness/)
+- [AI 에이전트로 일하는 법이 바뀝니다: 클로드 코드와 하네스 엔지니어링 실무 메모](https://blog.wonslab.dev/2026-04-11-claude-code-harness-engineering-notes/)
+- [AI 코딩 성능을 바꾸는 하네스 엔지니어링의 4가지 핵심 원칙](https://blog.wonslab.dev/2026-05-02-harness-engineering-karpathy-ai-coding-01418635105/)
