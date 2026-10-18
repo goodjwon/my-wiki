@@ -4,7 +4,7 @@ type: concept
 tags: [graph-engineering, ai-agent, langgraph, orchestration, harness]
 sources: [ai-engineering/grap-engineering/또다른 트렌드 Graph Engineering 알려드림_1786315251439.md]
 created: 2026-08-10
-updated: 2026-09-28
+updated: 2026-10-18
 ---
 
 # 그래프 엔지니어링 (Graph Engineering)
@@ -135,3 +135,9 @@ graph.add_conditional_edges("evaluate", should_retry,
 - [[concept-advisor-worker]] — 최소 그래프의 실전 구현
 - [[concept-claude-hooks]] — 컨디션의 환경 층 구현
 - [[concept-domain-event-eventual-consistency]] — 백엔드 도메인의 같은 구조 (직접 참조 대신 신호·상태 전이)
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [모닝 브리핑 — 출근 전 3분 뉴스 앱을 만든 이유와 과정](https://blog.wonslab.dev/2026-10-18-morningbrief-intro/) — 뉴스 요약 배치에 커버리지 루프·품질 루프(각 최대 2회), 스텝 상한 20, 코드 검사 후 LLM 검수, 대체 경로를 적용한 실전 사례

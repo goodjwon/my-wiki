@@ -4,7 +4,7 @@ type: concept
 tags: [loop-engineering, harness, ai-agent, react-pattern, claude-code]
 sources: [ai-engineering/loop-engineering/loop-engineering-notes.md, ai-engineering/loop-engineering/primary-sources.md]
 created: 2026-06-13
-updated: 2026-09-28
+updated: 2026-10-18
 ---
 
 # Loop 엔지니어링 (Loop Engineering)
@@ -143,3 +143,9 @@ Addy Osmani는 토큰 비용에 **절대적으로 주의**해야 한다고 말�
 - [[src-copilot-token-pricing]] — 토큰 비용 폭증 위험
 - [[concept-cronjob-concurrency-trap]] — 인프라 영역의 같은 "거부 신호 없는 폭주" 패턴
 - [[concept-keepalive-timeout-race]] — 인프라 영역의 같은 "종료 신호 가정" 패턴
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [모닝 브리핑 — 출근 전 3분 뉴스 앱을 만든 이유와 과정](https://blog.wonslab.dev/2026-10-18-morningbrief-intro/) — 뉴스 요약 배치에 커버리지 루프·품질 루프(각 최대 2회), 스텝 상한 20, 코드 검사 후 LLM 검수, 대체 경로를 적용한 실전 사례

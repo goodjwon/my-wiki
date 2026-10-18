@@ -4,6 +4,10 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-18] link | 블로그 "모닝 브리핑 소개" 글 역링크
+- trendcompass-mkdocs에 `2026-10-18-morningbrief-intro` 글 작성(morningbrief 저장소 문서 기반). 글의 참고 자료에서 [[concept-loop-engineering]]·[[concept-graph-engineering]]로 링크.
+- 두 concept 페이지에 "이 개념을 다룬 글" 절 신설(상호 링크 관행).
+
 ## [2026-10-14] link | 블로그↔위키 상호 링크 보강 (Search Console 신뢰 신호)
 - 배경: wiki "크롤링됨-색인 안 됨" 212 — 기술 원인(10-08) 해소 후 남은 축은 외부 링크·신뢰 신호. CLAUDE.md "상호 링크 관행"을 실제로 적용.
 - 블로그 trendcompass-mkdocs 기술 글 11편의 `## 참고 자료 및 출처`에 관련 위키 페이지 링크(끝 슬래시 정본 URL), 기존 09-03 글의 위키 URL도 정본으로 교정. 건강·경제·게임 글은 대응 개념이 없어 제외.
