@@ -4,6 +4,10 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-24] fix | 카파시 4원칙 원저자·원문 인용 교정
+- 블로그 재작성 중 발견: 4원칙 CLAUDE.md는 카파시 관찰을 바탕으로 Forrest Chang이 작성(forrestchang/andrej-karpathy-skills). [[guide-harness-00-prerequisites]] 용어 표 2곳 교정.
+- [[concept-claude-md]] 인용 "100줄→30줄"을 원문 "200 lines and it could be 50"으로 교정.
+
 ## [2026-10-24] fix | 강의 페이지 93개 H1·title에 장 주제 반영 (색인 미생성 대응)
 - 진단: 리디렉션·canonical·sitemap·robots·서버 렌더링 HTML은 정상(MkDocs 출력에 색인 차단 요소 없음, 본문 텍스트 비중 77%). Search Console 표의 최종 크롤링이 10-02 이전 = 10-08 수정이 아직 재크롤링되지 않음.
 - 남은 사이트 내부 원인: 강의 93페이지가 H1 5종("○○ 실전 강의 교재")을 공유하고 title이 "TDD 실전 강의 — 22장"처럼 주제 없이 번호만 → 템플릿 중복 페이지로 보이기 쉬움.

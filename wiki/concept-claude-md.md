@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, claude-md, karpathy]
 sources: [ai-engineering/harness-engineering/harness-kit/module2/CLAUDE.md, ai-engineering/harness-engineering/harness-engineering-tutor-prompt.md, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-10-14
+updated: 2026-10-24
 ---
 
 # CLAUDE.md — 에이전트 헌법
@@ -26,7 +26,7 @@ updated: 2026-10-14
 
 ### 2. Simplicity First (단순함 우선)
 - 요청된 것만 구현합니다. "나중에 쓸 수도 있는" 메서드 추가는 금지합니다.
-- 100줄이 30줄로 가능하면 다시 씁니다.
+- 200줄을 50줄로 쓸 수 있으면 다시 씁니다(원문 "If you write 200 lines and it could be 50, rewrite it").
 - "시니어 엔지니어가 보면 과하다고 할까?" → Yes면 단순화합니다.
 
 ### 3. Surgical Changes (외과적 변경)

@@ -6,7 +6,7 @@ sources:
   - ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md
   - ai-engineering/harness-engineering/harness_engineering.md
 created: 2026-05-31
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
 # 하네스 실습 사전 안내 (Module 00 — Prerequisites)
@@ -567,7 +567,7 @@ Module 1 (실패 패턴 찾기)
 | **CLAUDE.md** | Claude Code가 **프로젝트 루트에서 자동으로 읽는** 규칙 파일. 매 세션 시작 시 가장 먼저 로드. 곧 "에이전트 헌법". |
 | **AGENTS.md** | CLAUDE.md와 같은 역할이지만 **모델 불가지론적** — Codex/Gemini 등 다른 에이전트도 읽는 공용 표준. Claude Code는 CLAUDE.md가 있는 프로젝트에서는 AGENTS.md를 자동으로 읽지 않으므로, CLAUDE.md에 `@AGENTS.md` 한 줄로 가져옵니다 (module4). |
 | **STOP 트리거** | "에이전트가 X를 하려 하면 즉시 멈춰라"의 규칙 목록. CLAUDE.md 섹션 7에 적음. |
-| **Karpathy 4원칙** | Think Before Coding / Simplicity First / Surgical Changes / Goal-Driven Execution. Andrej Karpathy가 자신의 CLAUDE.md에서 정리한 4가지. |
+| **Karpathy 4원칙** | Think Before Coding / Simplicity First / Surgical Changes / Goal-Driven Execution. Andrej Karpathy의 LLM 코딩 관찰을 Forrest Chang이 CLAUDE.md로 정리한 4가지(forrestchang/andrej-karpathy-skills). |
 
 ### Hooks 관련
 
@@ -616,7 +616,7 @@ Module 1 (실패 패턴 찾기)
 
 | 인물 | 누구 |
 |------|------|
-| **Andrej Karpathy** | 전 OpenAI/Tesla AI 디렉터. 자신의 CLAUDE.md 공개로 "선언 층" 패턴을 정립. |
+| **Andrej Karpathy** | 전 OpenAI/Tesla AI 디렉터. LLM 코딩의 흔한 실수를 지적한 관찰(2026-01)이 4원칙 CLAUDE.md(Forrest Chang 작성)의 바탕이 됨. |
 | **Mitchell Hashimoto** | HashiCorp 창업자. "실패할 때마다 시스템을 엔지니어링하라"는 피드백 루프 원칙 제시. |
 | **OpenAI Harness Engineering** | OpenAI 내부 5개월 실험 ("100만 줄 생성, 인간 코드 0줄"). 컨텍스트·라이프사이클 인프라 패턴 공개. |
 
