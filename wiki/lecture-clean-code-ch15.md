@@ -1,15 +1,13 @@
 ---
-title: "Clean Code 실전 강의 — 15장"
+title: "Clean Code 실전 강의 15장 — JUnit 들여다보기"
 type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 15장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 클린 코드 실전 강의 교재
-
-## 15장 — JUnit 들여다보기
+# Clean Code 실전 강의 15장 — JUnit 들여다보기
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 실제 오픈소스 코드 정련 워크스루 **전제 환경**: Java 17+
 

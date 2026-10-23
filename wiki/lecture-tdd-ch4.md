@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 4장"
+title: "TDD 실전 강의 4장 — 프라이버시"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 4장.md]
 created: 2026-06-20
-updated: 2026-07-05
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 4장 — 프라이버시
+# TDD 실전 강의 4장 — 프라이버시
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → RED → GREEN → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
 

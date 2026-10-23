@@ -1,15 +1,13 @@
 ---
-title: "Clean Code 실전 강의 — 16장"
+title: "Clean Code 실전 강의 16장 — SerialDate 리팩터링"
 type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 16장.md]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-10-24
 ---
 
-# 클린 코드 실전 강의 교재
-
-## 16장 — SerialDate 리팩터링
+# Clean Code 실전 강의 16장 — SerialDate 리팩터링
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 큰 사례 워크스루 — 첫째 돌려보고 둘째 고친다 **전제 환경**: Java 17+
 

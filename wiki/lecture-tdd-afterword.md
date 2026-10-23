@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 마치는글"
+title: "TDD 실전 강의 마치는 글 — Martin Fowler"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 마치는글.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 마치는 글 — Martin Fowler
+# TDD 실전 강의 마치는 글 — Martin Fowler
 
 > 책 원본의 마치는 글 (Fowler) 의 메시지 요약.
 

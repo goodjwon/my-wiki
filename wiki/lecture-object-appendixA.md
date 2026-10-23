@@ -1,17 +1,15 @@
 ---
-title: "오브젝트 실전 강의 — 부록 A"
+title: "오브젝트 실전 강의 부록 A — 계약에 의한 설계 (Design by Contract)"
 type: source
 tags: [book, object, cho-young-ho, lecture]
 sources: [object/오브젝트 실전 강의 교재 부록A.md]
 created: 2026-06-21
-updated: 2026-06-27
+updated: 2026-10-24
 ---
 
-# 오브젝트 실전 강의 교재
+# 오브젝트 실전 강의 부록 A — 계약에 의한 설계 (Design by Contract)
 
 > 개념 정리판: [[concept-design-by-contract]] — Java 실현 수단 매핑 포함
-
-## 부록 A — 계약에 의한 설계 (Design by Contract)
 
 > **원서**: 조영호 『오브젝트』 **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 → 핵심 교훈 → 함정 → 체크리스트 → 퀴즈(정답 분리)
 

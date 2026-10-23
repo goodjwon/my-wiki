@@ -1,15 +1,13 @@
 ---
-title: "리팩터링 2판 실전 강의 — 3장"
+title: "리팩터링 2판 실전 강의 3장 — 코드에서 나는 악취"
 type: source
 tags: [book, refactoring, fowler, lecture]
 sources: [refactoring/리팩터링 실전 강의 교재 3장.md]
 created: 2026-06-20
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
-# 리팩터링 실전 강의 교재
-
-## 3장 — 코드에서 나는 악취
+# 리팩터링 2판 실전 강의 3장 — 코드에서 나는 악취
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 4.x (start.spring.io 기본값)
 

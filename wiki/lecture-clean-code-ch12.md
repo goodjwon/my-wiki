@@ -1,15 +1,13 @@
 ---
-title: "Clean Code 실전 강의 — 12장"
+title: "Clean Code 실전 강의 12장 — 창발성 (Emergence)"
 type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 12장.md]
 created: 2026-06-20
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
-# 클린 코드 실전 강의 교재
-
-## 12장 — 창발성 (Emergence)
+# Clean Code 실전 강의 12장 — 창발성 (Emergence)
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 4.x (start.spring.io 기본값)
 

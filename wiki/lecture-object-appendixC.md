@@ -1,17 +1,15 @@
 ---
-title: "오브젝트 실전 강의 — 부록 C"
+title: "오브젝트 실전 강의 부록 C — 동적인 협력, 정적인 코드"
 type: source
 tags: [book, object, cho-young-ho, lecture]
 sources: [object/오브젝트 실전 강의 교재 부록C.md]
 created: 2026-06-21
-updated: 2026-07-05
+updated: 2026-10-24
 ---
 
-# 오브젝트 실전 강의 교재
+# 오브젝트 실전 강의 부록 C — 동적인 협력, 정적인 코드
 
 > 개념 정리판: [[concept-domain-model-kinds]] — 분석/설계/구현 3모델
-
-## 부록 C — 동적인 협력, 정적인 코드
 
 > **원서**: 조영호 『오브젝트』 **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 → 핵심 교훈 → 함정 → 체크리스트 → 퀴즈(정답 분리)
 

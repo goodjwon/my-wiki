@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 부록A"
+title: "TDD 실전 강의 부록 A — 영향도"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 부록A.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 부록 A — 영향도
+# TDD 실전 강의 부록 A — 영향도
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생
 

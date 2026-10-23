@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 25장"
+title: "TDD 실전 강의 25장 — 테스트 주도 개발 패턴"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 25장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 25장 — 테스트 주도 개발 패턴
+# TDD 실전 강의 25장 — 테스트 주도 개발 패턴
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 3부 시작 — 패턴 카탈로그
 

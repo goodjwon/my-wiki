@@ -1,15 +1,13 @@
 ---
-title: "리팩터링 2판 실전 강의 — 5장"
+title: "리팩터링 2판 실전 강의 5장 — 리팩터링 카탈로그 보는 법"
 type: source
 tags: [book, refactoring, fowler, lecture]
 sources: [refactoring/리팩터링 실전 강의 교재 5장.md]
 created: 2026-06-20
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
-# 리팩터링 실전 강의 교재
-
-## 5장 — 리팩터링 카탈로그 보는 법
+# 리팩터링 2판 실전 강의 5장 — 리팩터링 카탈로그 보는 법
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 짧은 메타 장 — 6장부터의 카탈로그 사용 설명서 **전제 환경**: Java 17+, Spring Boot 4.x (start.spring.io 기본값)
 

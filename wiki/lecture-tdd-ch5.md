@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 5장"
+title: "TDD 실전 강의 5장 — 솔직히 말하자면"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 5장.md]
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 5장 — 솔직히 말하자면
+# TDD 실전 강의 5장 — 솔직히 말하자면
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 할 일 → RED → GREEN → REFACTOR → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, JUnit 5
 

@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 2장"
+title: "TDD 실전 강의 2장 — 타락한 객체"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 2장.md]
 created: 2026-06-20
-updated: 2026-07-05
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 2장 — 타락한 객체
+# TDD 실전 강의 2장 — 타락한 객체
 
 > **원서**: 켄트 벡 『Test-Driven Development: By Example』 1부(화폐 예제) **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 따라하기(Red-Green-Refactor) → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈(정답 분리) **전제 환경**: Java 17+, JUnit 5
 

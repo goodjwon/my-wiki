@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-24] fix | 강의 페이지 93개 H1·title에 장 주제 반영 (색인 미생성 대응)
+- 진단: 리디렉션·canonical·sitemap·robots·서버 렌더링 HTML은 정상(MkDocs 출력에 색인 차단 요소 없음, 본문 텍스트 비중 77%). Search Console 표의 최종 크롤링이 10-02 이전 = 10-08 수정이 아직 재크롤링되지 않음.
+- 남은 사이트 내부 원인: 강의 93페이지가 H1 5종("○○ 실전 강의 교재")을 공유하고 title이 "TDD 실전 강의 — 22장"처럼 주제 없이 번호만 → 템플릿 중복 페이지로 보이기 쉬움.
+- 수정: H1·title을 "TDD 실전 강의 22장 — 실패 처리하기" 형식으로 바꾸고 중복되던 H2를 제거, `updated` 갱신(sitemap lastmod 반영).
+
 ## [2026-10-18] link | 블로그 "모닝 브리핑 소개" 글 역링크
 - trendcompass-mkdocs에 `2026-10-18-morningbrief-intro` 글 작성(morningbrief 저장소 문서 기반). 글의 참고 자료에서 [[concept-loop-engineering]]·[[concept-graph-engineering]]로 링크.
 - 두 concept 페이지에 "이 개념을 다룬 글" 절 신설(상호 링크 관행).

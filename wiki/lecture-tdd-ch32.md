@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 32장"
+title: "TDD 실전 강의 32장 — TDD 마스터하기"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 32장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 32장 — TDD 마스터하기
+# TDD 실전 강의 32장 — TDD 마스터하기
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 책 전체 회고
 

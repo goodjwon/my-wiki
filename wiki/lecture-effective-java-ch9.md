@@ -1,15 +1,13 @@
 ---
-title: "Effective Java 실전 강의 — 9장"
+title: "Effective Java 실전 강의 9장 — 일반적인 프로그래밍 원칙"
 type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 9장.md]
 created: 2026-06-20
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
-# 이펙티브 자바 실전 강의 교재
-
-## 9장 — 일반적인 프로그래밍 원칙
+# Effective Java 실전 강의 9장 — 일반적인 프로그래밍 원칙
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 따라하기(실습) → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+, Spring Boot 4.x (start.spring.io 기본값)
 

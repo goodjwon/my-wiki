@@ -1,15 +1,13 @@
 ---
-title: "리팩터링 2판 실전 강의 — 1장"
+title: "리팩터링 2판 실전 강의 1장 — 리팩터링: 첫 번째 예시"
 type: source
 tags: [book, refactoring, fowler, lecture]
 sources: [refactoring/리팩터링 실전 강의 교재 1장.md]
 created: 2026-06-20
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
-# 리팩터링 실전 강의 교재
-
-## 1장 — 리팩터링: 첫 번째 예시
+# 리팩터링 2판 실전 강의 1장 — 리팩터링: 첫 번째 예시
 
 > **원서**: 마틴 파울러 『리팩터링 2판』 **대상**: Java/Spring·JS/TS 백엔드 입문~중급 수강생 **형식**: 개념 → 비유 → 예시 프로그램 → 따라하기(단계별 리팩터링) → 핵심 교훈 → 현업 예제 → 함정 → 체크리스트 → 퀴즈 **코드 언어**: 원서를 따라 JavaScript로 진행하고, 필요한 곳에 TypeScript/Java·Spring 대응을 덧붙입니다.
 

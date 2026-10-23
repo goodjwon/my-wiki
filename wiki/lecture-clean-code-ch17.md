@@ -1,17 +1,15 @@
 ---
-title: "Clean Code 실전 강의 — 17장"
+title: "Clean Code 실전 강의 17장 — 냄새와 휴리스틱"
 type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 17장.md]
 created: 2026-06-20
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
-# 클린 코드 실전 강의 교재
+# Clean Code 실전 강의 17장 — 냄새와 휴리스틱
 
 > N1~N7 개념 정리판: [[concept-naming-conventions]]
-
-## 17장 — 냄새와 휴리스틱
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 휴리스틱 카탈로그 — 사전처럼 사용 **전제 환경**: Java 17+, Spring Boot 4.x (start.spring.io 기본값)
 

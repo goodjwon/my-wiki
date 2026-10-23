@@ -1,15 +1,13 @@
 ---
-title: "Effective Java 실전 강의 — 5장"
+title: "Effective Java 실전 강의 5장 — 제네릭"
 type: source
 tags: [book, effective-java, bloch, lecture]
 sources: [effective_java/이펙티브 자바 실전 강의 교재 5장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 이펙티브 자바 실전 강의 교재
-
-## 5장 — 제네릭
+# Effective Java 실전 강의 5장 — 제네릭
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 개념 설명 → 비유 → 현업 예제 → 따라하기(실습) → 함정 → 체크리스트 → 퀴즈 **전제 환경**: Java 17+
 

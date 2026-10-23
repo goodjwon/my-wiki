@@ -1,15 +1,13 @@
 ---
-title: "TDD 실전 강의 — 18장"
+title: "TDD 실전 강의 18장 — xUnit 으로 가는 첫걸음"
 type: source
 tags: [book, tdd, kent-beck, lecture]
 sources: [tdd/테스트 주도 개발 실전 강의 교재 18장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 테스트 주도 개발 실전 강의 교재
-
-## 18장 — xUnit 으로 가는 첫걸음
+# TDD 실전 강의 18장 — xUnit 으로 가는 첫걸음
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 2부 시작 — xUnit을 TDD로 만들기
 

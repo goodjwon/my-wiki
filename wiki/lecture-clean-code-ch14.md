@@ -1,15 +1,13 @@
 ---
-title: "Clean Code 실전 강의 — 14장"
+title: "Clean Code 실전 강의 14장 — 점진적인 개선 (Args 사례)"
 type: source
 tags: [book, clean-code, uncle-bob, lecture]
 sources: [clean-code/클린 코드 실전 강의 교재 14장.md]
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-24
 ---
 
-# 클린 코드 실전 강의 교재
-
-## 14장 — 점진적인 개선 (Args 사례)
+# Clean Code 실전 강의 14장 — 점진적인 개선 (Args 사례)
 
 > **대상**: Java/Spring 백엔드 입문~중급 수강생 **형식**: 사례 워크스루 — 1차 초안 → 정련 → 결과 **전제 환경**: Java 17+
 
