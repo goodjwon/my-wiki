@@ -630,7 +630,7 @@ INFO    -  Documentation built in 0.23 seconds
 |---|---|---|
 | [[concept-loop-engineering]] | 에이전트의 "고쳤습니다"가 아니라 테스트의 종료 코드 | 글의 "해결했다"가 아니라 커밋·테스트 결과 |
 | [[concept-harness-engineering]] | 부탁(프롬프트) 대신 구조(검사 스크립트) | 다짐 대신 빌드(`zensical build`)와 Search Console 결과 |
-| [[guide-deploy-mkdocs-firebase]] | 빌드 경고 0건이어야 배포 | 같은 사이트 생성기 계열의 Firebase 배포판. 이 가이드는 무료·학생용으로 GitHub Pages를 씀 |
+| [[guide-deploy-mkdocs-firebase]] | 빌드에서 `No issues found`여야 배포 | 같은 Zensical을 쓰는 Firebase 배포판. 이 가이드는 무료·학생용으로 GitHub Pages를 씀 |
 
 ## 체크리스트
 
@@ -652,6 +652,6 @@ INFO    -  Documentation built in 0.23 seconds
 ## 관련 페이지
 
 - [[guide-java-learning-path]] — 글감이 되는 실습 전체 지도
-- [[guide-deploy-mkdocs-firebase]] — 이 위키의 배포 방식 (MkDocs + Firebase)
+- [[guide-deploy-mkdocs-firebase]] — 이 위키의 배포 방식 (Zensical + Firebase)
 - [[entity-obsidian]] — Obsidian 기능 정리
 - [[guide-wiki-authoring-standards]] — 글 구조·문체 기준

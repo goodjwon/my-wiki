@@ -181,7 +181,7 @@ updated: 2026-09-28
 
 ### 운영 가이드
 
-- [[guide-deploy-mkdocs-firebase]] — MkDocs Material + Firebase Hosting 무료 배포
+- [[guide-deploy-mkdocs-firebase]] — Zensical + Firebase Hosting 무료 배포 (처음부터 따라 하기)
 - [[guide-portfolio-blog]] — 학생 실습 기록을 Zensical + GitHub Pages 포트폴리오 블로그로 배포 (Mac, VS Code·Obsidian 편집)
 - [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 (CLAUDE.md·ADR·트러블슈팅)
 - [[guide-wiki-authoring-standards]] — 위키 작성 표준 (다이어그램·분량·셀프 체크)

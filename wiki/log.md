@@ -4,6 +4,11 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-24] guide | 위키 배포 가이드를 Zensical 기준으로 다시 씀
+- [[guide-deploy-mkdocs-firebase]] 전면 재작성: 맨 앞에 "만들게 될 파일" 트리(파일마다 만드는 Step 표시), 모든 코드 앞에 파일 용도 리드인, 명령마다 예상 결과, 긴 스크립트 4개(wikilinks·seo·new_badge·zensical_prep)는 용도 표 + 접힌 전체 코드. Firebase 설정은 대화형 `firebase init` 대신 파일 직접 작성, 비상 대안(`BUILDER=mkdocs`) 절 신설.
+- 사실 교정: `firebase.json`의 `trailingSlash`가 문서에는 false, 실제는 true였음 → 실제 값으로.
+- 새 클론 검증 중 발견: `requirements.txt`의 `pymdown-extensions==10.21.3` 고정이 Zensical과 충돌해 새 PC 설치 실패 → 동작 환경 `pip freeze`로 다시 고정. 가이드의 최소 3줄(zensical·mkdocs-material·mkdocs-glightbox)로도 새 venv 설치·두 빌드 방식 통과 확인.
+
 ## [2026-10-24] ops | 위키 빌드를 Zensical(모던 테마)로 전환
 - 빌드 도구: Material for MkDocs 9.7(2027-05-05 지원 종료) → Zensical 0.0.72. `mkdocs.yml`은 그대로 읽고, `scripts/build-site.sh`가 `zensical build`를 실행. 비상 대안 `BUILDER=mkdocs bash scripts/build-site.sh`.
 - Zensical은 MkDocs 훅을 실행하지 않으므로 `scripts/zensical_prep.py`로 옮김: pre(description 자동 추출·backlog/plan noindex·30일 🆕 nav 배지 → `.zensical.yml` 생성), post(frontmatter `updated`=lastmod sitemap, robots 페이지 제외). `overrides/sitemap.xml` 삭제(Zensical에서 렌더 오류).
