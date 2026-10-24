@@ -4,6 +4,18 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-24] link+verify | 블로그 글 ↔ 위키 md 1:1 대조·정리
+- 색인 중 블로그 19편을 위키 대표 md와 1:1 매핑(전부 연결). 신설: [[src-on-pocket-news]](블로그 2편)·[[src-morningbrief]](1편) — 블로그 사실 주장을 각 저장소 커밋·코드와 대조해 작성.
+- 대조로 찾은 블로그 오류 정정(블로그 저장소): OPN 소개 연표 3건(인코딩 감지 03월·페어링 04월·지자체 복지로 04월)과 근거 없는 "복지로 2,400여 건" 삭제, 헤드리스 감수 예외(10-20) 반영 / 모닝 브리핑 출시 상태(App Store 10-21·Play 비공개 테스트 10-23)·Kotlin 전환 날짜 / 우아한객체지향 글의 front matter title이 유튜브 영상 제목이던 것을 H1로.
+- 역링크 추가 4건(java-study-ch08·guide-java-practice-spring-library·guide-java-learning-path·src-workout-history-launch), 재작성으로 바뀐 블로그 제목 반영 12곳(깨진 대괄호 링크 3곳 포함).
+- 비개발 공장 글 7편(게임·경제·건강·벤치마크) noindex — 위키 범위 밖, 영상 요약 품질 위험.
+
+## [2026-10-24] guide | 포트폴리오 블로그 실습 가이드 신설
+- [[guide-portfolio-blog]]: 학생 실습 md → Zensical 0.0.72 + GitHub Pages 블로그 (Mac 설치·VS Code/Obsidian 편집·Search Console·비상 대안).
+- 도구 선정 근거: MkDocs 1.x 유지 중단·2.0 비호환, Material for MkDocs 2027-05-05 지원 종료 → 후속 Zensical(같은 mkdocs.yml 읽음). Starlight 0.42도 실측 비교(Node 217MB·블로그 외부 플러그인)해 학생용에서 제외.
+- 검증: 가이드 코드블록을 추출해 새 디렉터리에서 Zensical·mkdocs-material 9.7.7 양쪽 빌드 통과, slug 주소·이미지·Search Console 확인 파일 복사 확인. 테스트 저장소 goodjwon/portfolio-test로 Pages 배포·글 추가 push 자동 반영·비상 대안(mkdocs-material) CI 배포까지 성공.
+- 발견(이 위키 전환 시 과제): Zensical은 `[[위키링크]]`를 변환하지 않고, 이 위키의 커스텀 sitemap 템플릿(`pages` 변수)과 hooks(seo.py·new_badge.py)는 그대로 동작하지 않음.
+
 ## [2026-10-24] fix | 카파시 4원칙 원저자·원문 인용 교정
 - 블로그 재작성 중 발견: 4원칙 CLAUDE.md는 카파시 관찰을 바탕으로 Forrest Chang이 작성(forrestchang/andrej-karpathy-skills). [[guide-harness-00-prerequisites]] 용어 표 2곳 교정.
 - [[concept-claude-md]] 인용 "100줄→30줄"을 원문 "200 lines and it could be 50"으로 교정.

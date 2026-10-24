@@ -117,6 +117,8 @@ updated: 2026-09-28
 - [[concept-wall-clock-state-machine]] — 벽시계 앵커 기반 타이머 상태기계
 - [[concept-thin-client-idempotent-sync]] — 얇은 클라이언트와 멱등 동기화
 - [[src-workout-history-launch]] — Workout History 앱 출시기 (설계 원칙·시행착오·에이전트 개발)
+- [[src-on-pocket-news]] — On Pocket News 개발기 (룰 기반 정책 추천, 개인정보 개편, 블로그 글 대조)
+- [[src-morningbrief]] — 모닝 브리핑 개발기 (배치 + Firestore, 상한 있는 요약 루프, 블로그 글 대조)
 
 ## 하네스·AI 에이전트
 
@@ -180,5 +182,6 @@ updated: 2026-09-28
 ### 운영 가이드
 
 - [[guide-deploy-mkdocs-firebase]] — MkDocs Material + Firebase Hosting 무료 배포
+- [[guide-portfolio-blog]] — 학생 실습 기록을 Zensical + GitHub Pages 포트폴리오 블로그로 배포 (Mac, VS Code·Obsidian 편집)
 - [[guide-project-docs-setup]] — 프로젝트별 문서 시스템 셋업 (CLAUDE.md·ADR·트러블슈팅)
 - [[guide-wiki-authoring-standards]] — 위키 작성 표준 (다이어그램·분량·셀프 체크)

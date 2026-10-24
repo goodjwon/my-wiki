@@ -4,7 +4,7 @@ type: concept
 tags: [지식관리, PKM, 세컨드브레인]
 sources: [ai-engineering/llm-wiki-pattern/llm-wiki-pattern.md]
 created: 2026-04-18
-updated: 2026-10-14
+updated: 2026-10-24
 ---
 
 # 복리 지식 (Compounding Knowledge)
@@ -43,4 +43,4 @@ updated: 2026-10-14
 
 블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
 
-- [안드레이 카파시의 Claude Code 활용법 분석: 마크다운으로 구축하는 AI 세컨드 브레인 메모](https://blog.wonslab.dev/2026-04-18-claude-code-ai/)
+- [카파시의 LLM 위키를 반년 운영해 보니: 마크다운 세컨드 브레인의 구조와 규칙](https://blog.wonslab.dev/2026-04-18-claude-code-ai/)

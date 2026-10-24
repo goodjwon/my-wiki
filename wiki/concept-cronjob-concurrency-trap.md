@@ -211,3 +211,4 @@ spec:
 - [[concept-transactional-rollback-policy]] / [[concept-jpa-enum-mapping]] — 같은 "기본값과 가정의 함정" 패턴의 Spring·JPA판
 - [[src-spring-data-access-ref]] — Spring Batch의 `@Scheduled` 멀티 인스턴스 운영 맥락
 - [[concept-harness-engineering]] — 인프라 기본값에 대한 "구조적 방어"
+- [[src-on-pocket-news]] — 같은 "기본값과 가정의 함정": 알림 수신 기본값 true가 동의 없이 켜진 사례

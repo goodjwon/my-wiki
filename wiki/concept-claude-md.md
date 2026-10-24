@@ -129,5 +129,5 @@ Node 실습판은 12섹션으로 재구성합니다(자기검증 루프=섹션 5
 
 블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
 
-- [커서(Cursor) 대신 클로드 코드를 선택한 이유: 1인 개발자의 AI 에이전트 혁명](https://blog.wonslab.dev/2025-12-23-cursor-1-ai/)
-- [AI 코딩 성능을 바꾸는 하네스 엔지니어링의 4가지 핵심 원칙](https://blog.wonslab.dev/2026-05-02-harness-engineering-karpathy-ai-coding-01418635105/)
+- [커서(Cursor) 대신 클로드 코드를 쓰는 이유: 여섯 저장소의 설정 파일과 커밋 기록으로 본 선택](https://blog.wonslab.dev/2025-12-23-cursor-1-ai/)
+- [카파시 4원칙을 내 CLAUDE.md에 대 보다: 하네스 엔지니어링의 4가지 핵심 원칙](https://blog.wonslab.dev/2026-05-02-harness-engineering-karpathy-ai-coding-01418635105/)

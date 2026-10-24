@@ -4,7 +4,7 @@ type: source
 tags: [java, study, ch08]
 sources: [java-study/java-study-ch08-서버와인증.md]
 created: 2026-04-18
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
 # 서버와 인증
@@ -1121,3 +1121,9 @@ Spring Security에서도 직접 JWT를 파싱하는 커스텀 필터 구조를 �
 JWT의 핵심은 토큰 문자열이 아니라, 세션 없이 인증 상태를 검증하는 구조를 이해하는 데 있습니다.
 
 ---
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [보안 사고 뉴스로 백엔드 면접 준비하기 — 공식 조사 결과를 설계 질문으로 바꾸는 법](https://blog.wonslab.dev/2025-12-21-backend-interview-security-news/)

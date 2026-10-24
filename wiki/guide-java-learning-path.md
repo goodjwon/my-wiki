@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, learning-path, curriculum, index]
 sources: [java-study/]
 created: 2026-06-29
-updated: 2026-09-28
+updated: 2026-10-24
 ---
 
 # Java 학습 경로 — 3단계 로드맵
@@ -36,3 +36,9 @@ T4는 Spring과 함께 테스트(ch09)를 다루므로 괄호 안 챕터는 3단
 - [[src-java-study-2024-2025]] — 원본 교재 (97개 문서 전체 카탈로그)
 - 방법론: [[guide-code-authoring-and-review]] · [[entity-tdd]] · [[entity-refactoring]] · [[entity-object]] · [[entity-effective-java]] · [[entity-clean-code]]
 - 레퍼런스: 챕터에서 만난 주제를 더 깊이 팔 때는 개념([[concept-spring-core]]·[[concept-transactional-rollback-policy]])과 도구([[entity-spring-boot]]·[[entity-jvm]]) 페이지를 찾아봅니다.
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [주니어 소멸의 시대, 데이터로 다시 보기 — 좁아진 문과 학습 경로 설계](https://blog.wonslab.dev/2025-12-29-vanishing-junior-jobs-next-decade/)

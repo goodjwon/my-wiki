@@ -4,7 +4,7 @@ type: concept
 tags: [claude-code, harness, multi-agent, agents-md, context-engineering]
 sources: [ai-engineering/harness-engineering/harness-kit/module4/, ai-engineering/harness-engineering/하네스엔지니어링_슬라이드해설_강의교안.md]
 created: 2026-05-30
-updated: 2026-10-14
+updated: 2026-10-24
 ---
 
 # 멀티 에이전트 — Planner / Coder / Critic
@@ -165,5 +165,5 @@ OpenAI 사례에서는 **Claude + Codex가 3라운드 토론** 후 CONDITIONAL R
 
 블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
 
-- [커서(Cursor) 대신 클로드 코드를 선택한 이유: 1인 개발자의 AI 에이전트 혁명](https://blog.wonslab.dev/2025-12-23-cursor-1-ai/)
+- [커서(Cursor) 대신 클로드 코드를 쓰는 이유: 여섯 저장소의 설정 파일과 커밋 기록으로 본 선택](https://blog.wonslab.dev/2025-12-23-cursor-1-ai/)
 - [안드레이 카파시 + 하네스 멀티 에이전트 = 이제 무적입니다 (v2.1)](https://blog.wonslab.dev/2026-07-05-karpathy-harness-multi-agent/)

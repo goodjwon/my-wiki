@@ -135,6 +135,7 @@ graph.add_conditional_edges("evaluate", should_retry,
 - [[concept-advisor-worker]] — 최소 그래프의 실전 구현
 - [[concept-claude-hooks]] — 컨디션의 환경 층 구현
 - [[concept-domain-event-eventual-consistency]] — 백엔드 도메인의 같은 구조 (직접 참조 대신 신호·상태 전이)
+- [[src-morningbrief]] — 실전 사례: Digest 그래프(조건부 엣지, GraphRunner 스텝 상한 20)
 
 ## 이 개념을 다룬 글
 

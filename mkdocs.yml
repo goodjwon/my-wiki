@@ -285,6 +285,8 @@ nav:
     - 벽시계 타이머: concept-wall-clock-state-machine.md
     - 멱등 동기화: concept-thin-client-idempotent-sync.md
     - Workout History 출시기: src-workout-history-launch.md
+    - On Pocket News 개발기: src-on-pocket-news.md
+    - 모닝 브리핑 개발기: src-morningbrief.md
   - 하네스·AI 에이전트:
     - 개념:
       - 하네스 엔지니어링: concept-harness-engineering.md
@@ -327,6 +329,7 @@ nav:
     - Obsidian: entity-obsidian.md
     - LLM Wiki 패턴: src-llm-wiki-pattern.md
     - 위키 배포: guide-deploy-mkdocs-firebase.md
+    - 포트폴리오 블로그 실습: guide-portfolio-blog.md
     - 프로젝트 문서 시스템: guide-project-docs-setup.md
     - 위키 작성 표준: guide-wiki-authoring-standards.md
 

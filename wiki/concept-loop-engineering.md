@@ -143,6 +143,8 @@ Addy Osmani는 토큰 비용에 **절대적으로 주의**해야 한다고 말�
 - [[src-copilot-token-pricing]] — 토큰 비용 폭증 위험
 - [[concept-cronjob-concurrency-trap]] — 인프라 영역의 같은 "거부 신호 없는 폭주" 패턴
 - [[concept-keepalive-timeout-race]] — 인프라 영역의 같은 "종료 신호 가정" 패턴
+- [[src-morningbrief]] — 실전 사례: 커버리지·품질 루프(각 상한 2), 코드 검사 후 LLM 검수, 폴백
+- [[src-on-pocket-news]] — 실전 사례: 테스트 통과 뒤 화면 증적이 거부 신호가 되어 알림 동의 버그를 잡음
 
 ## 이 개념을 다룬 글
 

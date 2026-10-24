@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, practice, spring, jpa, h2, rest-api, validation, swagger, test]
 sources: [java-study/practice/]
 created: 2026-09-28
-updated: 2026-09-29
+updated: 2026-10-24
 ---
 
 # Spring 실습 과제 — 도서 대여 REST API
@@ -1631,3 +1631,9 @@ curl -s -w '\n%{http_code}\n' -X POST http://localhost:8090/api/loans/999/return
 - [[concept-jpa-enum-mapping]] — `@Enumerated(STRING)`을 써야 하는 이유
 - [[guide-java-practice-library-ui]] — 다음 과제: 이 API를 쓰는 화면(React + Vite)
 - [[guide-java-practice-library-merge]] — 다음 과제: API와 화면 병합·한 jar 배포
+
+## 이 개념을 다룬 글
+
+블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
+
+- [AWS CEO가 '주니어 대체는 바보짓'이라 한 이유와, 주니어가 AI와 함께 연습할 세 가지](https://blog.wonslab.dev/2025-12-29-ai-aws-ceo/)

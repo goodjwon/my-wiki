@@ -4,7 +4,7 @@ type: synthesis
 tags: [java, study, practice, spring, react, vite, cors, playwright, e2e, deploy]
 sources: [java-study/practice/]
 created: 2026-09-29
-updated: 2026-10-14
+updated: 2026-10-24
 ---
 
 # 과제 2-3. API와 화면 병합
@@ -934,4 +934,4 @@ Running 3 tests using 1 worker
 
 블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
 
-- [클로드 코드(Claude Code)로 E2E 테스트 자동화: Playwright Test Agents 완벽 활용법 (ft. 병렬 실행)](https://blog.wonslab.dev/2026-01-02-claude-code-e2e-ft-playwright/)
+- [클로드 코드와 Playwright로 E2E 테스트 만들기: 세 프로젝트의 실제 구성과 Test Agents를 붙일 자리](https://blog.wonslab.dev/2026-01-02-claude-code-e2e-ft-playwright/)

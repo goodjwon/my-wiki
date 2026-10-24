@@ -4,7 +4,7 @@ type: concept
 tags: [ddd, aggregate, 도메인설계, 트랜잭션, jpa]
 sources: [object-dependency/aggregate-boundary-lifecycle.md]
 created: 2026-08-10
-updated: 2026-10-14
+updated: 2026-10-24
 ---
 
 # 애그리거트 경계 (Aggregate Boundary)
@@ -88,4 +88,4 @@ public class Order {                       // 애그리거트 루트
 
 블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
 
-- [[우아한테크세미나] 190620 우아한객체지향 by 우아한형제들 개발실장 조영호님](https://blog.wonslab.dev/2026-08-04-object-oriented-dependency-management/)
+- [객체지향 설계의 핵심은 의존성 관리다: 조영호 님의 배달 앱 예제로 읽는 도메인 분리 전략](https://blog.wonslab.dev/2026-08-04-object-oriented-dependency-management/)
