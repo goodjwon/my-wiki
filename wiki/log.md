@@ -4,6 +4,13 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-10-24] ops | 위키 빌드를 Zensical(모던 테마)로 전환
+- 빌드 도구: Material for MkDocs 9.7(2027-05-05 지원 종료) → Zensical 0.0.72. `mkdocs.yml`은 그대로 읽고, `scripts/build-site.sh`가 `zensical build`를 실행. 비상 대안 `BUILDER=mkdocs bash scripts/build-site.sh`.
+- Zensical은 MkDocs 훅을 실행하지 않으므로 `scripts/zensical_prep.py`로 옮김: pre(description 자동 추출·backlog/plan noindex·30일 🆕 nav 배지 → `.zensical.yml` 생성), post(frontmatter `updated`=lastmod sitemap, robots 페이지 제외). `overrides/sitemap.xml` 삭제(Zensical에서 렌더 오류).
+- 디자인: 모던 테마 + Pretendard 글꼴, 상단 바 흰색/검정·강조색 indigo.
+- 검증: 페이지 216개·sitemap 213 URL·lastmod 213개가 MkDocs 빌드와 동일, description·robots·og·JSON-LD·canonical·사이트 확인 메타·이미지 확대(glightbox) 유지. 다른 PC는 `.venv/bin/pip install -r requirements.txt` 필요.
+- [[guide-portfolio-blog]]에 Step 3-1 디자인 다듬기·예시 사이트 링크 추가.
+
 ## [2026-10-24] link+verify | 블로그 글 ↔ 위키 md 1:1 대조·정리
 - 색인 중 블로그 19편을 위키 대표 md와 1:1 매핑(전부 연결). 신설: [[src-on-pocket-news]](블로그 2편)·[[src-morningbrief]](1편) — 블로그 사실 주장을 각 저장소 커밋·코드와 대조해 작성.
 - 대조로 찾은 블로그 오류 정정(블로그 저장소): OPN 소개 연표 3건(인코딩 감지 03월·페어링 04월·지자체 복지로 04월)과 근거 없는 "복지로 2,400여 건" 삭제, 헤드리스 감수 예외(10-20) 반영 / 모닝 브리핑 출시 상태(App Store 10-21·Play 비공개 테스트 10-23)·Kotlin 전환 날짜 / 우아한객체지향 글의 front matter title이 유튜브 영상 제목이던 것을 H1로.

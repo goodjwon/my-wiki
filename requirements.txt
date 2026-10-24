@@ -30,3 +30,4 @@ selectolax==0.4.10
 six==1.17.0
 urllib3==2.7.0
 watchdog==6.0.0
+zensical==0.0.72

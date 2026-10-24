@@ -8,12 +8,21 @@ external:
   - https://www.mkdocs.org/
   - https://firebase.google.com/docs/hosting
 created: 2026-05-31
-updated: 2026-10-14
+updated: 2026-10-24
 ---
 
 # 위키 배포 가이드 — MkDocs Material + Firebase Hosting
 
 이 위키(`wiki/` 디렉터리)를 정적 사이트로 빌드해 외부에 공개하는 절차입니다. 실제 운영 중인 [wiki.wonslab.dev](https://wiki.wonslab.dev)의 설정 파일·스크립트를 그대로 옮겼으므로, 같은 구조의 저장소라면 이 순서대로 따라 하면 됩니다. 비용은 0원(도메인 제외)이고 셋업은 1~2시간 걸립니다.
+
+!!! info "2026-10-24 빌드 도구 전환 — Zensical"
+    이 위키는 2026-10-24부터 같은 `mkdocs.yml`을 **Zensical** 0.0.72로 빌드합니다(Material for MkDocs 9.7은 2027-05-05 지원 종료, 배경은 [[guide-portfolio-blog]] Step 1). 아래 단계는 MkDocs 기준 그대로 유효하며, 달라진 점은 세 가지입니다.
+
+    | 항목 | 변경 |
+    |---|---|
+    | 빌드 명령 | `build-site.sh`가 `zensical build -c -f .zensical.yml` 실행. `BUILDER=mkdocs`면 기존 MkDocs 빌드 |
+    | 훅 (Step 5 🆕 배지, SEO) | Zensical은 훅을 실행하지 않아 `scripts/zensical_prep.py`가 빌드 전(description·noindex·🆕 nav 배지)과 빌드 후(lastmod sitemap)에 같은 일을 함 |
+    | `overrides/sitemap.xml` | 삭제. sitemap은 빌드 후 단계가 생성 |
 
 ## 결정 배경
 

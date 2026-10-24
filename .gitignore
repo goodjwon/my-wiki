@@ -9,3 +9,5 @@ site/
 __pycache__/
 .firebase/
 firebase-debug.log
+.zensical.yml
+.cache/

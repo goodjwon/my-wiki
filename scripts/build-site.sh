@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# wiki/ 를 docs/ 로 복사한 뒤 MkDocs 빌드
+# wiki/ 를 docs/ 로 복사한 뒤 Zensical 빌드 (BUILDER=mkdocs 로 Material for MkDocs 빌드)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -33,11 +33,23 @@ else
   python3 scripts/wikilinks.py docs
 fi
 
-echo "▶ mkdocs build"
-if [ -x ".venv/bin/mkdocs" ]; then
-  .venv/bin/mkdocs build --clean
+PY=python3; [ -x ".venv/bin/python3" ] && PY=.venv/bin/python3
+BIN=""; [ -d ".venv/bin" ] && BIN=".venv/bin/"
+
+# Zensical은 MkDocs 훅을 실행하지 않음 → seo.py·new_badge.py 역할을 전후 단계로 수행
+echo "▶ description·noindex·🆕 배지 전처리"
+$PY scripts/zensical_prep.py pre docs mkdocs.yml .zensical.yml
+
+if [ "${BUILDER:-zensical}" = "mkdocs" ]; then
+  # 비상 대안: Material for MkDocs (2027-05-05 지원 종료)
+  echo "▶ mkdocs build"
+  ${BIN}mkdocs build --clean   # 훅(seo·new_badge)이 직접 실행되므로 원본 설정 사용
 else
-  mkdocs build --clean
+  echo "▶ zensical build"
+  ${BIN}zensical build -c -f .zensical.yml
 fi
+
+echo "▶ sitemap.xml (lastmod = frontmatter updated)"
+$PY scripts/zensical_prep.py post docs site "$(sed -n 's/^site_url: *//p' mkdocs.yml)"
 
 echo "✅ 빌드 완료 → site/"

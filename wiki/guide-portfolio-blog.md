@@ -5,11 +5,12 @@ tags: [guide, portfolio, blog, zensical, mkdocs, github-pages, obsidian, markdow
 sources: []
 created: 2026-10-24
 updated: 2026-10-24
+description: "Java·Spring 실습 기록 md를 Zensical로 포트폴리오 블로그로 만들어 GitHub Pages에 배포하는 Mac 기준 실습 가이드입니다. 설치, 디자인, 글 쓰기, 편집기, 자동 배포, Search Console 등록까지 다룹니다."
 ---
 
 # 포트폴리오 블로그 실습 — 실습 기록을 Zensical·GitHub Pages로 배포하기 (Mac)
 
-Java·Spring 실습을 하며 쓴 마크다운(md) 기록을 **나만의 포트폴리오 블로그**로 배포하는 실습입니다. 결과물은 `https://<GitHub 아이디>.github.io/` 주소의 사이트이고, 실습 글을 `git push` 하면 몇 분 뒤 사이트에 자동으로 반영됩니다. 모든 명령은 Mac 터미널 기준입니다.
+Java·Spring 실습을 하며 쓴 마크다운(md) 기록을 **나만의 포트폴리오 블로그**로 배포하는 실습입니다. 결과물은 `https://<GitHub 아이디>.github.io/` 주소의 사이트이고, 실습 글을 `git push` 하면 몇 분 뒤 사이트에 자동으로 반영됩니다. 완성 모습은 [예시 사이트](https://goodjwon.github.io/portfolio-test/)에서 볼 수 있습니다. 모든 명령은 Mac 터미널 기준입니다.
 
 !!! example "실습 위치·실행"
 
@@ -118,6 +119,7 @@ printf 'site/\n.DS_Store\n.cache/\n' > .gitignore
 ├── .github/workflows/docs.yml     ← 자동 배포 (Step 7)
 └── docs/                          ← 사이트에 올라가는 md
     ├── index.md                   ← 첫 화면 (자기소개)
+    ├── stylesheets/extra.css      ← 글꼴·첫 화면 스타일 (Step 3-1)
     └── blog/
         ├── index.md               ← 글 목록 페이지
         └── posts/
@@ -211,6 +213,138 @@ Java·Spring을 배우며 **직접 만들고 테스트로 검증한 실습**을 
 ```markdown
 # 실습 기록
 ```
+
+### 3-1. 디자인 다듬기
+
+Zensical은 기본으로 모던 테마를 씁니다. 여기에 한글 글꼴, 첫 화면, 강조색 세 가지를 더하면 포트폴리오다운 모습이 됩니다. 완성 모습은 [예시 사이트](https://goodjwon.github.io/portfolio-test/)에서 볼 수 있습니다.
+
+| 바꾸는 것 | 효과 |
+|---|---|
+| 글꼴 Pretendard | 한글 글자가 고르고 또렷하게 보입니다 |
+| 첫 화면 | 큰 제목, 소개 한 줄, 버튼 2개, 대표 실습 카드 3개 |
+| 상단 탭 메뉴 | 왼쪽 메뉴 대신 머리글에 "소개·실습 기록" 탭이 생깁니다 |
+| 날짜 형식 | 글 날짜가 "2026년 10월 24일"로 표시됩니다 |
+| 바닥글 | "Made with Zensical" 문구를 숨깁니다 |
+
+**파일**: `mkdocs.yml` — 기존 설정에서 아래 부분만 고칩니다. `features`에 한 줄, `palette`의 두 항목에 각각 두 줄, `extra`·`extra_css` 블록, 블로그의 `post_date_format`, 그리고 `nav`의 글 목록 제목입니다.
+
+```yaml
+nav:
+  - 소개: index.md
+  - 실습 기록:
+      - 실습 기록: blog/index.md
+
+theme:
+  features:
+    - content.code.copy
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - navigation.tabs                  # 추가: 상단 탭 메뉴
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white                   # 추가
+      accent: indigo                   # 추가
+      toggle:
+        icon: material/weather-night
+        name: 어두운 화면으로
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black                   # 추가
+      accent: indigo                   # 추가
+      toggle:
+        icon: material/weather-sunny
+        name: 밝은 화면으로
+
+extra:                                 # 추가: 바닥글 'Made with Zensical' 숨김
+  generator: false
+
+extra_css:                             # 추가
+  - stylesheets/extra.css
+
+plugins:
+  - search
+  - blog:
+      post_url_format: "{slug}"
+      post_date_format: "yyyy년 M월 d일"   # 추가
+```
+
+**파일**: `docs/stylesheets/extra.css` — 글꼴과 첫 화면 모양을 정하는 스타일 파일입니다. 그대로 복사합니다.
+
+```css
+/* 한글 글꼴: Pretendard */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+:root {
+  --md-text-font: "Pretendard Variable";
+}
+
+/* 첫 화면 */
+.hero { padding: 3rem 0 2rem; }
+.hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.6rem; }
+.hero .lead { font-size: 1.15rem; opacity: 0.75; margin-bottom: 1.6rem; }
+.hero .md-button { margin: 0 0.4rem 0.4rem 0; border-radius: 999px; }
+.hero h1, .hero .lead { word-break: keep-all; }
+
+@media screen and (max-width: 44.9375em) {
+  .hero { padding: 1.5rem 0 1rem; }
+  .hero h1 { font-size: 1.9rem; }
+}
+```
+
+**파일**: `docs/index.md` — 첫 화면을 아래 내용으로 바꿉니다. 맨 위 `hide`는 첫 화면에서만 왼쪽 메뉴와 목차를 숨기는 설정입니다. 카드는 자기 실습으로 채우고, 글이 있는 카드에는 `글 읽기` 링크를 답니다.
+
+```markdown
+---
+hide:
+  - navigation
+  - toc
+---
+
+<div class="hero" markdown>
+
+# 홍길동의 개발 기록
+
+<p class="lead">Java·Spring을 배우며 직접 만들고 테스트로 검증한 실습을 기록합니다.</p>
+
+[실습 기록 보기](blog/index.md){ .md-button .md-button--primary }
+[GitHub](https://github.com/gildong){ .md-button }
+
+</div>
+
+## 이런 걸 해 봤습니다
+
+<div class="grid cards" markdown>
+
+-   **도서 대여 API**
+
+    ---
+
+    연체 회원 대여 금지 규칙을 경계값 테스트로 고정했습니다.
+
+    [글 읽기](blog/posts/2026-10-24-library-loan/index.md)
+
+-   **콘솔 도서 관리**
+
+    ---
+
+    컬렉션 선택을 바꿔 검색 속도를 비교했습니다.
+
+-   **계층 분리 리팩터링**
+
+    ---
+
+    서비스 테스트가 빨라진 이유를 정리했습니다.
+
+</div>
+
+## 다룰 줄 아는 것
+
+Java 21 · Spring Boot · JPA · JUnit 5 · Git · GitHub Actions
+```
+
+미리보기(Step 4)에서 첫 화면에 큰 제목과 둥근 버튼 두 개, 카드 세 장이 보이면 정상입니다. 카드 안의 `글 읽기` 링크는 Step 5에서 그 글을 만든 뒤에야 열립니다. 글 화면 왼쪽 위의 "Index로 돌아가기"는 Zensical에 들어 있는 한국어 번역 문구라서 설정으로 바뀌지 않습니다.
 
 ## 4. 미리보기와 빌드
 
@@ -467,7 +601,7 @@ INFO    -  Building documentation to directory: /Users/<사용자>/gildong.githu
 INFO    -  Documentation built in 0.23 seconds
 ```
 
-이 명령이 성공하면 `.github/workflows/docs.yml`의 두 줄을 아래처럼 바꿔 배포도 전환합니다. Material for MkDocs는 2027-05-05까지 치명적 버그 수정을 받으므로, 그 전에 Zensical 문제가 풀리면 다시 되돌립니다.
+이 명령이 성공하면 `.github/workflows/docs.yml`의 두 줄을 아래처럼 바꿔 배포도 전환합니다. Material for MkDocs는 2027-05-05까지 치명적 버그 수정을 받으므로, 그 전에 Zensical 문제가 풀리면 다시 되돌립니다. 이 상태에서는 Step 3-1의 모던 테마가 Material 기본 모양으로 돌아갑니다. 글꼴·첫 화면·카드는 그대로 유지됩니다.
 
 ```yaml
       - run: pip install mkdocs-material==9.7.7
@@ -487,6 +621,7 @@ INFO    -  Documentation built in 0.23 seconds
 | Actions에서 `deploy` 실패, "Pages not enabled" | Pages Source가 GitHub Actions가 아님 | Step 7의 `gh api` 명령 또는 Settings → Pages 설정 |
 | 사이트가 404 | 첫 배포 직후 반영 지연 | `gh run watch`가 끝난 뒤 1~2분 후 새로고침 |
 | `<아이디>.github.io`가 아닌 이름으로 저장소를 만듦 | 주소가 `https://<아이디>.github.io/<저장소>/`가 됨 | `mkdocs.yml`의 `site_url`을 그 주소로 바꿈 (안 바꾸면 sitemap·canonical 주소가 틀림) |
+| 첫 화면 카드가 세로 목록으로 보임 | `attr_list`·`md_in_html` 확장이 빠졌거나 카드 줄 앞 공백이 4칸이 아님 | Step 3 `markdown_extensions` 확인, `-   ` 뒤 내용은 공백 4칸 들여쓰기 |
 | 빌드는 되는데 화면이 이상함 | Zensical 버전 변경 | 버전 고정 확인, 안 되면 Step 9 |
 
 ## 같은 인사이트 패턴 — 검증된 것만 남긴다
