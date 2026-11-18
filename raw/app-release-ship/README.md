@@ -160,7 +160,7 @@ ln -s ~/VsCodeProjects/wonslab-hub/release/ship ~/.claude/skills/ship
 - [[concept-harness-engineering]] — 에이전트가 실수해도 막히게 만드는 장치 (dry-run 기본값과 승인 게이트)
 - [[guide-deploy-mkdocs-firebase]] — 위키 배포 가이드
 
-## 부록. 다음 작업 후보 — 스토어 등록 정보 갱신 (미구현)
+## 부록. /ship listing — 스토어 등록 정보 갱신 (2026-11-19 구현, 조회·dry-run만 검증)
 
 첫 등록은 사람이 한다. 그 뒤 설명·스크린샷 갱신은 두 스토어 모두 API로 할 수 있다.
 
@@ -172,4 +172,7 @@ ln -s ~/VsCodeProjects/wonslab-hub/release/ship ~/.claude/skills/ship
 | 반영 시점 | edit commit 즉시 (설명만 바꾸면 검토 짧음) | 다음 버전 심사 때 같이. 프로모션 문구만 심사 없이 바로 |
 
 - 이미지 원본은 앱마다 이미 있는 스크린샷 자동 촬영(integration_test)을 쓴다
-- 아이디어: `/ship listing` — 문구 초안과 스크린샷을 만들고, 승인 뒤 양 스토어에 반영
+- 흐름: `listing-get`으로 현재 등록 정보를 JSON으로 꺼냄 → Claude가 고침(요청이 없으면 낡은 문구·오타 제안) → `listing-set` dry-run으로 바뀌는 칸만 미리보기 → 승인 → `--go`
+- JSON에서 이미지는 개수(숫자)로 나온다. 숫자는 그대로 두고, 파일 경로 배열로 바꾸면 그 칸 이미지를 통째로 교체한다
+- iOS 이름·부제·설명·키워드·스크린샷은 수정 가능한 버전이 있어야 바뀐다. 없으면 `--version <다음 버전>`으로 새 버전을 만들고, 다음 `/ship prod` 심사 때 공개된다
+- 첫 실행에서 찾은 것: 한 앱의 Play 앱 이름에 오타가 있었다(App Store 쪽은 정상). 두 스토어 문구를 나란히 꺼내 보는 것만으로 잡힌다
