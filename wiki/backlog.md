@@ -217,7 +217,19 @@ updated: 2026-10-11
 
 ### 다음 세션 최우선 (Pending)
 
-(비어 있음 — 2026-10-05 작업까지 모두 완료·배포)
+- [ ] **GSC 색인 요청 캠페인 — 다음 확인 2026-12-03경** (2026-11-19 진단). 11-19 GSC = 색인 13 / 미색인 373
+  (크롤링됨-색인 안 됨 237·리디렉션 71·발견됨 64·대체 1). 색인 수 08월 ~120 → 13.
+  - 진단: `firebase.json` `trailingSlash: false`(05-31 `fff9cde`)~10-08(`928cdf2`) 동안 sitemap·canonical(`/x/`)과 서버 301(`/x`)이 서로 모순.
+    "크롤링됨" 237 중 184(무슬래시 136 + 수정 전 크롤 48)가 고장 기간 판정, 수정 후 크롤 판정은 53건. 리디렉션 71 = 옛 무슬래시 주소(정상).
+  - 현재 기술 상태 정상: concept-jspecify-null-safety URL 검사 = 가져오기 성공·색인 허용·Google 선택 표준=검사된 URL, Googlebot UA 200/30ms/정적 본문.
+    lecture 페이지 noindex 안은 철회(실제 수업 자료, 사용자 판단).
+  - 조치(사용자, 하루 10건 "색인 생성 요청"): 11-21 = 홈, comparison-advisor-worker-vs-graph, concept-harness/loop/graph-engineering,
+    concept-advisor-worker, guide-harness-00-prerequisites, guide-loop-engineering-demo, guide-advisor-worker-demo, guide-portfolio-blog /
+    11-22 = src-workout-history-launch, src-morningbrief, src-on-pocket-news, concept-wall-clock-state-machine, concept-local-first-append-only,
+    concept-thin-client-idempotent-sync, concept-cronjob-concurrency-trap, concept-jspecify-null-safety, guide-java-track1-basics, guide-wiki-authoring-standards.
+    lecture-*는 링크 따라 크롤되므로 개별 요청 안 함.
+  - **12-03경 확인**: 요청 페이지 "최근 크롤링" 날짜 + 페이지 보고서 CSV 재추출 → 10-08 이후 크롤된 슬래시 URL 거절률만 판정. "리디렉션" 유효성 검사는 재실행 안 함.
+  - 블로그(blog.wonslab.dev) 쪽 같은 캠페인: trendcompass-mkdocs `BACKLOG.md` "하고 있는 것".
 
 사용자 직접 조치 권장(위키 밖):
 - [ ] **카카오 REST API 키 재발급** — 2026-09-29 채팅에 노출됨. 재발급 후 `~/.config/wonslab/kakao.env`만 교체(저장소·사이트엔 키 없음).
