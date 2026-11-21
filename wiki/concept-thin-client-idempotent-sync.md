@@ -129,3 +129,5 @@ Future<void> importIncremental() async {
 - [[concept-wall-clock-state-machine]] — 같은 앱의 이벤트 발행·소비 분리
 - [[concept-domain-event-eventual-consistency]] — 멱등 소비자·최종 일관성의 서버 쪽 원형
 - [[concept-api-backward-compatibility]] — 폰·워치 공통 JSON 스키마를 진화시킬 때의 Tolerant Reader
+- [[concept-api-contract-server-swap]] — 클라이언트를 얇게 두고 계약으로 서버를 교체한 사례(언제볼래)
+- [[concept-empty-result-vs-failure]] — 빈 배치가 앵커를 밀던 함정과 같은 구조("빈 결과 ≠ 실패")

@@ -4,6 +4,12 @@ title: Wons Wiki 로그
 
 # Wiki Log
 
+## [2026-11-19] ingest+update | 앱 5종 지식화 — 새 앱 2(동네기후·언제볼래), 갱신 3(모닝 브리핑·운동기록·On Pocket News)
+- raw 신설: raw/dongne-climate/, raw/gather/, raw/morningbrief/, raw/on-pocket-news/ (README·TIMELINE, 일부 TECH_NOTES — 각 비공개 앱 저장소 git log·문서 기준, 조회 2026-11-19). raw/workout-history/TIMELINE.md에 09-03 이후 절 추가.
+- 새 source: [[src-dongne-climate]], [[src-gather]]. 갱신: [[src-morningbrief]](10-24 이후 변경), [[src-workout-history-launch]](출시 이후 변경), [[src-on-pocket-news]](10-11 이후 변경).
+- 새 concept: [[concept-climate-normal-comparison]], [[concept-api-contract-server-swap]], [[concept-empty-result-vs-failure]], [[concept-rule-as-of-judgment]], [[concept-run-once-batch-exit-contract]] — 기존 concept 역링크·패턴표 행 추가.
+- 블로그(blog.wonslab.dev) 2026-11-19 글 5편과 상호 링크. 블로그 = 왜·무엇이 바뀌었나(이야기), 위키 = 구조·결정·함정 정본.
+
 ## [2026-10-24] guide | 위키 배포 가이드를 Zensical 기준으로 다시 씀
 - [[guide-deploy-mkdocs-firebase]] 전면 재작성: 맨 앞에 "만들게 될 파일" 트리(파일마다 만드는 Step 표시), 모든 코드 앞에 파일 용도 리드인, 명령마다 예상 결과, 긴 스크립트 4개(wikilinks·seo·new_badge·zensical_prep)는 용도 표 + 접힌 전체 코드. Firebase 설정은 대화형 `firebase init` 대신 파일 직접 작성, 비상 대안(`BUILDER=mkdocs`) 절 신설.
 - 사실 교정: `firebase.json`의 `trailingSlash`가 문서에는 false, 실제는 true였음 → 실제 값으로.

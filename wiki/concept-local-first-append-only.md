@@ -130,3 +130,5 @@ test('자정 직전 기록과 직후 기록은 다른 날', () {
 - [[concept-thin-client-idempotent-sync]] — 진실(폰 DB)과 캐시(워치)의 분리
 - [[concept-domain-event-eventual-consistency]] — 원본 트랜잭션이 진실, 구독자는 파생
 - [[concept-id-reference-vs-object-reference]] — "편한 기본값" 패턴표의 본가
+- [[concept-climate-normal-comparison]] — 파생값을 저장하지 않고 예보도 진실 자리에 두지 않는 같은 원리
+- [[concept-rule-as-of-judgment]] — 기록뿐 아니라 판정의 잣대(목표)도 날짜별로 남겨야 과거가 고정된다

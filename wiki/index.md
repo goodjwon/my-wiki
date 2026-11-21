@@ -116,9 +116,16 @@ updated: 2026-09-28
 - [[concept-local-first-append-only]] — Local-first + Append-only: 기록이 진실이고 통계는 파생입니다
 - [[concept-wall-clock-state-machine]] — 벽시계 앵커 기반 타이머 상태기계
 - [[concept-thin-client-idempotent-sync]] — 얇은 클라이언트와 멱등 동기화
-- [[src-workout-history-launch]] — Workout History 앱 출시기 (설계 원칙·시행착오·에이전트 개발)
-- [[src-on-pocket-news]] — On Pocket News 개발기 (룰 기반 정책 추천, 개인정보 개편, 블로그 글 대조)
-- [[src-morningbrief]] — 모닝 브리핑 개발기 (배치 + Firestore, 상한 있는 요약 루프, 블로그 글 대조)
+- [[concept-empty-result-vs-failure]] — 빈 결과와 실패를 구분한다: 조용한 0건을 막는 경계
+- [[concept-run-once-batch-exit-contract]] — 상주 루프를 1회 실행 배치로 옮길 때의 종료 코드 계약
+- [[concept-rule-as-of-judgment]] — 그날의 잣대로 판정: 목표·규칙 변경이 과거 판정을 재채점하지 않게 하는 날짜별 이력
+- [[concept-api-contract-server-swap]] — API 계약 고정 후 서버 교체 (손으로 고치는 OpenAPI + 생성 클라이언트)
+- [[concept-climate-normal-comparison]] — 이동 기준선(직전 10년)과 고정 기준선, 예보와 실측의 타입 분리
+- [[src-workout-history-launch]] — Workout History 앱 출시기 (2026-07 ~ 2026-11, 설계 원칙·시행착오·출시 이후 변경)
+- [[src-on-pocket-news]] — On Pocket News 개발기 (룰 기반 정책 추천, 개인정보 개편, 2026-11 갱신: 배치 전환·정확도 측정)
+- [[src-morningbrief]] — 모닝 브리핑 개발기 (배치 + Firestore, 상한 있는 요약 루프, 10-24 이후 온포켓 연동·0건 장애)
+- [[src-gather]] — 언제볼래 개발기 (도메인은 서버 한 곳, 서버 교체, 심사 2.1 대응)
+- [[src-dongne-climate]] — 동네기후 개발기 (배치가 평년·편차를 계산해 정적 JSON으로, 앱은 파일만 읽음)
 
 ## 하네스·AI 에이전트
 

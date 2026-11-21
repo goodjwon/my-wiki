@@ -237,3 +237,4 @@ class UserControllerV2 {
 - [[src-spring-web-mvc-ref]] — Spring MVC 깊이
 - [[src-copilot-token-pricing]] — 같은 "유지보수 부담" 인사이트
 - [[concept-claude-md]] — STOP 트리거 후보
+- [[concept-rule-as-of-judgment]] — 계약(규칙)이 바뀌어도 과거는 과거 계약으로 해석하는 같은 구조

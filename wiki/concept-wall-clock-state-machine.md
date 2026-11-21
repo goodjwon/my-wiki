@@ -132,3 +132,4 @@ class TimerEngine {
 - [[concept-thin-client-idempotent-sync]] — 폰↔워치 신호 협력
 - [[concept-domain-event-eventual-consistency]] — 이벤트 발행·소비 분리의 서버 쪽 원형
 - [[concept-design-patterns]] — 상태 패턴·옵저버 패턴의 교과서적 형태
+- [[concept-climate-normal-comparison]] — 기준(평년 기간)을 값으로 주입하는 같은 원리

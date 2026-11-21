@@ -145,6 +145,8 @@ Addy Osmani는 토큰 비용에 **절대적으로 주의**해야 한다고 말�
 - [[concept-keepalive-timeout-race]] — 인프라 영역의 같은 "종료 신호 가정" 패턴
 - [[src-morningbrief]] — 실전 사례: 커버리지·품질 루프(각 상한 2), 코드 검사 후 LLM 검수, 폴백
 - [[src-on-pocket-news]] — 실전 사례: 테스트 통과 뒤 화면 증적이 거부 신호가 되어 알림 동의 버그를 잡음
+- [[concept-run-once-batch-exit-contract]] — 헤드리스 에이전트의 자기 보고 대신 호출 기록으로 판정
+- [[concept-empty-result-vs-failure]] — "조용히 실패한다"의 운영 사례(모닝 브리핑 10-27 0건 장애)
 
 ## 이 개념을 다룬 글
 

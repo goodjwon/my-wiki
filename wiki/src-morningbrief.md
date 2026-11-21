@@ -1,13 +1,15 @@
 ---
-title: 모닝 브리핑 개발기 (2026-10-05 ~ 2026-10-23)
+title: 모닝 브리핑 개발기 (2026-10-05 ~ 2026-11-14)
 type: source
-tags: [morningbrief, spring-batch, kotlin, firestore, fcm, flutter, loop-engineering, graph-engineering, app-release]
-sources: []
+tags: [morningbrief, spring-batch, kotlin, firestore, fcm, flutter, loop-engineering, graph-engineering, app-release, on-pocket-news, incident]
+sources:
+  - morningbrief/
 external:
   - https://wonslab.dev/morningbrief/
   - https://blog.wonslab.dev/2026-10-18-morningbrief-intro/
+  - https://blog.wonslab.dev/2026-11-19-morningbrief-update/
 created: 2026-10-24
-updated: 2026-10-24
+updated: 2026-11-19
 ---
 
 # 모닝 브리핑 개발기 — 배치 + Firestore, 상한 있는 요약 루프
@@ -15,7 +17,8 @@ updated: 2026-10-24
 ## 출처
 
 - 이 페이지는 블로그 글 [모닝 브리핑 — 출근 전 3분 뉴스 앱을 만든 이유와 과정](https://blog.wonslab.dev/2026-10-18-morningbrief-intro/)과 1:1로 대응하는 지식 원본입니다.
-- 사실 원본은 **비공개 앱 저장소** morningbrief입니다(CLAUDE.md, docs/progress.md, docs/BACKLOG-done.md, docs/architecture.md, docs/samples/, 백엔드 코드, git 이력). raw/ 사본은 두지 않았고, 블로그 글의 주장은 2026-10-24 기준 저장소와 한 문장씩 대조했습니다.
+- 사실 원본은 **비공개 앱 저장소** morningbrief입니다(CLAUDE.md, docs/progress.md, docs/BACKLOG-done.md, docs/architecture.md, docs/samples/, 백엔드 코드, git 이력). 소개 글의 주장은 2026-10-24 기준 저장소와 한 문장씩 대조했습니다.
+- 2026-11-19에 git 이력 기반 원본 노트 `raw/morningbrief/TIMELINE.md`를 만들고, 10-24 이후 변경을 아래 「10-24 이후 변경」 절에 더했습니다. 대응 블로그 글은 [모닝 브리핑 한 달](https://blog.wonslab.dev/2026-11-19-morningbrief-update/)입니다.
 
 ## 앱 한 줄
 
@@ -72,6 +75,40 @@ API 서버를 걷어 낸 이유는 세 가지입니다. 클라우드 RDB의 고�
 | 2026-10-21 | App Store 출시(0.1.0 빌드 5), 이후 0.1.1 업데이트 준비 | progress.md, `0963c54` |
 | 2026-10-23 | Android 패키지 `dev.wonslab.morningbrief`, Play 비공개 테스트 제출 | `34cca40` `7530224` |
 
+## 10-24 이후 변경 (2026-10-25 ~ 11-14)
+
+날짜별 사실은 `raw/morningbrief/TIMELINE.md`에 있습니다. 여기서는 구조가 바뀐 지점만 정리합니다.
+
+| 축 | 변경 | 근거 |
+|----|------|------|
+| 온포켓 연동 ① 맞춤 정보 | notifyJob = picks → notify. 온포켓 partner/matches로 동의 회원의 추천을 받아 `users/{uid}/picks`에 동기화(firstSeenAt), 알림에 "새 맞춤 정보 N건". 매칭 키는 소셜 로그인 sub, 이메일·이메일 해시 미사용 | `0449dd3` |
+| 온포켓 연동 ② 앱 안 화면 | morningBriefJob = digest → publish → onpocket → claims. 전날 06:00 이후 공개분을 `onpocket/{date}`(제목·200자 설명·링크·분류, 본문 없음, 30일)에 저장, 앱은 BriefScreen을 재사용해 같은 읽음·스크랩·맨 위로 | `dd1c29c` `dd691ef` |
+| 온포켓 연동 ③ 분류·설정 | 대표 주제는 앱이 정하지 않고 온포켓이 준 category를 따름. 맞춤 설정(관심 주제·지역·내 상황·동의)은 앱에서 온포켓 프로필 API로 저장, 온포켓 토큰은 기기 메모리만 | `2d6d259` `29d1e40` |
+| 알림 | notifyJob `slot`(06:30·07:00·07:30·08:00), 배치 허브에 시각별 작업 4개. 계기: 06:30 선택 사용자에게 07:00 도착 | `dc00436` |
+| 토픽 | 보안 신설(9개), IT·AI 하루 최대 5 → 7건 | `9fc8cd4` |
+| 앱 운영 | 업데이트 안내(Android 인앱 업데이트·iOS lookup 비교) | `58eac93` |
+| 테스트 | Testcontainers → H2, 회원 upsert를 공통 SQL로, `./gradlew check` 58개 전부 통과 | `652b2c3` |
+| 스토어 | 스크린샷 6장 재촬영(가상 샘플 데이터), 업로드 자동화 스크립트(키 미발급으로 미사용) | `778569e` |
+
+### 함정과 해결
+
+| 함정 | 해결 | 근거 |
+|------|------|------|
+| YAML에 끼어든 블록이 `brief.sources.rss`를 끊어 뉴스 토픽 7개가 0건(10-27) | 빈 피드면 실패, 운영 설정 바인딩 테스트 → [[concept-empty-result-vs-failure]] | `6b50db9` `403935a` |
+| 재게시한 오늘 브리핑이 이미 받은 기기에 안 보임 | 오늘 날짜만 항상 서버 읽기 | `9af12b0` |
+| iOS 푸시 10-22~10-28 `THIRD_PARTY_AUTH_ERROR` | Firebase에 APNs 인증 키 등록(10-28) | `4224aa6` |
+| App Store가 승인된 버전 트레인에 새 빌드를 받지 않음(0.1.1·0.1.2·1.0.0) | 빌드마다 버전도 올림 | `507bc30` `7ac6590` `797757a` |
+| `Navigator.canPop()`이 위에 쌓인 화면 때문에 첫 화면에서도 참 → 뒤로 버튼 노출 | `ModalRoute.isFirst` | progress.md |
+| 날짜만 있는 `pubDate`를 0시로 해석하면 전날 공지가 24시간 창에서 빠짐 | KST 정오로 해석 | `9fc8cd4` |
+| Mockito `eq/any`가 null을 돌려 Kotlin non-null 인자에서 NPE(Docker가 없어 한 번도 안 돈 테스트) | `?: 대체값` | `652b2c3` |
+
+### 배포 상태 (기록 기준)
+
+| 스토어 | 상태 | 근거 |
+|--------|------|------|
+| App Store | 11-03 lookup 기준 공개 버전 1.0.4, 1.0.5는 "배포 준비됨"(11-14 백로그) | progress.md, BACKLOG.md |
+| Google Play | 10-23 비공개 테스트 제출, 11-14에 빌드 27(1.0.5) 출시를 콘솔 화면으로 확인(트랙 미기재) | `7530224` `2d0b191` |
+
 ## 블로그 글과의 1:1 대응
 
 | 블로그 절 | 위키 절 | 대조 메모 |
@@ -106,6 +143,7 @@ API 서버를 걷어 낸 이유는 세 가지입니다. 클라우드 RDB의 고�
 
 ## 원본 출처
 
+- raw: `raw/morningbrief/README.md`, `raw/morningbrief/TIMELINE.md` (2026-11-19 조회, HEAD `b394843`)
 - 비공개 저장소 morningbrief — CLAUDE.md 1~4장, docs/progress.md, docs/BACKLOG-done.md, docs/architecture.md, docs/samples/dryrun-2026-10-07.md
 - 백엔드 코드 — `DigestGraph.kt`, `DigestSummarizer.kt`, `RunOptions.kt`, `EventClusterer.kt`, `NotifyService.kt`
 - 지원 페이지 https://wonslab.dev/morningbrief/
@@ -115,10 +153,13 @@ API 서버를 걷어 낸 이유는 세 가지입니다. 클라우드 RDB의 고�
 - [[concept-loop-engineering]] — 품질 루프·개발 루프의 영속 개념
 - [[concept-graph-engineering]] — Digest 그래프(조건부 엣지·스텝 상한)의 영속 개념
 - [[src-workout-history-launch]] — 같은 계정·번들 ID 규칙으로 출시한 앞선 1인 앱
-- [[src-on-pocket-news]] — 복지·정책 토픽의 피드를 주는 자매 서비스
+- [[src-on-pocket-news]] — 복지·정책 토픽의 피드, 맞춤 정보(picks), 대표 주제를 주는 자매 서비스
+- [[concept-empty-result-vs-failure]] — 10-27 0건 장애에서 나온 "빈 결과와 실패를 구분한다" 원칙
+- [[src-dongne-climate]] — 같은 batch-hub, 서버 없는 구조를 쓴 다음 앱(앱은 정적 JSON을 읽음)
 
 ## 이 개념을 다룬 글
 
 블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
 
 - [모닝 브리핑 — 출근 전 3분 뉴스 앱을 만든 이유와 과정](https://blog.wonslab.dev/2026-10-18-morningbrief-intro/)
+- [모닝 브리핑 한 달 — 소개 글 이후 바뀐 것과 그 이유](https://blog.wonslab.dev/2026-11-19-morningbrief-update/)

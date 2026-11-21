@@ -284,9 +284,16 @@ nav:
     - Local-first 기록: concept-local-first-append-only.md
     - 벽시계 타이머: concept-wall-clock-state-machine.md
     - 멱등 동기화: concept-thin-client-idempotent-sync.md
+    - 빈 결과와 실패: concept-empty-result-vs-failure.md
+    - 1회 실행 배치 종료 코드: concept-run-once-batch-exit-contract.md
+    - 그날의 잣대로 판정: concept-rule-as-of-judgment.md
+    - API 계약 고정 후 서버 교체: concept-api-contract-server-swap.md
+    - 기후 평년 비교: concept-climate-normal-comparison.md
     - Workout History 출시기: src-workout-history-launch.md
     - On Pocket News 개발기: src-on-pocket-news.md
     - 모닝 브리핑 개발기: src-morningbrief.md
+    - 언제볼래 개발기: src-gather.md
+    - 동네기후 개발기: src-dongne-climate.md
   - 하네스·AI 에이전트:
     - 개념:
       - 하네스 엔지니어링: concept-harness-engineering.md

@@ -212,3 +212,4 @@ spec:
 - [[src-spring-data-access-ref]] — Spring Batch의 `@Scheduled` 멀티 인스턴스 운영 맥락
 - [[concept-harness-engineering]] — 인프라 기본값에 대한 "구조적 방어"
 - [[src-on-pocket-news]] — 같은 "기본값과 가정의 함정": 알림 수신 기본값 true가 동의 없이 켜진 사례
+- [[concept-run-once-batch-exit-contract]] — 1회 실행 배치의 실패 판정

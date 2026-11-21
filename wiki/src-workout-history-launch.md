@@ -1,5 +1,5 @@
 ---
-title: Workout History 출시 여정 (2026-07 ~ 2026-09)
+title: Workout History 출시 여정 (2026-07 ~ 2026-11)
 type: source
 tags: [workout-history, flutter, watchos, wear-os, app-release, retrospective, local-first]
 sources:
@@ -9,14 +9,14 @@ sources:
 external:
   - https://wonslab.dev/workout-history
 created: 2026-09-03
-updated: 2026-10-24
+updated: 2026-11-19
 ---
 
 # Workout History 출시 여정 — 회고와 설계 원칙 6개
 
 ## 출처
 
-- `raw/workout-history/TIMELINE.md` — 출시 여정 회고(2026-08-19 심사 제출 스냅샷 + 2026-09-03 출시 후 표)
+- `raw/workout-history/TIMELINE.md` — 출시 여정 회고(2026-08-19 심사 제출 스냅샷 + 2026-09-03 출시 후 표 + 2026-11-19 추가 기록)
 - `raw/workout-history/TECH_NOTES.md` — 설계 원칙 6개와 그 이유·함정(2026-09-03 공개 요약)
 - 상세 설계 문서(PLANNING·CONCEPTS·ARCHITECTURE·DATABASE)는 **비공개 앱 저장소**가 유일한 원본입니다. 이 위키에는 공유 기준선(2026-08-19) 결정대로 회고와 개념 요약만 둡니다.
 
@@ -91,6 +91,39 @@ Future<void> onSaveTap() async {
 | 번들 ID 교체 | 새 컨테이너라 기존 실기록 유실 | 헬스 가져오기로 복구 |
 | xcodebuild 산출물 | DerivedData에 떨어지는데 `build/ios/` 구 잔해를 설치 | 설치 경로 확인 |
 
+## 출시 이후 변경 (2026-09-03 ~ 2026-11-19)
+
+근거는 `raw/workout-history/TIMELINE.md` "2026-09-03 이후" 절입니다. 1.0.6에서 1.7.4까지 약 2.5개월, 321커밋(9월 3일 블로그 글 게시 이후)입니다.
+
+### 스토어 상태 (조회 기준 2026-11-19)
+
+| 플랫폼 | 라이브·프로덕션 | 테스트 트랙 최신 | 비고 |
+|--------|----------------|-----------------|------|
+| iOS App Store | 1.7.1, 출시 시각 2026-11-11T01:33Z(UTC, App Store 공개 조회 2026-11-19) | 1.7.4(47) TestFlight | 1.7.2 이후는 스토어 미반영 |
+| Google Play | 1.5.3(38) 프로덕션(2026-11-03 콘솔 확인, 2026-11-19 공개 페이지도 1.5.3) | 1.7.4(47) 비공개 트랙 | 프로덕션 액세스 승인 2026-10-12, 1.7.x는 비공개 테스트까지 |
+| Wear OS | 스토어 미등록 | — | 가짜 데이터로 동작, 정식화 보류(B-176) |
+
+### 기능 축별 변화
+
+| 축 | 변화 | 스키마 |
+|----|------|--------|
+| 목표·계획 | 루틴 목표, 플랜 위저드, 목표 변경 이력, 60대+ 계획 개편, 월요일 주간 리뷰 목표 올리기 제안 | v10 · v11 |
+| 헬스 연동 | Android Health Connect 가져오기, 걷기 하루 합산, 헬스 쓰기(앱 기록 → HealthKit·HC, 가져온 기록은 되쓰지 않음), 가져온 운동의 측정 kcal | v14 |
+| 연속 기록 | 일시정지, 18~23시 지키기 알림(기본 on), 7일 연속 직후 인앱 리뷰 1회 | v13 |
+| 수행 화면 | 세트 이어하기, 빠른 종목(세트마다 한 번 탭·좌우 안내), 동작 가이드(관절 좌표 → 3D 캐릭터 영상 → 근육 인체) | v15 |
+
+### 새로 남긴 함정과 결정
+
+| 함정·결정 | 내용 | 정리 위치 |
+|-----------|------|----------|
+| 목표를 바꾸면 과거가 재채점됨 | 제자리 UPDATE가 스트릭을 소급 붕괴, 한 달 뒤 주간 리뷰에서 재발 | [[concept-rule-as-of-judgment]] |
+| 심사 대기 중 재제출 = 줄 다시 서기 | 열흘간 다섯 번 제출하며 매번 직전 제출을 취소, 1.2.0~1.4.0이 심사를 끝내지 못함 | 제출 뒤에는 결과까지 빌드를 건드리지 않음 |
+| 이중 집계 | 아이폰+애플워치 걸음 2배 집계(B-131), 헬스 쓰기 시 가져온 기록 되쓰기 금지 | [[concept-thin-client-idempotent-sync]]와 같은 "진실은 한 곳" 원리 |
+| Play 건강 권한 신고 | 소모 칼로리 선언이 "목적·기능·이점 불충분"으로 거절 → 데이터 유형마다 목적·앱 내 기능·사용자 이점 3요소로 재작성 | 앱 저장소 `STORE_ANDROID.md` 5.1 |
+| 워치 버전 불일치 | TestFlight 업로드가 워치 타깃 버전 불일치로 거부 → ipa 내부 앱·워치 버전 검증 후 업로드 | 앱 저장소 `CHANGELOG.md` 3장 |
+| 정책 반전 | "미달성 압박 알림 금지"를 사용자가 뒤집어 연속 기록 지키기 알림 도입(평가 1건·리뷰 요청 코드 0건 진단 직후) | 앱 저장소 `BACKLOG_DONE.md` B-185·B-190 |
+| 추정값 표기 | 근육 활성도는 측정값이 아니므로 출시 노트에 효능·정확성 표현 금지 | 앱 저장소 `CHANGELOG.md` 2장 |
+
 ## 개발 프로세스 — 에이전트 6역할
 
 Claude Code 에이전트를 advisor(판단·범위·문서 정합) · app-developer(도메인·엔진·DB·네이티브) · ui-developer(화면·토큰·접근성) · qa-reviewer(머지 게이트) · tester(회귀 시나리오) · release-manager(버전·제출) 6역할로 나눴습니다.
@@ -110,6 +143,7 @@ Claude Code 에이전트를 advisor(판단·범위·문서 정합) · app-develo
 - [[concept-local-first-append-only]] — 원칙 1·2·6의 영속 개념
 - [[concept-wall-clock-state-machine]] — 원칙 3의 영속 개념
 - [[concept-thin-client-idempotent-sync]] — 원칙 4의 영속 개념 + 증분 가져오기 앵커 함정
+- [[concept-rule-as-of-judgment]] — 출시 후 목표 변경 이력(B-117·B-180)에서 나온 판정 잣대 개념
 - [[concept-advisor-worker]] — 6역할 프로세스의 원형
 - [[guide-project-docs-setup]] — PLANNING·ARCHITECTURE·BACKLOG 문서 체계의 템플릿
 - [[src-on-pocket-news]] — 같은 1인 개발 사례: 통과 신호보다 화면 증적을 완료 기준으로
@@ -120,4 +154,5 @@ Claude Code 에이전트를 advisor(판단·범위·문서 정합) · app-develo
 블로그 [트렌드나침반](https://blog.wonslab.dev/)에서 이 주제를 다룬 글입니다.
 
 - [운동 기록 앱을 45일 만에 App Store에 올리기까지 — 혼자, 그리고 여섯 에이전트와](https://blog.wonslab.dev/2026-09-03-workout-history-45-days-six-agents/)
+- [출시 후 두 달 반, 운동기록 앱은 무엇이 왜 바뀌었나](https://blog.wonslab.dev/2026-11-19-workout-history-update/)
 - [AI 네이티브 시대 개발자 생존 전략: 앱 세 개를 AI 에이전트와 만들며 바뀐 내 역할](https://blog.wonslab.dev/2026-04-04-ai-native-developer-survival/)

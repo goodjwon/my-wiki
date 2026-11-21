@@ -1,22 +1,24 @@
 ---
-title: On Pocket News 개발기 (2026-02 ~ 2026-10)
+title: On Pocket News 개발기 (2026-02 ~ 2026-11)
 type: source
 tags: [on-pocket-news, spring-boot, kotlin, react, firestore, cloud-run, privacy, personalization, harness-engineering]
-sources: []
+sources: [on-pocket-news/]
 external:
   - https://pocket.wonslab.dev
   - https://blog.wonslab.dev/2026-10-10-on-pocket-news-intro/
   - https://blog.wonslab.dev/2026-10-10-on-pocket-news-privacy-local-collection/
+  - https://blog.wonslab.dev/2026-11-19-on-pocket-news-update/
 created: 2026-10-24
-updated: 2026-10-24
+updated: 2026-11-19
 ---
 
 # On Pocket News 개발기 — 룰 기반 정책 추천과 1인 서비스의 개인정보 개편
 
 ## 출처
 
-- 이 페이지는 블로그 글 2편(서비스 소개, 개인정보·수집 개편기)과 1:1로 대응하는 지식 원본입니다.
+- 이 페이지는 블로그 글 2편(서비스 소개, 개인정보·수집 개편기)과 1:1로 대응하는 지식 원본입니다. 2026-11-19 갱신 글은 아래 "2026-10-11 이후 변경" 절과 대응합니다.
 - 사실 원본은 on-pocket-news 저장소(CONSTITUTION.md, CLAUDE.md, docs/exec-plans/active/BACKLOG.md, docs/exec-plans/evidence/2026-10-10/TEST_EVIDENCE.md, docs/references/OPERATIONS.md, 코드, git 이력 571커밋)입니다. raw/ 사본은 두지 않았고, 블로그 글의 주장은 2026-10-24 기준 저장소와 한 문장씩 대조했습니다.
+- 2026-11-19 갱신: 2026-10-11 ~ 11-04 변경(120커밋)은 `raw/on-pocket-news/TIMELINE.md`에 날짜별 사실로 두고, 이 페이지에는 구조가 바뀐 지점만 요약했습니다.
 - 법 조항은 국가법령정보센터의 개인정보 보호법 현행본(2026-09-11 시행)과 대조했습니다.
 
 ## 서비스 한 줄
@@ -57,6 +59,26 @@ updated: 2026-10-24
 | 2026-10-19 | 커스텀 도메인 연결, 구글·애플 로그인 | `c42116f` `77662bd` |
 | 2026-10-20 | 예외 신설: batch-hub `onpocket-review` 헤드리스 감수(1건씩, 하루 최대 30건) | `4e77cb5` |
 
+## 2026-10-11 이후 변경 (~ 11-04)
+
+소개 글 이후 한 달은 기능 추가보다 **운영 경로를 사람 손에서 배치로 옮기는 일**이 중심이었습니다. 날짜별 사실은 `raw/on-pocket-news/TIMELINE.md`가 정본입니다.
+
+| 축 | 2026-10-10 상태 | 2026-11-04 상태 | 근거 |
+|---|---|---|---|
+| 로그인 | 이메일·비밀번호 + 이메일 인증 | 구글·애플만(JWKS RS256 검증). 회원이 테스트 계정뿐일 때 폐지 | `22316bb` `2d0590f` |
+| 감수 | 사람이 세션을 열 때만 | batch-hub `onpocket-review` 05:00 헤드리스, 1건씩 최대 100건, 보류 건은 `skip` | `4e77cb5` `938cabd` |
+| 수집 실행 | 맥 상주 에이전트 루프 | 1회 실행 후 종료 명령 3개(복지로 04:30, 정책브리핑 공식 API 04:40, 정부24·기업마당·마이홈 04:45) | `789e43d` `fe13e7d` `c878e15` |
+| 상주 에이전트 | 20초 간격 폴링 | 폴링 제거 결정(요청의 82%가 폴링). 정기 작업은 batch-hub 1회 실행 배치로 운영, 상주 에이전트는 남은 역할로 다른 PC에서 계속 실행(2026-11-19 사용자 확인) | `e69f7e2` |
+| 외부 연동 | 경량 피드 공개 | `/public/feed`에 `X-Client-Key`, 동의 회원 추천 `POST /partner/matches`(`X-Partner-Key`), `TopicCategory`·`GET /public/categories` | `1df0c41` `584e64b` `703ccb8` |
+| 지역 | 거주지 1곳 | 관심 지역 최대 3곳(점수 0.9배), 회원 지역 보강 수집, 법정동코드 대조 | `1a2aa62` `3370bdf` `2e11ea6` |
+| 엔진 검증 | 페르소나 키워드 적합률(대리 지표) | 정답 세트 정밀도@5 36→61%, 재현율 34→49% | `75af24d` `5aefab2` |
+
+엔진은 두 번 고쳤습니다. 10-24에는 구현 결함 세 가지(새 기사가 예전 고득점 기사에 밀려 영영 추천되지 않음, 다양성 필터가 호출되지 않음, 기관만 다른 같은 기사 중복)를 고쳤고(`71f49fa`), 11-01에는 기준을 바닥부터 재검증해 기존 매칭 이력 193건 중 149건을 지웠습니다(`e584fb2` `ac3d8f4`). 11-04에 정답 세트를 만든 뒤 세부 자격 8규칙·본문 첫머리 시군구 보정·뉴스 점수 ×0.75를 넣었습니다. 61%는 개선에 쓴 같은 세트로 잰 값이라 저장소도 "낙관적"이라고 적어 두었습니다.
+
+지역 수집원은 저작권 기준으로 골랐습니다. 공공 API와 공공누리 1유형만 쓰고, 공공누리 2·4유형 RSS와 포털·신문은 제외했습니다. 지역사랑상품권 API는 같은 날 같은 지역 값이 섞여 자동 안내가 사실을 왜곡할 수 있어 보류했습니다(`eb00308`).
+
+배치 전환에서 밟은 함정(처리 0건인데 성공, 한 건이 큐 전체를 막음, 인증 실패를 '할 일 없음'으로 삼킴)은 [[concept-run-once-batch-exit-contract]]에 정리했습니다.
+
 ## 사고와 규칙 — 실패가 문서가 된 경로
 
 | 사고 | 증상 | 남은 규칙 |
@@ -81,7 +103,7 @@ updated: 2026-10-24
 | 제35·36조 열람·정정 | 내 정보 화면에서 조회·수정 | `bab29ea` |
 | 제21조 파기 | 탈퇴 시 회원·매칭 이력 즉시 삭제, 기관 등록 요청은 요청자 이름만 익명화 | `bab29ea` |
 
-암호화는 `PiiCipher`가 `enc:v1:` + base64(IV 12바이트 + 암호문)로 저장하고, 접두어가 없으면 평문으로 보고 그대로 돌려줍니다. 서버가 시작하며 회원을 읽을 때 평문 회원을 찾아 암호화해 다시 저장하므로 별도 마이그레이션 스크립트가 없습니다. 이메일 인증은 6자리 코드 10분, 1회용 가입 토큰 30분, 이메일당 1시간 5회 요청, 5회 오답 시 코드 폐기이며 SMTP 계정이 없으면 자동으로 꺼집니다.
+암호화는 `PiiCipher`가 `enc:v1:` + base64(IV 12바이트 + 암호문)로 저장하고, 접두어가 없으면 평문으로 보고 그대로 돌려줍니다. 서버가 시작하며 회원을 읽을 때 평문 회원을 찾아 암호화해 다시 저장하므로 별도 마이그레이션 스크립트가 없습니다. 이메일 인증(6자리 코드 10분, 이메일당 1시간 5회 요청)은 2026-10-24 이메일·비밀번호 로그인 폐지와 함께 제거됐습니다(`2d0590f`).
 
 중복 필터는 네 겹입니다. 목록 상태 파라미터(`pageIndex`·`searchKrwd` 등)를 지운 URL, 같은 사이트의 같은 제목(공백·기호 무시), 제목·출처 줄을 뺀 본문 해시, 그리고 감수에서 지운 글의 묘비(tombstone) 키를 비교합니다. 묘비는 저장소에 남으므로 재시작 뒤에도 되살아나지 않습니다.
 
@@ -109,6 +131,8 @@ updated: 2026-10-24
 | AI 루프 | 에이전트의 자기 보고 | 테스트·타입 체크·실제 에러 | [[concept-loop-engineering]] |
 | 앱 출시 | 리뷰 없이 머지 | qa-reviewer → tester 게이트 생략 금지 | [[src-workout-history-launch]] |
 | 기본값 | "무난한" 기본값 | 명시적 설정·계약 | [[concept-cronjob-concurrency-trap]] |
+| 배치 | 종료 코드 0 | API 호출 기록이 없으면 종료 코드 2 | [[concept-run-once-batch-exit-contract]] |
+| 추천 정확도 | 제목 키워드 적합률 46% | 정답 세트 정밀도@5·재현율 | (이 페이지) |
 
 자동화가 "완료"라고 말하는 순간은 의견이고, 사람이 화면과 본문으로 확인한 결과가 사실입니다.
 
@@ -124,6 +148,7 @@ updated: 2026-10-24
 
 - 서비스: <https://pocket.wonslab.dev>
 - 블로그: 아래 "이 개념을 다룬 글" 2편
+- raw: `raw/on-pocket-news/README.md`, `raw/on-pocket-news/TIMELINE.md`
 - 저장소: CONSTITUTION.md, CLAUDE.md §3, docs/exec-plans/active/BACKLOG.md, docs/exec-plans/evidence/2026-10-10/TEST_EVIDENCE.md, docs/references/OPERATIONS.md
 - 법령: 국가법령정보센터 [개인정보 보호법](https://www.law.go.kr/법령/개인정보보호법)
 
@@ -135,6 +160,7 @@ updated: 2026-10-24
 - [[src-workout-history-launch]] — 같은 1인 개발, 게이트 생략 금지
 - [[src-morningbrief]] — 경량 피드 API(`/public/feed`)를 소비하는 자매 서비스
 - [[concept-cronjob-concurrency-trap]] — "기본값과 가정의 함정" 패턴 허브
+- [[concept-run-once-batch-exit-contract]] — 상주 루프를 1회 실행 배치로 옮길 때의 종료 코드 계약
 
 ## 이 개념을 다룬 글
 
@@ -142,3 +168,4 @@ updated: 2026-10-24
 
 - [On Pocket News — 내 주머니 속 정책 뉴스를 만든 이유와 과정](https://blog.wonslab.dev/2026-10-10-on-pocket-news-intro/)
 - [1인 서비스에 개인정보보호법 입히기 — On Pocket News 개편기](https://blog.wonslab.dev/2026-10-10-on-pocket-news-privacy-local-collection/)
+- [On Pocket News 한 달 — 사람이 돌리던 서비스를 배치로 옮기며 바뀐 것](https://blog.wonslab.dev/2026-11-19-on-pocket-news-update/)
