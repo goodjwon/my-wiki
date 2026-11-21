@@ -32,3 +32,10 @@
 .md-typeset details {
   font-size: .8rem;
 }
+
+/* 이미지는 무조건 가운데 정렬 (2026-11-21 사용자 규칙, 블로그와 동일). 아이콘·이모지는 제외. */
+.md-typeset img:not(.twemoji):not(.emojione):not(.gemoji) {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
