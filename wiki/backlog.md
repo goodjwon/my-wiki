@@ -228,6 +228,7 @@ updated: 2026-10-11
     11-22 = src-workout-history-launch, src-morningbrief, src-on-pocket-news, concept-wall-clock-state-machine, concept-local-first-append-only,
     concept-thin-client-idempotent-sync, concept-cronjob-concurrency-trap, concept-jspecify-null-safety, guide-java-track1-basics, guide-wiki-authoring-standards.
     lecture-*는 링크 따라 크롤되므로 개별 요청 안 함.
+    11-23 이후 추가(11-19 배포 `3b5658e`): src-dongne-climate, src-gather, concept-climate-normal-comparison, concept-api-contract-server-swap, concept-empty-result-vs-failure, concept-rule-as-of-judgment, concept-run-once-batch-exit-contract.
   - **12-03경 확인**: 요청 페이지 "최근 크롤링" 날짜 + 페이지 보고서 CSV 재추출 → 10-08 이후 크롤된 슬래시 URL 거절률만 판정. "리디렉션" 유효성 검사는 재실행 안 함.
   - 블로그(blog.wonslab.dev) 쪽 같은 캠페인: trendcompass-mkdocs `BACKLOG.md` "하고 있는 것".
 
